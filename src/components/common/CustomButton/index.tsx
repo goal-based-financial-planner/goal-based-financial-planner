@@ -1,18 +1,16 @@
-import React, { ReactNode } from 'react';
-import Button from '@mui/material/Button';
+import React from "react";
+import Button, { ButtonProps } from "@mui/material/Button";
 
-interface CustomButtonProps {
-  text: string;
-  icon: ReactNode;
-  onClick: () => void;
+interface CustomButtonProps extends ButtonProps {
+	text: string;
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ text, icon, onClick }) => {
-  return (
-    <Button startIcon={icon} onClick={onClick}>
-      {text}
-    </Button>
-  );
+const CustomButton: React.FC<CustomButtonProps> = ({ text, ...rest }) => {
+	return (
+		<Button variant="contained" {...rest}>
+			{text}
+		</Button>
+	);
 };
 
 export default CustomButton;
