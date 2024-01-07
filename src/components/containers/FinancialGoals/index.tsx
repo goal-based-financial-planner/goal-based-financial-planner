@@ -17,20 +17,22 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   dispatch,
 }) => {
   const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
-  const handleClose = () => setShowAddGoalsModal(false);
+  const handleClose = () => {
+    setShowAddGoalsModal(false);
+  };
 
   return (
     <>
       <Grid container spacing={2}>
         <Grid xs={10}>
-          <h1>Financial Goals</h1>
+          <h2>Financial Goals</h2>
         </Grid>
         <Grid
           xs={2}
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
-            alignItems: 'flex-end',
+            alignItems: 'center',
           }}
         >
           <Box>
@@ -40,10 +42,10 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
               onClick={() => {
                 setShowAddGoalsModal(true);
               }}
-            ></CustomButton>
+            />
           </Box>
         </Grid>
-        <Grid xs={12}>
+        <Grid xs={12} sx={{ mb: 5 }}>
           <FinancialGoalsTable goals={plannerData.financialGoals} />
         </Grid>
       </Grid>
@@ -51,6 +53,7 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
       <AddFinancialGoals
         handleClose={handleClose}
         showAddGoalsModal={showAddGoalsModal}
+        dispatch={dispatch}
       />
     </>
   );
