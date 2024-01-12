@@ -1,5 +1,7 @@
-import { FinancialGoal } from "./FinancialGoals";
+import { Assets } from './AssetData';
+import { FinancialGoal } from './FinancialGoals';
 
 export type PlannerData = {
-    financialGoals: FinancialGoal[];
-}
+  financialGoals: FinancialGoal[];
+  assets: Assets;
+};

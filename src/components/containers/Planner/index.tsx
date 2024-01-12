@@ -7,6 +7,7 @@ import {
 import CustomPaper from '../../common/CustomPaper';
 import CustomButton from '../../common/CustomButton';
 import { Box, Grid, Stack } from '@mui/material';
+import AssetsPlanner from '../InvestmentsBreakdown/LongTermGoalsSplit';
 
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
@@ -14,11 +15,14 @@ const Planner: React.FC = () => {
     initialPlannerData,
   );
   const [showGoalsTable, setShowGoalsTable] = useState(true);
+  const [showAssetsTable, setShowAssetsTable] = useState(false);
   const handleSave = () => {
     setShowGoalsTable(false);
+    setShowAssetsTable(true);
   };
   const handleEdit = () => {
     setShowGoalsTable(true);
+    setShowAssetsTable(false);
   };
   return (
     <Box>
@@ -45,6 +49,14 @@ const Planner: React.FC = () => {
           </Grid>
         </CustomPaper>
       )}
+      {showAssetsTable ? (
+        <CustomPaper>
+          <h2>Assets Planner </h2>
+          <Box sx={{ p: 3 }}>
+            <AssetsPlanner dispatch={dispatch} plannerData={plannerData} />
+          </Box>
+        </CustomPaper>
+      ) : null}
     </Box>
   );
 };

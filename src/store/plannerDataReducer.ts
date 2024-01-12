@@ -8,6 +8,11 @@ export type PlannerDataAction = {
 
 export const initialPlannerData: PlannerData = {
   financialGoals: [],
+  assets: {
+    LongTermGoals: null,
+    MidTermGoals: null,
+    ShortTermGoals: null,
+  },
 };
 
 export function plannerDataReducer(
@@ -20,6 +25,12 @@ export function plannerDataReducer(
         ...state,
         financialGoals: [...state.financialGoals, action.payload],
       };
+    case PlannerDataActionType.UPDATE_ASSETS:
+      return {
+        ...state,
+        assets: { ...state.assets, ...action.payload },
+      };
+
     default:
       return state;
   }

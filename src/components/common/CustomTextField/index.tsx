@@ -61,14 +61,12 @@ const CustomTextField = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target?.value;
-    console.log(text, regex?.test(text));
+
     setInvalidChar(false);
     if (isValidString(text)) {
-      console.log('valid string eh');
       setValidateField(false);
       onChange?.(text);
     } else {
-      console.log('valid string kadu');
       setValidateField(true);
       setInvalidChar(true);
     }
@@ -77,9 +75,7 @@ const CustomTextField = ({
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const text = e.target?.value;
     setInvalidChar(false);
-    console.log(!isValidLength(text));
     if (!isValidLength(text)) {
-      console.log(text);
       setValidateField(true);
     }
 
