@@ -1,7 +1,7 @@
 import { Assets } from './AssetData';
 import { FinancialGoal } from './FinancialGoals';
 
-export type PlannerData = {
-  financialGoals: FinancialGoal[];
-  assets: Assets;
-};
+export class PlannerData {
+  financialGoals: FinancialGoal[] = [];
+  assets: Assets = { longTermGoals: [], midTermGoals: [], shortTermGoals: [] };
+}

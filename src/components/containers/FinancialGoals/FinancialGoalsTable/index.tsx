@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   Table,
   TableBody,
@@ -12,9 +12,13 @@ import { FinancialGoal } from '../../../../domain/FinancialGoals';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
+  addGoalButton: ReactNode;
 }
 
-const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({ goals }) => {
+const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
+  goals,
+  addGoalButton,
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -30,16 +34,25 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({ goals }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {goals.map((goal, index) => (
-            <TableRow key={index}>
-              <TableCell>{goal.goalName}</TableCell>
-              <TableCell>{goal.startYear}</TableCell>
-              <TableCell>{goal.targetYear}</TableCell>
-              <TableCell>{goal.targetAmount}</TableCell>
-              <TableCell>{goal.getTerm()}</TableCell>
-              <TableCell>{goal.getTermType()}</TableCell>
+          {goals && goals.length > 0 ? (
+            goals.map((goal, index) => (
+              <TableRow key={index}>
+                <TableCell>{goal.goalName}</TableCell>
+                <TableCell>{goal.startYear}</TableCell>
+                <TableCell>{goal.targetYear}</TableCell>
+                <TableCell>{goal.targetAmount}</TableCell>
+                <TableCell>{goal.getTerm()}</TableCell>
+                <TableCell>{goal.getTermType()}</TableCell>
+                <TableCell>{goal.getTargetAmount()}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={7} style={{ textAlign: 'center' }}>
+                {addGoalButton}
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </TableContainer>

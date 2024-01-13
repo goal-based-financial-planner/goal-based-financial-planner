@@ -18,7 +18,7 @@ export interface EditableTableColumnConfig {
 }
 
 export interface EditableTableRef {
-  getData: () => AssetRow[] | null;
+  getData: () => AssetRow[];
 }
 
 interface EditableTableProps {

@@ -6,7 +6,7 @@ import {
 } from '../../../store/plannerDataReducer';
 import CustomPaper from '../../common/CustomPaper';
 import CustomButton from '../../common/CustomButton';
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import AssetsPlanner from '../InvestmentsBreakdown/LongTermGoalsSplit';
 
 const Planner: React.FC = () => {
@@ -31,8 +31,8 @@ const Planner: React.FC = () => {
           <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
           <Stack alignItems="flex-end">
             <CustomButton
-              sx={{ mb: 2 }}
-              text="Save & Next"
+              sx={{ mb: 2, fontSize: '1.2rem' }}
+              text="Continue"
               onClick={handleSave}
             />
           </Stack>
@@ -42,6 +42,7 @@ const Planner: React.FC = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={11}>
               <h2>Financial Goals</h2>
+              <Typography>You have added </Typography>
             </Grid>
             <Grid item xs={1}>
               <CustomButton text="Edit" onClick={handleEdit} />

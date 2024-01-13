@@ -4,7 +4,7 @@ export interface AssetRow {
 }
 
 export interface Assets {
-  LongTermGoals: AssetRow[] | null | undefined;
-  MidTermGoals: AssetRow[] | null | undefined;
-  ShortTermGoals: AssetRow[] | null | undefined;
+  longTermGoals: AssetRow[];
+  midTermGoals: AssetRow[];
+  shortTermGoals: AssetRow[];
 }

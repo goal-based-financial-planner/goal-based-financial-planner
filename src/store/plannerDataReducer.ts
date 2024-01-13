@@ -6,14 +6,7 @@ export type PlannerDataAction = {
   type: PlannerDataActionType;
 };
 
-export const initialPlannerData: PlannerData = {
-  financialGoals: [],
-  assets: {
-    LongTermGoals: null,
-    MidTermGoals: null,
-    ShortTermGoals: null,
-  },
-};
+export const initialPlannerData: PlannerData = new PlannerData();
 
 export function plannerDataReducer(
   state = initialPlannerData,

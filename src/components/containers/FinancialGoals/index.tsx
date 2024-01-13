@@ -21,6 +21,18 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
     setShowAddGoalsModal(false);
   };
 
+  const getAddGoalButton = () => {
+    return (
+      <CustomButton
+        text="Add Goal"
+        startIcon={<AddIcon />}
+        onClick={() => {
+          setShowAddGoalsModal(true);
+        }}
+      />
+    );
+  };
+
   return (
     <>
       <Grid container spacing={2}>
@@ -35,18 +47,22 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
             alignItems: 'center',
           }}
         >
+          {plannerData.financialGoals.length > 0 ? (
+            <Box>{getAddGoalButton()}</Box>
+          ) : null}
+        </Grid>
+        <Grid xs={12}>
           <Box>
-            <CustomButton
-              text="Add Goal"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setShowAddGoalsModal(true);
-              }}
-            />
+            Let's start by adding your financial goals. A financial goal is in
+            most cases an event for which you have to flush out a lumpsum of
+            money...
           </Box>
         </Grid>
-        <Grid xs={12} sx={{ mb: 5 }}>
-          <FinancialGoalsTable goals={plannerData.financialGoals} />
+        <Grid xs={12} sx={{ mb: 5, mt: 5 }}>
+          <FinancialGoalsTable
+            goals={plannerData.financialGoals}
+            addGoalButton={getAddGoalButton()}
+          />
         </Grid>
       </Grid>
 
