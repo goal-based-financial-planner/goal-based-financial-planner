@@ -33,6 +33,18 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
     );
   };
 
+  const prepareEmptyBodyPlaceholder = () => {
+    return (
+      <>
+        <p>
+          Yon't have any goals added. Click on Add Goal to start adding your
+          goals...
+        </p>
+        {getAddGoalButton()}
+      </>
+    );
+  };
+
   return (
     <>
       <Grid container spacing={2}>
@@ -61,7 +73,7 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
         <Grid xs={12} sx={{ mb: 5, mt: 5 }}>
           <FinancialGoalsTable
             goals={plannerData.financialGoals}
-            addGoalButton={getAddGoalButton()}
+            emptyBodyPlaceholder={prepareEmptyBodyPlaceholder()}
           />
         </Grid>
       </Grid>

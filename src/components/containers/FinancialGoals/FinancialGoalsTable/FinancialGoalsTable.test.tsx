@@ -14,7 +14,7 @@ test('renders FinancialGoalsTable component', () => {
   render(
     <FinancialGoalsTable
       goals={goals}
-      addGoalButton={<CustomButton text="" />}
+      emptyBodyPlaceholder={<CustomButton text="" />}
     />,
   );
 

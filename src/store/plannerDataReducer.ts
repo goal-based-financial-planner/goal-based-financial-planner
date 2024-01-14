@@ -11,19 +11,15 @@ export const initialPlannerData: PlannerData = new PlannerData();
 export function plannerDataReducer(
   state = initialPlannerData,
   action: PlannerDataAction,
-) {
+): PlannerData {
   switch (action.type) {
     case PlannerDataActionType.ADD_FINANCIAL_GOAL:
-      return {
-        ...state,
-        financialGoals: [...state.financialGoals, action.payload],
-      };
+      return new PlannerData(
+        [...state.financialGoals, action.payload],
+        state.assets,
+      );
     case PlannerDataActionType.UPDATE_ASSETS:
-      return {
-        ...state,
-        assets: { ...state.assets, ...action.payload },
-      };
-
+      return new PlannerData(state.financialGoals, action.payload);
     default:
       return state;
   }

@@ -12,12 +12,12 @@ import { FinancialGoal } from '../../../../domain/FinancialGoals';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
-  addGoalButton: ReactNode;
+  emptyBodyPlaceholder: ReactNode;
 }
 
 const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
   goals,
-  addGoalButton,
+  emptyBodyPlaceholder: addGoalButton,
 }) => {
   return (
     <TableContainer component={Paper}>
