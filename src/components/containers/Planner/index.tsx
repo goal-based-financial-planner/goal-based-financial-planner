@@ -9,20 +9,20 @@ import CustomButton from '../../common/CustomButton';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import AssetsPlanner from '../InvestmentsBreakdown/LongTermGoalsSplit';
 
+type StateType = 'goals' | 'breakdown' | 'recommendations';
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
     plannerDataReducer,
     initialPlannerData,
   );
-  const [showGoalsTable, setShowGoalsTable] = useState(true);
-  const [showAssetsTable, setShowAssetsTable] = useState(false);
+
+  const [currentState, setCurrentState] = useState<StateType>('goals');
+
   const handleSave = () => {
-    setShowGoalsTable(false);
-    setShowAssetsTable(true);
+    setCurrentState('breakdown');
   };
   const handleEdit = () => {
-    setShowGoalsTable(true);
-    setShowAssetsTable(false);
+    setCurrentState('goals');
   };
 
   const getGoalSummaryAsText = () => {
@@ -46,7 +46,7 @@ const Planner: React.FC = () => {
 
   return (
     <Box sx={{ m: 1 }}>
-      {showGoalsTable ? (
+      {currentState === 'goals' ? (
         <CustomPaper>
           <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
           <Stack alignItems="flex-end">
@@ -72,7 +72,7 @@ const Planner: React.FC = () => {
           </Grid>
         </CustomPaper>
       )}
-      {showAssetsTable ? (
+      {currentState === 'breakdown' ? (
         <CustomPaper>
           <h2>Assets Planner </h2>
           <Box sx={{ p: 3 }}>

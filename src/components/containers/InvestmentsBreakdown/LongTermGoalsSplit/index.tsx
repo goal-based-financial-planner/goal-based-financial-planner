@@ -53,11 +53,9 @@ const AssetsPlanner: React.FC<AssetsPlannerProps> = ({
       shortTermGoals,
     };
 
-    // console.log('dfghjkl', trimmedLongTermGoals);
     updateAssets(dispatch, assetsData);
   };
 
-  console.log(plannerData);
   return (
     <>
       <Stack flexDirection="row" gap={3}>

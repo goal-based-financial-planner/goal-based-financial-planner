@@ -9,6 +9,7 @@ import {
   Paper,
 } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import CustomTooltip from '../../../common/CustomTooltip';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
@@ -25,12 +26,20 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
         <TableHead>
           <TableRow>
             <TableCell>Goal name</TableCell>
+
             <TableCell>Start Year</TableCell>
             <TableCell>Target Year</TableCell>
             <TableCell>Amount</TableCell>
-            <TableCell>Term</TableCell>
-            <TableCell>Term type</TableCell>
-            <TableCell>Capital Adjusted by Inflation</TableCell>
+            <TableCell>
+              Term <CustomTooltip tooltipText="Goal Name" />
+            </TableCell>
+            <TableCell>
+              Term type <CustomTooltip tooltipText="Goal Name" />
+            </TableCell>
+            <TableCell>
+              Capital Adjusted by Inflation{' '}
+              <CustomTooltip tooltipText="Goal Name" />
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

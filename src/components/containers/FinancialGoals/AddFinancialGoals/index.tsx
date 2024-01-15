@@ -11,28 +11,90 @@ import {
   NUMBER_PATTERN,
   YEAR_PATTERN,
 } from '../../../../domain/constants';
+import CustomTooltip from '../../../common/CustomTooltip';
 
 interface AddFinancialGoalsProps {
   showAddGoalsModal: boolean;
   handleClose: () => void;
   dispatch: Dispatch<PlannerDataAction>;
 }
+
 const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
   showAddGoalsModal,
   handleClose,
   dispatch,
 }: AddFinancialGoalsProps) => {
   const handleCloseAndReset = () => {
+    setValidationErrors({});
     setGoalName('');
     setStartYear('');
     setTargetYear('');
     setTargetAmount('');
     setIsTargetYearValid(false);
-
     handleClose();
   };
 
+  const [goalName, setGoalName] = useState<string>('');
+  const [startYear, setStartYear] = useState<string>('');
+  const [targetYear, setTargetYear] = useState<string>('');
+  const [targetAmount, setTargetAmount] = useState<string>('');
+  const [isTargetYearValid, setIsTargetYearValid] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, boolean>
+  >({});
+
+  const handleGoalNameChange = (value: string) => {
+    setValidationErrors({ ...validationErrors, goalName: false });
+    setGoalName(value);
+  };
+
+  const handleStartYearChange = (value: any) => {
+    setValidationErrors({ ...validationErrors, startYear: false });
+    setStartYear(value);
+  };
+
+  const handleTargetYearChange = (value: any) => {
+    setValidationErrors({ ...validationErrors, targetYear: false });
+    setTargetYear(value);
+  };
+
+  const handleTargetAmountChange = (value: any) => {
+    setValidationErrors({ ...validationErrors, targetAmount: false });
+    setTargetAmount(value);
+  };
+
+  const handleTargetYearBlur = () => {
+    setIsTargetYearValid(true);
+  };
+
   const handleAdd = () => {
+    const errors: Record<string, boolean> = {};
+
+    if (!goalName || !ALPHANUMERIC_PATTERN.test(goalName)) {
+      errors.goalName = true;
+    }
+
+    if (!targetAmount || !NUMBER_PATTERN.test(targetAmount)) {
+      errors.targetAmount = true;
+    }
+
+    if (!startYear || !YEAR_PATTERN.test(startYear)) {
+      errors.startYear = true;
+    }
+
+    if (
+      !targetYear ||
+      !YEAR_PATTERN.test(targetYear) ||
+      (isTargetYearValid && Number(targetYear) < Number(startYear))
+    ) {
+      errors.targetYear = true;
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+
     addFinancialGoal(
       dispatch,
       new FinancialGoal(
@@ -42,31 +104,8 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
         Number(targetAmount),
       ),
     );
+
     handleCloseAndReset();
-  };
-
-  const [goalName, setGoalName] = useState<string>('');
-  const [startYear, setStartYear] = useState<string>('');
-  const [targetYear, setTargetYear] = useState<string>('');
-  const [targetAmount, setTargetAmount] = useState<string>('');
-  const [isTargetYearValid, setIsTargetYearValid] = useState<boolean>(false);
-
-  const handleGoalNameChange = (value: string) => {
-    setGoalName(value);
-  };
-
-  const handleStartYearChange = (value: any) => {
-    setStartYear(value);
-  };
-  const handleTargetYearChange = (value: any) => {
-    setTargetYear(value);
-  };
-  const handleTargetAmountChange = (value: any) => {
-    setTargetAmount(value);
-  };
-
-  const handleTargetYearBlur = () => {
-    setIsTargetYearValid(true);
   };
 
   return (
@@ -103,20 +142,29 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               sx={{ minWidth: '270px', minHeight: 80 }}
               helperText="Enter valid Goal Name"
               required
+              error={validationErrors.goalName}
               value={goalName}
               onChange={handleGoalNameChange}
               regex={ALPHANUMERIC_PATTERN}
+              InputProps={{
+                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+              }}
             />
           </Grid>
+
           <Grid xs={6}>
             <CustomTextField
               label="Amount"
               sx={{ minWidth: '270px', minHeight: 80 }}
               required
               helperText="Enter valid Amount"
+              error={validationErrors.targetAmount}
               value={targetAmount}
               onChange={handleTargetAmountChange}
               regex={NUMBER_PATTERN}
+              InputProps={{
+                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+              }}
             />
           </Grid>
           <Grid xs={6}>
@@ -125,23 +173,33 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               helperText="Enter valid start year"
               label="Investment Start Year"
               required
+              error={validationErrors.startYear}
               value={startYear}
               onChange={handleStartYearChange}
               regex={YEAR_PATTERN}
+              InputProps={{
+                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+              }}
             />
           </Grid>
           <Grid xs={6}>
             <CustomTextField
               sx={{ minWidth: '270px', minHeight: 80 }}
-              helperText="Enter valid start year"
+              helperText="Enter valid target year"
               label="Investment End Year"
               required
               value={targetYear}
-              regex={YEAR_PATTERN}
-              error={isTargetYearValid && targetYear < startYear}
+              error={
+                validationErrors.targetYear ||
+                (isTargetYearValid && Number(targetYear) < Number(startYear))
+              }
               additionalHelperText="Target year should be greater than start year"
               onChange={handleTargetYearChange}
               onBlur={handleTargetYearBlur}
+              regex={YEAR_PATTERN}
+              InputProps={{
+                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+              }}
             />
           </Grid>
           <Grid xs={6}>

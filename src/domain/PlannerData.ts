@@ -33,7 +33,7 @@ export class PlannerData {
   getFinancialGoalSummary(): FinancialGoalSumary {
     return Object.values(TermType).map((termType) => {
       return {
-        termType: termType,
+        termType,
         numberOfGoals: this.financialGoals.filter(
           (goal) => goal.getTermType() === termType,
         ).length,

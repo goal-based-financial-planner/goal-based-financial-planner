@@ -132,7 +132,7 @@ const CustomTextField = ({
   return (
     <TextField
       type={type}
-      variant="outlined"
+      variant="standard"
       id={id}
       required={required}
       label={label}
