@@ -22,14 +22,6 @@ export class PlannerData {
     this.assets = assets;
   }
 
-  addFinancialGoal(goal: FinancialGoal) {
-    this.financialGoals.push(goal);
-  }
-
-  setAssets(assets: Assets) {
-    this.assets = assets;
-  }
-
   getFinancialGoalSummary(): FinancialGoalSumary {
     return Object.values(TermType).map((termType) => {
       return {

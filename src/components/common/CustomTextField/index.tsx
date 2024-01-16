@@ -132,6 +132,7 @@ const CustomTextField = ({
   return (
     <TextField
       type={type}
+      autoComplete="off"
       variant="standard"
       id={id}
       required={required}

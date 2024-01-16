@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Dispatch, ReactNode } from 'react';
 import {
   Table,
   TableBody,
@@ -10,16 +10,25 @@ import {
 } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import CustomTooltip from '../../../common/CustomTooltip';
+import { Delete } from '@mui/icons-material';
+import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
+import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
   emptyBodyPlaceholder: ReactNode;
+  dispatch: Dispatch<PlannerDataAction>;
 }
 
 const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
   goals,
   emptyBodyPlaceholder: addGoalButton,
+  dispatch,
 }) => {
+  const deleteGoal = (index: any) => {
+    deleteFinancialGoal(dispatch, index);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -40,6 +49,7 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
               Capital Adjusted by Inflation{' '}
               <CustomTooltip tooltipText="Goal Name" />
             </TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -53,6 +63,9 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
                 <TableCell>{goal.getTerm()}</TableCell>
                 <TableCell>{goal.getTermType()}</TableCell>
                 <TableCell>{goal.getTargetAmount()}</TableCell>
+                <TableCell>
+                  <Delete color="action" onClick={() => deleteGoal(index)} />
+                </TableCell>
               </TableRow>
             ))
           ) : (

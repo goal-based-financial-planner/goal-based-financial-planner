@@ -51,6 +51,7 @@ const Planner: React.FC = () => {
           <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
           <Stack alignItems="flex-end">
             <CustomButton
+              disabled={plannerData.financialGoals.length === 0}
               sx={{ fontSize: '1.2rem' }}
               text="Continue"
               onClick={handleSave}

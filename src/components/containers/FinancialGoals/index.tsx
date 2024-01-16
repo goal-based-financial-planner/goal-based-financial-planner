@@ -74,6 +74,7 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
           <FinancialGoalsTable
             goals={plannerData.financialGoals}
             emptyBodyPlaceholder={prepareEmptyBodyPlaceholder()}
+            dispatch={dispatch}
           />
         </Grid>
       </Grid>
