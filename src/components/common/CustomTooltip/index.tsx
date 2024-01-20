@@ -9,6 +9,7 @@ const CustomTooltip = ({ tooltipText }: CustomPaperProps) => {
   return (
     <Tooltip
       title={<Fragment>{tooltipText}</Fragment>}
+      style={{ verticalAlign: 'middle' }}
       slotProps={{
         popper: {
           modifiers: [

@@ -44,11 +44,11 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
             <TableCell>Target Year</TableCell>
             <TableCell>Capital Required</TableCell>
             <TableCell>
-              Term
+              <span style={{ verticalAlign: 'middle' }}>Term</span>
               <CustomTooltip tooltipText="Number of years you have to accumulate the capital " />
             </TableCell>
             <TableCell>
-              Term type{' '}
+              <span style={{ verticalAlign: 'middle' }}>Term type</span>
               <CustomTooltip
                 tooltipText={
                   <>
@@ -62,10 +62,12 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
               />
             </TableCell>
             <TableCell>
-              Capital Adjusted by Inflation
+              <span style={{ verticalAlign: 'middle' }}>
+                Capital Adjusted by Inflation
+              </span>
               <CustomTooltip tooltipText="Capital adjusted by taking inflation into account" />
             </TableCell>
-            <TableCell />
+            <TableCell align="right" />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -81,8 +83,8 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
                 <TableCell>
                   {goal.getInfaltionAdjustedTargetAmount(inflationPercentage)}
                 </TableCell>
-                <TableCell>
-                  <Delete color="action" onClick={() => deleteGoal(index)} />
+                <TableCell align="right">
+                  <Delete color="error" onClick={() => deleteGoal(index)} />
                 </TableCell>
               </TableRow>
             ))
