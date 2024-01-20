@@ -5,8 +5,7 @@ import {
   plannerDataReducer,
 } from '../../../store/plannerDataReducer';
 import CustomPaper from '../../common/CustomPaper';
-import CustomButton from '../../common/CustomButton';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import AssetsPlanner from '../InvestmentsBreakdown/LongTermGoalsSplit';
 
 type StateType = 'goals' | 'breakdown' | 'recommendations';
@@ -50,12 +49,15 @@ const Planner: React.FC = () => {
         <CustomPaper>
           <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
           <Stack alignItems="flex-end">
-            <CustomButton
+            <Button
               disabled={plannerData.financialGoals.length === 0}
               sx={{ fontSize: '1.2rem' }}
-              text="Continue"
               onClick={handleSave}
-            />
+              variant="contained"
+              color="primary"
+            >
+              Continue
+            </Button>
           </Stack>
         </CustomPaper>
       ) : (
@@ -68,7 +70,13 @@ const Planner: React.FC = () => {
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <CustomButton text="Edit" onClick={handleEdit} />
+              <Button
+                onClick={handleEdit}
+                variant="contained"
+                color="secondary"
+              >
+                Edit
+              </Button>
             </Grid>
           </Grid>
         </CustomPaper>

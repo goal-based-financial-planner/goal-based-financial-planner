@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import FinancialGoalsTable from '.';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { screen } from '@testing-library/react';
-import CustomButton from '../../../common/CustomButton';
+import { Button } from '@mui/material';
 
 test('renders FinancialGoalsTable component', () => {
   const goals: FinancialGoal[] = [];
@@ -14,7 +14,7 @@ test('renders FinancialGoalsTable component', () => {
   render(
     <FinancialGoalsTable
       goals={goals}
-      emptyBodyPlaceholder={<CustomButton text="" />}
+      emptyBodyPlaceholder={<Button></Button>}
       dispatch={() => {}}
     />,
   );

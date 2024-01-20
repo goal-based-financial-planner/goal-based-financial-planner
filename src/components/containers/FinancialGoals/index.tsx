@@ -1,11 +1,11 @@
 import React, { Dispatch, useState } from 'react';
 import FinancialGoalsTable from './FinancialGoalsTable';
-import { Box, Unstable_Grid2 as Grid } from '@mui/material';
+import { Box, Button, Unstable_Grid2 as Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from './AddFinancialGoals';
-import CustomButton from '../../common/CustomButton';
 import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
+import { FlagCircle } from '@mui/icons-material';
 
 type FinancialGoalsProps = {
   plannerData: PlannerData;
@@ -23,13 +23,16 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
 
   const getAddGoalButton = () => {
     return (
-      <CustomButton
-        text="Add Goal"
+      <Button
         startIcon={<AddIcon />}
+        variant="contained"
+        color="secondary"
         onClick={() => {
           setShowAddGoalsModal(true);
         }}
-      />
+      >
+        Add Goal
+      </Button>
     );
   };
 

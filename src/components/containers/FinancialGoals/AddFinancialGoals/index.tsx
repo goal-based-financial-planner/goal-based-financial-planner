@@ -1,7 +1,12 @@
-import { Unstable_Grid2 as Grid, Modal, Paper, Stack } from '@mui/material';
+import {
+  Button,
+  Unstable_Grid2 as Grid,
+  Modal,
+  Paper,
+  Stack,
+} from '@mui/material';
 import React, { Dispatch, useState } from 'react';
-import CustomButton from '../../../common/CustomButton';
-import { CancelRounded, SaveAltOutlined } from '@mui/icons-material';
+import { Add, CancelRounded } from '@mui/icons-material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
@@ -203,12 +208,14 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             />
           </Grid>
           <Grid xs={6}>
-            <CustomButton
-              text="Cancel"
+            <Button
               startIcon={<CancelRounded />}
               variant="outlined"
+              color="secondary"
               onClick={handleCloseAndReset}
-            />
+            >
+              Cancel
+            </Button>
           </Grid>
           <Grid
             xs={6}
@@ -218,11 +225,14 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               alignItems: 'flex-end',
             }}
           >
-            <CustomButton
-              text="Add"
-              startIcon={<SaveAltOutlined />}
+            <Button
+              startIcon={<Add />}
               onClick={handleAdd}
-            />
+              variant="contained"
+              color="secondary"
+            >
+              Add
+            </Button>
           </Grid>
         </Grid>
       </Paper>

@@ -48,4 +48,13 @@ export class FinancialGoal {
       return TermType.LONG_TERM;
     }
   }
+
+  getInfaltionAdjustedTargetAmount(inflationPercentage: number): number {
+    const term = this.getTerm();
+    const inflatedAmount =
+      this.targetAmount * Math.pow(1 + inflationPercentage / 100, term);
+    const roundedInflationAmount =
+      Math.round((inflatedAmount + Number.EPSILON) * 100) / 100;
+    return roundedInflationAmount;
+  }
 }

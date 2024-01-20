@@ -6,8 +6,7 @@ import EditableTable, {
   EditableTableColumnConfig,
   EditableTableRef,
 } from '../../../common/EditableTable';
-import CustomButton from '../../../common/CustomButton';
-import { Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { updateAssets } from '../../../../store/plannerDataActions';
 import { AssetRow } from '../../../../domain/AssetData';
 
@@ -74,7 +73,9 @@ const AssetsPlanner: React.FC<AssetsPlannerProps> = ({
           <EditableTable columnConfig={columnConfig} ref={shortTermGoalsRef} />
         </Stack>
       </Stack>
-      <CustomButton sx={{ mt: 3 }} text={'Continue'} onClick={handleContinue} />
+      <Button sx={{ mt: 3 }} onClick={handleContinue}>
+        Continue
+      </Button>
     </>
   );
 };
