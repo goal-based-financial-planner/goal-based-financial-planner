@@ -144,6 +144,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
           <Grid xs={6}>
             <CustomTextField
               label="Goal Name"
+              placeholder='Eg: "Child Education"'
               sx={{ minWidth: '270px', minHeight: 80 }}
               helperText="Enter valid Goal Name"
               required
@@ -152,14 +153,17 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               onChange={handleGoalNameChange}
               regex={ALPHANUMERIC_PATTERN}
               InputProps={{
-                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+                endAdornment: (
+                  <CustomTooltip tooltipText="Give your goal a name" />
+                ),
               }}
             />
           </Grid>
 
           <Grid xs={6}>
             <CustomTextField
-              label="Amount"
+              label="Capital Needed"
+              placeholder='Eg: "1000000"'
               sx={{ minWidth: '270px', minHeight: 80 }}
               required
               helperText="Enter valid Amount"
@@ -168,7 +172,9 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               onChange={handleTargetAmountChange}
               regex={NUMBER_PATTERN}
               InputProps={{
-                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+                endAdornment: (
+                  <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
+                ),
               }}
             />
           </Grid>
@@ -176,6 +182,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             <CustomTextField
               sx={{ minWidth: '270px', minHeight: 80 }}
               helperText="Enter valid start year"
+              placeholder='Eg: "2024"'
               label="Investment Start Year"
               required
               error={validationErrors.startYear}
@@ -183,7 +190,9 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               onChange={handleStartYearChange}
               regex={YEAR_PATTERN}
               InputProps={{
-                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+                endAdornment: (
+                  <CustomTooltip tooltipText="When are you planning to start investing?" />
+                ),
               }}
             />
           </Grid>
@@ -191,6 +200,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             <CustomTextField
               sx={{ minWidth: '270px', minHeight: 80 }}
               helperText="Enter valid target year"
+              placeholder='Eg: "2040"'
               label="Investment End Year"
               required
               value={targetYear}
@@ -203,7 +213,9 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               onBlur={handleTargetYearBlur}
               regex={YEAR_PATTERN}
               InputProps={{
-                endAdornment: <CustomTooltip tooltipText="Goal Name" />,
+                endAdornment: (
+                  <CustomTooltip tooltipText="When do you want to meet this goal by? " />
+                ),
               }}
             />
           </Grid>

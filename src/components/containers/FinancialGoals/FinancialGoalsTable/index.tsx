@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
 } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import CustomTooltip from '../../../common/CustomTooltip';
@@ -41,16 +42,28 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
 
             <TableCell>Start Year</TableCell>
             <TableCell>Target Year</TableCell>
-            <TableCell>Amount</TableCell>
+            <TableCell>Capital Required</TableCell>
             <TableCell>
-              Term <CustomTooltip tooltipText="Goal Name" />
+              Term
+              <CustomTooltip tooltipText="Number of years you have to accumulate the capital " />
             </TableCell>
             <TableCell>
-              Term type <CustomTooltip tooltipText="Goal Name" />
+              Term type{' '}
+              <CustomTooltip
+                tooltipText={
+                  <>
+                    <ul>
+                      <li>Short Term if the term is less than 4 years</li>
+                      <li>Medium Term if the term is less than 6 years</li>
+                      <li>Long Term if the term is more than 6 years</li>
+                    </ul>
+                  </>
+                }
+              />
             </TableCell>
             <TableCell>
-              Capital Adjusted by Inflation{' '}
-              <CustomTooltip tooltipText="Goal Name" />
+              Capital Adjusted by Inflation
+              <CustomTooltip tooltipText="Capital adjusted by taking inflation into account" />
             </TableCell>
             <TableCell />
           </TableRow>

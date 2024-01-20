@@ -1,13 +1,14 @@
 import { Tooltip } from '@mui/material';
 import { Info } from '@mui/icons-material';
+import { Fragment, ReactNode } from 'react';
 
 interface CustomPaperProps {
-  tooltipText: string;
+  tooltipText: ReactNode | string;
 }
 const CustomTooltip = ({ tooltipText }: CustomPaperProps) => {
   return (
     <Tooltip
-      title={tooltipText}
+      title={<Fragment>{tooltipText}</Fragment>}
       slotProps={{
         popper: {
           modifiers: [
