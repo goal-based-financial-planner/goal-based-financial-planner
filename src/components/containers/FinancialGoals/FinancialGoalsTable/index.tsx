@@ -7,7 +7,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography,
 } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import CustomTooltip from '../../../common/CustomTooltip';

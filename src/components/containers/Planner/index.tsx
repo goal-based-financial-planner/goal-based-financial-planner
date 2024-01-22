@@ -20,6 +20,7 @@ const Planner: React.FC = () => {
   const handleSave = () => {
     setCurrentState('breakdown');
   };
+
   const handleEdit = () => {
     setCurrentState('goals');
   };
@@ -28,7 +29,7 @@ const Planner: React.FC = () => {
     const goalSummary = plannerData
       .getFinancialGoalSummary()
       .filter((e) => e.numberOfGoals > 0)
-      .map((e) => e.numberOfGoals + ' ' + e.termType);
+      .map((e) => `${e.numberOfGoals} ${e.termType}`);
 
     const summaryText = goalSummary.join(', ');
     const lastIndex = summaryText.lastIndexOf(',');
@@ -69,7 +70,7 @@ const Planner: React.FC = () => {
                 {`You have added ${getGoalSummaryAsText()} goals`}
               </Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={1} textAlign="right">
               <Button
                 onClick={handleEdit}
                 variant="contained"
@@ -84,9 +85,7 @@ const Planner: React.FC = () => {
       {currentState === 'breakdown' ? (
         <CustomPaper>
           <h2>Assets Planner </h2>
-          <Box sx={{ p: 3 }}>
-            <AssetsPlanner dispatch={dispatch} plannerData={plannerData} />
-          </Box>
+          <AssetsPlanner dispatch={dispatch} plannerData={plannerData} />
         </CustomPaper>
       ) : null}
     </Box>

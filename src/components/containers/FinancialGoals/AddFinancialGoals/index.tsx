@@ -40,7 +40,9 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
   };
 
   const [goalName, setGoalName] = useState<string>('');
-  const [startYear, setStartYear] = useState<string>('');
+  const [startYear, setStartYear] = useState<string>(
+    String(new Date().getFullYear()),
+  );
   const [targetYear, setTargetYear] = useState<string>('');
   const [targetAmount, setTargetAmount] = useState<string>('');
   const [isTargetYearValid, setIsTargetYearValid] = useState<boolean>(false);

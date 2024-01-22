@@ -23,13 +23,14 @@ export interface EditableTableRef {
 
 interface EditableTableProps {
   columnConfig: EditableTableColumnConfig[];
+  onInputChange?: () => void;
 }
 
 export const generateUniqueId = () =>
   `id${Math.random().toString(16).slice(2)}`;
 
 const EditableTable = forwardRef<EditableTableRef, EditableTableProps>(
-  ({ columnConfig }, ref) => {
+  ({ columnConfig, onInputChange }, ref) => {
     const newEmptyObject = () =>
       columnConfig
         .map((e) => e.id)
@@ -46,7 +47,11 @@ const EditableTable = forwardRef<EditableTableRef, EditableTableProps>(
       if (!newData[index + 1]) {
         newData[index + 1] = newEmptyObject();
       }
+
       setData(newData);
+      if (onInputChange) {
+        onInputChange();
+      }
     };
 
     useImperativeHandle(ref, () => ({
