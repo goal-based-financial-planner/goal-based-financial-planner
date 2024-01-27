@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import FinancialGoals from '../FinancialGoals';
 import {
   initialPlannerData,
@@ -16,14 +16,23 @@ const Planner: React.FC = () => {
   );
 
   const [currentState, setCurrentState] = useState<StateType>('goals');
+  const assetsRef = useRef<HTMLDivElement>(null);
 
-  const handleSave = () => {
+  const handleGoalContinue = () => {
     setCurrentState('breakdown');
   };
-
-  const handleEdit = () => {
+  const handleGoalsEdit = () => {
     setCurrentState('goals');
   };
+  useEffect(() => {
+    if (currentState === 'breakdown') {
+      // Scroll page to bring breakdown into view
+      assetsRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [currentState]);
 
   const getGoalSummaryAsText = () => {
     const goalSummary = plannerData
@@ -53,7 +62,7 @@ const Planner: React.FC = () => {
             <Button
               disabled={plannerData.financialGoals.length === 0}
               sx={{ fontSize: '1.2rem' }}
-              onClick={handleSave}
+              onClick={handleGoalContinue}
               variant="contained"
               color="primary"
             >
@@ -72,7 +81,7 @@ const Planner: React.FC = () => {
             </Grid>
             <Grid item xs={1} textAlign="right">
               <Button
-                onClick={handleEdit}
+                onClick={handleGoalsEdit}
                 variant="contained"
                 color="secondary"
               >
@@ -83,7 +92,7 @@ const Planner: React.FC = () => {
         </CustomPaper>
       )}
       {currentState === 'breakdown' ? (
-        <CustomPaper>
+        <CustomPaper sx={{ height: '100vh' }} ref={assetsRef}>
           <h2>Assets Planner </h2>
           <AssetsPlanner dispatch={dispatch} plannerData={plannerData} />
         </CustomPaper>

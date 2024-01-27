@@ -67,7 +67,7 @@ const EditableTable = forwardRef<EditableTableRef, EditableTableProps>(
     };
 
     return (
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table>
           <TableHead>
             <TableRow>

@@ -85,6 +85,10 @@ const AssetsPlanner: React.FC<AssetsPlannerProps> = ({
 
   return (
     <>
+      <Box>
+        Now that you have added your financial goals, let's add the assets that
+        you are interested to invest in.
+      </Box>
       {errorMsg ? (
         <p style={{ marginBottom: '10px', color: 'hsl(0,70%,60%)' }}>
           {' '}
@@ -128,7 +132,7 @@ const AssetsPlanner: React.FC<AssetsPlannerProps> = ({
       </Stack>
       <Box textAlign="right">
         <Button
-          sx={{ mt: 3 }}
+          sx={{ mt: 3, fontSize: '1.2rem' }}
           onClick={handleContinue}
           variant="contained"
           color="primary"
