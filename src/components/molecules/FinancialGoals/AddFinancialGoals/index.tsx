@@ -10,13 +10,13 @@ import { Add, CancelRounded } from '@mui/icons-material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
-import CustomTextField from '../../../common/CustomTextField';
+import CustomTextField from '../../../atoms/CustomTextField';
 import {
   ALPHANUMERIC_PATTERN,
   NUMBER_PATTERN,
   YEAR_PATTERN,
-} from '../../../../domain/constants';
-import CustomTooltip from '../../../common/CustomTooltip';
+} from '../../../../types/constants';
+import CustomTooltip from '../../../atoms/CustomTooltip';
 
 interface AddFinancialGoalsProps {
   showAddGoalsModal: boolean;

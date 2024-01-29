@@ -1,8 +1,8 @@
 import React, { Dispatch, useState } from 'react';
-import FinancialGoalsTable from './FinancialGoalsTable';
+import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTable';
 import { Box, Button, Unstable_Grid2 as Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import AddFinancialGoals from './AddFinancialGoals';
+import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
 import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 

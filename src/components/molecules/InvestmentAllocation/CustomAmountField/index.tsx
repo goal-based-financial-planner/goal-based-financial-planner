@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 
-const NumberInput = ({ value, onChange }: any) => {
+const CustomAmountField = ({ value, onChange }: any) => {
   const [inputValue, setInputValue] = useState(value);
 
   const handleInputChange = (event: any) => {
@@ -16,6 +16,7 @@ const NumberInput = ({ value, onChange }: any) => {
       autoComplete="off"
       value={inputValue}
       onChange={handleInputChange}
+      // TODO: Get min and max values from props
       inputProps={{
         min: 0,
         max: 100,
@@ -28,4 +29,4 @@ const NumberInput = ({ value, onChange }: any) => {
   );
 };
 
-export default NumberInput;
+export default CustomAmountField;

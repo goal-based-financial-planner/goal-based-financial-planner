@@ -5,9 +5,9 @@ import {
   persistPlannerData,
   plannerDataReducer,
 } from '../../../store/plannerDataReducer';
-import CustomPaper from '../../common/CustomPaper';
+import CustomPaper from '../../atoms/CustomPaper';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import AssetsTypeTable from '../InvestmentsBreakdown/AssetsTypeTable';
+import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
 
 type StateType = 'goals' | 'breakdown' | 'recommendations';
 const Planner: React.FC = () => {
@@ -62,7 +62,10 @@ const Planner: React.FC = () => {
   return (
     <Box sx={{ m: 1 }}>
       {currentState === 'goals' ? (
+        // TODO: Move custom paper, editable and non editable logic into Financial GOals
+
         <CustomPaper>
+          {/* TODO: Pass only necessary data, don't pass entire planner data */}
           <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
           <Stack alignItems="flex-end">
             <Button
@@ -98,11 +101,14 @@ const Planner: React.FC = () => {
         </CustomPaper>
       )}
       {currentState === 'breakdown' ? (
+        // TODO: Pass into custom paper and pass only investment allocation details
         <CustomPaper sx={{ height: '100vh' }} ref={assetsRef}>
           <h2>Assets Planner </h2>
-          {/* <AssetsPlanner dispatch={dispatch} plannerData={plannerData} /> */}
 
-          <AssetsTypeTable dispatch={dispatch} plannerData={plannerData} />
+          <InvestmentAllocationTable
+            dispatch={dispatch}
+            plannerData={plannerData}
+          />
         </CustomPaper>
       ) : null}
     </Box>

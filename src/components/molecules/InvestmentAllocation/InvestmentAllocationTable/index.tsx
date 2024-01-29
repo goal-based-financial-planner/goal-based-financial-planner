@@ -11,9 +11,9 @@ import {
   styled,
   tableCellClasses,
 } from '@mui/material';
-import useTableData from './useTableData';
+import useInvestmentOptions from '../../../../hooks/useInvestmentAssetOptions';
 import React, { Dispatch } from 'react';
-import NumberInput from './CustomAmountField';
+import CustomAmountField from '../CustomAmountField';
 import {
   setLongTermAssetPercentage,
   setMidTermAssetPercentage,
@@ -32,15 +32,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-interface AssetsTypeTableProps {
+interface InvestmentAllocationProps {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
 }
-const AssetsTypeTable: React.FC<AssetsTypeTableProps> = ({
+const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
   dispatch,
   plannerData,
 }) => {
-  const tableData = useTableData();
+  const tableData = useInvestmentOptions();
 
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
     setShortTermAssetPercentage(dispatch, assetId, value);
@@ -93,14 +93,14 @@ const AssetsTypeTable: React.FC<AssetsTypeTableProps> = ({
                   <TableCell>{tableData[index].assetType}</TableCell>
                   <TableCell>{tableData[index].expectedPercentage}</TableCell>
 
-                  <TableCell>{tableData[index].riskGrade}</TableCell>
+                  <TableCell>{tableData[index].riskType}</TableCell>
 
                   <StyledTableCell
                     style={{
                       background: 'rgba(0, 0, 0, 0.04)',
                     }}
                   >
-                    <NumberInput
+                    <CustomAmountField
                       value={
                         plannerData.assets.shortTermGoals[tableData[index].id]
                       }
@@ -115,7 +115,7 @@ const AssetsTypeTable: React.FC<AssetsTypeTableProps> = ({
                   <StyledTableCell
                     style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
-                    <NumberInput
+                    <CustomAmountField
                       value={
                         plannerData.assets.midTermGoals[tableData[index].id]
                       }
@@ -127,7 +127,7 @@ const AssetsTypeTable: React.FC<AssetsTypeTableProps> = ({
                   <StyledTableCell
                     style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
-                    <NumberInput
+                    <CustomAmountField
                       value={
                         plannerData.assets.longTermGoals[tableData[index].id]
                       }
@@ -157,4 +157,4 @@ const AssetsTypeTable: React.FC<AssetsTypeTableProps> = ({
   );
 };
 
-export default AssetsTypeTable;
+export default InvestmentAllocationTable;

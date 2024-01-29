@@ -1,5 +1,5 @@
 import { TermType } from '../types/enums';
-import { Assets } from './AssetData';
+import { InvestmentAllocation } from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
 
 export type FinancialGoalSumary = Array<{
@@ -8,11 +8,15 @@ export type FinancialGoalSumary = Array<{
 }>;
 export class PlannerData {
   financialGoals: FinancialGoal[] = [];
-  assets: Assets = { longTermGoals: {}, midTermGoals: {}, shortTermGoals: {} };
+  assets: InvestmentAllocation = {
+    longTermGoals: {},
+    midTermGoals: {},
+    shortTermGoals: {},
+  };
 
   constructor(
     financialGoals: FinancialGoal[] = [],
-    assets: Assets = {
+    assets: InvestmentAllocation = {
       longTermGoals: {},
       midTermGoals: {},
       shortTermGoals: {},

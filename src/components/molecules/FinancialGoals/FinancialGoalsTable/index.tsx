@@ -9,7 +9,7 @@ import {
   Paper,
 } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
-import CustomTooltip from '../../../common/CustomTooltip';
+import CustomTooltip from '../../../atoms/CustomTooltip';
 import { Delete } from '@mui/icons-material';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
