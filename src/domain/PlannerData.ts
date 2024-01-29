@@ -8,14 +8,14 @@ export type FinancialGoalSumary = Array<{
 }>;
 export class PlannerData {
   financialGoals: FinancialGoal[] = [];
-  assets: Assets = { longTermGoals: [], midTermGoals: [], shortTermGoals: [] };
+  assets: Assets = { longTermGoals: {}, midTermGoals: {}, shortTermGoals: {} };
 
   constructor(
     financialGoals: FinancialGoal[] = [],
     assets: Assets = {
-      longTermGoals: [],
-      midTermGoals: [],
-      shortTermGoals: [],
+      longTermGoals: {},
+      midTermGoals: {},
+      shortTermGoals: {},
     },
   ) {
     this.financialGoals = financialGoals;

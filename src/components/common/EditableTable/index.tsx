@@ -1,6 +1,5 @@
 import { Delete } from '@mui/icons-material';
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,

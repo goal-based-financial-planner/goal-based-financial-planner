@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from './AddFinancialGoals';
 import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import { FlagCircle } from '@mui/icons-material';
 
 type FinancialGoalsProps = {
   plannerData: PlannerData;

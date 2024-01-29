@@ -7,7 +7,7 @@ import {
 } from '../../../store/plannerDataReducer';
 import CustomPaper from '../../common/CustomPaper';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import AssetsPlanner from '../InvestmentsBreakdown/LongTermGoalsSplit';
+import AssetsTypeTable from '../InvestmentsBreakdown/AssetsTypeTable';
 
 type StateType = 'goals' | 'breakdown' | 'recommendations';
 const Planner: React.FC = () => {
@@ -58,6 +58,7 @@ const Planner: React.FC = () => {
     return summaryText;
   };
 
+  console.log(plannerData);
   return (
     <Box sx={{ m: 1 }}>
       {currentState === 'goals' ? (
@@ -99,7 +100,9 @@ const Planner: React.FC = () => {
       {currentState === 'breakdown' ? (
         <CustomPaper sx={{ height: '100vh' }} ref={assetsRef}>
           <h2>Assets Planner </h2>
-          <AssetsPlanner dispatch={dispatch} plannerData={plannerData} />
+          {/* <AssetsPlanner dispatch={dispatch} plannerData={plannerData} /> */}
+
+          <AssetsTypeTable dispatch={dispatch} plannerData={plannerData} />
         </CustomPaper>
       ) : null}
     </Box>
