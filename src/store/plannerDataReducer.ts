@@ -1,12 +1,15 @@
+import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerData } from '../domain/PlannerData';
 import { PlannerDataActionType } from './plannerDataActions';
+
+const LOCAL_STORAGE_KEY = 'plannerData';
 
 export type PlannerDataAction = {
   payload: any;
   type: PlannerDataActionType;
 };
 
-export const initialPlannerData: PlannerData = new PlannerData();
+export const initialPlannerData: PlannerData = getInitialData();
 
 export function plannerDataReducer(
   state = initialPlannerData,
@@ -30,4 +33,29 @@ export function plannerDataReducer(
     default:
       return state;
   }
+}
+
+export function getInitialData() {
+  const localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY) as string;
+
+  if (localStorageData) {
+    try {
+      const parsedState = JSON.parse(localStorageData) as PlannerData;
+      const financialGoals = parsedState.financialGoals.map(
+        (e: FinancialGoal) =>
+          new FinancialGoal(
+            e.goalName,
+            e.startYear,
+            e.targetYear,
+            e.targetAmount,
+          ),
+      );
+      return new PlannerData(financialGoals, parsedState.assets);
+    } catch {}
+  }
+  return new PlannerData();
+}
+
+export function persistPlannerData(plannerData: PlannerData) {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(plannerData));
 }

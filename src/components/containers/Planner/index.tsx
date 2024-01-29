@@ -1,7 +1,8 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import FinancialGoals from '../FinancialGoals';
 import {
-  initialPlannerData,
+  getInitialData,
+  persistPlannerData,
   plannerDataReducer,
 } from '../../../store/plannerDataReducer';
 import CustomPaper from '../../common/CustomPaper';
@@ -12,10 +13,14 @@ type StateType = 'goals' | 'breakdown' | 'recommendations';
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
     plannerDataReducer,
-    initialPlannerData,
+    getInitialData(),
   );
 
   const [currentState, setCurrentState] = useState<StateType>('goals');
+
+  useEffect(() => {
+    persistPlannerData(plannerData);
+  }, [plannerData]);
   const assetsRef = useRef<HTMLDivElement>(null);
 
   const handleGoalContinue = () => {
