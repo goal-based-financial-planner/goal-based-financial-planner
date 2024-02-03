@@ -1,21 +1,24 @@
 import React, { Dispatch, useState } from 'react';
 import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTable';
-import { Box, Button, Unstable_Grid2 as Grid } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
 import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
+import CustomPaper from '../../atoms/CustomPaper';
+import { StepType } from '../../../types/types';
 
-type FinancialGoalsProps = {
+type FinancialGoalsProps = StepType & {
   plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
-  // onContinue: () => void;
 };
 
 const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   plannerData,
   dispatch,
-  // onContinue,
+  isExpanded,
+  onContinue,
+  onEdit,
 }) => {
   const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
   const handleClose = () => {
@@ -49,8 +52,28 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
     );
   };
 
-  return (
-    <>
+  const getGoalSummaryAsText = () => {
+    const goalSummary = plannerData
+      .getFinancialGoalSummary()
+      .filter((e) => e.numberOfGoals > 0)
+      .map((e) => `${e.numberOfGoals} ${e.termType}`);
+
+    const summaryText = goalSummary.join(', ');
+    const lastIndex = summaryText.lastIndexOf(',');
+    if (lastIndex !== -1) {
+      const updatedSummaryText =
+        summaryText.substring(0, lastIndex) +
+        ' and ' +
+        summaryText.substring(lastIndex + 1);
+      return updatedSummaryText;
+    }
+
+    return summaryText;
+  };
+
+  return isExpanded ? (
+    <CustomPaper>
+      {/* TODO: Pass only necessary data, don't pass entire planner data */}
       <Grid container spacing={2} justifyContent="flex-end">
         <Grid xs={10}>
           <h2>Financial Goals</h2>
@@ -81,17 +104,6 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
             dispatch={dispatch}
           />
         </Grid>
-        {/* <Box>
-          <Button
-            disabled={plannerData.financialGoals.length === 0}
-            sx={{ fontSize: '1.2rem' }}
-            onClick={onContinue}
-            variant="contained"
-            color="primary"
-          >
-            Continue
-          </Button>
-        </Box> */}
       </Grid>
 
       <AddFinancialGoals
@@ -99,7 +111,34 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
         showAddGoalsModal={showAddGoalsModal}
         dispatch={dispatch}
       />
-    </>
+      <Stack alignItems="flex-end">
+        <Button
+          disabled={plannerData.financialGoals.length === 0}
+          sx={{ fontSize: '1.2rem' }}
+          onClick={onContinue}
+          variant="contained"
+          color="primary"
+        >
+          Continue
+        </Button>
+      </Stack>
+    </CustomPaper>
+  ) : (
+    <CustomPaper>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={11}>
+          <h2>Financial Goals</h2>
+          <Typography>
+            {`You have added ${getGoalSummaryAsText()} goals`}
+          </Typography>
+        </Grid>
+        <Grid item xs={1} textAlign="right">
+          <Button onClick={onEdit} variant="contained" color="secondary">
+            Edit
+          </Button>
+        </Grid>
+      </Grid>
+    </CustomPaper>
   );
 };
 
