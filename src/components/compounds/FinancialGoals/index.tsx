@@ -9,11 +9,13 @@ import { PlannerDataAction } from '../../../store/plannerDataReducer';
 type FinancialGoalsProps = {
   plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
+  // onContinue: () => void;
 };
 
 const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   plannerData,
   dispatch,
+  // onContinue,
 }) => {
   const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
   const handleClose = () => {
@@ -49,7 +51,7 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
 
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} justifyContent="flex-end">
         <Grid xs={10}>
           <h2>Financial Goals</h2>
         </Grid>
@@ -79,6 +81,17 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
             dispatch={dispatch}
           />
         </Grid>
+        {/* <Box>
+          <Button
+            disabled={plannerData.financialGoals.length === 0}
+            sx={{ fontSize: '1.2rem' }}
+            onClick={onContinue}
+            variant="contained"
+            color="primary"
+          >
+            Continue
+          </Button>
+        </Box> */}
       </Grid>
 
       <AddFinancialGoals

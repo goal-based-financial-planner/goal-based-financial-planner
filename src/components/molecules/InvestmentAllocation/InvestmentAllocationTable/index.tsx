@@ -8,11 +8,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
+  Typography,
   styled,
   tableCellClasses,
 } from '@mui/material';
 import useInvestmentOptions from '../../../../hooks/useInvestmentAssetOptions';
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useState } from 'react';
 import CustomAmountField from '../CustomAmountField';
 import {
   setLongTermAssetPercentage,
@@ -35,13 +37,25 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface InvestmentAllocationProps {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
+  onAssetsPlannerContinue: any;
+}
+interface Terms {
+  shortTerm?: boolean;
+  midTerm?: boolean;
+  longTerm?: boolean;
 }
 const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
   dispatch,
   plannerData,
+  onAssetsPlannerContinue,
 }) => {
   const tableData = useInvestmentOptions();
 
+  const [termTooltipVisible, setTermTooltipVisible] = useState<Terms>({
+    shortTerm: false,
+    midTerm: false,
+    longTerm: false,
+  });
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
     setShortTermAssetPercentage(dispatch, assetId, value);
   };
@@ -53,6 +67,108 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
     setLongTermAssetPercentage(dispatch, assetId, value);
   };
 
+  const isTooltipVisible = (termType: keyof PlannerData['assets']) => {
+    const termSum = tableData.reduce(
+      (sum, row) => sum + Number(plannerData.assets[termType][row.id] || 0),
+      0,
+    );
+
+    return termSum !== 100;
+  };
+
+  const isTermGoalGreaterZero = (columnNameToHide: string) => {
+    return plannerData
+      .getFinancialGoalSummary()
+      .some(
+        (item) => item.termType === columnNameToHide && item.numberOfGoals > 0,
+      );
+  };
+
+  console.log('fhgjk;', isTermGoalGreaterZero('longTerm'));
+  const renderTooltipCell = (
+    label: string,
+    termType: 'shortTerm' | 'midTerm' | 'longTerm',
+    offset: number,
+    columnNameToHide: string,
+  ) => {
+    const tooltipVisible = termTooltipVisible[termType];
+    const hideColumn = isTermGoalGreaterZero(columnNameToHide);
+
+    return !hideColumn ? null : (
+      <StyledTableCell sx={{ width: '70px' }}>
+        {tooltipVisible ? (
+          <Tooltip
+            sx={{ alignContent: 'right', justifyContent: 'right' }}
+            title={
+              <Box>
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: '16px', textAlign: 'center' }}
+                >
+                  should add up to 100
+                </Typography>
+              </Box>
+            }
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: 'offset',
+                    options: {
+                      offset: [0, offset],
+                    },
+                  },
+                ],
+              },
+            }}
+            arrow
+            placement="top"
+            open={tooltipVisible}
+          >
+            <div>{label}</div>
+          </Tooltip>
+        ) : (
+          <div>{label}</div>
+        )}
+      </StyledTableCell>
+    );
+  };
+
+  const handleClick = () => {
+    const shortTermTooltipVisible = isTooltipVisible('shortTermGoals');
+    const midTermTooltipVisible = isTooltipVisible('midTermGoals');
+    const longTermTooltipVisible = isTooltipVisible('longTermGoals');
+
+    if (shortTermTooltipVisible) {
+      return setTermTooltipVisible({
+        shortTerm: shortTermTooltipVisible,
+      });
+    }
+    if (midTermTooltipVisible) {
+      return setTermTooltipVisible({
+        midTerm: midTermTooltipVisible,
+      });
+    }
+
+    if (longTermTooltipVisible) {
+      return setTermTooltipVisible({
+        longTerm: longTermTooltipVisible,
+      });
+    }
+
+    if (
+      !shortTermTooltipVisible &&
+      !midTermTooltipVisible &&
+      !longTermTooltipVisible
+    ) {
+      onAssetsPlannerContinue();
+      return setTermTooltipVisible({
+        shortTerm: false,
+        midTerm: false,
+        longTerm: false,
+      });
+    }
+  };
   return (
     <>
       <Box>
@@ -64,27 +180,32 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
         <TableContainer
           component={Paper}
           sx={{
-            maxWidth: 1500,
+            maxWidth: 1000,
             mt: 4,
           }}
         >
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ width: '100px' }}>Asset Type</TableCell>
-                <TableCell sx={{ width: '100px' }}>
+                <TableCell sx={{ width: '140px' }}>Asset Type</TableCell>
+                <TableCell sx={{ width: '140px' }}>
                   Expected Percentage (%)
                 </TableCell>
-                <TableCell sx={{ width: '100px' }}>Risk Grade</TableCell>
-                <StyledTableCell sx={{ width: '100px' }}>
-                  Short term (%)
-                </StyledTableCell>
-                <StyledTableCell sx={{ width: '100px' }}>
-                  Mid term (%)
-                </StyledTableCell>
-                <StyledTableCell sx={{ width: '100px' }}>
-                  Long term (%)
-                </StyledTableCell>
+                <TableCell sx={{ width: '140px' }}>Risk Grade</TableCell>
+
+                {renderTooltipCell(
+                  'Short Term (%)',
+                  'shortTerm',
+                  10,
+                  'Short Term',
+                )}
+                {renderTooltipCell('Mid Term (%)', 'midTerm', 10, 'Mid Term')}
+                {renderTooltipCell(
+                  'Long Term (%)',
+                  'longTerm',
+                  10,
+                  'Long Term',
+                )}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -95,47 +216,59 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
 
                   <TableCell>{tableData[index].riskType}</TableCell>
 
-                  <StyledTableCell
-                    style={{
-                      background: 'rgba(0, 0, 0, 0.04)',
-                    }}
-                  >
-                    <CustomAmountField
-                      value={
-                        plannerData.assets.shortTermGoals[tableData[index].id]
-                      }
-                      onChange={(value: any) =>
-                        handleInputChangeForShortTerm(
-                          tableData[index].id,
-                          value,
-                        )
-                      }
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell
-                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
-                  >
-                    <CustomAmountField
-                      value={
-                        plannerData.assets.midTermGoals[tableData[index].id]
-                      }
-                      onChange={(value: any) =>
-                        handleInputChangeForMidTerm(tableData[index].id, value)
-                      }
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell
-                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
-                  >
-                    <CustomAmountField
-                      value={
-                        plannerData.assets.longTermGoals[tableData[index].id]
-                      }
-                      onChange={(value: any) =>
-                        handleInputChangeForLongTerm(tableData[index].id, value)
-                      }
-                    />
-                  </StyledTableCell>
+                  {isTermGoalGreaterZero('Short Term') ? (
+                    <StyledTableCell
+                      style={{
+                        background: 'rgba(0, 0, 0, 0.04)',
+                      }}
+                    >
+                      <CustomAmountField
+                        value={
+                          plannerData.assets.shortTermGoals[tableData[index].id]
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeForShortTerm(
+                            tableData[index].id,
+                            value,
+                          )
+                        }
+                      />
+                    </StyledTableCell>
+                  ) : null}
+                  {isTermGoalGreaterZero('Mid Term') ? (
+                    <StyledTableCell
+                      style={{ background: 'rgba(0, 0, 0, 0.04)' }}
+                    >
+                      <CustomAmountField
+                        value={
+                          plannerData.assets.midTermGoals[tableData[index].id]
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeForMidTerm(
+                            tableData[index].id,
+                            value,
+                          )
+                        }
+                      />
+                    </StyledTableCell>
+                  ) : null}
+                  {isTermGoalGreaterZero('Long Term') ? (
+                    <StyledTableCell
+                      style={{ background: 'rgba(0, 0, 0, 0.04)' }}
+                    >
+                      <CustomAmountField
+                        value={
+                          plannerData.assets.longTermGoals[tableData[index].id]
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeForLongTerm(
+                            tableData[index].id,
+                            value,
+                          )
+                        }
+                      />
+                    </StyledTableCell>
+                  ) : null}
                 </TableRow>
               ))}
             </TableBody>
@@ -146,7 +279,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
       <Box textAlign="right">
         <Button
           sx={{ mt: 3, fontSize: '1.2rem' }}
-          onClick={() => {}}
+          onClick={handleClick}
           variant="contained"
           color="primary"
         >

@@ -6,14 +6,20 @@ import { PlannerData } from '../../../domain/PlannerData';
 type InvestmentAllocationProps = {
   plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
+  onAssetsPlannerContinue: any;
 };
 
 const InvestmentAllocation: React.FC<InvestmentAllocationProps> = ({
   plannerData,
   dispatch,
+  onAssetsPlannerContinue,
 }) => {
   return (
-    <InvestmentAllocationTable dispatch={dispatch} plannerData={plannerData} />
+    <InvestmentAllocationTable
+      dispatch={dispatch}
+      plannerData={plannerData}
+      onAssetsPlannerContinue={onAssetsPlannerContinue}
+    />
   );
 };
 
