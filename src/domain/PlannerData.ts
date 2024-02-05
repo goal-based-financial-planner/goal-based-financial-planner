@@ -36,4 +36,22 @@ export class PlannerData {
       };
     });
   }
+
+  getGoalSummaryAsText(): string {
+    const goalSummary = this.getFinancialGoalSummary()
+      .filter((e) => e.numberOfGoals > 0)
+      .map((e) => `${e.numberOfGoals} ${e.termType}`);
+
+    const summaryText = goalSummary.join(', ');
+    const lastIndex = summaryText.lastIndexOf(',');
+    if (lastIndex !== -1) {
+      const updatedSummaryText =
+        summaryText.substring(0, lastIndex) +
+        ' and ' +
+        summaryText.substring(lastIndex + 1);
+      return updatedSummaryText;
+    }
+
+    return summaryText;
+  }
 }

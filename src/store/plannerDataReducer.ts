@@ -1,5 +1,6 @@
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerData } from '../domain/PlannerData';
+import { TermType } from '../types/enums';
 import { PlannerDataActionType } from './plannerDataActions';
 
 const LOCAL_STORAGE_KEY = 'plannerData';
@@ -53,8 +54,26 @@ export function plannerDataReducer(
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
       const financialGoals = [...state.financialGoals];
+      const assets = state.assets;
       financialGoals.splice(action.payload, 1);
-      return new PlannerData(financialGoals, state.assets);
+
+      const allSelecteTermTypes = new Set(
+        financialGoals.map((g) => g.getTermType()),
+      );
+
+      if (!allSelecteTermTypes.has(TermType.SHORT_TERM)) {
+        assets.shortTermGoals = {};
+      }
+
+      if (!allSelecteTermTypes.has(TermType.MEDIUM_TERM)) {
+        assets.midTermGoals = {};
+      }
+
+      if (!allSelecteTermTypes.has(TermType.LONG_TERM)) {
+        assets.longTermGoals = {};
+      }
+
+      return new PlannerData(financialGoals, assets);
 
     default:
       return state;

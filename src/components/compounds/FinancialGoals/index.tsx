@@ -7,6 +7,7 @@ import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import CustomPaper from '../../atoms/CustomPaper';
 import { StepType } from '../../../types/types';
+import Step from '../../molecules/Step';
 
 type FinancialGoalsProps = StepType & {
   plannerData: PlannerData;
@@ -52,34 +53,21 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
     );
   };
 
-  const getGoalSummaryAsText = () => {
-    const goalSummary = plannerData
-      .getFinancialGoalSummary()
-      .filter((e) => e.numberOfGoals > 0)
-      .map((e) => `${e.numberOfGoals} ${e.termType}`);
-
-    const summaryText = goalSummary.join(', ');
-    const lastIndex = summaryText.lastIndexOf(',');
-    if (lastIndex !== -1) {
-      const updatedSummaryText =
-        summaryText.substring(0, lastIndex) +
-        ' and ' +
-        summaryText.substring(lastIndex + 1);
-      return updatedSummaryText;
-    }
-
-    return summaryText;
-  };
-
-  return isExpanded ? (
-    <CustomPaper>
-      {/* TODO: Pass only necessary data, don't pass entire planner data */}
-      <Grid container spacing={2} justifyContent="flex-end">
-        <Grid xs={10}>
-          <h2>Financial Goals</h2>
-        </Grid>
+  return (
+    <Step
+      isExpanded={isExpanded}
+      onContinue={onContinue}
+      onEdit={onEdit}
+      title={'Financial Goals'}
+      subtext="Let's start by adding your financial goals. A financial goal is in
+            most cases an event for which you have to flush out a lumpsum of
+            money..."
+      isContinueDisabled={plannerData.getFinancialGoalSummary().length === 0}
+      summaryText={`You have added ${plannerData.getGoalSummaryAsText()} goals`}
+    >
+      <>
         <Grid
-          xs={2}
+          xs={12}
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
@@ -90,55 +78,20 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
             <Box>{getAddGoalButton()}</Box>
           ) : null}
         </Grid>
-        <Grid xs={12}>
-          <Box>
-            Let's start by adding your financial goals. A financial goal is in
-            most cases an event for which you have to flush out a lumpsum of
-            money...
-          </Box>
-        </Grid>
-        <Grid xs={12} sx={{ mb: 5, mt: 5 }}>
-          <FinancialGoalsTable
-            goals={plannerData.financialGoals}
-            emptyBodyPlaceholder={prepareEmptyBodyPlaceholder()}
-            dispatch={dispatch}
-          />
-        </Grid>
-      </Grid>
 
-      <AddFinancialGoals
-        handleClose={handleClose}
-        showAddGoalsModal={showAddGoalsModal}
-        dispatch={dispatch}
-      />
-      <Stack alignItems="flex-end">
-        <Button
-          disabled={plannerData.financialGoals.length === 0}
-          sx={{ fontSize: '1.2rem' }}
-          onClick={onContinue}
-          variant="contained"
-          color="primary"
-        >
-          Continue
-        </Button>
-      </Stack>
-    </CustomPaper>
-  ) : (
-    <CustomPaper>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={11}>
-          <h2>Financial Goals</h2>
-          <Typography>
-            {`You have added ${getGoalSummaryAsText()} goals`}
-          </Typography>
-        </Grid>
-        <Grid item xs={1} textAlign="right">
-          <Button onClick={onEdit} variant="contained" color="secondary">
-            Edit
-          </Button>
-        </Grid>
-      </Grid>
-    </CustomPaper>
+        <FinancialGoalsTable
+          goals={plannerData.financialGoals}
+          emptyBodyPlaceholder={prepareEmptyBodyPlaceholder()}
+          dispatch={dispatch}
+        />
+
+        <AddFinancialGoals
+          handleClose={handleClose}
+          showAddGoalsModal={showAddGoalsModal}
+          dispatch={dispatch}
+        />
+      </>
+    </Step>
   );
 };
 
