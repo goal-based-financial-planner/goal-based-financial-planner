@@ -1,11 +1,10 @@
 import React, { Dispatch, useState } from 'react';
 import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTable';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
 import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import CustomPaper from '../../atoms/CustomPaper';
 import { StepType } from '../../../types/types';
 import Step from '../../molecules/Step';
 
@@ -14,7 +13,7 @@ type FinancialGoalsProps = StepType & {
   dispatch: Dispatch<PlannerDataAction>;
 };
 
-const FinancialGoals: React.FC<FinancialGoalsProps> = ({
+const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   plannerData,
   dispatch,
   isExpanded,
@@ -95,4 +94,4 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   );
 };
 
-export default FinancialGoals;
+export default FinancialGoalsStep;

@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import FinancialGoals from '../FinancialGoals';
+import FinancialGoalsStep from '../FinancialGoalsStep';
 import {
   getInitialData,
   persistPlannerData,
@@ -7,7 +7,7 @@ import {
 } from '../../../store/plannerDataReducer';
 import { Box } from '@mui/material';
 
-import InvestmentAllocation from '../InvestmentAllocation';
+import InvestmentAllocationStep from '../InvestmentAllocationStep';
 import { PlannerState } from '../../../types/enums';
 
 const Planner: React.FC = () => {
@@ -60,16 +60,16 @@ const Planner: React.FC = () => {
   console.log(plannerData);
   return (
     <Box sx={{ m: 1 }}>
-      <FinancialGoals
+      <FinancialGoalsStep
         isExpanded={isFinancialGoalsExpanded}
         onContinue={() => goToStep(PlannerState.ASSET_ALLOCATION)}
         onEdit={() => goToStep(PlannerState.GOALS)}
         plannerData={plannerData}
         dispatch={dispatch}
-      ></FinancialGoals>
+      ></FinancialGoalsStep>
 
       {isAssetAllocationVisible ? (
-        <InvestmentAllocation
+        <InvestmentAllocationStep
           dispatch={dispatch}
           plannerData={plannerData}
           onContinue={() => goToStep(PlannerState.PORTFOLIO_SUMMARY)}

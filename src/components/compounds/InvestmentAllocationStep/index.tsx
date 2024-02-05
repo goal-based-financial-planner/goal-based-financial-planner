@@ -11,29 +11,30 @@ type InvestmentAllocationProps = StepType & {
   dispatch: Dispatch<PlannerDataAction>;
 };
 
-export interface Terms {
+export interface ToolTipVisibilityState {
   shortTerm?: boolean;
   midTerm?: boolean;
   longTerm?: boolean;
 }
 
-const InvestmentAllocation: React.FC<InvestmentAllocationProps> = ({
+const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   plannerData,
   dispatch,
   isExpanded,
   onContinue,
   onEdit,
 }) => {
-  const tableData = useInvestmentOptions();
+  const investmentOptions = useInvestmentOptions();
 
-  const [termTooltipVisible, setTermTooltipVisible] = useState<Terms>({
-    shortTerm: false,
-    midTerm: false,
-    longTerm: false,
-  });
+  const [tooltipVisibilityState, setTooltipVisiblityState] =
+    useState<ToolTipVisibilityState>({
+      shortTerm: false,
+      midTerm: false,
+      longTerm: false,
+    });
 
   const isTooltipVisible = (termType: keyof PlannerData['assets']) => {
-    const termSum = tableData.reduce(
+    const termSum = investmentOptions.reduce(
       (sum, row) => sum + Number(plannerData.assets[termType][row.id] || 0),
       0,
     );
@@ -41,27 +42,26 @@ const InvestmentAllocation: React.FC<InvestmentAllocationProps> = ({
     return termSum !== 100;
   };
 
-  const handleClick = () => {
-    debugger;
+  const handleStepContinue = () => {
     const shortTermTooltipVisible = isTooltipVisible('shortTermGoals');
     const midTermTooltipVisible = isTooltipVisible('midTermGoals');
     const longTermTooltipVisible = isTooltipVisible('longTermGoals');
 
     if (shortTermTooltipVisible) {
-      setTermTooltipVisible({
+      setTooltipVisiblityState({
         shortTerm: shortTermTooltipVisible,
       });
       return;
     }
     if (midTermTooltipVisible) {
-      setTermTooltipVisible({
+      setTooltipVisiblityState({
         midTerm: midTermTooltipVisible,
       });
       return;
     }
 
     if (longTermTooltipVisible) {
-      setTermTooltipVisible({
+      setTooltipVisiblityState({
         longTerm: longTermTooltipVisible,
       });
       return;
@@ -72,7 +72,7 @@ const InvestmentAllocation: React.FC<InvestmentAllocationProps> = ({
       !midTermTooltipVisible &&
       !longTermTooltipVisible
     ) {
-      setTermTooltipVisible({
+      setTooltipVisiblityState({
         shortTerm: false,
         midTerm: false,
         longTerm: false,
@@ -84,7 +84,7 @@ const InvestmentAllocation: React.FC<InvestmentAllocationProps> = ({
   return (
     <Step
       isExpanded={isExpanded}
-      onContinue={handleClick}
+      onContinue={handleStepContinue}
       onEdit={onEdit}
       title={'Asset Allocation'}
       subtext="Now that you have added your financial goals, let's add the assets that
@@ -95,11 +95,11 @@ const InvestmentAllocation: React.FC<InvestmentAllocationProps> = ({
       <InvestmentAllocationTable
         dispatch={dispatch}
         plannerData={plannerData}
-        tableData={tableData}
-        termTooltipVisible={termTooltipVisible}
+        investmentOptions={investmentOptions}
+        tooltipVisibilityState={tooltipVisibilityState}
       />
     </Step>
   );
 };
 
-export default InvestmentAllocation;
+export default InvestmentAllocationStep;

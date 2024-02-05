@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Paper,
   Table,
   TableBody,
@@ -24,7 +23,8 @@ import {
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { PlannerData } from '../../../../domain/PlannerData';
 import { InvestmentOptionType } from '../../../../domain/InvestmentOptions';
-import { Terms } from '../../../compounds/InvestmentAllocation';
+import { ToolTipVisibilityState } from '../../../compounds/InvestmentAllocationStep';
+import { TermType } from '../../../../types/enums';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,18 +36,18 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-interface InvestmentAllocationProps {
+interface InvestmentAllocationTableProps {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
-  tableData: InvestmentOptionType[];
-  termTooltipVisible: Terms;
+  investmentOptions: InvestmentOptionType[];
+  tooltipVisibilityState: ToolTipVisibilityState;
 }
 
-const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
+const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   dispatch,
   plannerData,
-  tableData,
-  termTooltipVisible,
+  investmentOptions,
+  tooltipVisibilityState: termTooltipVisible,
 }) => {
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
     setShortTermAssetPercentage(dispatch, assetId, value);
@@ -60,25 +60,22 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
     setLongTermAssetPercentage(dispatch, assetId, value);
   };
 
-  const isTermGoalGreaterZero = (columnNameToHide: string) => {
+  const areGoalsPresentOfType = (column: string) => {
     return plannerData
       .getFinancialGoalSummary()
-      .some(
-        (item) => item.termType === columnNameToHide && item.numberOfGoals > 0,
-      );
+      .some((item) => item.termType === column && item.numberOfGoals > 0);
   };
 
-  console.log('fhgjk;', isTermGoalGreaterZero('longTerm'));
-  const renderTooltipCell = (
+  const conditionallyRenderToolTipBasedCell = (
     label: string,
     termType: 'shortTerm' | 'midTerm' | 'longTerm',
     offset: number,
-    columnNameToHide: string,
+    column: string,
   ) => {
     const tooltipVisible = termTooltipVisible[termType];
-    const hideColumn = isTermGoalGreaterZero(columnNameToHide);
+    const shouldHideColumn = areGoalsPresentOfType(column);
 
-    return !hideColumn ? null : (
+    return !shouldHideColumn ? null : (
       <StyledTableCell sx={{ width: '70px' }}>
         {tooltipVisible ? (
           <Tooltip
@@ -136,25 +133,37 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
               </TableCell>
               <TableCell sx={{ width: '140px' }}>Risk Grade</TableCell>
 
-              {renderTooltipCell(
+              {conditionallyRenderToolTipBasedCell(
                 'Short Term (%)',
                 'shortTerm',
                 10,
-                'Short Term',
+                TermType.SHORT_TERM,
               )}
-              {renderTooltipCell('Mid Term (%)', 'midTerm', 10, 'Mid Term')}
-              {renderTooltipCell('Long Term (%)', 'longTerm', 10, 'Long Term')}
+              {conditionallyRenderToolTipBasedCell(
+                'Mid Term (%)',
+                'midTerm',
+                10,
+                TermType.MEDIUM_TERM,
+              )}
+              {conditionallyRenderToolTipBasedCell(
+                'Long Term (%)',
+                'longTerm',
+                10,
+                TermType.LONG_TERM,
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
+            {investmentOptions.map((row, index) => (
               <TableRow key={`index`}>
-                <TableCell>{tableData[index].assetType}</TableCell>
-                <TableCell>{tableData[index].expectedPercentage}</TableCell>
+                <TableCell>{investmentOptions[index].assetType}</TableCell>
+                <TableCell>
+                  {investmentOptions[index].expectedPercentage}
+                </TableCell>
 
-                <TableCell>{tableData[index].riskType}</TableCell>
+                <TableCell>{investmentOptions[index].riskType}</TableCell>
 
-                {isTermGoalGreaterZero('Short Term') ? (
+                {areGoalsPresentOfType(TermType.SHORT_TERM) ? (
                   <StyledTableCell
                     style={{
                       background: 'rgba(0, 0, 0, 0.04)',
@@ -162,41 +171,53 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets.shortTermGoals[tableData[index].id]
+                        plannerData.assets.shortTermGoals[
+                          investmentOptions[index].id
+                        ]
                       }
                       onChange={(value: any) =>
                         handleInputChangeForShortTerm(
-                          tableData[index].id,
+                          investmentOptions[index].id,
                           value,
                         )
                       }
                     />
                   </StyledTableCell>
                 ) : null}
-                {isTermGoalGreaterZero('Mid Term') ? (
+                {areGoalsPresentOfType(TermType.MEDIUM_TERM) ? (
                   <StyledTableCell
                     style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets.midTermGoals[tableData[index].id]
+                        plannerData.assets.midTermGoals[
+                          investmentOptions[index].id
+                        ]
                       }
                       onChange={(value: any) =>
-                        handleInputChangeForMidTerm(tableData[index].id, value)
+                        handleInputChangeForMidTerm(
+                          investmentOptions[index].id,
+                          value,
+                        )
                       }
                     />
                   </StyledTableCell>
                 ) : null}
-                {isTermGoalGreaterZero('Long Term') ? (
+                {areGoalsPresentOfType(TermType.LONG_TERM) ? (
                   <StyledTableCell
                     style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets.longTermGoals[tableData[index].id]
+                        plannerData.assets.longTermGoals[
+                          investmentOptions[index].id
+                        ]
                       }
                       onChange={(value: any) =>
-                        handleInputChangeForLongTerm(tableData[index].id, value)
+                        handleInputChangeForLongTerm(
+                          investmentOptions[index].id,
+                          value,
+                        )
                       }
                     />
                   </StyledTableCell>
