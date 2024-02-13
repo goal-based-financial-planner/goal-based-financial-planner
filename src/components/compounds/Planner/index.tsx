@@ -66,7 +66,7 @@ const Planner: React.FC = () => {
         onEdit={() => goToStep(PlannerState.GOALS)}
         plannerData={plannerData}
         dispatch={dispatch}
-      ></FinancialGoalsStep>
+      />
 
       {isAssetAllocationVisible ? (
         <InvestmentAllocationStep

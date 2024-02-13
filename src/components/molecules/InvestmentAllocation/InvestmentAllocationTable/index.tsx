@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Paper,
   Table,
   TableBody,
@@ -7,6 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
   styled,
@@ -24,7 +26,7 @@ import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { PlannerData } from '../../../../domain/PlannerData';
 import { InvestmentOptionType } from '../../../../domain/InvestmentOptions';
 import { ToolTipVisibilityState } from '../../../compounds/InvestmentAllocationStep';
-import { TermType } from '../../../../types/enums';
+import { InvestmentOptionRiskType, TermType } from '../../../../types/enums';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,6 +43,8 @@ interface InvestmentAllocationTableProps {
   plannerData: PlannerData;
   investmentOptions: InvestmentOptionType[];
   tooltipVisibilityState: ToolTipVisibilityState;
+  investmentOptionsData: any;
+  setInvestmentOptions: any;
 }
 
 const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
@@ -48,6 +52,8 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   plannerData,
   investmentOptions,
   tooltipVisibilityState: termTooltipVisible,
+  investmentOptionsData,
+  setInvestmentOptions,
 }) => {
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
     setShortTermAssetPercentage(dispatch, assetId, value);
@@ -64,6 +70,18 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
     return plannerData
       .getFinancialGoalSummary()
       .some((item) => item.termType === column && item.numberOfGoals > 0);
+  };
+
+  const handleAddRow = () => {
+    setInvestmentOptions([
+      ...investmentOptionsData,
+      {
+        assetType: '',
+        expectedPercentage: '',
+        riskType: '' as InvestmentOptionRiskType,
+        id: Math.random().toString(),
+      } as unknown as InvestmentOptionType,
+    ]);
   };
 
   const conditionallyRenderToolTipBasedCell = (
@@ -115,6 +133,8 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
     );
   };
 
+  console.log('dfgchvjbkl', investmentOptionsData);
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <TableContainer
@@ -154,31 +174,53 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {investmentOptions.map((row, index) => (
-              <TableRow key={`index`}>
-                <TableCell>{investmentOptions[index].assetType}</TableCell>
+            {investmentOptionsData.map((row: any, index: any) => (
+              <TableRow key={index}>
                 <TableCell>
-                  {investmentOptions[index].expectedPercentage}
+                  <TextField
+                    value={row.assetType}
+                    onChange={(e) => {
+                      const updatedOptions = [...investmentOptionsData];
+                      updatedOptions[index].assetType = e.target.value;
+                      setInvestmentOptions(updatedOptions);
+                    }}
+                  />
                 </TableCell>
-
-                <TableCell>{investmentOptions[index].riskType}</TableCell>
-
+                <TableCell>
+                  <CustomAmountField
+                    value={row.expectedPercentage}
+                    onChange={(e: any) => {
+                      const updatedOptions = [...investmentOptionsData];
+                      updatedOptions[index].expectedPercentage = e;
+                      setInvestmentOptions(updatedOptions);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    value={row.riskType}
+                    onChange={(e) => {
+                      const updatedOptions = [...investmentOptionsData];
+                      updatedOptions[index].riskType = e.target
+                        .value as InvestmentOptionRiskType;
+                      setInvestmentOptions(updatedOptions);
+                    }}
+                  />
+                </TableCell>
                 {areGoalsPresentOfType(TermType.SHORT_TERM) ? (
                   <StyledTableCell
-                    style={{
-                      background: 'rgba(0, 0, 0, 0.04)',
-                    }}
+                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
                         plannerData.assets.shortTermGoals[
-                          investmentOptions[index].id
+                          investmentOptions[index]?.id || ''
                         ]
                       }
                       onChange={(value: any) =>
                         handleInputChangeForShortTerm(
-                          investmentOptions[index].id,
-                          value,
+                          investmentOptions[index]?.id,
+                          value || '',
                         )
                       }
                     />
@@ -191,12 +233,12 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                     <CustomAmountField
                       value={
                         plannerData.assets.midTermGoals[
-                          investmentOptions[index].id
+                          investmentOptions[index]?.id || ''
                         ]
                       }
                       onChange={(value: any) =>
                         handleInputChangeForMidTerm(
-                          investmentOptions[index].id,
+                          investmentOptions[index]?.id,
                           value,
                         )
                       }
@@ -210,12 +252,12 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                     <CustomAmountField
                       value={
                         plannerData.assets.longTermGoals[
-                          investmentOptions[index].id
+                          investmentOptions[index]?.id || ''
                         ]
                       }
                       onChange={(value: any) =>
                         handleInputChangeForLongTerm(
-                          investmentOptions[index].id,
+                          investmentOptions[index]?.id,
                           value,
                         )
                       }
@@ -224,6 +266,13 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                 ) : null}
               </TableRow>
             ))}
+            <TableRow>
+              <TableCell colSpan={3}>
+                <Button variant="contained" onClick={handleAddRow}>
+                  Add Row
+                </Button>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
