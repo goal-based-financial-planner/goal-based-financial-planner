@@ -5,7 +5,6 @@ import { PlannerData } from '../../../domain/PlannerData';
 import { StepType } from '../../../types/types';
 import Step from '../../molecules/Step';
 import useInvestmentOptions from '../../../hooks/useInvestmentAssetOptions';
-import { InvestmentOptionType } from '../../../domain/InvestmentOptions';
 
 type InvestmentAllocationProps = StepType & {
   plannerData: PlannerData;
@@ -27,9 +26,6 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
 }) => {
   const investmentOptions = useInvestmentOptions();
 
-  const [investmentOptionsData, setInvestmentOptions] =
-    useState<InvestmentOptionType[]>(investmentOptions);
-
   const [tooltipVisibilityState, setTooltipVisiblityState] =
     useState<ToolTipVisibilityState>({
       shortTerm: false,
@@ -38,7 +34,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
     });
 
   const isTooltipVisible = (termType: keyof PlannerData['assets']) => {
-    const termSum = investmentOptionsData.reduce(
+    const termSum = investmentOptions.reduce(
       (sum, row) => sum + Number(plannerData.assets[termType][row.id] || 0),
       0,
     );
@@ -101,8 +97,6 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
         plannerData={plannerData}
         investmentOptions={investmentOptions}
         tooltipVisibilityState={tooltipVisibilityState}
-        investmentOptionsData={investmentOptionsData}
-        setInvestmentOptions={setInvestmentOptions}
       />
     </Step>
   );
