@@ -9,17 +9,17 @@ export type FinancialGoalSumary = Array<{
 export class PlannerData {
   financialGoals: FinancialGoal[] = [];
   assets: InvestmentAllocation = {
-    longTermGoals: {},
-    midTermGoals: {},
-    shortTermGoals: {},
+    [TermType.LONG_TERM]: {},
+    [TermType.MEDIUM_TERM]: {},
+    [TermType.SHORT_TERM]: {},
   };
 
   constructor(
     financialGoals: FinancialGoal[] = [],
     assets: InvestmentAllocation = {
-      longTermGoals: {},
-      midTermGoals: {},
-      shortTermGoals: {},
+      [TermType.LONG_TERM]: {},
+      [TermType.MEDIUM_TERM]: {},
+      [TermType.SHORT_TERM]: {},
     },
   ) {
     this.financialGoals = financialGoals;

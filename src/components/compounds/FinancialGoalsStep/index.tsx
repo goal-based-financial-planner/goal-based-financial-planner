@@ -61,7 +61,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
       subtext="Let's start by adding your financial goals. A financial goal is in
             most cases an event for which you have to flush out a lumpsum of
             money..."
-      isContinueDisabled={plannerData.getFinancialGoalSummary().length === 0}
+      isContinueDisabled={plannerData.financialGoals.length === 0}
       summaryText={`You have added ${plannerData.getGoalSummaryAsText()} goals`}
     >
       <>

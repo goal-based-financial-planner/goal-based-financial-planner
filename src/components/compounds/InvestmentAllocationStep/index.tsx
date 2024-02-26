@@ -5,6 +5,7 @@ import { PlannerData } from '../../../domain/PlannerData';
 import { StepType } from '../../../types/types';
 import Step from '../../molecules/Step';
 import useInvestmentOptions from '../../../hooks/useInvestmentAssetOptions';
+import { TermType } from '../../../types/enums';
 
 type InvestmentAllocationProps = StepType & {
   plannerData: PlannerData;
@@ -12,9 +13,9 @@ type InvestmentAllocationProps = StepType & {
 };
 
 export interface ToolTipVisibilityState {
-  shortTerm?: boolean;
-  midTerm?: boolean;
-  longTerm?: boolean;
+  [TermType.SHORT_TERM]?: boolean;
+  [TermType.MEDIUM_TERM]?: boolean;
+  [TermType.LONG_TERM]?: boolean;
 }
 
 const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
@@ -26,61 +27,72 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
 }) => {
   const investmentOptions = useInvestmentOptions();
 
-  const [tooltipVisibilityState, setTooltipVisiblityState] =
+  const [tooltipVisibilityState, setTooltipVisibilityState] =
     useState<ToolTipVisibilityState>({
-      shortTerm: false,
-      midTerm: false,
-      longTerm: false,
+      [TermType.SHORT_TERM]: false,
+      [TermType.MEDIUM_TERM]: false,
+      [TermType.LONG_TERM]: false,
     });
+  const areGoalsPresentOfType = (column: string) => {
+    return plannerData
+      .getFinancialGoalSummary()
+      .some((item) => item.termType === column && item.numberOfGoals > 0);
+  };
+  const isAssetAllocationInvalid = (termType: TermType) => {
+    debugger;
+    if (areGoalsPresentOfType(termType)) {
+      const termSum = investmentOptions.reduce(
+        (sum, row) => sum + Number(plannerData.assets[termType][row.id] || 0),
+        0,
+      );
 
-  const isTooltipVisible = (termType: keyof PlannerData['assets']) => {
-    const termSum = investmentOptions.reduce(
-      (sum, row) => sum + Number(plannerData.assets[termType][row.id] || 0),
-      0,
-    );
-
-    return termSum !== 100;
+      return termSum !== 100;
+    } else return false;
   };
 
   const handleStepContinue = () => {
-    const shortTermTooltipVisible = isTooltipVisible('shortTermGoals');
-    const midTermTooltipVisible = isTooltipVisible('midTermGoals');
-    const longTermTooltipVisible = isTooltipVisible('longTermGoals');
+    const isShortTermAssetAllocationInvalid = isAssetAllocationInvalid(
+      TermType.SHORT_TERM,
+    );
+    const isMidTermAssetAllocationInvalid = isAssetAllocationInvalid(
+      TermType.MEDIUM_TERM,
+    );
+    const isLongTermAssetAllocationInvalid = isAssetAllocationInvalid(
+      TermType.LONG_TERM,
+    );
 
-    if (shortTermTooltipVisible) {
-      setTooltipVisiblityState({
-        shortTerm: shortTermTooltipVisible,
+    if (isShortTermAssetAllocationInvalid) {
+      setTooltipVisibilityState({
+        [TermType.SHORT_TERM]: isShortTermAssetAllocationInvalid,
       });
       return;
     }
-    if (midTermTooltipVisible) {
-      setTooltipVisiblityState({
-        midTerm: midTermTooltipVisible,
+    if (isMidTermAssetAllocationInvalid) {
+      setTooltipVisibilityState({
+        [TermType.MEDIUM_TERM]: isMidTermAssetAllocationInvalid,
       });
       return;
     }
 
-    if (longTermTooltipVisible) {
-      setTooltipVisiblityState({
-        longTerm: longTermTooltipVisible,
+    if (isLongTermAssetAllocationInvalid) {
+      setTooltipVisibilityState({
+        [TermType.LONG_TERM]: isLongTermAssetAllocationInvalid,
       });
       return;
     }
-
     if (
-      !shortTermTooltipVisible &&
-      !midTermTooltipVisible &&
-      !longTermTooltipVisible
+      !isShortTermAssetAllocationInvalid &&
+      !isMidTermAssetAllocationInvalid &&
+      !isLongTermAssetAllocationInvalid
     ) {
-      setTooltipVisiblityState({
-        shortTerm: false,
-        midTerm: false,
-        longTerm: false,
+      setTooltipVisibilityState({
+        [TermType.SHORT_TERM]: false,
+        [TermType.MEDIUM_TERM]: false,
+        [TermType.LONG_TERM]: false,
       });
       onContinue();
     }
   };
-
   return (
     <Step
       isExpanded={isExpanded}
@@ -90,7 +102,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       subtext="Now that you have added your financial goals, let's add the assets that
         you are interested to invest in."
       isContinueDisabled={false}
-      summaryText={''}
+      summaryText={`You have added some assets here`}
     >
       <InvestmentAllocationTable
         dispatch={dispatch}

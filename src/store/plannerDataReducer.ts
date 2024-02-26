@@ -29,8 +29,8 @@ export function plannerDataReducer(
     case PlannerDataActionType.UPDATE_SHORT_TERM_ASSET:
       return new PlannerData(state.financialGoals, {
         ...state.assets,
-        shortTermGoals: {
-          ...state.assets.shortTermGoals,
+        [TermType.SHORT_TERM]: {
+          ...state.assets['Short Term'],
           ...action.payload,
         },
       });
@@ -38,16 +38,16 @@ export function plannerDataReducer(
     case PlannerDataActionType.UPDATE_MID_TERM_ASSET:
       return new PlannerData(state.financialGoals, {
         ...state.assets,
-        midTermGoals: {
-          ...state.assets.midTermGoals,
+        [TermType.MEDIUM_TERM]: {
+          ...state.assets['Medium Term'],
           ...action.payload,
         },
       });
     case PlannerDataActionType.UPDATE_LONG_TERM_ASSET:
       return new PlannerData(state.financialGoals, {
         ...state.assets,
-        longTermGoals: {
-          ...state.assets.longTermGoals,
+        [TermType.LONG_TERM]: {
+          ...state.assets['Long Term'],
           ...action.payload,
         },
       });
@@ -62,15 +62,15 @@ export function plannerDataReducer(
       );
 
       if (!allSelecteTermTypes.has(TermType.SHORT_TERM)) {
-        assets.shortTermGoals = {};
+        assets['Short Term'] = {};
       }
 
       if (!allSelecteTermTypes.has(TermType.MEDIUM_TERM)) {
-        assets.midTermGoals = {};
+        assets['Medium Term'] = {};
       }
 
       if (!allSelecteTermTypes.has(TermType.LONG_TERM)) {
-        assets.longTermGoals = {};
+        assets['Long Term'] = {};
       }
 
       return new PlannerData(financialGoals, assets);

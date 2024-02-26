@@ -9,6 +9,7 @@ import { Box } from '@mui/material';
 
 import InvestmentAllocationStep from '../InvestmentAllocationStep';
 import { PlannerState } from '../../../types/enums';
+import PortFolioSummaryStep from '../PortFolioSummaryStep.tsx';
 
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
@@ -27,6 +28,11 @@ const Planner: React.FC = () => {
   const [isAssetAllocationVisible, setIsAssetAllocationVisible] =
     useState<boolean>(false);
 
+  const [isPortFolioSummaryExpanded, setIsPortFolioSummaryExpanded] =
+    useState<boolean>(true);
+  const [isPortFolioSummaryVisible, setIsPortFolioSummaryVisible] =
+    useState<boolean>(false);
+
   useEffect(() => {
     persistPlannerData(plannerData);
   }, [plannerData]);
@@ -41,23 +47,27 @@ const Planner: React.FC = () => {
       case PlannerState.GOALS:
         setIsFinancialGoalsExpanded(true);
         setIsAssetAllocationVisible(false);
+        setIsPortFolioSummaryVisible(false);
         break;
       case PlannerState.ASSET_ALLOCATION:
         setIsFinancialGoalsExpanded(false);
         setIsAssetAllocationExpanded(true);
         setIsAssetAllocationVisible(true);
-        // Scroll page to bring breakdown into view
+        setIsPortFolioSummaryVisible(false);
+
         assetsRef.current?.scrollIntoView({
           behavior: 'smooth',
           block: 'start',
         });
         break;
       case PlannerState.PORTFOLIO_SUMMARY:
+        setIsAssetAllocationExpanded(false);
+        setIsPortFolioSummaryVisible(true);
+        setIsPortFolioSummaryExpanded(true);
         break;
     }
   }, [currentState]);
 
-  console.log(plannerData);
   return (
     <Box sx={{ m: 1 }}>
       <FinancialGoalsStep
@@ -75,6 +85,14 @@ const Planner: React.FC = () => {
           onContinue={() => goToStep(PlannerState.PORTFOLIO_SUMMARY)}
           onEdit={() => goToStep(PlannerState.ASSET_ALLOCATION)}
           isExpanded={isAssetAllocationExpanded}
+        />
+      ) : null}
+
+      {isPortFolioSummaryVisible ? (
+        <PortFolioSummaryStep
+          isExpanded={isPortFolioSummaryExpanded}
+          onContinue={() => {}}
+          onEdit={() => {}}
         />
       ) : null}
     </Box>

@@ -60,7 +60,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
     setLongTermAssetPercentage(dispatch, assetId, value);
   };
 
-  const areGoalsPresentOfType = (column: string) => {
+  const areGoalsPresentOfType = (column: TermType) => {
     return plannerData
       .getFinancialGoalSummary()
       .some((item) => item.termType === column && item.numberOfGoals > 0);
@@ -68,11 +68,12 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
 
   const conditionallyRenderToolTipBasedCell = (
     label: string,
-    termType: 'shortTerm' | 'midTerm' | 'longTerm',
+    termType: TermType,
     offset: number,
-    column: string,
+    column: TermType,
   ) => {
     const tooltipVisible = termTooltipVisible[termType];
+    console.log(termType, tooltipVisible);
     const shouldHideColumn = areGoalsPresentOfType(column);
 
     return !shouldHideColumn ? null : (
@@ -135,19 +136,19 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
 
               {conditionallyRenderToolTipBasedCell(
                 'Short Term (%)',
-                'shortTerm',
+                TermType.SHORT_TERM,
                 10,
                 TermType.SHORT_TERM,
               )}
               {conditionallyRenderToolTipBasedCell(
                 'Mid Term (%)',
-                'midTerm',
+                TermType.MEDIUM_TERM,
                 10,
                 TermType.MEDIUM_TERM,
               )}
               {conditionallyRenderToolTipBasedCell(
                 'Long Term (%)',
-                'longTerm',
+                TermType.LONG_TERM,
                 10,
                 TermType.LONG_TERM,
               )}
@@ -163,7 +164,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
 
                 <TableCell>{investmentOptions[index].riskType}</TableCell>
 
-                {areGoalsPresentOfType(TermType.SHORT_TERM) ? (
+                {areGoalsPresentOfType(TermType.SHORT_TERM) && (
                   <StyledTableCell
                     style={{
                       background: 'rgba(0, 0, 0, 0.04)',
@@ -171,7 +172,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets.shortTermGoals[
+                        plannerData.assets['Short Term'][
                           investmentOptions[index].id
                         ]
                       }
@@ -183,14 +184,14 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                       }
                     />
                   </StyledTableCell>
-                ) : null}
-                {areGoalsPresentOfType(TermType.MEDIUM_TERM) ? (
+                )}
+                {areGoalsPresentOfType(TermType.MEDIUM_TERM) && (
                   <StyledTableCell
                     style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets.midTermGoals[
+                        plannerData.assets['Medium Term'][
                           investmentOptions[index].id
                         ]
                       }
@@ -202,14 +203,14 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                       }
                     />
                   </StyledTableCell>
-                ) : null}
-                {areGoalsPresentOfType(TermType.LONG_TERM) ? (
+                )}
+                {areGoalsPresentOfType(TermType.LONG_TERM) && (
                   <StyledTableCell
                     style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets.longTermGoals[
+                        plannerData.assets['Long Term'][
                           investmentOptions[index].id
                         ]
                       }
@@ -221,7 +222,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                       }
                     />
                   </StyledTableCell>
-                ) : null}
+                )}
               </TableRow>
             ))}
           </TableBody>
