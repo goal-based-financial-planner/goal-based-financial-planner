@@ -26,7 +26,7 @@ const AssetTable = () => {
   );
 
   return (
-    <TableContainer component={Paper} sx={{ width: '1000px' }}>
+    <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>

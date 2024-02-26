@@ -1,10 +1,10 @@
 import { StepType } from '../../../types/types';
-import TabsWrappedLabel from '../../molecules/PortFolioSummary/summaryTabs';
+import PortfolioSummary from '../../molecules/PortFolioSummary/AllocationDetails';
 import Step from '../../molecules/Step';
 
 type PortFolioSummaryProps = StepType;
 
-const PortFolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
+const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
   isExpanded,
 }) => {
   return (
@@ -13,13 +13,14 @@ const PortFolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
       onContinue={() => {}}
       onEdit={() => {}}
       title={'Asset Allocation'}
-      subtext="You have assets with amount you need to invest here "
+      subtext="Alright! Based on the goals you have added and your preferences, we have created an asset allocation for you. "
       isContinueDisabled={false}
       summaryText={`You have added some assets here`}
+      hideContinue={true}
     >
-      <TabsWrappedLabel />
+      <PortfolioSummary />
     </Step>
   );
 };
 
-export default PortFolioSummaryStep;
+export default PortfolioSummaryStep;

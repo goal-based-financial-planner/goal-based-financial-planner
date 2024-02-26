@@ -4,12 +4,18 @@ import { Container, Paper, Stack, SxProps } from '@mui/material';
 interface CustomPaperProps {
   children: ReactNode;
   sx?: SxProps;
+  className?: string;
 }
 
 const CustomPaper = forwardRef<HTMLDivElement, CustomPaperProps>(
-  ({ children, sx }, ref: ForwardedRef<HTMLDivElement>) => {
+  ({ children, sx, className }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-      <Container maxWidth={false} sx={{ height: 1, ...sx }} ref={ref}>
+      <Container
+        maxWidth={false}
+        sx={{ ...sx }}
+        ref={ref}
+        className={className}
+      >
         <Stack gap={3} sx={{ minHeight: 1 }} mb={1} flexDirection="column">
           <Paper
             sx={{

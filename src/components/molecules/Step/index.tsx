@@ -11,6 +11,7 @@ type StepProps = {
   children: ReactNode;
   isContinueDisabled: boolean;
   summaryText: string;
+  hideContinue?: boolean;
 };
 
 const Step: React.FC<StepProps> = ({
@@ -22,10 +23,11 @@ const Step: React.FC<StepProps> = ({
   onContinue,
   onEdit,
   summaryText,
+  hideContinue,
 }) => {
   return isExpanded ? (
-    <CustomPaper>
-      <Grid spacing={2} justifyContent="flex-end">
+    <CustomPaper sx={{ height: 'calc(100vh - 16px)', overflow: 'auto' }}>
+      <Grid spacing={2}>
         <Grid xs={12}>
           <h2>{title}</h2>
         </Grid>
@@ -36,17 +38,19 @@ const Step: React.FC<StepProps> = ({
           {children}
         </Grid>
       </Grid>
-      <Stack alignItems="flex-end">
-        <Button
-          disabled={isContinueDisabled}
-          sx={{ fontSize: '1.2rem' }}
-          onClick={onContinue}
-          variant="contained"
-          color="primary"
-        >
-          Continue
-        </Button>
-      </Stack>
+      {hideContinue ? null : (
+        <Stack alignItems="flex-end">
+          <Button
+            disabled={isContinueDisabled}
+            sx={{ fontSize: '1.2rem' }}
+            onClick={onContinue}
+            variant="contained"
+            color="primary"
+          >
+            Continue
+          </Button>
+        </Stack>
+      )}
     </CustomPaper>
   ) : (
     <CustomPaper>

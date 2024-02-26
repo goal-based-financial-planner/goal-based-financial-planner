@@ -9,7 +9,7 @@ import { Box } from '@mui/material';
 
 import InvestmentAllocationStep from '../InvestmentAllocationStep';
 import { PlannerState } from '../../../types/enums';
-import PortFolioSummaryStep from '../PortFolioSummaryStep.tsx';
+import PortfolioSummaryStep from '../PortfolioSummaryStep';
 
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
@@ -89,7 +89,7 @@ const Planner: React.FC = () => {
       ) : null}
 
       {isPortFolioSummaryVisible ? (
-        <PortFolioSummaryStep
+        <PortfolioSummaryStep
           isExpanded={isPortFolioSummaryExpanded}
           onContinue={() => {}}
           onEdit={() => {}}
