@@ -6,6 +6,8 @@ export type FinancialGoalSumary = Array<{
   termType: TermType;
   numberOfGoals: number;
 }>;
+
+
 export class PlannerData {
   financialGoals: FinancialGoal[] = [];
   assets: InvestmentAllocation = {

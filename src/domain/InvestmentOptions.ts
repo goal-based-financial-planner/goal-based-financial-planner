@@ -1,11 +1,11 @@
 import { InvestmentOptionRiskType, TermType } from '../types/enums';
 
-export type InvestmentChoice = Record<string, number>;
+export type InvestmentChoices = Record<string, number>;
 
 export interface InvestmentAllocation {
-  [TermType.LONG_TERM]: InvestmentChoice;
-  [TermType.MEDIUM_TERM]: InvestmentChoice;
-  [TermType.SHORT_TERM]: InvestmentChoice;
+  [TermType.LONG_TERM]: InvestmentChoices;
+  [TermType.MEDIUM_TERM]: InvestmentChoices;
+  [TermType.SHORT_TERM]: InvestmentChoices;
 }
 
 export type InvestmentOptionType = {

@@ -6,13 +6,13 @@ const useInvestmentOptions = () => {
     {
       id: 'assetType_1',
       assetType: 'Small cap funds',
-      expectedPercentage: 6,
+      expectedPercentage: 12,
       riskType: InvestmentOptionRiskType.LOW,
     },
     {
       id: 'assetType_2',
       assetType: 'Large Cap funds',
-      expectedPercentage: 6,
+      expectedPercentage: 10,
       riskType: InvestmentOptionRiskType.LOW,
     },
     {
