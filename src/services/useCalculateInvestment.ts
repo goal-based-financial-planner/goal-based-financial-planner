@@ -3,6 +3,7 @@ import { FinancialGoal } from '../domain/FinancialGoals';
 import { InvestmentAllocation, InvestmentOptionType } from '../domain/InvestmentOptions';
 import { InvestmentOptionRiskType } from '../types/enums';
 
+// TODO: This code is duplicated, need to move it to a common place
 const investmentOptions: InvestmentOptionType[] = [
   {
     id: 'assetType_1',
@@ -23,8 +24,23 @@ const investmentOptions: InvestmentOptionType[] = [
     riskType: InvestmentOptionRiskType.HIGH,
   },
 ];
-const useCalculateInvestment = (plannerData: PlannerData) => {
-  return plannerData.financialGoals.map(goal => ({ [goal.getGoalName()]: calculateInvestmentPerGoal(goal, plannerData.assets) }));
+
+type InvestmentBreakdown = {
+  goalName: string;
+  assetBreakdown: {
+    assetId: string;
+    investmentValue: number;
+  }[]
+}[];
+const useCalculateInvestment = () => {
+  return { calculateInvestment };
+};
+
+const calculateInvestment = (plannerData: PlannerData): InvestmentBreakdown => {
+  return plannerData.financialGoals.map(goal => ({
+    goalName: goal.getGoalName(),
+    assetBreakdown: calculateInvestmentPerGoal(goal, plannerData.assets),
+  }));
 };
 
 const calculateInvestmentPerGoal = (goal: FinancialGoal, assets: InvestmentAllocation) => {
@@ -35,7 +51,10 @@ const calculateInvestmentPerGoal = (goal: FinancialGoal, assets: InvestmentAlloc
     return { assetId, returnPercentage: investmentChoiceDetail.expectedPercentage, percentageOfInvestment };
   });
   const totalMonthlyInvestmentNeeded = calculateTotalMonthlyInvestmentNeeded(assetDetails, goal.getTargetAmount(), goal.getTerm());
-  return assetDetails.map(e => ({ [e.assetId]: totalMonthlyInvestmentNeeded * e.percentageOfInvestment / 100 }));
+  return assetDetails.map(e => ({
+    assetId: e.assetId,
+    investmentValue: totalMonthlyInvestmentNeeded * e.percentageOfInvestment / 100,
+  }));
 
 };
 
