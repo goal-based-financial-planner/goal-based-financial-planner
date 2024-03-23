@@ -1,7 +1,7 @@
 import { Dispatch } from 'react';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerDataAction } from './plannerDataReducer';
-import { InvestmentAllocation } from '../domain/InvestmentOptions';
+import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
 
 export enum PlannerDataActionType {
   ADD_FINANCIAL_GOAL = 'ADD_FINANCIAL_GOAL',
@@ -34,7 +34,7 @@ export function deleteFinancialGoal(
 
 export function updateAssets(
   dispatch: Dispatch<PlannerDataAction>,
-  assetsData: InvestmentAllocation,
+  assetsData: InvestmentAllocationsType,
 ) {
   dispatch({
     payload: assetsData,

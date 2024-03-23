@@ -1,4 +1,5 @@
 import { TermType } from '../types/enums';
+import { INFLATION_PERCENTAGE } from './constants';
 
 export class FinancialGoal {
   constructor(
@@ -49,12 +50,10 @@ export class FinancialGoal {
     }
   }
 
-  getInfaltionAdjustedTargetAmount(inflationPercentage: number): number {
+  getInfaltionAdjustedTargetAmount(): number {
     const term = this.getTerm();
     const inflatedAmount =
-      this.targetAmount * Math.pow(1 + inflationPercentage / 100, term);
-    const roundedInflationAmount =
-      Math.round((inflatedAmount + Number.EPSILON) * 100) / 100;
-    return roundedInflationAmount;
+      this.targetAmount * Math.pow(1 + INFLATION_PERCENTAGE / 100, term);
+    return Math.round((inflatedAmount + Number.EPSILON) * 100) / 100;
   }
 }

@@ -1,0 +1,1 @@
+export const INFLATION_PERCENTAGE = 5;

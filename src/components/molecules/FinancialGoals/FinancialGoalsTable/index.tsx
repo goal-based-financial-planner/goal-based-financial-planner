@@ -13,7 +13,6 @@ import CustomTooltip from '../../../atoms/CustomTooltip';
 import { Delete } from '@mui/icons-material';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
-import { useConfiguraiton } from '../../../../hooks/useConfiguration';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
@@ -26,7 +25,6 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
   emptyBodyPlaceholder: addGoalButton,
   dispatch,
 }) => {
-  const { inflationPercentage } = useConfiguraiton();
 
   const deleteGoal = (index: any) => {
     deleteFinancialGoal(dispatch, index);
@@ -80,7 +78,7 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
                 <TableCell>{goal.getTerm()}</TableCell>
                 <TableCell>{goal.getTermType()}</TableCell>
                 <TableCell>
-                  {goal.getInfaltionAdjustedTargetAmount(inflationPercentage)}
+                  {goal.getInfaltionAdjustedTargetAmount()}
                 </TableCell>
                 <TableCell align="right">
                   <Delete color="error" onClick={() => deleteGoal(index)} />

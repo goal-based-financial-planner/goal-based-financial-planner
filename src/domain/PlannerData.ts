@@ -1,34 +1,30 @@
 import { TermType } from '../types/enums';
-import { InvestmentAllocation } from './InvestmentOptions';
+import { InvestmentAllocationsType } from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
 
-export type FinancialGoalSumary = Array<{
+export type FinancialGoalSummary = Array<{
   termType: TermType;
   numberOfGoals: number;
 }>;
 
 
 export class PlannerData {
-  financialGoals: FinancialGoal[] = [];
-  assets: InvestmentAllocation = {
-    [TermType.LONG_TERM]: {},
-    [TermType.MEDIUM_TERM]: {},
-    [TermType.SHORT_TERM]: {},
-  };
+  financialGoals: FinancialGoal[];
+  investmentAllocations: InvestmentAllocationsType;
 
   constructor(
     financialGoals: FinancialGoal[] = [],
-    assets: InvestmentAllocation = {
-      [TermType.LONG_TERM]: {},
-      [TermType.MEDIUM_TERM]: {},
-      [TermType.SHORT_TERM]: {},
+    assets: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [],
+      [TermType.MEDIUM_TERM]: [],
+      [TermType.SHORT_TERM]: [],
     },
   ) {
     this.financialGoals = financialGoals;
-    this.assets = assets;
+    this.investmentAllocations = assets;
   }
 
-  getFinancialGoalSummary(): FinancialGoalSumary {
+  getFinancialGoalSummary(): FinancialGoalSummary {
     return Object.values(TermType).map((termType) => {
       return {
         termType,

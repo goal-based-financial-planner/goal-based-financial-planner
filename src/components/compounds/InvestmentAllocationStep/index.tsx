@@ -4,7 +4,7 @@ import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import { PlannerData } from '../../../domain/PlannerData';
 import { StepType } from '../../../types/types';
 import Step from '../../molecules/Step';
-import useInvestmentOptions from '../../../hooks/useInvestmentAssetOptions';
+import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 import { TermType } from '../../../types/enums';
 
 type InvestmentAllocationProps = StepType & {
@@ -42,7 +42,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
     debugger;
     if (areGoalsPresentOfType(termType)) {
       const termSum = investmentOptions.reduce(
-        (sum, row) => sum + Number(plannerData.assets[termType][row.id] || 0),
+        (sum, row) => sum + Number(plannerData.investmentAllocations[termType][row.id] || 0),
         0,
       );
 

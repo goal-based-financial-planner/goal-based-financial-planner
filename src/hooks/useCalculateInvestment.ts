@@ -1,6 +1,6 @@
 import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
-import { InvestmentAllocation, InvestmentOptionType } from '../domain/InvestmentOptions';
+import { InvestmentAllocationsType, InvestmentOptionType } from '../domain/InvestmentOptions';
 import { InvestmentOptionRiskType } from '../types/enums';
 
 // TODO: This code is duplicated, need to move it to a common place
@@ -8,19 +8,19 @@ const investmentOptions: InvestmentOptionType[] = [
   {
     id: 'assetType_1',
     assetType: 'Small cap funds',
-    expectedPercentage: 12,
+    expectedReturnPercentage: 12,
     riskType: InvestmentOptionRiskType.LOW,
   },
   {
     id: 'assetType_2',
     assetType: 'Large Cap funds',
-    expectedPercentage: 10,
+    expectedReturnPercentage: 10,
     riskType: InvestmentOptionRiskType.LOW,
   },
   {
     id: 'assetType_3',
     assetType: 'Recurring deposit',
-    expectedPercentage: 6,
+    expectedReturnPercentage: 6,
     riskType: InvestmentOptionRiskType.HIGH,
   },
 ];
@@ -39,31 +39,40 @@ const useCalculateInvestment = () => {
 const calculateInvestment = (plannerData: PlannerData): InvestmentBreakdown => {
   return plannerData.financialGoals.map(goal => ({
     goalName: goal.getGoalName(),
-    assetBreakdown: calculateInvestmentPerGoal(goal, plannerData.assets),
+    assetBreakdown: calculateInvestmentPerGoal(goal, plannerData.investmentAllocations),
   }));
 };
 
-const calculateInvestmentPerGoal = (goal: FinancialGoal, assets: InvestmentAllocation) => {
-  const termTypeBasedInvestmentChoice = assets[goal.getTermType()];
-  const assetDetails = Object.entries(termTypeBasedInvestmentChoice).map(entry => {
-    const [assetId, percentageOfInvestment] = entry;
-    const investmentChoiceDetail = investmentOptions.filter(e => e.id === assetId)[0];
-    return { assetId, returnPercentage: investmentChoiceDetail.expectedPercentage, percentageOfInvestment };
+const calculateInvestmentPerGoal = (goal: FinancialGoal, investmentAllocations: InvestmentAllocationsType) => {
+
+  // Get the investment allocations for the term type of the goal
+  const investmentAllocationsForType = investmentAllocations[goal.getTermType()];
+
+  const assetDetails = investmentAllocationsForType.map(entry => {
+    const { id, investmentPercentage } = entry;
+    const { expectedReturnPercentage } = investmentOptions.filter(e => e.id === id)[0];
+    return {
+      id,
+      expectedReturnPercentage,
+      investmentPercentage,
+    };
   });
-  const totalMonthlyInvestmentNeeded = calculateTotalMonthlyInvestmentNeeded(assetDetails, goal.getTargetAmount(), goal.getTerm());
+
+
+  const totalMonthlyInvestmentNeeded = calculateTotalMonthlyInvestmentNeeded(assetDetails, goal.getInfaltionAdjustedTargetAmount(), goal.getTerm());
   return assetDetails.map(e => ({
-    assetId: e.assetId,
-    investmentValue: totalMonthlyInvestmentNeeded * e.percentageOfInvestment / 100,
+    assetId: e.id,
+    investmentValue: totalMonthlyInvestmentNeeded * e.investmentPercentage / 100,
   }));
 
 };
 
 const calculateTotalMonthlyInvestmentNeeded = (assetDetails: {
-  assetId: string,
-  returnPercentage: number,
-  percentageOfInvestment: number
+  id: string,
+  expectedReturnPercentage: number,
+  investmentPercentage: number
 }[], targetAmount: number, term: number) => {
-  const x = assetDetails.map(a => calculateX(a.returnPercentage / 100 / 12, term * 12, a.percentageOfInvestment));
+  const x = assetDetails.map(a => calculateX(a.expectedReturnPercentage / 100 / 12, term * 12, a.investmentPercentage));
   const combinedX = x.reduce((a, b) => a + b, 0);
   return targetAmount / combinedX;
 };

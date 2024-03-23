@@ -1,16 +1,16 @@
 import {
   Box,
   Paper,
+  styled,
   Table,
   TableBody,
   TableCell,
+  tableCellClasses,
   TableContainer,
   TableHead,
   TableRow,
   Tooltip,
   Typography,
-  styled,
-  tableCellClasses,
 } from '@mui/material';
 
 import React, { Dispatch } from 'react';
@@ -159,7 +159,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
               <TableRow key={`index`}>
                 <TableCell>{investmentOptions[index].assetType}</TableCell>
                 <TableCell>
-                  {investmentOptions[index].expectedPercentage}
+                  {investmentOptions[index].expectedReturnPercentage}
                 </TableCell>
 
                 <TableCell>{investmentOptions[index].riskType}</TableCell>
@@ -172,7 +172,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets['Short Term'][
+                        plannerData.investmentAllocations['Short Term'][
                           investmentOptions[index].id
                         ]
                       }
@@ -191,7 +191,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets['Medium Term'][
+                        plannerData.investmentAllocations['Medium Term'][
                           investmentOptions[index].id
                         ]
                       }
@@ -210,7 +210,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.assets['Long Term'][
+                        plannerData.investmentAllocations['Long Term'][
                           investmentOptions[index].id
                         ]
                       }

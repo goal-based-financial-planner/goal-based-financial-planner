@@ -44,7 +44,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
     return (
       <>
         <p>
-          Yon't have any goals added. Click on Add Goal to start adding your
+          You don't have any goals added. Click on Add Goal to start adding your
           goals...
         </p>
         {getAddGoalButton()}

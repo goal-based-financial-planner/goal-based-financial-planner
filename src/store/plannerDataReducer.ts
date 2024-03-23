@@ -20,7 +20,7 @@ export function plannerDataReducer(
     case PlannerDataActionType.ADD_FINANCIAL_GOAL:
       return new PlannerData(
         [...state.financialGoals, action.payload],
-        state.assets,
+        state.investmentAllocations,
       );
 
     case PlannerDataActionType.UPDATE_ASSETS:
@@ -28,49 +28,49 @@ export function plannerDataReducer(
 
     case PlannerDataActionType.UPDATE_SHORT_TERM_ASSET:
       return new PlannerData(state.financialGoals, {
-        ...state.assets,
+        ...state.investmentAllocations,
         [TermType.SHORT_TERM]: {
-          ...state.assets['Short Term'],
+          ...state.investmentAllocations['Short Term'],
           ...action.payload,
         },
       });
 
     case PlannerDataActionType.UPDATE_MID_TERM_ASSET:
       return new PlannerData(state.financialGoals, {
-        ...state.assets,
+        ...state.investmentAllocations,
         [TermType.MEDIUM_TERM]: {
-          ...state.assets['Medium Term'],
+          ...state.investmentAllocations['Medium Term'],
           ...action.payload,
         },
       });
     case PlannerDataActionType.UPDATE_LONG_TERM_ASSET:
       return new PlannerData(state.financialGoals, {
-        ...state.assets,
+        ...state.investmentAllocations,
         [TermType.LONG_TERM]: {
-          ...state.assets['Long Term'],
+          ...state.investmentAllocations['Long Term'],
           ...action.payload,
         },
       });
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
       const financialGoals = [...state.financialGoals];
-      const assets = state.assets;
+      const assets = state.investmentAllocations;
       financialGoals.splice(action.payload, 1);
 
-      const allSelecteTermTypes = new Set(
+      const allSelectedTermTypes = new Set(
         financialGoals.map((g) => g.getTermType()),
       );
 
-      if (!allSelecteTermTypes.has(TermType.SHORT_TERM)) {
-        assets['Short Term'] = {};
+      if (!allSelectedTermTypes.has(TermType.SHORT_TERM)) {
+        assets['Short Term'] = [];
       }
 
-      if (!allSelecteTermTypes.has(TermType.MEDIUM_TERM)) {
-        assets['Medium Term'] = {};
+      if (!allSelectedTermTypes.has(TermType.MEDIUM_TERM)) {
+        assets['Medium Term'] = [];
       }
 
-      if (!allSelecteTermTypes.has(TermType.LONG_TERM)) {
-        assets['Long Term'] = {};
+      if (!allSelectedTermTypes.has(TermType.LONG_TERM)) {
+        assets['Long Term'] = [];
       }
 
       return new PlannerData(financialGoals, assets);
@@ -95,7 +95,7 @@ export function getInitialData() {
             e.targetAmount,
           ),
       );
-      return new PlannerData(financialGoals, parsedState.assets);
+      return new PlannerData(financialGoals, parsedState.investmentAllocations);
     } catch {}
   }
   return new PlannerData();

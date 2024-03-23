@@ -2,7 +2,7 @@ import useCalculateInvestment from './useCalculateInvestment';
 import { TermType } from '../types/enums';
 import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
-import { InvestmentAllocation } from '../domain/InvestmentOptions';
+import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
 
 describe('Test useCalculateInvestment', () => {
   const getGoal = (result: {
@@ -32,9 +32,10 @@ describe('Test useCalculateInvestment', () => {
     // Arrange
 
     const financialGoals: FinancialGoal[] = [new FinancialGoal('goal1', 2024, 2030, 100000)];
-    const assets: InvestmentAllocation = {
-      [TermType.LONG_TERM]: { 'assetType_1': 100 }, [TermType.MEDIUM_TERM]: {}, [TermType.SHORT_TERM]:
-        {},
+    const assets: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [{ id: 'assetType_1', investmentPercentage: 100 }],
+      [TermType.MEDIUM_TERM]: [], [TermType.SHORT_TERM]:
+        [],
     };
     const plannerData: PlannerData = new PlannerData(financialGoals, assets);
 
@@ -43,7 +44,7 @@ describe('Test useCalculateInvestment', () => {
     const result = calculateInvestment(plannerData);
 
     // Assert
-    assertInvestmentValue(result, 'goal1', 'assetType_1', 945);
+    assertInvestmentValue(result, 'goal1', 'assetType_1', 1267);
   });
 
   it('should calcualte investment breakdown given planner data with multiple goals', () => {
@@ -52,9 +53,10 @@ describe('Test useCalculateInvestment', () => {
       new FinancialGoal('goal1', 2024, 2030, 100000),
       new FinancialGoal('goal2', 2024, 2026, 100000),
     ];
-    const assets: InvestmentAllocation = {
-      [TermType.LONG_TERM]: { 'assetType_1': 100 }, [TermType.MEDIUM_TERM]: {}, [TermType.SHORT_TERM]:
-        { 'assetType_3': 100 },
+    const assets: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [{ id: 'assetType_1', investmentPercentage: 100 }],
+      [TermType.MEDIUM_TERM]: [],
+      [TermType.SHORT_TERM]: [{ id: 'assetType_3', investmentPercentage: 100 }],
     };
     const plannerData: PlannerData = new PlannerData(financialGoals, assets);
 
@@ -64,8 +66,8 @@ describe('Test useCalculateInvestment', () => {
 
 
     // Assert
-    assertInvestmentValue(result, 'goal1', 'assetType_1', 945);
-    assertInvestmentValue(result, 'goal2', 'assetType_3', 3912);
+    assertInvestmentValue(result, 'goal1', 'assetType_1', 1267);
+    assertInvestmentValue(result, 'goal2', 'assetType_3', 4313);
 
   });
 
@@ -76,11 +78,16 @@ describe('Test useCalculateInvestment', () => {
       new FinancialGoal('goal2', 2024, 2028, 100000),
       new FinancialGoal('goal3', 2024, 2026, 100000),
     ];
-    const assets: InvestmentAllocation = {
-      [TermType.LONG_TERM]: { 'assetType_1': 80, 'assetType_2': 20 },
-      [TermType.MEDIUM_TERM]: { 'assetType_2': 50, 'assetType_3': 50 },
-      [TermType.SHORT_TERM]:
-        { 'assetType_3': 100 },
+    const assets: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [{ id: 'assetType_1', investmentPercentage: 80 }, {
+        id: 'assetType_2',
+        investmentPercentage: 20,
+      }],
+      [TermType.MEDIUM_TERM]: [{ id: 'assetType_2', investmentPercentage: 50 }, {
+        id: 'assetType_3',
+        investmentPercentage: 50,
+      }],
+      [TermType.SHORT_TERM]: [{ id: 'assetType_3', investmentPercentage: 100 }],
     };
     const plannerData: PlannerData = new PlannerData(financialGoals, assets);
 
@@ -89,11 +96,11 @@ describe('Test useCalculateInvestment', () => {
     const result = calculateInvestment(plannerData);
 
     // Assert
-    assertInvestmentValue(result, 'goal1', 'assetType_1', 7663);
-    assertInvestmentValue(result, 'goal1', 'assetType_2', 1915);
-    assertInvestmentValue(result, 'goal2', 'assetType_2', 880);
-    assertInvestmentValue(result, 'goal2', 'assetType_3', 880);
-    assertInvestmentValue(result, 'goal3', 'assetType_3', 3912);
+    assertInvestmentValue(result, 'goal1', 'assetType_1', 10269);
+    assertInvestmentValue(result, 'goal1', 'assetType_2', 2567);
+    assertInvestmentValue(result, 'goal2', 'assetType_2', 1070);
+    assertInvestmentValue(result, 'goal2', 'assetType_3', 1070);
+    assertInvestmentValue(result, 'goal3', 'assetType_3', 4313);
 
 
   });
