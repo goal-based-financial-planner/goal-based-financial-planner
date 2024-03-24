@@ -12,6 +12,17 @@ export type PlannerDataAction = {
 
 export const initialPlannerData: PlannerData = getInitialData();
 
+function updateAssetAllocation(state: PlannerData, action: PlannerDataAction, termType: TermType) {
+  let allocations = state.investmentAllocations[termType];
+  allocations = allocations.filter(e => e.id !== action.payload.id);
+  allocations.push(action.payload);
+
+  return new PlannerData(state.financialGoals, {
+    ...state.investmentAllocations,
+    [termType]: allocations,
+  });
+}
+
 export function plannerDataReducer(
   state = initialPlannerData,
   action: PlannerDataAction,
@@ -27,30 +38,13 @@ export function plannerDataReducer(
       return new PlannerData(state.financialGoals, action.payload);
 
     case PlannerDataActionType.UPDATE_SHORT_TERM_ASSET:
-      return new PlannerData(state.financialGoals, {
-        ...state.investmentAllocations,
-        [TermType.SHORT_TERM]: {
-          ...state.investmentAllocations['Short Term'],
-          ...action.payload,
-        },
-      });
+      return updateAssetAllocation(state, action, TermType.SHORT_TERM);
 
-    case PlannerDataActionType.UPDATE_MID_TERM_ASSET:
-      return new PlannerData(state.financialGoals, {
-        ...state.investmentAllocations,
-        [TermType.MEDIUM_TERM]: {
-          ...state.investmentAllocations['Medium Term'],
-          ...action.payload,
-        },
-      });
+    case PlannerDataActionType.UPDATE_MEDIUM_TERM_ASSET:
+      return updateAssetAllocation(state, action, TermType.MEDIUM_TERM);
+
     case PlannerDataActionType.UPDATE_LONG_TERM_ASSET:
-      return new PlannerData(state.financialGoals, {
-        ...state.investmentAllocations,
-        [TermType.LONG_TERM]: {
-          ...state.investmentAllocations['Long Term'],
-          ...action.payload,
-        },
-      });
+      return updateAssetAllocation(state, action, TermType.LONG_TERM);
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
       const financialGoals = [...state.financialGoals];

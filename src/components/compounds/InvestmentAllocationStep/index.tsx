@@ -39,10 +39,9 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       .some((item) => item.termType === column && item.numberOfGoals > 0);
   };
   const isAssetAllocationInvalid = (termType: TermType) => {
-    debugger;
     if (areGoalsPresentOfType(termType)) {
       const termSum = investmentOptions.reduce(
-        (sum, row) => sum + Number(plannerData.investmentAllocations[termType][row.id] || 0),
+        (sum, row) => sum + Number(plannerData.investmentAllocations[termType].filter(e => e.id === row.id)[0]?.investmentPercentage || 0),
         0,
       );
 

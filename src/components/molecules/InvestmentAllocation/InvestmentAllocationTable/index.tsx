@@ -50,14 +50,14 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   tooltipVisibilityState: termTooltipVisible,
 }) => {
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
-    setShortTermAssetPercentage(dispatch, assetId, value);
+    setShortTermAssetPercentage(dispatch, { id: assetId, investmentPercentage: value });
   };
 
   const handleInputChangeForMidTerm = (assetId: string, value: any) => {
-    setMidTermAssetPercentage(dispatch, assetId, value);
+    setMidTermAssetPercentage(dispatch, { id: assetId, investmentPercentage: value });
   };
   const handleInputChangeForLongTerm = (assetId: string, value: any) => {
-    setLongTermAssetPercentage(dispatch, assetId, value);
+    setLongTermAssetPercentage(dispatch, { id: assetId, investmentPercentage: value });
   };
 
   const areGoalsPresentOfType = (column: TermType) => {
@@ -73,7 +73,6 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
     column: TermType,
   ) => {
     const tooltipVisible = termTooltipVisible[termType];
-    console.log(termType, tooltipVisible);
     const shouldHideColumn = areGoalsPresentOfType(column);
 
     return !shouldHideColumn ? null : (
@@ -172,9 +171,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.investmentAllocations['Short Term'][
-                          investmentOptions[index].id
-                        ]
+                        plannerData.investmentAllocations['Short Term'].filter(e => e.id === investmentOptions[index].id)[0]?.investmentPercentage
                       }
                       onChange={(value: any) =>
                         handleInputChangeForShortTerm(
@@ -191,9 +188,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.investmentAllocations['Medium Term'][
-                          investmentOptions[index].id
-                        ]
+                        plannerData.investmentAllocations['Medium Term'].filter(e => e.id === investmentOptions[index].id)[0]?.investmentPercentage
                       }
                       onChange={(value: any) =>
                         handleInputChangeForMidTerm(
@@ -210,9 +205,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                   >
                     <CustomAmountField
                       value={
-                        plannerData.investmentAllocations['Long Term'][
-                          investmentOptions[index].id
-                        ]
+                        plannerData.investmentAllocations['Long Term'].filter(e => e.id === investmentOptions[index].id)[0]?.investmentPercentage
                       }
                       onChange={(value: any) =>
                         handleInputChangeForLongTerm(
