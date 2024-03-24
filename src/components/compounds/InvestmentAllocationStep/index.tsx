@@ -1,14 +1,12 @@
 import React, { Dispatch, useState } from 'react';
 import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import { PlannerData } from '../../../domain/PlannerData';
 import { StepType } from '../../../types/types';
 import Step from '../../molecules/Step';
 import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 import { TermType } from '../../../types/enums';
 
 type InvestmentAllocationProps = StepType & {
-  plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
 };
 

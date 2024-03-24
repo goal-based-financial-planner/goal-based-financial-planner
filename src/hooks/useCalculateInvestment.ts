@@ -25,18 +25,20 @@ const investmentOptions: InvestmentOptionType[] = [
   },
 ];
 
-type InvestmentBreakdown = {
+export type AssetBreakdown = {
+  assetId: string;
+  amount: number;
+}
+
+export type InvestmentBreakdown = {
   goalName: string;
-  assetBreakdown: {
-    assetId: string;
-    investmentValue: number;
-  }[]
-}[];
+  assetBreakdown: AssetBreakdown[]
+};
 const useCalculateInvestment = () => {
   return { calculateInvestment };
 };
 
-const calculateInvestment = (plannerData: PlannerData): InvestmentBreakdown => {
+const calculateInvestment = (plannerData: PlannerData): InvestmentBreakdown[] => {
   return plannerData.financialGoals.map(goal => ({
     goalName: goal.getGoalName(),
     assetBreakdown: calculateInvestmentPerGoal(goal, plannerData.investmentAllocations),
@@ -62,7 +64,7 @@ const calculateInvestmentPerGoal = (goal: FinancialGoal, investmentAllocations: 
   const totalMonthlyInvestmentNeeded = calculateTotalMonthlyInvestmentNeeded(assetDetails, goal.getInfaltionAdjustedTargetAmount(), goal.getTerm());
   return assetDetails.map(e => ({
     assetId: e.id,
-    investmentValue: totalMonthlyInvestmentNeeded * e.investmentPercentage / 100,
+    amount: totalMonthlyInvestmentNeeded * e.investmentPercentage / 100,
   }));
 
 };

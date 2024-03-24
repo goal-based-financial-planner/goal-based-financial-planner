@@ -1,31 +1,22 @@
-import useCalculateInvestment from './useCalculateInvestment';
+import useCalculateInvestment, { InvestmentBreakdown } from './useCalculateInvestment';
 import { TermType } from '../types/enums';
 import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
 
 describe('Test useCalculateInvestment', () => {
-  const getGoal = (result: {
-    goalName: string;
-    assetBreakdown: { assetId: string; investmentValue: number }[]
-  }[], goalName: string) => {
+  const getGoal = (result: InvestmentBreakdown[], goalName: string) => {
     return result.filter(e => e.goalName === goalName)[0];
   };
 
-  const getAssetType = (goal: {
-    goalName: string;
-    assetBreakdown: { assetId: string; investmentValue: number }[]
-  }, assetType: string) => {
+  const getAssetType = (goal: InvestmentBreakdown, assetType: string) => {
     return goal.assetBreakdown.filter(b => b.assetId === assetType)[0];
   };
 
-  const assertInvestmentValue = (result: {
-    goalName: string;
-    assetBreakdown: { assetId: string; investmentValue: number }[]
-  }[], goalName: string, assetType: string, expectedValue: number) => {
+  const assertInvestmentValue = (result: InvestmentBreakdown[], goalName: string, assetType: string, expectedValue: number) => {
     const goal = getGoal(result, goalName);
     const asset = getAssetType(goal, assetType);
-    expect(Math.floor(asset.investmentValue)).toEqual(expectedValue);
+    expect(Math.floor(asset.amount)).toEqual(expectedValue);
   };
 
   it('should calculate investment breakdown given planner data with single goal', () => {

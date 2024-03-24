@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import { ChangeEvent } from 'react';
 import AssetTable from '.';
 import { Tabs, Typography } from '@mui/material';
+import { PlannerData } from '../../../domain/PlannerData';
+import useCalculateInvestment from '../../../hooks/useCalculateInvestment';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,12 +40,19 @@ function a11yProps(index: number) {
   };
 }
 
-export default function AllocationDetails() {
+type AllocationDetailsProps = {
+  plannerData: PlannerData
+}
+const AllocationDetails: React.FC<AllocationDetailsProps> = ({ plannerData }) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
+
+  const { calculateInvestment } = useCalculateInvestment();
+  const investmentBreakdown = calculateInvestment(plannerData);
+
 
   return (
     <Box sx={{ width: '50%', typography: 'body1' }}>
@@ -59,7 +68,7 @@ export default function AllocationDetails() {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <AssetTable />
+          <AssetTable investmentBreakdown={investmentBreakdown} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           Item Two
@@ -68,3 +77,5 @@ export default function AllocationDetails() {
     </Box>
   );
 }
+
+export default AllocationDetails;

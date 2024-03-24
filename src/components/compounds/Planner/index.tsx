@@ -1,10 +1,6 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
 import FinancialGoalsStep from '../FinancialGoalsStep';
-import {
-  getInitialData,
-  persistPlannerData,
-  plannerDataReducer,
-} from '../../../store/plannerDataReducer';
+import { getInitialData, persistPlannerData, plannerDataReducer } from '../../../store/plannerDataReducer';
 import { Box } from '@mui/material';
 
 import InvestmentAllocationStep from '../InvestmentAllocationStep';
@@ -93,6 +89,7 @@ const Planner: React.FC = () => {
           isExpanded={isPortFolioSummaryExpanded}
           onContinue={() => {}}
           onEdit={() => {}}
+          plannerData={plannerData}
         />
       ) : null}
     </Box>

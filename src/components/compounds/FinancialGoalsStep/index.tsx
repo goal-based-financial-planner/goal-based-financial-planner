@@ -3,13 +3,11 @@ import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTa
 import { Box, Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
-import { PlannerData } from '../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import { StepType } from '../../../types/types';
 import Step from '../../molecules/Step';
 
 type FinancialGoalsProps = StepType & {
-  plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
 };
 

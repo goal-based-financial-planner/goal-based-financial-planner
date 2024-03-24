@@ -1,19 +1,14 @@
-import {
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from '@mui/material';
-import usePlanningServiceData from '../usePlannerServiceData';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { InvestmentBreakdown } from '../../../hooks/useCalculateInvestment';
 
-const AssetTable = () => {
-  const data = usePlanningServiceData();
-  const assetSums = data.reduce((acc, goal) => {
-    goal.investment.forEach(({ assetType, amount }) => {
-      acc[assetType] = (acc[assetType] || 0) + amount;
+type AssetTableProps = {
+  investmentBreakdown: InvestmentBreakdown[];
+}
+const AssetTable: React.FC<AssetTableProps> = ({ investmentBreakdown }) => {
+
+  const assetSums = investmentBreakdown.reduce((acc, goal) => {
+    goal.assetBreakdown.forEach(({ assetId, amount }) => {
+      acc[assetId] = (acc[assetId] || 0) + amount;
     });
     return acc;
   }, {} as { [key: string]: number });

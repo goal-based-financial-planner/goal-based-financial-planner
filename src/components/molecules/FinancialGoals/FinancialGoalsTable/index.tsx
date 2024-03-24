@@ -1,13 +1,5 @@
 import React, { Dispatch, ReactNode } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import CustomTooltip from '../../../atoms/CustomTooltip';
 import { Delete } from '@mui/icons-material';
@@ -74,11 +66,11 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
                 <TableCell>{goal.goalName}</TableCell>
                 <TableCell>{goal.startYear}</TableCell>
                 <TableCell>{goal.targetYear}</TableCell>
-                <TableCell>{goal.targetAmount}</TableCell>
+                <TableCell>{goal.targetAmount.toLocaleString()}</TableCell>
                 <TableCell>{goal.getTerm()}</TableCell>
                 <TableCell>{goal.getTermType()}</TableCell>
                 <TableCell>
-                  {goal.getInfaltionAdjustedTargetAmount()}
+                  {goal.getInfaltionAdjustedTargetAmount().toLocaleString()}
                 </TableCell>
                 <TableCell align="right">
                   <Delete color="error" onClick={() => deleteGoal(index)} />
