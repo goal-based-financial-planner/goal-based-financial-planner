@@ -1,19 +1,19 @@
-import useCalculateInvestment, { InvestmentBreakdown } from './useCalculateInvestment';
+import useCalculateInvestment, { GoalWiseInvestmentSuggestions } from './useCalculateInvestment';
 import { TermType } from '../types/enums';
 import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
 
 describe('Test useCalculateInvestment', () => {
-  const getGoal = (result: InvestmentBreakdown[], goalName: string) => {
+  const getGoal = (result: GoalWiseInvestmentSuggestions[], goalName: string) => {
     return result.filter(e => e.goalName === goalName)[0];
   };
 
-  const getAssetType = (goal: InvestmentBreakdown, assetType: string) => {
-    return goal.assetBreakdown.filter(b => b.assetId === assetType)[0];
+  const getAssetType = (goal: GoalWiseInvestmentSuggestions, assetType: string) => {
+    return goal.investmentSuggestions.filter(b => b.investmentOptionId === assetType)[0];
   };
 
-  const assertInvestmentValue = (result: InvestmentBreakdown[], goalName: string, assetType: string, expectedValue: number) => {
+  const assertInvestmentValue = (result: GoalWiseInvestmentSuggestions[], goalName: string, assetType: string, expectedValue: number) => {
     const goal = getGoal(result, goalName);
     const asset = getAssetType(goal, assetType);
     expect(Math.floor(asset.amount)).toEqual(expectedValue);

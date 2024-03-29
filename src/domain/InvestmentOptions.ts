@@ -2,7 +2,7 @@ import { InvestmentOptionRiskType, TermType } from '../types/enums';
 
 export type InvestmentOptionType = {
   id: string;
-  assetType: string;
+  investmentName: string;
   expectedReturnPercentage: number;
   riskType: InvestmentOptionRiskType;
 };

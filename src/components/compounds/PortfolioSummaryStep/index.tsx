@@ -1,13 +1,11 @@
-import AllocationDetails from '../../molecules/PortFolioSummary/AllocationDetails';
+import InvestmentSuggestions from '../../molecules/PortFolioSummary/InvestmentSuggestions';
 import Step from '../../molecules/Step';
 import { StepType } from '../../../types/types';
+import React from 'react';
 
 type PortFolioSummaryProps = StepType;
 
-const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
-  isExpanded,
-                                                                 plannerData,
-}) => {
+const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({ isExpanded, plannerData }) => {
   return (
     <Step
       isExpanded={isExpanded}
@@ -19,7 +17,7 @@ const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
       summaryText={`You have added some assets here`}
       hideContinue={true}
     >
-      <AllocationDetails plannerData={plannerData} />
+      <InvestmentSuggestions plannerData={plannerData} />
     </Step>
   );
 };

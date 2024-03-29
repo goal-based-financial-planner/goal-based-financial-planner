@@ -156,7 +156,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
           <TableBody>
             {investmentOptions.map((row, index) => (
               <TableRow key={`index`}>
-                <TableCell>{investmentOptions[index].assetType}</TableCell>
+                <TableCell>{investmentOptions[index].investmentName}</TableCell>
                 <TableCell>
                   {investmentOptions[index].expectedReturnPercentage}
                 </TableCell>

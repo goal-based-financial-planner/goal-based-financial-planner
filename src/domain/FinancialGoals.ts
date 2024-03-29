@@ -50,7 +50,7 @@ export class FinancialGoal {
     }
   }
 
-  getInfaltionAdjustedTargetAmount(): number {
+  getInflationAdjustedTargetAmount(): number {
     const term = this.getTerm();
     const inflatedAmount =
       this.targetAmount * Math.pow(1 + INFLATION_PERCENTAGE / 100, term);

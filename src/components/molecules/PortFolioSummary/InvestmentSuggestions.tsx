@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import AssetTable from '.';
+import InvestmentSuggestionsTable from './InvestmentSuggestionsTable';
 import { Tabs, Typography } from '@mui/material';
 import { PlannerData } from '../../../domain/PlannerData';
 import useCalculateInvestment from '../../../hooks/useCalculateInvestment';
@@ -40,10 +40,10 @@ function a11yProps(index: number) {
   };
 }
 
-type AllocationDetailsProps = {
+type InvestmentSuggestionsProps = {
   plannerData: PlannerData
 }
-const AllocationDetails: React.FC<AllocationDetailsProps> = ({ plannerData }) => {
+const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({ plannerData }) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
@@ -68,7 +68,7 @@ const AllocationDetails: React.FC<AllocationDetailsProps> = ({ plannerData }) =>
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <AssetTable investmentBreakdown={investmentBreakdown} />
+          <InvestmentSuggestionsTable suggestions={investmentBreakdown} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           Item Two
@@ -78,4 +78,4 @@ const AllocationDetails: React.FC<AllocationDetailsProps> = ({ plannerData }) =>
   );
 }
 
-export default AllocationDetails;
+export default InvestmentSuggestions;
