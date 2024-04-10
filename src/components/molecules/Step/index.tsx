@@ -28,14 +28,14 @@ const Step = forwardRef<HTMLDivElement,StepProps>(({
 }, ref) => {
   return isExpanded ? (
     <CustomPaper sx={{ height: 'calc(100vh - 16px)', overflow: 'hidden' }} ref={ref}>
-      <Grid spacing={2}>
-        <Grid xs={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <h2>{title}</h2>
         </Grid>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <Box>{subtext}</Box>
         </Grid>
-        <Grid xs={12} sx={{ mb: 5, mt: 5 }}>
+        <Grid item xs={12} sx={{ mb: 5, mt: 5 }}>
           {children}
         </Grid>
       </Grid>

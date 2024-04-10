@@ -1,6 +1,6 @@
 import React, { Dispatch, useState } from 'react';
 import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTable';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
@@ -64,8 +64,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
       summaryText={`You have added ${plannerData.getGoalSummaryAsText()} goals`}
     >
       <>
-        <Grid
-          xs={12}
+        <Box
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
@@ -75,7 +74,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
           {plannerData.financialGoals.length > 0 ? (
             <Box>{getAddGoalButton()}</Box>
           ) : null}
-        </Grid>
+        </Box>
 
         <FinancialGoalsTable
           goals={plannerData.financialGoals}
