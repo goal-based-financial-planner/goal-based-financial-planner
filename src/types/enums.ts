@@ -1,6 +1,6 @@
 export enum PlannerState {
   GOALS = 'goals',
-  ASSET_ALLOCATION = 'asset_allocation',
+  INVESTMENT_ALLOCATION = 'investment_allocation',
   PORTFOLIO_SUMMARY = 'portfolio_summary',
 }
 

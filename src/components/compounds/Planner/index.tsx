@@ -48,7 +48,7 @@ const Planner: React.FC = () => {
         setIsInvestmentAllocationVisible(false);
         setIsPortFolioSummaryVisible(false);
         break;
-      case PlannerState.ASSET_ALLOCATION:
+      case PlannerState.INVESTMENT_ALLOCATION:
         setIsFinancialGoalsExpanded(false);
         setIsInvestmentAllocationExpanded(true);
         setIsInvestmentAllocationVisible(true);
@@ -67,7 +67,7 @@ const Planner: React.FC = () => {
       case PlannerState.GOALS:
         financialGoalsRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
-      case PlannerState.ASSET_ALLOCATION:
+      case PlannerState.INVESTMENT_ALLOCATION:
         investmentAllocationsRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
       case PlannerState.PORTFOLIO_SUMMARY:
@@ -82,7 +82,7 @@ const Planner: React.FC = () => {
       <div ref={financialGoalsRef}>
         <FinancialGoalsStep
           isExpanded={isFinancialGoalsExpanded}
-          onContinue={() => goToStep(PlannerState.ASSET_ALLOCATION)}
+          onContinue={() => goToStep(PlannerState.INVESTMENT_ALLOCATION)}
           onEdit={() => goToStep(PlannerState.GOALS)}
           plannerData={plannerData}
           dispatch={dispatch}
@@ -94,7 +94,7 @@ const Planner: React.FC = () => {
             dispatch={dispatch}
             plannerData={plannerData}
             onContinue={() => goToStep(PlannerState.PORTFOLIO_SUMMARY)}
-            onEdit={() => goToStep(PlannerState.ASSET_ALLOCATION)}
+            onEdit={() => goToStep(PlannerState.INVESTMENT_ALLOCATION)}
             isExpanded={isInvestmentAllocationExpanded}
           />
         ) : null}
