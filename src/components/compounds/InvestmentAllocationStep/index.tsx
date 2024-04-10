@@ -1,13 +1,14 @@
 import React, { Dispatch, useState } from 'react';
 import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import { StepType } from '../../../types/types';
-import Step from '../../molecules/Step';
+import Step, { StepProps } from '../../molecules/Step';
 import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 import { TermType } from '../../../types/enums';
+import { PlannerData } from '../../../domain/PlannerData';
 
-type InvestmentAllocationProps = StepType & {
+type InvestmentAllocationProps = Pick<StepProps, "isExpanded" | "onContinue" | "onEdit"> & {
   dispatch: Dispatch<PlannerDataAction>;
+  plannerData: PlannerData
 };
 
 export interface ToolTipVisibilityState {
@@ -21,7 +22,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   dispatch,
   isExpanded,
   onContinue,
-  onEdit,
+  onEdit
 }) => {
   const investmentOptions = useInvestmentOptions();
 
@@ -95,9 +96,8 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       isExpanded={isExpanded}
       onContinue={handleStepContinue}
       onEdit={onEdit}
-      title={'Asset Allocation'}
-      subtext="Now that you have added your financial goals, let's add the assets that
-        you are interested to invest in."
+      title={'Investment Allocation'}
+      subtext="Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal"
       isContinueDisabled={false}
       summaryText={`You have added some assets here`}
     >

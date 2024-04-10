@@ -1,9 +1,11 @@
 import InvestmentSuggestions from '../../molecules/PortFolioSummary/InvestmentSuggestions';
-import Step from '../../molecules/Step';
-import { StepType } from '../../../types/types';
+import Step, { StepProps } from '../../molecules/Step';
 import React from 'react';
+import { PlannerData } from '../../../domain/PlannerData';
 
-type PortFolioSummaryProps = StepType;
+type PortFolioSummaryProps = Pick<StepProps, "isExpanded"> & {
+  plannerData: PlannerData
+};
 
 const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({ isExpanded, plannerData }) => {
   return (
@@ -11,8 +13,8 @@ const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({ isExpanded, pla
       isExpanded={isExpanded}
       onContinue={() => {}}
       onEdit={() => {}}
-      title={'Asset Allocation'}
-      subtext="Alright! Based on the goals you have added and your preferences, we have created an asset allocation for you. "
+      title={'Summary'}
+      subtext="Alright! Based on the goals you have added and your choice of investments, we calculated how much you should invest into each of the investment options. Here is a summary of the investments you have added."
       isContinueDisabled={false}
       summaryText={`You have added some assets here`}
       hideContinue={true}

@@ -1,8 +1,9 @@
-import React, { ReactNode } from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 import CustomPaper from '../../atoms/CustomPaper';
 import { Grid, Box, Stack, Button, Typography } from '@mui/material';
 
-type StepProps = {
+
+export type StepProps =  {
   isExpanded: boolean;
   onContinue: () => void;
   onEdit: () => void;
@@ -14,7 +15,7 @@ type StepProps = {
   hideContinue?: boolean;
 };
 
-const Step: React.FC<StepProps> = ({
+const Step = forwardRef<HTMLDivElement,StepProps>(({
   isExpanded,
   title,
   subtext,
@@ -23,10 +24,10 @@ const Step: React.FC<StepProps> = ({
   onContinue,
   onEdit,
   summaryText,
-  hideContinue,
-}) => {
+  hideContinue
+}, ref) => {
   return isExpanded ? (
-    <CustomPaper sx={{ height: 'calc(100vh - 16px)', overflow: 'auto' }}>
+    <CustomPaper sx={{ height: 'calc(100vh - 16px)', overflow: 'hidden' }} ref={ref}>
       <Grid spacing={2}>
         <Grid xs={12}>
           <h2>{title}</h2>
@@ -53,7 +54,7 @@ const Step: React.FC<StepProps> = ({
       )}
     </CustomPaper>
   ) : (
-    <CustomPaper>
+    <CustomPaper >
       <Grid spacing={2} alignItems="center">
         <Grid item xs={11}>
           <h2>{title}</h2>
@@ -67,6 +68,6 @@ const Step: React.FC<StepProps> = ({
       </Grid>
     </CustomPaper>
   );
-};
+});
 
 export default Step;

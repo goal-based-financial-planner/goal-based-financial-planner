@@ -19,9 +19,9 @@ const Planner: React.FC = () => {
   const [isFinancialGoalsExpanded, setIsFinancialGoalsExpanded] =
     useState<boolean>(true);
 
-  const [isAssetAllocationExpanded, setIsAssetAllocationExpanded] =
+  const [isInvestmentAllocationExpanded, setIsInvestmentAllocationExpanded] =
     useState<boolean>(true);
-  const [isAssetAllocationVisible, setIsAssetAllocationVisible] =
+  const [isInvestmentAllocationVisible, setIsInvestmentAllocationVisible] =
     useState<boolean>(false);
 
   const [isPortFolioSummaryExpanded, setIsPortFolioSummaryExpanded] =
@@ -29,10 +29,13 @@ const Planner: React.FC = () => {
   const [isPortFolioSummaryVisible, setIsPortFolioSummaryVisible] =
     useState<boolean>(false);
 
+  const financialGoalsRef = useRef<HTMLDivElement>(null);
+  const investmentAllocationsRef = useRef<HTMLDivElement>(null);
+  const portfolioSummaryRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     persistPlannerData(plannerData);
   }, [plannerData]);
-  const assetsRef = useRef<HTMLDivElement>(null);
 
   const goToStep = (nextStep: PlannerState) => {
     setCurrentState(nextStep);
@@ -42,56 +45,68 @@ const Planner: React.FC = () => {
     switch (currentState) {
       case PlannerState.GOALS:
         setIsFinancialGoalsExpanded(true);
-        setIsAssetAllocationVisible(false);
+        setIsInvestmentAllocationVisible(false);
         setIsPortFolioSummaryVisible(false);
         break;
       case PlannerState.ASSET_ALLOCATION:
         setIsFinancialGoalsExpanded(false);
-        setIsAssetAllocationExpanded(true);
-        setIsAssetAllocationVisible(true);
+        setIsInvestmentAllocationExpanded(true);
+        setIsInvestmentAllocationVisible(true);
         setIsPortFolioSummaryVisible(false);
-
-        assetsRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
         break;
       case PlannerState.PORTFOLIO_SUMMARY:
-        setIsAssetAllocationExpanded(false);
+        setIsInvestmentAllocationExpanded(false);
         setIsPortFolioSummaryVisible(true);
         setIsPortFolioSummaryExpanded(true);
         break;
     }
   }, [currentState]);
 
+  useEffect(() => {
+    switch (currentState) {
+      case PlannerState.GOALS:
+        financialGoalsRef.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      case PlannerState.ASSET_ALLOCATION:
+        investmentAllocationsRef.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      case PlannerState.PORTFOLIO_SUMMARY:
+        portfolioSummaryRef.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+    }
+
+  }, [currentState, isFinancialGoalsExpanded, isInvestmentAllocationVisible, isPortFolioSummaryVisible]);
+
   return (
     <Box sx={{ m: 1 }}>
-      <FinancialGoalsStep
-        isExpanded={isFinancialGoalsExpanded}
-        onContinue={() => goToStep(PlannerState.ASSET_ALLOCATION)}
-        onEdit={() => goToStep(PlannerState.GOALS)}
-        plannerData={plannerData}
-        dispatch={dispatch}
-      />
-
-      {isAssetAllocationVisible ? (
-        <InvestmentAllocationStep
+      <div ref={financialGoalsRef}>
+        <FinancialGoalsStep
+          isExpanded={isFinancialGoalsExpanded}
+          onContinue={() => goToStep(PlannerState.ASSET_ALLOCATION)}
+          onEdit={() => goToStep(PlannerState.GOALS)}
+          plannerData={plannerData}
           dispatch={dispatch}
-          plannerData={plannerData}
-          onContinue={() => goToStep(PlannerState.PORTFOLIO_SUMMARY)}
-          onEdit={() => goToStep(PlannerState.ASSET_ALLOCATION)}
-          isExpanded={isAssetAllocationExpanded}
         />
-      ) : null}
-
-      {isPortFolioSummaryVisible ? (
-        <PortfolioSummaryStep
-          isExpanded={isPortFolioSummaryExpanded}
-          onContinue={() => {}}
-          onEdit={() => {}}
-          plannerData={plannerData}
-        />
-      ) : null}
+      </div>
+      <div ref={investmentAllocationsRef}>
+        {isInvestmentAllocationVisible ? (
+          <InvestmentAllocationStep
+            dispatch={dispatch}
+            plannerData={plannerData}
+            onContinue={() => goToStep(PlannerState.PORTFOLIO_SUMMARY)}
+            onEdit={() => goToStep(PlannerState.ASSET_ALLOCATION)}
+            isExpanded={isInvestmentAllocationExpanded}
+          />
+        ) : null}
+      </div>
+      <div ref={portfolioSummaryRef}>
+        {isPortFolioSummaryVisible ? (
+          <PortfolioSummaryStep
+            isExpanded={isPortFolioSummaryExpanded}
+            plannerData={plannerData}
+          />
+        ) : null}
+      </div>
     </Box>
   );
 };

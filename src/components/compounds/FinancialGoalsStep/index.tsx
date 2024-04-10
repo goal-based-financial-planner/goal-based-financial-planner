@@ -4,11 +4,12 @@ import { Box, Button, Grid } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import { StepType } from '../../../types/types';
-import Step from '../../molecules/Step';
+import Step, { StepProps } from '../../molecules/Step';
+import { PlannerData } from '../../../domain/PlannerData';
 
-type FinancialGoalsProps = StepType & {
+type FinancialGoalsProps = Pick<StepProps, "isExpanded" | "onContinue" | "onEdit"> & {
   dispatch: Dispatch<PlannerDataAction>;
+  plannerData: PlannerData
 };
 
 const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
@@ -16,7 +17,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   dispatch,
   isExpanded,
   onContinue,
-  onEdit,
+  onEdit
 }) => {
   const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
   const handleClose = () => {
@@ -56,7 +57,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
       onContinue={onContinue}
       onEdit={onEdit}
       title={'Financial Goals'}
-      subtext="Let's start by adding your financial goals. A financial goal is in
+      subtext="Let's start by adding your financial goals. A financial goal is inthe
             most cases an event for which you have to flush out a lumpsum of
             money..."
       isContinueDisabled={plannerData.financialGoals.length === 0}
