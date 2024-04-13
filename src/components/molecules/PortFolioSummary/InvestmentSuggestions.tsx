@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import InvestmentSuggestionsTable from './InvestmentSuggestionsTable';
 import { Tabs, Typography } from '@mui/material';
 import { PlannerData } from '../../../domain/PlannerData';
-import useCalculateInvestment from '../../../hooks/useCalculateInvestment';
+import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,8 +50,8 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({ plannerDa
     setValue(newValue);
   };
 
-  const { calculateInvestment } = useCalculateInvestment();
-  const investmentBreakdown = calculateInvestment(plannerData);
+  const { calculateInvestmentNeededForGoals } = useInvestmentCalculator();
+  const investmentBreakdown = calculateInvestmentNeededForGoals(plannerData);
 
 
   return (

@@ -1,5 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { GoalWiseInvestmentSuggestions } from '../../../hooks/useCalculateInvestment';
+import { GoalWiseInvestmentSuggestions } from '../../../hooks/useInvestmentCalculator';
 import React from 'react';
 import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 
