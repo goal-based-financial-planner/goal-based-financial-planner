@@ -1,6 +1,6 @@
 import React, { forwardRef, ReactNode } from 'react';
 import CustomPaper from '../../atoms/CustomPaper';
-import { Grid, Box, Stack, Button, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 
 
 export type StepProps =  {
@@ -55,7 +55,7 @@ const Step = forwardRef<HTMLDivElement,StepProps>(({
     </CustomPaper>
   ) : (
     <CustomPaper >
-      <Grid spacing={2} alignItems="center">
+      <Grid container spacing={2} alignItems="center">
         <Grid item xs={11}>
           <h2>{title}</h2>
           <Typography>{summaryText}</Typography>

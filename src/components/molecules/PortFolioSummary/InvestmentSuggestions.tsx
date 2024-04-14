@@ -3,9 +3,10 @@ import { ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import InvestmentSuggestionsTable from './InvestmentSuggestionsTable';
-import { Tabs, Typography } from '@mui/material';
+import { Grid, Tabs, Typography } from '@mui/material';
 import { PlannerData } from '../../../domain/PlannerData';
 import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
+import PortfolioProjection from './PortfolioProjection';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,13 +51,14 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({ plannerDa
     setValue(newValue);
   };
 
-  const { calculateInvestmentNeededForGoals } = useInvestmentCalculator();
+  const { calculateInvestmentNeededForGoals, calculateYearlyReturnValueBySuggestions } = useInvestmentCalculator();
   const investmentBreakdown = calculateInvestmentNeededForGoals(plannerData);
+  const yearlyReturnValuesForSuggestions = calculateYearlyReturnValueBySuggestions(plannerData.financialGoals, investmentBreakdown);
 
 
   return (
-    <Box sx={{ width: '50%', typography: 'body1' }}>
-      <Box>
+    <Grid container spacing={1}>
+      <Grid item xs={6}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs
             onChange={handleChange}
@@ -66,16 +68,18 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({ plannerDa
             <Tab label="Allocation Table" {...a11yProps(0)} />
             <Tab label="Pie chart" {...a11yProps(1)} />
           </Tabs>
+          <CustomTabPanel value={value} index={0}>
+            <InvestmentSuggestionsTable suggestions={investmentBreakdown} />
+          </CustomTabPanel>
+          <CustomTabPanel value={value} index={1}>
+            Item Two
+          </CustomTabPanel>
         </Box>
-        <CustomTabPanel value={value} index={0}>
-          <InvestmentSuggestionsTable suggestions={investmentBreakdown} />
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          Item Two
-        </CustomTabPanel>
-      </Box>
-    </Box>
+      </Grid>
+      <Grid item xs={6}>
+        <PortfolioProjection goalWiseReturns={yearlyReturnValuesForSuggestions} /></Grid>
+    </Grid>
   );
-}
+};
 
 export default InvestmentSuggestions;
