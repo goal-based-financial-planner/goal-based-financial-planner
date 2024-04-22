@@ -1,6 +1,6 @@
-import { Tooltip } from '@mui/material';
+import { Box, Tooltip, Typography } from '@mui/material';
 import { Info } from '@mui/icons-material';
-import { Fragment, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface CustomPaperProps {
   tooltipText: ReactNode | string;
@@ -8,8 +8,22 @@ interface CustomPaperProps {
 const CustomTooltip = ({ tooltipText }: CustomPaperProps) => {
   return (
     <Tooltip
-      title={<Fragment>{tooltipText}</Fragment>}
-      style={{ verticalAlign: 'middle' }}
+      title={
+        <Box>
+          <Typography
+            variant="body2"
+            sx={{ fontSize: '16px', textAlign: 'center' }}
+          >
+            {tooltipText}
+          </Typography>
+        </Box>
+      }
+      sx={{
+        alignContent: 'right',
+        justifyContent: 'right',
+        verticalAlign: 'top',
+        ml: 1,
+      }}
       slotProps={{
         popper: {
           modifiers: [
