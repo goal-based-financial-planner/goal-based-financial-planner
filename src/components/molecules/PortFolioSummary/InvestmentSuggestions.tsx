@@ -7,6 +7,8 @@ import { Grid, Tabs, Typography } from '@mui/material';
 import { PlannerData } from '../../../domain/PlannerData';
 import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
 import PortfolioProjection from './PortfolioProjection';
+import { PieChart } from '@mui/x-charts/PieChart';
+import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,19 +44,55 @@ function a11yProps(index: number) {
 }
 
 type InvestmentSuggestionsProps = {
-  plannerData: PlannerData
-}
-const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({ plannerData }) => {
+  plannerData: PlannerData;
+};
+const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
+  plannerData,
+}) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
-  const { calculateInvestmentNeededForGoals, calculateYearlyReturnValueBySuggestions } = useInvestmentCalculator();
+  const {
+    calculateInvestmentNeededForGoals,
+    calculateYearlyReturnValueBySuggestions,
+  } = useInvestmentCalculator();
   const investmentBreakdown = calculateInvestmentNeededForGoals(plannerData);
-  const yearlyReturnValuesForSuggestions = calculateYearlyReturnValueBySuggestions(plannerData.financialGoals, investmentBreakdown);
+  const yearlyReturnValuesForSuggestions =
+    calculateYearlyReturnValueBySuggestions(
+      plannerData.financialGoals,
+      investmentBreakdown,
+    );
 
+  const investmentOptions = useInvestmentOptions();
+  const getAmountPerInvestmentOption = () => {
+    const aggregatedAmounts: { [key: string]: number } = {};
+
+    investmentBreakdown.forEach((suggestion) => {
+      suggestion.investmentSuggestions.forEach((i) => {
+        const investmentOptionId = i.investmentOptionId;
+        const amount = i.amount;
+        if (aggregatedAmounts.hasOwnProperty(investmentOptionId)) {
+          aggregatedAmounts[investmentOptionId] += amount;
+        } else {
+          aggregatedAmounts[investmentOptionId] = amount;
+        }
+      });
+    });
+
+    const result = Object.entries(aggregatedAmounts).map(
+      ([investmentOptionId, totalAmount]) => {
+        const investmentName = investmentOptions.find(
+          (o) => o.id === investmentOptionId,
+        )?.investmentName;
+        return { label: investmentName, value: Math.round(totalAmount) };
+      },
+    );
+
+    return result;
+  };
 
   return (
     <Grid container spacing={1}>
@@ -72,12 +110,25 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({ plannerDa
             <InvestmentSuggestionsTable suggestions={investmentBreakdown} />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            Item Two
+            <PieChart
+              series={[
+                {
+                  data: getAmountPerInvestmentOption(),
+                  cx: 100,
+                  cy: 100,
+                },
+              ]}
+              width={400}
+              height={200}
+            />
           </CustomTabPanel>
         </Box>
       </Grid>
       <Grid item xs={6}>
-        <PortfolioProjection goalWiseReturns={yearlyReturnValuesForSuggestions} /></Grid>
+        <PortfolioProjection
+          goalWiseReturns={yearlyReturnValuesForSuggestions}
+        />
+      </Grid>
     </Grid>
   );
 };
