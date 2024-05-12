@@ -1,15 +1,18 @@
-import React, { Dispatch, useState } from 'react';
-import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTable';
-import { Box, Button } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
-import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import Step, { StepProps } from '../../molecules/Step';
-import { PlannerData } from '../../../domain/PlannerData';
+import React, { Dispatch, useState } from "react";
+import FinancialGoalsTable from "../../molecules/FinancialGoals/FinancialGoalsTable";
+import { Box, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import AddFinancialGoals from "../../molecules/FinancialGoals/AddFinancialGoals";
+import { PlannerDataAction } from "../../../store/plannerDataReducer";
+import Step, { StepProps } from "../../molecules/Step";
+import { PlannerData } from "../../../domain/PlannerData";
 
-type FinancialGoalsProps = Pick<StepProps, "isExpanded" | "onContinue" | "onEdit"> & {
+type FinancialGoalsProps = Pick<
+  StepProps,
+  "isExpanded" | "onContinue" | "onEdit"
+> & {
   dispatch: Dispatch<PlannerDataAction>;
-  plannerData: PlannerData
+  plannerData: PlannerData;
 };
 
 const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
@@ -17,7 +20,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   dispatch,
   isExpanded,
   onContinue,
-  onEdit
+  onEdit,
 }) => {
   const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
   const handleClose = () => {
@@ -56,7 +59,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
       isExpanded={isExpanded}
       onContinue={onContinue}
       onEdit={onEdit}
-      title={'Financial Goals'}
+      title={"Financial Goals"}
       subtext="Let's start by adding your financial goals. A financial goal is inthe
             most cases an event for which you have to flush out a lumpsum of
             money..."
@@ -66,9 +69,9 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
       <>
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}
         >
           {plannerData.financialGoals.length > 0 ? (

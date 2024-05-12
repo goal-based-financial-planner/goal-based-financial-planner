@@ -1,5 +1,5 @@
-import { TermType } from '../types/enums';
-import { INFLATION_PERCENTAGE } from './constants';
+import { TermType } from "../types/enums";
+import { INFLATION_PERCENTAGE } from "./constants";
 
 export class FinancialGoal {
   constructor(

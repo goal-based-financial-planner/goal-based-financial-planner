@@ -94,6 +94,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
     return result;
   };
 
+
   return (
     <Grid container spacing={1}>
       <Grid item xs={6}>
@@ -127,6 +128,8 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
       <Grid item xs={6}>
         <PortfolioProjection
           goalWiseReturns={yearlyReturnValuesForSuggestions}
+          financialGoals={plannerData.financialGoals}
+          investmentBreakdown={investmentBreakdown}
         />
       </Grid>
     </Grid>

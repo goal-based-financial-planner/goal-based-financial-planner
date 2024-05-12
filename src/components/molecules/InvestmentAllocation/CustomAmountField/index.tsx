@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
 
 const CustomAmountField = ({ value, onChange }: any) => {
   const [inputValue, setInputValue] = useState(value);
@@ -21,8 +21,8 @@ const CustomAmountField = ({ value, onChange }: any) => {
         max: 100,
       }}
       style={{
-        background: 'white',
-        width: '80px',
+        background: "white",
+        width: "80px",
       }}
     />
   );

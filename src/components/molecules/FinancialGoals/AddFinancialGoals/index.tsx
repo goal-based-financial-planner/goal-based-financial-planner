@@ -4,19 +4,19 @@ import {
   Modal,
   Paper,
   Stack,
-} from '@mui/material';
-import React, { Dispatch, useState } from 'react';
-import { Add, CancelRounded } from '@mui/icons-material';
-import { PlannerDataAction } from '../../../../store/plannerDataReducer';
-import { addFinancialGoal } from '../../../../store/plannerDataActions';
-import { FinancialGoal } from '../../../../domain/FinancialGoals';
-import CustomTextField from '../../../atoms/CustomTextField';
+} from "@mui/material";
+import React, { Dispatch, useState } from "react";
+import { Add, CancelRounded } from "@mui/icons-material";
+import { PlannerDataAction } from "../../../../store/plannerDataReducer";
+import { addFinancialGoal } from "../../../../store/plannerDataActions";
+import { FinancialGoal } from "../../../../domain/FinancialGoals";
+import CustomTextField from "../../../atoms/CustomTextField";
 import {
   ALPHANUMERIC_PATTERN,
   NUMBER_PATTERN,
   YEAR_PATTERN,
-} from '../../../../types/constants';
-import CustomTooltip from '../../../atoms/CustomTooltip';
+} from "../../../../types/constants";
+import CustomTooltip from "../../../atoms/CustomTooltip";
 
 interface AddFinancialGoalsProps {
   showAddGoalsModal: boolean;
@@ -31,20 +31,20 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
 }: AddFinancialGoalsProps) => {
   const handleCloseAndReset = () => {
     setValidationErrors({});
-    setGoalName('');
-    setStartYear('');
-    setTargetYear('');
-    setTargetAmount('');
+    setGoalName("");
+    setStartYear("");
+    setTargetYear("");
+    setTargetAmount("");
     setIsTargetYearValid(false);
     handleClose();
   };
 
-  const [goalName, setGoalName] = useState<string>('');
+  const [goalName, setGoalName] = useState<string>("");
   const [startYear, setStartYear] = useState<string>(
     String(new Date().getFullYear()),
   );
-  const [targetYear, setTargetYear] = useState<string>('');
-  const [targetAmount, setTargetAmount] = useState<string>('');
+  const [targetYear, setTargetYear] = useState<string>("");
+  const [targetAmount, setTargetAmount] = useState<string>("");
   const [isTargetYearValid, setIsTargetYearValid] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
@@ -127,15 +127,15 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
         component={Stack}
         p={3}
         sx={{
-          position: 'absolute',
+          position: "absolute",
           minWidth: {
-            xs: '90%',
+            xs: "90%",
             sm: null,
             md: 600,
           },
           maxWidth: 400,
           width: {
-            xs: '80%',
+            xs: "80%",
             md: 600,
           },
         }}
@@ -147,7 +147,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             <CustomTextField
               label="Goal Name"
               placeholder='Eg: "Child Education"'
-              sx={{ minWidth: '270px', minHeight: 80 }}
+              sx={{ minWidth: "270px", minHeight: 80 }}
               helperText="Enter valid Goal Name"
               required
               error={validationErrors.goalName}
@@ -166,7 +166,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             <CustomTextField
               label="Capital Needed"
               placeholder='Eg: "1000000"'
-              sx={{ minWidth: '270px', minHeight: 80 }}
+              sx={{ minWidth: "270px", minHeight: 80 }}
               required
               helperText="Enter valid Amount"
               error={validationErrors.targetAmount}
@@ -182,7 +182,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
           </Grid>
           <Grid xs={6}>
             <CustomTextField
-              sx={{ minWidth: '270px', minHeight: 80 }}
+              sx={{ minWidth: "270px", minHeight: 80 }}
               helperText="Enter valid start year"
               placeholder='Eg: "2024"'
               label="Investment Start Year"
@@ -200,7 +200,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
           </Grid>
           <Grid xs={6}>
             <CustomTextField
-              sx={{ minWidth: '270px', minHeight: 80 }}
+              sx={{ minWidth: "270px", minHeight: 80 }}
               helperText="Enter valid target year"
               placeholder='Eg: "2040"'
               label="Investment End Year"
@@ -234,9 +234,9 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
           <Grid
             xs={6}
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
             }}
           >
             <Button

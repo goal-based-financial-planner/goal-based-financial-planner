@@ -1,14 +1,17 @@
-import React, { Dispatch, useState } from 'react';
-import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
-import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import Step, { StepProps } from '../../molecules/Step';
-import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
-import { TermType } from '../../../types/enums';
-import { PlannerData } from '../../../domain/PlannerData';
+import React, { Dispatch, useState } from "react";
+import InvestmentAllocationTable from "../../molecules/InvestmentAllocation/InvestmentAllocationTable";
+import { PlannerDataAction } from "../../../store/plannerDataReducer";
+import Step, { StepProps } from "../../molecules/Step";
+import useInvestmentOptions from "../../../hooks/useInvestmentOptions";
+import { TermType } from "../../../types/enums";
+import { PlannerData } from "../../../domain/PlannerData";
 
-type InvestmentAllocationProps = Pick<StepProps, "isExpanded" | "onContinue" | "onEdit"> & {
+type InvestmentAllocationProps = Pick<
+  StepProps,
+  "isExpanded" | "onContinue" | "onEdit"
+> & {
   dispatch: Dispatch<PlannerDataAction>;
-  plannerData: PlannerData
+  plannerData: PlannerData;
 };
 
 export interface ToolTipVisibilityState {
@@ -22,7 +25,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   dispatch,
   isExpanded,
   onContinue,
-  onEdit
+  onEdit,
 }) => {
   const investmentOptions = useInvestmentOptions();
 
@@ -40,7 +43,13 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   const isAssetAllocationInvalid = (termType: TermType) => {
     if (areGoalsPresentOfType(termType)) {
       const termSum = investmentOptions.reduce(
-        (sum, row) => sum + Number(plannerData.investmentAllocations[termType].filter(e => e.id === row.id)[0]?.investmentPercentage || 0),
+        (sum, row) =>
+          sum +
+          Number(
+            plannerData.investmentAllocations[termType].filter(
+              (e) => e.id === row.id,
+            )[0]?.investmentPercentage || 0,
+          ),
         0,
       );
 
@@ -96,7 +105,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       isExpanded={isExpanded}
       onContinue={handleStepContinue}
       onEdit={onEdit}
-      title={'Investment Allocation'}
+      title={"Investment Allocation"}
       subtext="Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal"
       isContinueDisabled={false}
       summaryText={`You have added some assets here`}

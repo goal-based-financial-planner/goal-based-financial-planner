@@ -5,8 +5,8 @@ import {
   type TextFieldVariants,
   type StandardTextFieldProps,
   type OutlinedTextFieldProps,
-} from '@mui/material';
-import React, { useState } from 'react';
+} from "@mui/material";
+import React, { useState } from "react";
 
 export interface CustomTextFieldProps {
   maxLength?: number;
@@ -23,14 +23,14 @@ export interface CustomTextFieldProps {
 
 export type TextFieldProps<
   Variant extends TextFieldVariants = TextFieldVariants,
-> = Variant extends 'filled'
-  ? Omit<FilledTextFieldProps, 'onChange' | 'onBlur'>
-  : Variant extends 'standard'
-  ? Omit<StandardTextFieldProps, 'onChange' | 'onBlur'>
-  : Omit<OutlinedTextFieldProps, 'onChange' | 'onBlur'>;
+> = Variant extends "filled"
+  ? Omit<FilledTextFieldProps, "onChange" | "onBlur">
+  : Variant extends "standard"
+    ? Omit<StandardTextFieldProps, "onChange" | "onBlur">
+    : Omit<OutlinedTextFieldProps, "onChange" | "onBlur">;
 
 const CustomTextField = ({
-  type = 'text',
+  type = "text",
   label,
   id,
   value,
@@ -82,24 +82,24 @@ const CustomTextField = ({
     onBlur?.(text);
   };
 
-  document.addEventListener('wheel', () => {
+  document.addEventListener("wheel", () => {
     const activeEl = document.activeElement as HTMLInputElement;
-    if (activeEl.type === 'number') {
+    if (activeEl.type === "number") {
       activeEl.blur();
     }
   });
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const inputChar = event.key;
-    if (type === 'number' && !isValidString(String(value) + inputChar)) {
+    if (type === "number" && !isValidString(String(value) + inputChar)) {
       event.preventDefault();
       setInvalidChar(true);
     }
-    if (String(value).length === maxLength && event.key !== 'Enter') {
+    if (String(value).length === maxLength && event.key !== "Enter") {
       setInvalidChar(true);
     }
 
-    if (isEnterOperable && event.key === 'Enter') {
+    if (isEnterOperable && event.key === "Enter") {
       setInvalidChar(false);
       setValidateField(true);
     }
@@ -117,7 +117,7 @@ const CustomTextField = ({
       !invalidChar &&
       !disableRequiredErrorMessage
     ) {
-      return '*Required';
+      return "*Required";
     }
 
     return isInValid ? helperText : additionalHelperText ?? helperText;
@@ -141,7 +141,7 @@ const CustomTextField = ({
       onChange={handleChange}
       onBlur={handleBlur}
       onKeyPress={handleKeyPress}
-      helperText={error || isInValid ? getHelperText() : ''}
+      helperText={error || isInValid ? getHelperText() : ""}
       error={error || isInValid}
       sx={{
         ...sx,

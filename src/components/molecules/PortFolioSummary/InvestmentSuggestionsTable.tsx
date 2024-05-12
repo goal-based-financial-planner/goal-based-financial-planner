@@ -6,7 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from '@mui/material';
+} from "@mui/material";
 import { GoalWiseInvestmentSuggestions } from '../../../hooks/useInvestmentCalculator';
 import React from 'react';
 import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
@@ -23,12 +23,15 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
 }) => {
   const investmentOptions = useInvestmentOptions();
 
-  const investmentOptionWiseSum = suggestions.reduce((acc, goal) => {
-    goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
-      acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
-    });
-    return acc;
-  }, {} as { [key: string]: number });
+  const investmentOptionWiseSum = suggestions.reduce(
+    (acc, goal) => {
+      goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
+        acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
+      });
+      return acc;
+    },
+    {} as { [key: string]: number },
+  );
 
   const assetSumArray = Object.entries(investmentOptionWiseSum).map(
     ([investmentOptionId, totalValue]) => ({

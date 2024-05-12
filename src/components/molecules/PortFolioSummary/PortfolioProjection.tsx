@@ -1,62 +1,140 @@
-import React from 'react';
-import { LineChart } from '@mui/x-charts';
-import { Box } from '@mui/material';
-import { GoalWiseReturn } from '../../../hooks/useInvestmentCalculator';
+import React, { useState } from "react";
+import { AxisConfig, LineChart, LineSeriesType } from "@mui/x-charts";
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import {
+  GoalWiseInvestmentSuggestions,
+  GoalWiseReturn,
+} from "../../../hooks/useInvestmentCalculator";
+import { MakeOptional } from "@mui/x-charts/models/helpers";
+import { FinancialGoal } from "../../../domain/FinancialGoals";
 
 type PortfolioProjectionProps = {
   goalWiseReturns: GoalWiseReturn[];
+  financialGoals: FinancialGoal[];
+  investmentBreakdown: GoalWiseInvestmentSuggestions[];
 };
 
 const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
-                                                                   goalWiseReturns,
-                                                                 }) => {
-  const { minYear, maxYear } = goalWiseReturns.reduce(
-    (acc, goalWiseReturn) => {
-      const minYear = Math.min(
-        acc.minYear,
-        ...goalWiseReturn.returnsPerInvestment
-          .map((r) => r.returnsByYear.map((ry) => ry.year))
-          .flat(),
-      );
-      const maxYear = Math.max(
-        acc.maxYear,
-        ...goalWiseReturn.returnsPerInvestment
-          .map((r) => r.returnsByYear.map((ry) => ry.year))
-          .flat(),
-      );
-      return { minYear, maxYear };
-    },
-    { minYear: Infinity, maxYear: 0 },
+  goalWiseReturns,
+  financialGoals,
+  investmentBreakdown,
+}) => {
+  const [selectedGoal, setSelectedGoal] = useState<FinancialGoal>(
+    financialGoals[0],
   );
 
-
-  const generateXAxis = () => {
-    return Array.from({ length: maxYear - minYear + 1 }, (_, i) => i + minYear);
+  const generateXAxis = (): MakeOptional<AxisConfig, "id">[] => {
+    const data = Array.from(
+      { length: selectedGoal.getTerm() + 1 },
+      (_, i) => i + selectedGoal.getInvestmentStartYear(),
+    );
+    return [
+      {
+        data,
+        valueFormatter: (v) => v.toString(),
+        label: "Year",
+        tickMinStep: 1,
+      },
+    ];
   };
 
-  const generateYAxis = () => {
-    return goalWiseReturns.map((goalWiseReturn) => {
-      const data = [];
+  const generateSeries = (): MakeOptional<LineSeriesType, "type">[] => {
+    const selectedGoalWiseReturn = goalWiseReturns.find(
+      (gr) => gr.goalName === selectedGoal.goalName,
+    )!;
 
-      for (let i = minYear; i <= maxYear; i++) {
-        const totalReturn = goalWiseReturn.returnsPerInvestment.reduce((acc, investment) => {
-          const returnByYear = investment.returnsByYear.find((ry) => ry.year === i);
+    const investmentSuggestion = investmentBreakdown.find(
+      (ib) => ib.goalName === selectedGoal.goalName,
+    )!;
+    const investmentPerOneYear =
+      investmentSuggestion.investmentSuggestions.reduce((acc, investment) => {
+        return acc + investment.amount;
+      }, 0) * 12;
+
+    const returns: number[] = [];
+    const invested: number[] = [];
+
+    for (
+      let i = selectedGoal.getInvestmentStartYear();
+      i <= selectedGoal.getTargetYear();
+      i++
+    ) {
+      const totalReturn = selectedGoalWiseReturn.returnsPerInvestment.reduce(
+        (acc, investment) => {
+          const returnByYear = investment.returnsByYear.find(
+            (ry) => ry.year === i,
+          );
           return acc + (returnByYear?.return || 0);
-        }, 0);
-        data.push(totalReturn > 0 ? totalReturn : null);
-      }
+        },
+        0,
+      );
 
-      return { label: goalWiseReturn.goalName, data };
-    });
+      returns.push(totalReturn);
+
+      invested.push(
+        investmentPerOneYear * (i - selectedGoal.getInvestmentStartYear()) || 0,
+      );
+    }
+    return [
+      {
+        data: returns,
+        label: "Expected Portfolio Value",
+        valueFormatter: (v) => v.toLocaleString(),
+      },
+      {
+        data: invested,
+        label: "Invested Amount",
+        valueFormatter: (v) => v.toLocaleString(),
+      },
+    ];
+  };
+
+  const handleSelectedGoalChange = (e: SelectChangeEvent<string>) => {
+    const goal = financialGoals.find(
+      (goal) => goal.goalName === e.target.value,
+    )!;
+    setSelectedGoal(goal);
   };
 
   return (
-    <Box height={'100%'} width={'100%'}>
-      <LineChart
-        xAxis={[{ data: generateXAxis() }]}
-        series={generateYAxis()}
-      />
-    </Box>
+    <>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <Box>
+          <FormControl>
+            <InputLabel id="Goal">Age</InputLabel>
+            <Select
+              labelId="goalName"
+              id="goalSelect"
+              value={selectedGoal.goalName}
+              label="Goal"
+              onChange={(e) => handleSelectedGoalChange(e)}
+            >
+              {goalWiseReturns.map((goalWiseReturn) => (
+                <MenuItem value={goalWiseReturn.goalName}>
+                  {goalWiseReturn.goalName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box height={400} width={"100%"}>
+          {" "}
+          {/* Adjust the height as needed */}
+          <LineChart
+            xAxis={generateXAxis()}
+            series={generateSeries()}
+            margin={{ left: 80 }}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 

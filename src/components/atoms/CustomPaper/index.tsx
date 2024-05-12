@@ -1,5 +1,5 @@
-import { ReactNode, forwardRef, ForwardedRef } from 'react';
-import { Container, Paper, Stack, SxProps } from '@mui/material';
+import { ReactNode, forwardRef, ForwardedRef } from "react";
+import { Container, Paper, Stack, SxProps } from "@mui/material";
 
 interface CustomPaperProps {
   children: ReactNode;
@@ -19,7 +19,7 @@ const CustomPaper = forwardRef<HTMLDivElement, CustomPaperProps>(
         <Stack gap={3} sx={{ minHeight: 1 }} mb={1} flexDirection="column">
           <Paper
             sx={{
-              padding: '24px',
+              padding: "24px",
               flex: 1,
             }}
             elevation={1}

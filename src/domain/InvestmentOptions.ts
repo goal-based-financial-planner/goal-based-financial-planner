@@ -1,4 +1,4 @@
-import { InvestmentOptionRiskType, TermType } from '../types/enums';
+import { InvestmentOptionRiskType, TermType } from "../types/enums";
 
 export type InvestmentOptionType = {
   id: string;
@@ -7,6 +7,12 @@ export type InvestmentOptionType = {
   riskType: InvestmentOptionRiskType;
 };
 
-export type InvestmentChoiceType = { investmentPercentage: number } & Pick<InvestmentOptionType, 'id'>
+export type InvestmentChoiceType = { investmentPercentage: number } & Pick<
+  InvestmentOptionType,
+  "id"
+>;
 
-export type InvestmentAllocationsType = Record<TermType, InvestmentChoiceType[]>;
+export type InvestmentAllocationsType = Record<
+  TermType,
+  InvestmentChoiceType[]
+>;
