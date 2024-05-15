@@ -140,7 +140,6 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
               <TableCell sx={{ width: '140px' }}>
                 Expected Percentage (%)
               </TableCell>
-              <TableCell sx={{ width: '140px' }}>Risk Grade</TableCell>
 
               {conditionallyRenderToolTipBasedCell(
                 'Short Term (%)',
@@ -169,9 +168,6 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                 <TableCell>
                   {investmentOptions[index].expectedReturnPercentage}
                 </TableCell>
-
-                <TableCell>{investmentOptions[index].riskType}</TableCell>
-
                 {areGoalsPresentOfType(TermType.SHORT_TERM) && (
                   <StyledTableCell
                     style={{

@@ -35,12 +35,12 @@ const GoalWiseInvestmentSuggestion = ({
             </TableHead>
             <TableBody>
               {investmentPerOption.map((a: InvestmentPerOptionType) => (
-                <>
+                <TableRow>
                   <TableCell>{a.goalName}</TableCell>
                   <TableCell>
                     {a.amount.toLocaleString(navigator.language)}
                   </TableCell>
-                </>
+                </TableRow>
               ))}
             </TableBody>
           </Table>

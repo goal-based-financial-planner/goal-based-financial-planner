@@ -1,24 +1,80 @@
 import { InvestmentOptionType } from '../domain/InvestmentOptions';
-import { InvestmentOptionRiskType } from '../types/enums';
 
 const investmentOptions: InvestmentOptionType[] = [
   {
-    id: 'assetType_1',
-    investmentName: 'Small cap funds',
-    expectedReturnPercentage: 12,
-    riskType: InvestmentOptionRiskType.LOW,
+    id: 'largecap',
+    investmentName: 'Large Cap Equity Mutual Funds',
+    expectedReturnPercentage: 11,
   },
   {
-    id: 'assetType_2',
-    investmentName: 'Large Cap funds',
-    expectedReturnPercentage: 10,
-    riskType: InvestmentOptionRiskType.LOW,
+    id: 'midcap',
+    investmentName: 'Mid Cap Equity Mutual Funds',
+    expectedReturnPercentage: 13.5,
   },
   {
-    id: 'assetType_3',
-    investmentName: 'Recurring deposit',
+    id: 'smallcap',
+    investmentName: 'Small Cap Equity Mutual Funds',
+    expectedReturnPercentage: 16.5,
+  },
+  {
+    id: 'multicap',
+    investmentName: 'Multi-Cap Equity Mutual Funds',
+    expectedReturnPercentage: 13.5,
+  },
+  {
+    id: 'sectoralthematic',
+    investmentName: 'Sectoral/Thematic Equity Mutual Funds',
+    expectedReturnPercentage: 15,
+  },
+  {
+    id: 'dividendyield',
+    investmentName: 'Dividend Yield Equity Mutual Funds',
+    expectedReturnPercentage: 11,
+  },
+  {
+    id: 'ppf',
+    investmentName: 'Public Provident Fund (PPF)',
+    expectedReturnPercentage: 7.1,
+  },
+  {
+    id: 'nps',
+    investmentName: 'National Pension System (NPS)',
+    expectedReturnPercentage: 9,
+  },
+  {
+    id: 'rd',
+    investmentName: 'Bank Recurring Deposits (FD)',
     expectedReturnPercentage: 6,
-    riskType: InvestmentOptionRiskType.HIGH,
+  },
+  {
+    id: 'fd',
+    investmentName: 'Bank Fixed Deposits (FD)',
+    expectedReturnPercentage: 6,
+  },
+  {
+    id: 'realestate',
+    investmentName: 'Real Estate',
+    expectedReturnPercentage: 9.5,
+  },
+  {
+    id: 'gold',
+    investmentName: 'Gold',
+    expectedReturnPercentage: 7.5,
+  },
+  {
+    id: 'corporatebonds',
+    investmentName: 'Corporate Bonds',
+    expectedReturnPercentage: 8.5,
+  },
+  {
+    id: 'sgbs',
+    investmentName: 'Sovereign Gold Bonds (SGBs)',
+    expectedReturnPercentage: 2.5,
+  },
+  {
+    id: 'gsecs',
+    investmentName: 'Government Securities (G-Secs)',
+    expectedReturnPercentage: 7,
   },
 ];
 

@@ -41,7 +41,16 @@ const Step = forwardRef<HTMLDivElement, StepProps>(
           <Grid item xs={12}>
             <Box>{subtext}</Box>
           </Grid>
-          <Grid item xs={12} sx={{ mb: 5, mt: 5 }}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              mb: 5,
+              mt: 5,
+              overflow: 'scroll',
+              height: 'calc(100vh - 300px)',
+            }}
+          >
             {children}
           </Grid>
         </Grid>
