@@ -82,7 +82,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
       });
     });
 
-    const result = Object.entries(aggregatedAmounts).map(
+    return Object.entries(aggregatedAmounts).map(
       ([investmentOptionId, totalAmount]) => {
         const investmentName = investmentOptions.find(
           (o) => o.id === investmentOptionId,
@@ -90,10 +90,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
         return { label: investmentName, value: Math.round(totalAmount) };
       },
     );
-
-    return result;
   };
-
 
   return (
     <Grid container spacing={1}>

@@ -1,18 +1,18 @@
-import { Dispatch } from "react";
-import { FinancialGoal } from "../domain/FinancialGoals";
-import { PlannerDataAction } from "./plannerDataReducer";
+import { Dispatch } from 'react';
+import { FinancialGoal } from '../domain/FinancialGoals';
+import { PlannerDataAction } from './plannerDataReducer';
 import {
   InvestmentAllocationsType,
   InvestmentChoiceType,
-} from "../domain/InvestmentOptions";
+} from '../domain/InvestmentOptions';
 
 export enum PlannerDataActionType {
-  ADD_FINANCIAL_GOAL = "ADD_FINANCIAL_GOAL",
-  UPDATE_ASSETS = "UPDATE_ASSETS",
-  DELETE_FINANCIAL_GOAL = "DELETE_FINANCIAL_GOAL",
-  UPDATE_SHORT_TERM_ASSET = "UPDATE_SHORT_TERM_ASSET",
-  UPDATE_MEDIUM_TERM_ASSET = "UPDATE_MEDIUM_TERM_ASSET",
-  UPDATE_LONG_TERM_ASSET = "UPDATE_LONG_TERM_ASSET",
+  ADD_FINANCIAL_GOAL = 'ADD_FINANCIAL_GOAL',
+  UPDATE_ASSETS = 'UPDATE_ASSETS',
+  DELETE_FINANCIAL_GOAL = 'DELETE_FINANCIAL_GOAL',
+  UPDATE_SHORT_TERM_ASSET = 'UPDATE_SHORT_TERM_ASSET',
+  UPDATE_MEDIUM_TERM_ASSET = 'UPDATE_MEDIUM_TERM_ASSET',
+  UPDATE_LONG_TERM_ASSET = 'UPDATE_LONG_TERM_ASSET',
 }
 
 export function addFinancialGoal(

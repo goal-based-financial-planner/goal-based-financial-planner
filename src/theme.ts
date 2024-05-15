@@ -1,4 +1,4 @@
-import { responsiveFontSizes, createTheme } from "@mui/material";
+import { responsiveFontSizes, createTheme } from '@mui/material';
 
 export const theme = responsiveFontSizes(
   createTheme({
@@ -6,12 +6,12 @@ export const theme = responsiveFontSizes(
       MuiTooltip: {
         styleOverrides: {
           tooltip: {
-            fontSize: "2em",
-            color: "black",
-            backgroundColor: "hsl(0,0%,70%)",
+            fontSize: '2em',
+            color: 'black',
+            backgroundColor: 'hsl(0,0%,70%)',
           },
           arrow: {
-            color: "hsl(0,0%,70%)",
+            color: 'hsl(0,0%,70%)',
           },
         },
       },

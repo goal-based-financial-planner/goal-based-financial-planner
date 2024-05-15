@@ -1,6 +1,6 @@
-import React, { forwardRef, ReactNode } from "react";
-import CustomPaper from "../../atoms/CustomPaper";
-import { Box, Button, Grid, Stack, Typography } from "@mui/material";
+import React, { forwardRef, ReactNode } from 'react';
+import CustomPaper from '../../atoms/CustomPaper';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 
 export type StepProps = {
   isExpanded: boolean;
@@ -31,7 +31,7 @@ const Step = forwardRef<HTMLDivElement, StepProps>(
   ) => {
     return isExpanded ? (
       <CustomPaper
-        sx={{ height: "calc(100vh - 16px)", overflow: "hidden" }}
+        sx={{ height: 'calc(100vh - 16px)', overflow: 'hidden' }}
         ref={ref}
       >
         <Grid container spacing={2}>
@@ -49,7 +49,7 @@ const Step = forwardRef<HTMLDivElement, StepProps>(
           <Stack alignItems="flex-end">
             <Button
               disabled={isContinueDisabled}
-              sx={{ fontSize: "1.2rem" }}
+              sx={{ fontSize: '1.2rem' }}
               onClick={onContinue}
               variant="contained"
               color="primary"

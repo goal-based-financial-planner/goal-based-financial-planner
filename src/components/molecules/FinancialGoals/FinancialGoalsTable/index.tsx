@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode } from "react";
+import React, { Dispatch, ReactNode } from 'react';
 import {
   Paper,
   Table,
@@ -7,12 +7,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from "@mui/material";
-import { FinancialGoal } from "../../../../domain/FinancialGoals";
-import CustomTooltip from "../../../atoms/CustomTooltip";
-import { Delete } from "@mui/icons-material";
-import { deleteFinancialGoal } from "../../../../store/plannerDataActions";
-import { PlannerDataAction } from "../../../../store/plannerDataReducer";
+} from '@mui/material';
+import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import CustomTooltip from '../../../atoms/CustomTooltip';
+import { Delete } from '@mui/icons-material';
+import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
+import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
@@ -40,11 +40,11 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
             <TableCell>Target Year</TableCell>
             <TableCell>Capital Required</TableCell>
             <TableCell>
-              <span style={{ verticalAlign: "middle" }}>Term</span>
+              <span style={{ verticalAlign: 'middle' }}>Term</span>
               <CustomTooltip tooltipText="Number of years you have to accumulate the capital " />
             </TableCell>
             <TableCell>
-              <span style={{ verticalAlign: "middle" }}>Term type</span>
+              <span style={{ verticalAlign: 'middle' }}>Term type</span>
               <CustomTooltip
                 tooltipText={
                   <>
@@ -58,7 +58,7 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
               />
             </TableCell>
             <TableCell>
-              <span style={{ verticalAlign: "middle" }}>
+              <span style={{ verticalAlign: 'middle' }}>
                 Capital Adjusted by Inflation
               </span>
               <CustomTooltip tooltipText="Capital adjusted by taking inflation into account" />
@@ -90,7 +90,7 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} style={{ textAlign: "center" }}>
+              <TableCell colSpan={7} style={{ textAlign: 'center' }}>
                 {addGoalButton}
               </TableCell>
             </TableRow>

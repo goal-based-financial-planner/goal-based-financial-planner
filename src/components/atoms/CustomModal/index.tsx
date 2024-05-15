@@ -1,5 +1,5 @@
-import { Modal, Stack, Paper } from "@mui/material";
-import { ReactNode, useEffect, useState } from "react";
+import { Modal, Stack, Paper } from '@mui/material';
+import { ReactNode, useEffect, useState } from 'react';
 
 interface CustomModalProps {
   open: boolean;
@@ -7,7 +7,7 @@ interface CustomModalProps {
   children: ReactNode;
 }
 const CustomModal = ({ open, onClose, children }: CustomModalProps) => {
-  const [showModal, setShowModal] = useState(false);
+  const [, setShowModal] = useState(false);
   useEffect(() => {
     setShowModal(open);
   }, [open]);
@@ -23,15 +23,15 @@ const CustomModal = ({ open, onClose, children }: CustomModalProps) => {
         component={Stack}
         p={3}
         sx={{
-          position: "absolute",
+          position: 'absolute',
           minWidth: {
-            xs: "90%",
+            xs: '90%',
             sm: null,
             md: 400,
           },
           maxWidth: 400,
           width: {
-            xs: "80%",
+            xs: '80%',
             md: 400,
           },
         }}

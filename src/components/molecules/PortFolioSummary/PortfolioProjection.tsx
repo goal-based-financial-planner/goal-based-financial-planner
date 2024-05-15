@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { AxisConfig, LineChart, LineSeriesType } from "@mui/x-charts";
+import React, { useState } from 'react';
+import { AxisConfig, LineChart, LineSeriesType } from '@mui/x-charts';
 import {
   Box,
   FormControl,
@@ -7,13 +7,13 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-} from "@mui/material";
+} from '@mui/material';
 import {
   GoalWiseInvestmentSuggestions,
   GoalWiseReturn,
-} from "../../../hooks/useInvestmentCalculator";
-import { MakeOptional } from "@mui/x-charts/models/helpers";
-import { FinancialGoal } from "../../../domain/FinancialGoals";
+} from '../../../hooks/useInvestmentCalculator';
+import { MakeOptional } from '@mui/x-charts/models/helpers';
+import { FinancialGoal } from '../../../domain/FinancialGoals';
 
 type PortfolioProjectionProps = {
   goalWiseReturns: GoalWiseReturn[];
@@ -30,7 +30,7 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
     financialGoals[0],
   );
 
-  const generateXAxis = (): MakeOptional<AxisConfig, "id">[] => {
+  const generateXAxis = (): MakeOptional<AxisConfig, 'id'>[] => {
     const data = Array.from(
       { length: selectedGoal.getTerm() + 1 },
       (_, i) => i + selectedGoal.getInvestmentStartYear(),
@@ -39,13 +39,13 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
       {
         data,
         valueFormatter: (v) => v.toString(),
-        label: "Year",
+        label: 'Year',
         tickMinStep: 1,
       },
     ];
   };
 
-  const generateSeries = (): MakeOptional<LineSeriesType, "type">[] => {
+  const generateSeries = (): MakeOptional<LineSeriesType, 'type'>[] => {
     const selectedGoalWiseReturn = goalWiseReturns.find(
       (gr) => gr.goalName === selectedGoal.goalName,
     )!;
@@ -85,12 +85,12 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
     return [
       {
         data: returns,
-        label: "Expected Portfolio Value",
+        label: 'Expected Portfolio Value',
         valueFormatter: (v) => v.toLocaleString(),
       },
       {
         data: invested,
-        label: "Invested Amount",
+        label: 'Invested Amount',
         valueFormatter: (v) => v.toLocaleString(),
       },
     ];
@@ -124,8 +124,8 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
             </Select>
           </FormControl>
         </Box>
-        <Box height={400} width={"100%"}>
-          {" "}
+        <Box height={400} width={'100%'}>
+          {' '}
           {/* Adjust the height as needed */}
           <LineChart
             xAxis={generateXAxis()}

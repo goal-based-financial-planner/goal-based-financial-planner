@@ -1,6 +1,6 @@
-import { TermType } from "../types/enums";
-import { InvestmentAllocationsType } from "./InvestmentOptions";
-import { FinancialGoal } from "./FinancialGoals";
+import { TermType } from '../types/enums';
+import { InvestmentAllocationsType } from './InvestmentOptions';
+import { FinancialGoal } from './FinancialGoals';
 
 export type FinancialGoalSummary = Array<{
   termType: TermType;
@@ -39,14 +39,14 @@ export class PlannerData {
       .filter((e) => e.numberOfGoals > 0)
       .map((e) => `${e.numberOfGoals} ${e.termType}`);
 
-    const summaryText = goalSummary.join(", ");
-    const lastIndex = summaryText.lastIndexOf(",");
+    const summaryText = goalSummary.join(', ');
+    const lastIndex = summaryText.lastIndexOf(',');
     if (lastIndex !== -1) {
-      const updatedSummaryText =
+      return (
         summaryText.substring(0, lastIndex) +
-        " and " +
-        summaryText.substring(lastIndex + 1);
-      return updatedSummaryText;
+        ' and ' +
+        summaryText.substring(lastIndex + 1)
+      );
     }
 
     return summaryText;

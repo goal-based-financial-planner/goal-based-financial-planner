@@ -11,20 +11,20 @@ import {
   TableRow,
   Tooltip,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 
-import React, { Dispatch } from "react";
-import CustomAmountField from "../CustomAmountField";
+import React, { Dispatch } from 'react';
+import CustomAmountField from '../CustomAmountField';
 import {
   setLongTermAssetPercentage,
   setMidTermAssetPercentage,
   setShortTermAssetPercentage,
-} from "../../../../store/plannerDataActions";
-import { PlannerDataAction } from "../../../../store/plannerDataReducer";
-import { PlannerData } from "../../../../domain/PlannerData";
-import { InvestmentOptionType } from "../../../../domain/InvestmentOptions";
-import { ToolTipVisibilityState } from "../../../compounds/InvestmentAllocationStep";
-import { TermType } from "../../../../types/enums";
+} from '../../../../store/plannerDataActions';
+import { PlannerDataAction } from '../../../../store/plannerDataReducer';
+import { PlannerData } from '../../../../domain/PlannerData';
+import { InvestmentOptionType } from '../../../../domain/InvestmentOptions';
+import { ToolTipVisibilityState } from '../../../compounds/InvestmentAllocationStep';
+import { TermType } from '../../../../types/enums';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -85,15 +85,15 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
     const shouldHideColumn = areGoalsPresentOfType(column);
 
     return !shouldHideColumn ? null : (
-      <StyledTableCell sx={{ width: "70px" }}>
+      <StyledTableCell sx={{ width: '70px' }}>
         {tooltipVisible ? (
           <Tooltip
-            sx={{ alignContent: "right", justifyContent: "right" }}
+            sx={{ alignContent: 'right', justifyContent: 'right' }}
             title={
               <Box>
                 <Typography
                   variant="body2"
-                  sx={{ fontSize: "16px", textAlign: "center" }}
+                  sx={{ fontSize: '16px', textAlign: 'center' }}
                 >
                   should add up to 100
                 </Typography>
@@ -103,7 +103,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
               popper: {
                 modifiers: [
                   {
-                    name: "offset",
+                    name: 'offset',
                     options: {
                       offset: [0, offset],
                     },
@@ -125,7 +125,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <TableContainer
         component={Paper}
         sx={{
@@ -136,26 +136,26 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "140px" }}>Asset Type</TableCell>
-              <TableCell sx={{ width: "140px" }}>
+              <TableCell sx={{ width: '140px' }}>Asset Type</TableCell>
+              <TableCell sx={{ width: '140px' }}>
                 Expected Percentage (%)
               </TableCell>
-              <TableCell sx={{ width: "140px" }}>Risk Grade</TableCell>
+              <TableCell sx={{ width: '140px' }}>Risk Grade</TableCell>
 
               {conditionallyRenderToolTipBasedCell(
-                "Short Term (%)",
+                'Short Term (%)',
                 TermType.SHORT_TERM,
                 10,
                 TermType.SHORT_TERM,
               )}
               {conditionallyRenderToolTipBasedCell(
-                "Mid Term (%)",
+                'Mid Term (%)',
                 TermType.MEDIUM_TERM,
                 10,
                 TermType.MEDIUM_TERM,
               )}
               {conditionallyRenderToolTipBasedCell(
-                "Long Term (%)",
+                'Long Term (%)',
                 TermType.LONG_TERM,
                 10,
                 TermType.LONG_TERM,
@@ -175,12 +175,12 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                 {areGoalsPresentOfType(TermType.SHORT_TERM) && (
                   <StyledTableCell
                     style={{
-                      background: "rgba(0, 0, 0, 0.04)",
+                      background: 'rgba(0, 0, 0, 0.04)',
                     }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.investmentAllocations["Short Term"].filter(
+                        plannerData.investmentAllocations['Short Term'].filter(
                           (e) => e.id === investmentOptions[index].id,
                         )[0]?.investmentPercentage
                       }
@@ -195,11 +195,11 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                 )}
                 {areGoalsPresentOfType(TermType.MEDIUM_TERM) && (
                   <StyledTableCell
-                    style={{ background: "rgba(0, 0, 0, 0.04)" }}
+                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.investmentAllocations["Medium Term"].filter(
+                        plannerData.investmentAllocations['Medium Term'].filter(
                           (e) => e.id === investmentOptions[index].id,
                         )[0]?.investmentPercentage
                       }
@@ -214,11 +214,11 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
                 )}
                 {areGoalsPresentOfType(TermType.LONG_TERM) && (
                   <StyledTableCell
-                    style={{ background: "rgba(0, 0, 0, 0.04)" }}
+                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
                   >
                     <CustomAmountField
                       value={
-                        plannerData.investmentAllocations["Long Term"].filter(
+                        plannerData.investmentAllocations['Long Term'].filter(
                           (e) => e.id === investmentOptions[index].id,
                         )[0]?.investmentPercentage
                       }

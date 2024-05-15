@@ -1,15 +1,15 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
-import FinancialGoalsStep from "../FinancialGoalsStep";
+import React, { useEffect, useReducer, useRef, useState } from 'react';
+import FinancialGoalsStep from '../FinancialGoalsStep';
 import {
   getInitialData,
   persistPlannerData,
   plannerDataReducer,
-} from "../../../store/plannerDataReducer";
-import { Box } from "@mui/material";
+} from '../../../store/plannerDataReducer';
+import { Box } from '@mui/material';
 
-import InvestmentAllocationStep from "../InvestmentAllocationStep";
-import { PlannerState } from "../../../types/enums";
-import PortfolioSummaryStep from "../PortfolioSummaryStep";
+import InvestmentAllocationStep from '../InvestmentAllocationStep';
+import { PlannerState } from '../../../types/enums';
+import PortfolioSummaryStep from '../PortfolioSummaryStep';
 
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
@@ -69,15 +69,15 @@ const Planner: React.FC = () => {
   useEffect(() => {
     switch (currentState) {
       case PlannerState.GOALS:
-        financialGoalsRef.current?.scrollIntoView({ behavior: "smooth" });
+        financialGoalsRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
       case PlannerState.INVESTMENT_ALLOCATION:
         investmentAllocationsRef.current?.scrollIntoView({
-          behavior: "smooth",
+          behavior: 'smooth',
         });
         break;
       case PlannerState.PORTFOLIO_SUMMARY:
-        portfolioSummaryRef.current?.scrollIntoView({ behavior: "smooth" });
+        portfolioSummaryRef.current?.scrollIntoView({ behavior: 'smooth' });
         break;
     }
   }, [

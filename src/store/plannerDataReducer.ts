@@ -1,9 +1,9 @@
-import { FinancialGoal } from "../domain/FinancialGoals";
-import { PlannerData } from "../domain/PlannerData";
-import { TermType } from "../types/enums";
-import { PlannerDataActionType } from "./plannerDataActions";
+import { FinancialGoal } from '../domain/FinancialGoals';
+import { PlannerData } from '../domain/PlannerData';
+import { TermType } from '../types/enums';
+import { PlannerDataActionType } from './plannerDataActions';
 
-const LOCAL_STORAGE_KEY = "plannerData";
+const LOCAL_STORAGE_KEY = 'plannerData';
 
 export type PlannerDataAction = {
   payload: any;
@@ -60,15 +60,15 @@ export function plannerDataReducer(
       );
 
       if (!allSelectedTermTypes.has(TermType.SHORT_TERM)) {
-        assets["Short Term"] = [];
+        assets['Short Term'] = [];
       }
 
       if (!allSelectedTermTypes.has(TermType.MEDIUM_TERM)) {
-        assets["Medium Term"] = [];
+        assets['Medium Term'] = [];
       }
 
       if (!allSelectedTermTypes.has(TermType.LONG_TERM)) {
-        assets["Long Term"] = [];
+        assets['Long Term'] = [];
       }
 
       return new PlannerData(financialGoals, assets);

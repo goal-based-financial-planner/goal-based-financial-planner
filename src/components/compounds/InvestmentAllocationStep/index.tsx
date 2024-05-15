@@ -1,14 +1,14 @@
-import React, { Dispatch, useState } from "react";
-import InvestmentAllocationTable from "../../molecules/InvestmentAllocation/InvestmentAllocationTable";
-import { PlannerDataAction } from "../../../store/plannerDataReducer";
-import Step, { StepProps } from "../../molecules/Step";
-import useInvestmentOptions from "../../../hooks/useInvestmentOptions";
-import { TermType } from "../../../types/enums";
-import { PlannerData } from "../../../domain/PlannerData";
+import React, { Dispatch, useState } from 'react';
+import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
+import { PlannerDataAction } from '../../../store/plannerDataReducer';
+import Step, { StepProps } from '../../molecules/Step';
+import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
+import { TermType } from '../../../types/enums';
+import { PlannerData } from '../../../domain/PlannerData';
 
 type InvestmentAllocationProps = Pick<
   StepProps,
-  "isExpanded" | "onContinue" | "onEdit"
+  'isExpanded' | 'onContinue' | 'onEdit'
 > & {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
@@ -105,7 +105,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       isExpanded={isExpanded}
       onContinue={handleStepContinue}
       onEdit={onEdit}
-      title={"Investment Allocation"}
+      title={'Investment Allocation'}
       subtext="Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal"
       isContinueDisabled={false}
       summaryText={`You have added some assets here`}

@@ -1,7 +1,7 @@
-import { PlannerData } from "../domain/PlannerData";
-import { FinancialGoal } from "../domain/FinancialGoals";
-import { InvestmentAllocationsType } from "../domain/InvestmentOptions";
-import useInvestmentOptions from "./useInvestmentOptions";
+import { PlannerData } from '../domain/PlannerData';
+import { FinancialGoal } from '../domain/FinancialGoals';
+import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
+import useInvestmentOptions from './useInvestmentOptions';
 
 export type InvestmentSuggestion = {
   investmentOptionId: string;

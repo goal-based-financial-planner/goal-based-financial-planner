@@ -6,7 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-} from "@mui/material";
+} from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../../hooks/useInvestmentCalculator';
 import React from 'react';
 import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
