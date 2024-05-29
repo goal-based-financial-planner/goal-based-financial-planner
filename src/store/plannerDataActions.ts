@@ -4,6 +4,7 @@ import { PlannerDataAction } from './plannerDataReducer';
 import {
   InvestmentAllocationsType,
   InvestmentChoiceType,
+  InvestmentOptionType,
 } from '../domain/InvestmentOptions';
 
 export enum PlannerDataActionType {
@@ -13,6 +14,7 @@ export enum PlannerDataActionType {
   UPDATE_SHORT_TERM_ASSET = 'UPDATE_SHORT_TERM_ASSET',
   UPDATE_MEDIUM_TERM_ASSET = 'UPDATE_MEDIUM_TERM_ASSET',
   UPDATE_LONG_TERM_ASSET = 'UPDATE_LONG_TERM_ASSET',
+  ADD_INVESTMENT_OPTION = 'ADD_INVESTMENT_OPTION',
 }
 
 export function addFinancialGoal(
@@ -72,5 +74,15 @@ export function setLongTermAssetPercentage(
   dispatch({
     payload,
     type: PlannerDataActionType.UPDATE_LONG_TERM_ASSET,
+  });
+}
+
+export function addInvestmentOption(
+  dispatch: Dispatch<PlannerDataAction>,
+  payload: InvestmentOptionType,
+) {
+  dispatch({
+    payload,
+    type: PlannerDataActionType.ADD_INVESTMENT_OPTION,
   });
 }

@@ -1,5 +1,8 @@
 import { TermType } from '../types/enums';
-import { InvestmentAllocationsType } from './InvestmentOptions';
+import {
+  InvestmentAllocationsType,
+  InvestmentOptionType,
+} from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
 
 export type FinancialGoalSummary = Array<{
@@ -10,6 +13,7 @@ export type FinancialGoalSummary = Array<{
 export class PlannerData {
   financialGoals: FinancialGoal[];
   investmentAllocations: InvestmentAllocationsType;
+  investmentAllocationOptions: InvestmentOptionType[];
 
   constructor(
     financialGoals: FinancialGoal[] = [],
@@ -18,9 +22,11 @@ export class PlannerData {
       [TermType.MEDIUM_TERM]: [],
       [TermType.SHORT_TERM]: [],
     },
+    investmentAllocationOptions: InvestmentOptionType[] = [],
   ) {
     this.financialGoals = financialGoals;
     this.investmentAllocations = assets;
+    this.investmentAllocationOptions = investmentAllocationOptions;
   }
 
   getFinancialGoalSummary(): FinancialGoalSummary {

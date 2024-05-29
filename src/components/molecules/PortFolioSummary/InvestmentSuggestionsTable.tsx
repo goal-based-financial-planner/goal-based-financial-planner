@@ -9,29 +9,26 @@ import {
 } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../../hooks/useInvestmentCalculator';
 import React from 'react';
-import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 import CustomTooltip from '../../atoms/CustomTooltip';
 import GoalWiseInvestmentSuggestion, {
   InvestmentPerOptionType,
 } from '../../atoms/GoalWiseInvestmentSuggestion';
+import { InvestmentOptionType } from '../../../domain/InvestmentOptions';
 
 type InvestmentSuggestionsTableProps = {
   suggestions: GoalWiseInvestmentSuggestions[];
+  investmentOptions: InvestmentOptionType[];
 };
 const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
   suggestions,
+  investmentOptions,
 }) => {
-  const investmentOptions = useInvestmentOptions();
-
-  const investmentOptionWiseSum = suggestions.reduce(
-    (acc, goal) => {
-      goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
-        acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
-      });
-      return acc;
-    },
-    {} as { [key: string]: number },
-  );
+  const investmentOptionWiseSum = suggestions.reduce((acc, goal) => {
+    goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
+      acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
+    });
+    return acc;
+  }, {} as { [key: string]: number });
 
   const assetSumArray = Object.entries(investmentOptionWiseSum).map(
     ([investmentOptionId, totalValue]) => ({

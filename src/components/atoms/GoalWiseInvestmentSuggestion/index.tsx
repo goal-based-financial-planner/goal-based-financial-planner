@@ -29,8 +29,10 @@ const GoalWiseInvestmentSuggestion = ({
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Goal name</TableCell>
-                <TableCell>Amount</TableCell>
+                
+                  <TableCell>Goal name</TableCell>
+                  <TableCell>Amount</TableCell>
+              
               </TableRow>
             </TableHead>
             <TableBody>

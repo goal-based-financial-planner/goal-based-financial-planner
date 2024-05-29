@@ -8,7 +8,6 @@ import { PlannerData } from '../../../domain/PlannerData';
 import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
 import PortfolioProjection from './PortfolioProjection';
 import { PieChart } from '@mui/x-charts/PieChart';
-import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,7 +57,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
   const {
     calculateInvestmentNeededForGoals,
     calculateYearlyReturnValueBySuggestions,
-  } = useInvestmentCalculator();
+  } = useInvestmentCalculator(plannerData);
   const investmentBreakdown = calculateInvestmentNeededForGoals(plannerData);
   const yearlyReturnValuesForSuggestions =
     calculateYearlyReturnValueBySuggestions(
@@ -66,7 +65,6 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
       investmentBreakdown,
     );
 
-  const investmentOptions = useInvestmentOptions();
   const getAmountPerInvestmentOption = () => {
     const aggregatedAmounts: { [key: string]: number } = {};
 
@@ -84,7 +82,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
 
     return Object.entries(aggregatedAmounts).map(
       ([investmentOptionId, totalAmount]) => {
-        const investmentName = investmentOptions.find(
+        const investmentName = plannerData.investmentAllocationOptions.find(
           (o) => o.id === investmentOptionId,
         )?.investmentName;
         return { label: investmentName, value: Math.round(totalAmount) };
@@ -105,7 +103,10 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
             <Tab label="Pie chart" {...a11yProps(1)} />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
-            <InvestmentSuggestionsTable suggestions={investmentBreakdown} />
+            <InvestmentSuggestionsTable
+              suggestions={investmentBreakdown}
+              investmentOptions={plannerData.investmentAllocationOptions}
+            />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <PieChart

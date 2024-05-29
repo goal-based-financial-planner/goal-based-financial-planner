@@ -13,7 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import React, { Dispatch } from 'react';
+import React, { Dispatch, ReactNode } from 'react';
 import CustomAmountField from '../CustomAmountField';
 import {
   setLongTermAssetPercentage,
@@ -22,7 +22,6 @@ import {
 } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { PlannerData } from '../../../../domain/PlannerData';
-import { InvestmentOptionType } from '../../../../domain/InvestmentOptions';
 import { ToolTipVisibilityState } from '../../../compounds/InvestmentAllocationStep';
 import { TermType } from '../../../../types/enums';
 
@@ -39,14 +38,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface InvestmentAllocationTableProps {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
-  investmentOptions: InvestmentOptionType[];
+  emptyBodyPlaceholder: ReactNode;
   tooltipVisibilityState: ToolTipVisibilityState;
 }
 
 const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   dispatch,
   plannerData,
-  investmentOptions,
+  emptyBodyPlaceholder: addInvestmentOption,
   tooltipVisibilityState: termTooltipVisible,
 }) => {
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
@@ -162,73 +161,102 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {investmentOptions.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>{investmentOptions[index].investmentName}</TableCell>
-                <TableCell>
-                  {investmentOptions[index].expectedReturnPercentage}
+            {plannerData.investmentAllocationOptions.length > 0 ? (
+              plannerData.investmentAllocationOptions.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    {
+                      plannerData.investmentAllocationOptions[index]
+                        .investmentName
+                    }
+                  </TableCell>
+                  <TableCell>
+                    {
+                      plannerData.investmentAllocationOptions[index]
+                        .expectedReturnPercentage
+                    }
+                  </TableCell>
+
+                  {/* <TableCell>{investmentOptions[index].riskType}</TableCell> */}
+
+                  {areGoalsPresentOfType(TermType.SHORT_TERM) && (
+                    <StyledTableCell
+                      style={{
+                        background: 'rgba(0, 0, 0, 0.04)',
+                      }}
+                    >
+                      <CustomAmountField
+                        value={
+                          plannerData.investmentAllocations[
+                            'Short Term'
+                          ].filter(
+                            (e) =>
+                              e.id ===
+                              plannerData.investmentAllocationOptions[index].id,
+                          )[0]?.investmentPercentage
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeForShortTerm(
+                            plannerData.investmentAllocationOptions[index].id,
+                            value,
+                          )
+                        }
+                      />
+                    </StyledTableCell>
+                  )}
+                  {areGoalsPresentOfType(TermType.MEDIUM_TERM) && (
+                    <StyledTableCell
+                      style={{ background: 'rgba(0, 0, 0, 0.04)' }}
+                    >
+                      <CustomAmountField
+                        value={
+                          plannerData.investmentAllocations[
+                            'Medium Term'
+                          ].filter(
+                            (e) =>
+                              e.id ===
+                              plannerData.investmentAllocationOptions[index].id,
+                          )[0]?.investmentPercentage
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeForMidTerm(
+                            plannerData.investmentAllocationOptions[index].id,
+                            value,
+                          )
+                        }
+                      />
+                    </StyledTableCell>
+                  )}
+                  {areGoalsPresentOfType(TermType.LONG_TERM) && (
+                    <StyledTableCell
+                      style={{ background: 'rgba(0, 0, 0, 0.04)' }}
+                    >
+                      <CustomAmountField
+                        value={
+                          plannerData.investmentAllocations['Long Term'].filter(
+                            (e) =>
+                              e.id ===
+                              plannerData.investmentAllocationOptions[index].id,
+                          )[0]?.investmentPercentage
+                        }
+                        onChange={(value: any) =>
+                          handleInputChangeForLongTerm(
+                            plannerData.investmentAllocationOptions[index].id,
+                            value,
+                          )
+                        }
+                      />
+                    </StyledTableCell>
+                  )}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} style={{ textAlign: 'center' }}>
+                  {addInvestmentOption}
                 </TableCell>
-                {areGoalsPresentOfType(TermType.SHORT_TERM) && (
-                  <StyledTableCell
-                    style={{
-                      background: 'rgba(0, 0, 0, 0.04)',
-                    }}
-                  >
-                    <CustomAmountField
-                      value={
-                        plannerData.investmentAllocations['Short Term'].filter(
-                          (e) => e.id === investmentOptions[index].id,
-                        )[0]?.investmentPercentage
-                      }
-                      onChange={(value: any) =>
-                        handleInputChangeForShortTerm(
-                          investmentOptions[index].id,
-                          value,
-                        )
-                      }
-                    />
-                  </StyledTableCell>
-                )}
-                {areGoalsPresentOfType(TermType.MEDIUM_TERM) && (
-                  <StyledTableCell
-                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
-                  >
-                    <CustomAmountField
-                      value={
-                        plannerData.investmentAllocations['Medium Term'].filter(
-                          (e) => e.id === investmentOptions[index].id,
-                        )[0]?.investmentPercentage
-                      }
-                      onChange={(value: any) =>
-                        handleInputChangeForMidTerm(
-                          investmentOptions[index].id,
-                          value,
-                        )
-                      }
-                    />
-                  </StyledTableCell>
-                )}
-                {areGoalsPresentOfType(TermType.LONG_TERM) && (
-                  <StyledTableCell
-                    style={{ background: 'rgba(0, 0, 0, 0.04)' }}
-                  >
-                    <CustomAmountField
-                      value={
-                        plannerData.investmentAllocations['Long Term'].filter(
-                          (e) => e.id === investmentOptions[index].id,
-                        )[0]?.investmentPercentage
-                      }
-                      onChange={(value: any) =>
-                        handleInputChangeForLongTerm(
-                          investmentOptions[index].id,
-                          value,
-                        )
-                      }
-                    />
-                  </StyledTableCell>
-                )}
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </TableContainer>

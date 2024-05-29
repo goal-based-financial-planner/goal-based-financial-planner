@@ -1,10 +1,12 @@
 import React, { Dispatch, useState } from 'react';
-import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import Step, { StepProps } from '../../molecules/Step';
-import useInvestmentOptions from '../../../hooks/useInvestmentOptions';
 import { TermType } from '../../../types/enums';
+import AddIcon from '@mui/icons-material/Add';
 import { PlannerData } from '../../../domain/PlannerData';
+import AddInvestmentOptions from '../../molecules/InvestmentAllocation/AddInvestmentOptions';
+import { Box, Button } from '@mui/material';
+import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
 
 type InvestmentAllocationProps = Pick<
   StepProps,
@@ -27,7 +29,26 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   onContinue,
   onEdit,
 }) => {
-  const investmentOptions = useInvestmentOptions();
+  const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
+
+  const handleClose = () => {
+    setShowAddGoalsModal(false);
+  };
+
+  const getAddInvestmentOptionButton = () => {
+    return (
+      <Button
+        startIcon={<AddIcon />}
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setShowAddGoalsModal(true);
+        }}
+      >
+        Add Investment option
+      </Button>
+    );
+  };
 
   const [tooltipVisibilityState, setTooltipVisibilityState] =
     useState<ToolTipVisibilityState>({
@@ -42,7 +63,10 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   };
   const isAssetAllocationInvalid = (termType: TermType) => {
     if (areGoalsPresentOfType(termType)) {
-      const termSum = investmentOptions.reduce(
+
+
+      const termSum = plannerData.investmentAllocationOptions.reduce(
+
         (sum, row) =>
           sum +
           Number(
@@ -100,6 +124,19 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       onContinue();
     }
   };
+
+  const prepareEmptyBodyPlaceholder = () => {
+    return (
+      <>
+        <p>
+          You don't have any goals added. Click on Add Goal to start adding your
+          goals...
+        </p>
+        {getAddInvestmentOptionButton()}
+      </>
+    );
+  };
+
   return (
     <Step
       isExpanded={isExpanded}
@@ -110,11 +147,33 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       isContinueDisabled={false}
       summaryText={`You have added some assets here`}
     >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
+        {plannerData.investmentAllocationOptions.length > 0 ? (
+          <Box>{getAddInvestmentOptionButton()}</Box>
+        ) : null}
+      </Box>
       <InvestmentAllocationTable
         dispatch={dispatch}
         plannerData={plannerData}
-        investmentOptions={investmentOptions}
+        emptyBodyPlaceholder={prepareEmptyBodyPlaceholder()}
         tooltipVisibilityState={tooltipVisibilityState}
+      />
+      {/* <InvesmentOptionsTable
+        invesmentOptions={plannerData.investmentAllocationOptions}
+        emptyBodyPlaceholder={undefined}
+        dispatch={dispatch}
+      /> */}
+
+      <AddInvestmentOptions
+        showAddInvesmentOptionsModal={showAddGoalsModal}
+        handleClose={handleClose}
+        dispatch={dispatch}
       />
     </Step>
   );

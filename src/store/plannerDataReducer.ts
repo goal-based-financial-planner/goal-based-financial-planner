@@ -21,10 +21,14 @@ function updateAssetAllocation(
   allocations = allocations.filter((e) => e.id !== action.payload.id);
   allocations.push(action.payload);
 
-  return new PlannerData(state.financialGoals, {
-    ...state.investmentAllocations,
-    [termType]: allocations,
-  });
+  return new PlannerData(
+    state.financialGoals,
+    {
+      ...state.investmentAllocations,
+      [termType]: allocations,
+    },
+    state.investmentAllocationOptions,
+  );
 }
 
 export function plannerDataReducer(
@@ -36,6 +40,14 @@ export function plannerDataReducer(
       return new PlannerData(
         [...state.financialGoals, action.payload],
         state.investmentAllocations,
+        state.investmentAllocationOptions,
+      );
+
+    case PlannerDataActionType.ADD_INVESTMENT_OPTION:
+      return new PlannerData(
+        state.financialGoals,
+        state.investmentAllocations,
+        [...state.investmentAllocationOptions, action.payload],
       );
 
     case PlannerDataActionType.UPDATE_ASSETS:
@@ -93,7 +105,12 @@ export function getInitialData() {
             e.targetAmount,
           ),
       );
-      return new PlannerData(financialGoals, parsedState.investmentAllocations);
+
+      return new PlannerData(
+        financialGoals,
+        parsedState.investmentAllocations,
+        parsedState.investmentAllocationOptions,
+      );
     } catch {}
   }
   return new PlannerData();

@@ -1,7 +1,6 @@
 import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
-import useInvestmentOptions from './useInvestmentOptions';
 
 export type InvestmentSuggestion = {
   investmentOptionId: string;
@@ -25,9 +24,7 @@ export type GoalWiseReturn = {
   returnsPerInvestment: ReturnsPerInvestment[];
 };
 
-const useInvestmentCalculator = () => {
-  const investmentOptions = useInvestmentOptions();
-
+const useInvestmentCalculator = (plannerData: PlannerData) => {
   const calculateInvestmentNeededForGoals = (
     plannerData: PlannerData,
   ): GoalWiseInvestmentSuggestions[] => {
@@ -47,12 +44,11 @@ const useInvestmentCalculator = () => {
     // Get the investment allocations for the term type of the goal
     const investmentAllocationsForType =
       investmentAllocations[goal.getTermType()];
-
     const assetDetails = investmentAllocationsForType.map((entry) => {
       const { id, investmentPercentage } = entry;
-      const { expectedReturnPercentage } = investmentOptions.filter(
-        (e) => e.id === id,
-      )[0];
+      const { expectedReturnPercentage } =
+        plannerData.investmentAllocationOptions.filter((e) => e.id === id)[0];
+
       return {
         id,
         expectedReturnPercentage,
@@ -65,6 +61,8 @@ const useInvestmentCalculator = () => {
       goal.getInflationAdjustedTargetAmount(),
       goal.getTerm(),
     );
+
+    console.log(assetDetails);
     return assetDetails.map((e) => ({
       investmentOptionId: e.id,
       amount: (totalMonthlyInvestmentNeeded * e.investmentPercentage) / 100,
@@ -80,14 +78,15 @@ const useInvestmentCalculator = () => {
     targetAmount: number,
     term: number,
   ) => {
-    const x = assetDetails.map((a) =>
-      calculateX(
+    const x = assetDetails.map((a) => {
+      return calculateX(
         a.expectedReturnPercentage / 100 / 12,
         term * 12,
         a.investmentPercentage,
-      ),
-    );
+      );
+    });
     const combinedX = x.reduce((a, b) => a + b, 0);
+
     return targetAmount / combinedX;
   };
 
@@ -118,9 +117,10 @@ const useInvestmentCalculator = () => {
 
     for (let i = startYear + 1; i <= endYear; i++) {
       const termInMonths = (i - startYear) * 12;
-      const expectedReturnPercentage = investmentOptions.filter(
-        (e) => e.id === investmentSuggestion.investmentOptionId,
-      )[0].expectedReturnPercentage;
+      const expectedReturnPercentage =
+        plannerData.investmentAllocationOptions.filter(
+          (e) => e.id === investmentSuggestion.investmentOptionId,
+        )[0].expectedReturnPercentage;
       const returnOfTheYear = calculateReturnOnInvestment(
         investmentSuggestion.amount,
         termInMonths,
