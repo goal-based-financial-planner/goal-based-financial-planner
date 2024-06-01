@@ -64,7 +64,7 @@ export function plannerDataReducer(
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
       const financialGoals = [...state.financialGoals];
-      const assets = state.investmentAllocations;
+      const { investmentAllocations } = state;
       financialGoals.splice(action.payload, 1);
 
       const allSelectedTermTypes = new Set(
@@ -72,18 +72,18 @@ export function plannerDataReducer(
       );
 
       if (!allSelectedTermTypes.has(TermType.SHORT_TERM)) {
-        assets['Short Term'] = [];
+        investmentAllocations['Short Term'] = [];
       }
 
       if (!allSelectedTermTypes.has(TermType.MEDIUM_TERM)) {
-        assets['Medium Term'] = [];
+        investmentAllocations['Medium Term'] = [];
       }
 
       if (!allSelectedTermTypes.has(TermType.LONG_TERM)) {
-        assets['Long Term'] = [];
+        investmentAllocations['Long Term'] = [];
       }
 
-      return new PlannerData(financialGoals, assets);
+      return new PlannerData(financialGoals, investmentAllocations);
 
     default:
       return state;

@@ -74,14 +74,18 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
                 <TableCell>{goal.startYear}</TableCell>
                 <TableCell>{goal.targetYear}</TableCell>
                 <TableCell>
-                  {goal.targetAmount.toLocaleString(navigator.language)}
+                  {goal.targetAmount.toLocaleString(navigator.language, {
+                    maximumFractionDigits: 2,
+                  })}
                 </TableCell>
                 <TableCell>{goal.getTerm()}</TableCell>
                 <TableCell>{goal.getTermType()}</TableCell>
                 <TableCell>
                   {goal
                     .getInflationAdjustedTargetAmount()
-                    .toLocaleString(navigator.language)}
+                    .toLocaleString(navigator.language, {
+                      maximumFractionDigits: 2,
+                    })}
                 </TableCell>
                 <TableCell align="right">
                   <Delete color="error" onClick={() => deleteGoal(index)} />

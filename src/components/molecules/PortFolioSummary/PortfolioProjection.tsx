@@ -86,12 +86,14 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
       {
         data: returns,
         label: 'Expected Portfolio Value',
-        valueFormatter: (v) => v.toLocaleString(),
+        valueFormatter: (v) =>
+          v.toLocaleString(navigator.language, { maximumFractionDigits: 2 }),
       },
       {
         data: invested,
         label: 'Invested Amount',
-        valueFormatter: (v) => v.toLocaleString(),
+        valueFormatter: (v) =>
+          v.toLocaleString(navigator.language, { maximumFractionDigits: 2 }),
       },
     ];
   };
@@ -104,37 +106,35 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
   };
 
   return (
-    <>
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <Box>
-          <FormControl>
-            <InputLabel id="Goal">Age</InputLabel>
-            <Select
-              labelId="goalName"
-              id="goalSelect"
-              value={selectedGoal.goalName}
-              label="Goal"
-              onChange={(e) => handleSelectedGoalChange(e)}
-            >
-              {goalWiseReturns.map((goalWiseReturn) => (
-                <MenuItem value={goalWiseReturn.goalName}>
-                  {goalWiseReturn.goalName}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-        <Box height={400} width={'100%'}>
-          {' '}
-          {/* Adjust the height as needed */}
-          <LineChart
-            xAxis={generateXAxis()}
-            series={generateSeries()}
-            margin={{ left: 80 }}
-          />
-        </Box>
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Box>
+        <FormControl>
+          <InputLabel id="Goal">Goal</InputLabel>
+          <Select
+            labelId="goalName"
+            id="goalSelect"
+            value={selectedGoal.goalName}
+            label="Goal"
+            onChange={(e) => handleSelectedGoalChange(e)}
+          >
+            {goalWiseReturns.map((goalWiseReturn) => (
+              <MenuItem value={goalWiseReturn.goalName}>
+                {goalWiseReturn.goalName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
-    </>
+      <Box height={400} width={'100%'}>
+        {' '}
+        {/* Adjust the height as needed */}
+        <LineChart
+          xAxis={generateXAxis()}
+          series={generateSeries()}
+          margin={{ left: 80 }}
+        />
+      </Box>
+    </Box>
   );
 };
 

@@ -16,9 +16,9 @@ import {
 import React, { Dispatch, ReactNode } from 'react';
 import CustomAmountField from '../CustomAmountField';
 import {
-  setLongTermAssetPercentage,
-  setMidTermAssetPercentage,
-  setShortTermAssetPercentage,
+  setLongTermInvestmentPercentage,
+  setMidTermInvestmentPercentage,
+  setShortTermInvestmentPercentage,
 } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { PlannerData } from '../../../../domain/PlannerData';
@@ -49,20 +49,20 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   tooltipVisibilityState: termTooltipVisible,
 }) => {
   const handleInputChangeForShortTerm = (assetId: string, value: any) => {
-    setShortTermAssetPercentage(dispatch, {
+    setShortTermInvestmentPercentage(dispatch, {
       id: assetId,
       investmentPercentage: value,
     });
   };
 
   const handleInputChangeForMidTerm = (assetId: string, value: any) => {
-    setMidTermAssetPercentage(dispatch, {
+    setMidTermInvestmentPercentage(dispatch, {
       id: assetId,
       investmentPercentage: value,
     });
   };
   const handleInputChangeForLongTerm = (assetId: string, value: any) => {
-    setLongTermAssetPercentage(dispatch, {
+    setLongTermInvestmentPercentage(dispatch, {
       id: assetId,
       investmentPercentage: value,
     });

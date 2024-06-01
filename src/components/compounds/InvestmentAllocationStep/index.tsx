@@ -29,10 +29,11 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   onContinue,
   onEdit,
 }) => {
-  const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
+  const [showInvestmentOptionModal, setShowInvestmentOptionModal] =
+    useState(false);
 
   const handleClose = () => {
-    setShowAddGoalsModal(false);
+    setShowInvestmentOptionModal(false);
   };
 
   const getAddInvestmentOptionButton = () => {
@@ -42,7 +43,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
         variant="contained"
         color="secondary"
         onClick={() => {
-          setShowAddGoalsModal(true);
+          setShowInvestmentOptionModal(true);
         }}
       >
         Add Investment option
@@ -61,12 +62,9 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       .getFinancialGoalSummary()
       .some((item) => item.termType === column && item.numberOfGoals > 0);
   };
-  const isAssetAllocationInvalid = (termType: TermType) => {
+  const isInvestmentAllocationInvalid = (termType: TermType) => {
     if (areGoalsPresentOfType(termType)) {
-
-
       const termSum = plannerData.investmentAllocationOptions.reduce(
-
         (sum, row) =>
           sum +
           Number(
@@ -82,39 +80,38 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   };
 
   const handleStepContinue = () => {
-    const isShortTermAssetAllocationInvalid = isAssetAllocationInvalid(
-      TermType.SHORT_TERM,
-    );
-    const isMidTermAssetAllocationInvalid = isAssetAllocationInvalid(
+    const isShortTermInvestmentAllocationInvalid =
+      isInvestmentAllocationInvalid(TermType.SHORT_TERM);
+    const isMidTermInvestmentAllocationInvalid = isInvestmentAllocationInvalid(
       TermType.MEDIUM_TERM,
     );
-    const isLongTermAssetAllocationInvalid = isAssetAllocationInvalid(
+    const isLongTermInvestmentAllocationInvalid = isInvestmentAllocationInvalid(
       TermType.LONG_TERM,
     );
 
-    if (isShortTermAssetAllocationInvalid) {
+    if (isShortTermInvestmentAllocationInvalid) {
       setTooltipVisibilityState({
-        [TermType.SHORT_TERM]: isShortTermAssetAllocationInvalid,
+        [TermType.SHORT_TERM]: isShortTermInvestmentAllocationInvalid,
       });
       return;
     }
-    if (isMidTermAssetAllocationInvalid) {
+    if (isMidTermInvestmentAllocationInvalid) {
       setTooltipVisibilityState({
-        [TermType.MEDIUM_TERM]: isMidTermAssetAllocationInvalid,
+        [TermType.MEDIUM_TERM]: isMidTermInvestmentAllocationInvalid,
       });
       return;
     }
 
-    if (isLongTermAssetAllocationInvalid) {
+    if (isLongTermInvestmentAllocationInvalid) {
       setTooltipVisibilityState({
-        [TermType.LONG_TERM]: isLongTermAssetAllocationInvalid,
+        [TermType.LONG_TERM]: isLongTermInvestmentAllocationInvalid,
       });
       return;
     }
     if (
-      !isShortTermAssetAllocationInvalid &&
-      !isMidTermAssetAllocationInvalid &&
-      !isLongTermAssetAllocationInvalid
+      !isShortTermInvestmentAllocationInvalid &&
+      !isMidTermInvestmentAllocationInvalid &&
+      !isLongTermInvestmentAllocationInvalid
     ) {
       setTooltipVisibilityState({
         [TermType.SHORT_TERM]: false,
@@ -145,7 +142,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       title={'Investment Allocation'}
       subtext="Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal"
       isContinueDisabled={false}
-      summaryText={`You have added some assets here`}
+      summaryText={`You have added some investment options here`}
     >
       <Box
         sx={{
@@ -171,7 +168,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
       /> */}
 
       <AddInvestmentOptions
-        showAddInvesmentOptionsModal={showAddGoalsModal}
+        showAddInvesmentOptionsModal={showInvestmentOptionModal}
         handleClose={handleClose}
         dispatch={dispatch}
       />

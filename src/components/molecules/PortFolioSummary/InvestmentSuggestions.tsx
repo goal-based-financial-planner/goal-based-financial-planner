@@ -99,7 +99,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
             aria-label="lab API tabs example"
             value={value}
           >
-            <Tab label="Allocation Table" {...a11yProps(0)} />
+            <Tab label="Investment Suggestions" {...a11yProps(0)} />
             <Tab label="Pie chart" {...a11yProps(1)} />
           </Tabs>
           <CustomTabPanel value={value} index={0}>

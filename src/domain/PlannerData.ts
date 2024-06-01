@@ -4,6 +4,7 @@ import {
   InvestmentOptionType,
 } from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
+import { DEFAULT_INVESTMENT_OPTIONS } from './constants';
 
 export type FinancialGoalSummary = Array<{
   termType: TermType;
@@ -22,11 +23,12 @@ export class PlannerData {
       [TermType.MEDIUM_TERM]: [],
       [TermType.SHORT_TERM]: [],
     },
-    investmentAllocationOptions: InvestmentOptionType[] = [],
+    investmentAllocationOptions?: InvestmentOptionType[],
   ) {
     this.financialGoals = financialGoals;
     this.investmentAllocations = assets;
-    this.investmentAllocationOptions = investmentAllocationOptions;
+    this.investmentAllocationOptions =
+      investmentAllocationOptions ?? DEFAULT_INVESTMENT_OPTIONS;
   }
 
   getFinancialGoalSummary(): FinancialGoalSummary {

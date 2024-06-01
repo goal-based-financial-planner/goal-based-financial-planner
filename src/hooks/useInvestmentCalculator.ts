@@ -44,26 +44,28 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
     // Get the investment allocations for the term type of the goal
     const investmentAllocationsForType =
       investmentAllocations[goal.getTermType()];
-    const assetDetails = investmentAllocationsForType.map((entry) => {
-      const { id, investmentPercentage } = entry;
-      const { expectedReturnPercentage } =
-        plannerData.investmentAllocationOptions.filter((e) => e.id === id)[0];
+    const investmentAllocationDetails = investmentAllocationsForType.map(
+      (entry) => {
+        const { id, investmentPercentage } = entry;
+        const { expectedReturnPercentage } =
+          plannerData.investmentAllocationOptions.filter((e) => e.id === id)[0];
 
-      return {
-        id,
-        expectedReturnPercentage,
-        investmentPercentage,
-      };
-    });
+        return {
+          id,
+          expectedReturnPercentage,
+          investmentPercentage,
+        };
+      },
+    );
 
     const totalMonthlyInvestmentNeeded = calculateTotalMonthlyInvestmentNeeded(
-      assetDetails,
+      investmentAllocationDetails,
       goal.getInflationAdjustedTargetAmount(),
       goal.getTerm(),
     );
 
-    console.log(assetDetails);
-    return assetDetails.map((e) => ({
+    console.log(investmentAllocationDetails);
+    return investmentAllocationDetails.map((e) => ({
       investmentOptionId: e.id,
       amount: (totalMonthlyInvestmentNeeded * e.investmentPercentage) / 100,
     }));

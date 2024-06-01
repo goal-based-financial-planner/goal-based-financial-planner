@@ -2,7 +2,6 @@ import { Dispatch } from 'react';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerDataAction } from './plannerDataReducer';
 import {
-  InvestmentAllocationsType,
   InvestmentChoiceType,
   InvestmentOptionType,
 } from '../domain/InvestmentOptions';
@@ -37,17 +36,7 @@ export function deleteFinancialGoal(
   });
 }
 
-export function updateAssets(
-  dispatch: Dispatch<PlannerDataAction>,
-  assetsData: InvestmentAllocationsType,
-) {
-  dispatch({
-    payload: assetsData,
-    type: PlannerDataActionType.UPDATE_ASSETS,
-  });
-}
-
-export function setShortTermAssetPercentage(
+export function setShortTermInvestmentPercentage(
   dispatch: Dispatch<PlannerDataAction>,
   payload: InvestmentChoiceType,
 ) {
@@ -57,7 +46,7 @@ export function setShortTermAssetPercentage(
   });
 }
 
-export function setMidTermAssetPercentage(
+export function setMidTermInvestmentPercentage(
   dispatch: Dispatch<PlannerDataAction>,
   payload: InvestmentChoiceType,
 ) {
@@ -67,7 +56,7 @@ export function setMidTermAssetPercentage(
   });
 }
 
-export function setLongTermAssetPercentage(
+export function setLongTermInvestmentPercentage(
   dispatch: Dispatch<PlannerDataAction>,
   payload: InvestmentChoiceType,
 ) {

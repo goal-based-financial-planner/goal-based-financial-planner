@@ -29,10 +29,8 @@ const GoalWiseInvestmentSuggestion = ({
           <Table>
             <TableHead>
               <TableRow>
-                
-                  <TableCell>Goal name</TableCell>
-                  <TableCell>Amount</TableCell>
-              
+                <TableCell>Goal name</TableCell>
+                <TableCell>Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -40,7 +38,9 @@ const GoalWiseInvestmentSuggestion = ({
                 <TableRow>
                   <TableCell>{a.goalName}</TableCell>
                   <TableCell>
-                    {a.amount.toLocaleString(navigator.language)}
+                    {a.amount.toLocaleString(navigator.language, {
+                      maximumFractionDigits: 2,
+                    })}
                   </TableCell>
                 </TableRow>
               ))}
