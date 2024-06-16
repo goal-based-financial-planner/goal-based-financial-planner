@@ -50,7 +50,7 @@ describe.skip('Test useInvestmentCalculator', () => {
     // Act
     const { calculateInvestmentNeededForGoals } =
       useInvestmentCalculator(plannerData);
-    const result = calculateInvestmentNeededForGoals(plannerData);
+    const result = calculateInvestmentNeededForGoals(plannerData, 2024);
 
     // Assert
     assertInvestmentValue(result, 'goal1', 'assetType_1', 1267);
@@ -72,7 +72,7 @@ describe.skip('Test useInvestmentCalculator', () => {
     // Act
     const { calculateInvestmentNeededForGoals } =
       useInvestmentCalculator(plannerData);
-    const result = calculateInvestmentNeededForGoals(plannerData);
+    const result = calculateInvestmentNeededForGoals(plannerData, 2024);
 
     // Assert
     assertInvestmentValue(result, 'goal1', 'assetType_1', 1267);
@@ -112,7 +112,7 @@ describe.skip('Test useInvestmentCalculator', () => {
     // Act
     const { calculateInvestmentNeededForGoals } =
       useInvestmentCalculator(plannerData);
-    const result = calculateInvestmentNeededForGoals(plannerData);
+    const result = calculateInvestmentNeededForGoals(plannerData, 2024);
 
     // Assert
     assertInvestmentValue(result, 'goal1', 'assetType_1', 10269);
@@ -124,18 +124,12 @@ describe.skip('Test useInvestmentCalculator', () => {
 
   it('should compute return for generated investment suggestions for goals', () => {
     const plannerData: PlannerData = getMockPlannerData();
-    const {
-      calculateInvestmentNeededForGoals,
-      calculateYearlyReturnValueBySuggestions,
-    } = useInvestmentCalculator(plannerData);
-
-    const investmentSuggestions =
-      calculateInvestmentNeededForGoals(plannerData);
+    const { calculateYearlyReturnValueBySuggestions } =
+      useInvestmentCalculator(plannerData);
 
     // Act
     const result = calculateYearlyReturnValueBySuggestions(
       plannerData.financialGoals,
-      investmentSuggestions,
     );
 
     function getReturnsByYears(resultIndex: number, investmentIndex: number) {

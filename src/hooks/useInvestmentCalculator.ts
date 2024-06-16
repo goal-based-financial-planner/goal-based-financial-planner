@@ -21,22 +21,42 @@ type ReturnsPerInvestment = {
 
 export type GoalWiseReturn = {
   goalName: string;
+  investmentSuggestions: InvestmentSuggestion[];
   returnsPerInvestment: ReturnsPerInvestment[];
 };
 
 const useInvestmentCalculator = (plannerData: PlannerData) => {
   const calculateInvestmentNeededForGoals = (
     plannerData: PlannerData,
+    selectedYear: number,
   ): GoalWiseInvestmentSuggestions[] => {
-    return plannerData.financialGoals.map((goal) => ({
-      goalName: goal.getGoalName(),
-      investmentSuggestions: calculateInvestmentPerGoal(
-        goal,
-        plannerData.investmentAllocations,
-      ),
-    }));
+    return plannerData.financialGoals.map((goal) => {
+      // Check if selected year falls under the term of the goal
+      if (
+        selectedYear < goal.getInvestmentStartYear() ||
+        selectedYear > goal.getTargetYear()
+      ) {
+        return {
+          goalName: goal.getGoalName(),
+          investmentSuggestions: [],
+        };
+      }
+
+      return {
+        goalName: goal.getGoalName(),
+        investmentSuggestions: calculateInvestmentPerGoal(
+          goal,
+          plannerData.investmentAllocations,
+        ),
+      };
+    });
   };
 
+  /**
+   * Calculates regardless of the year the goal starts
+   * @param goal
+   * @param investmentAllocations
+   */
   const calculateInvestmentPerGoal = (
     goal: FinancialGoal,
     investmentAllocations: InvestmentAllocationsType,
@@ -64,7 +84,6 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
       goal.getTerm(),
     );
 
-    console.log(investmentAllocationDetails);
     return investmentAllocationDetails.map((e) => ({
       investmentOptionId: e.id,
       amount: (totalMonthlyInvestmentNeeded * e.investmentPercentage) / 100,
@@ -158,9 +177,15 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
 
   const calculateYearlyReturnValueBySuggestions = (
     financialGoals: FinancialGoal[],
-    goalWiseInvestmentSuggestions: GoalWiseInvestmentSuggestions[],
   ): GoalWiseReturn[] => {
     const goalWiseReturns: GoalWiseReturn[] = [];
+    const goalWiseInvestmentSuggestions = financialGoals.map((goal) => ({
+      goalName: goal.getGoalName(),
+      investmentSuggestions: calculateInvestmentPerGoal(
+        goal,
+        plannerData.investmentAllocations,
+      ),
+    }));
     goalWiseInvestmentSuggestions.forEach((goalWiseSuggestion) => {
       const goal = financialGoals.filter(
         (e) => e.getGoalName() === goalWiseSuggestion.goalName,
@@ -169,8 +194,10 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
         goal,
         goalWiseSuggestion,
       );
+
       goalWiseReturns.push({
         goalName: goal.getGoalName(),
+        investmentSuggestions: goalWiseSuggestion.investmentSuggestions,
         returnsPerInvestment,
       });
     });
@@ -181,6 +208,7 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
   return {
     calculateInvestmentNeededForGoals,
     calculateYearlyReturnValueBySuggestions,
+    calculateInvestmentPerGoal,
   };
 };
 

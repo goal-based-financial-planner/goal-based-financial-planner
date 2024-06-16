@@ -8,26 +8,27 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import {
-  GoalWiseInvestmentSuggestions,
-  GoalWiseReturn,
-} from '../../../hooks/useInvestmentCalculator';
+
 import { MakeOptional } from '@mui/x-charts/models/helpers';
 import { FinancialGoal } from '../../../domain/FinancialGoals';
+import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
+import { PlannerData } from '../../../domain/PlannerData';
 
 type PortfolioProjectionProps = {
-  goalWiseReturns: GoalWiseReturn[];
-  financialGoals: FinancialGoal[];
-  investmentBreakdown: GoalWiseInvestmentSuggestions[];
+  plannerData: PlannerData;
 };
 
 const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
-  goalWiseReturns,
-  financialGoals,
-  investmentBreakdown,
+  plannerData,
 }) => {
   const [selectedGoal, setSelectedGoal] = useState<FinancialGoal>(
-    financialGoals[0],
+    plannerData.financialGoals[0],
+  );
+  const { calculateYearlyReturnValueBySuggestions } =
+    useInvestmentCalculator(plannerData);
+
+  const goalWiseReturns = calculateYearlyReturnValueBySuggestions(
+    plannerData.financialGoals,
   );
 
   const generateXAxis = (): MakeOptional<AxisConfig, 'id'>[] => {
@@ -50,11 +51,8 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
       (gr) => gr.goalName === selectedGoal.goalName,
     )!;
 
-    const investmentSuggestion = investmentBreakdown.find(
-      (ib) => ib.goalName === selectedGoal.goalName,
-    )!;
     const investmentPerOneYear =
-      investmentSuggestion.investmentSuggestions.reduce((acc, investment) => {
+      selectedGoalWiseReturn.investmentSuggestions.reduce((acc, investment) => {
         return acc + investment.amount;
       }, 0) * 12;
 
@@ -99,7 +97,7 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
   };
 
   const handleSelectedGoalChange = (e: SelectChangeEvent<string>) => {
-    const goal = financialGoals.find(
+    const goal = plannerData.financialGoals.find(
       (goal) => goal.goalName === e.target.value,
     )!;
     setSelectedGoal(goal);
@@ -126,8 +124,6 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
         </FormControl>
       </Box>
       <Box height={400} width={'100%'}>
-        {' '}
-        {/* Adjust the height as needed */}
         <LineChart
           xAxis={generateXAxis()}
           series={generateSeries()}

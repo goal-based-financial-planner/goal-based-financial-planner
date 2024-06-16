@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import InvestmentSuggestionsTable from './InvestmentSuggestionsTable';
-import { Grid, Tabs, Typography } from '@mui/material';
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tabs,
+  Typography,
+} from '@mui/material';
 import { PlannerData } from '../../../domain/PlannerData';
 import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
 import PortfolioProjection from './PortfolioProjection';
@@ -49,21 +57,37 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
   plannerData,
 }) => {
   const [value, setValue] = React.useState(0);
+  const [selectedYear, setSelectedYear] = React.useState(0);
+  const [years, setYears] = React.useState<number[]>([]);
+
+  useEffect(() => {
+    debugger;
+    const minMaxYears = plannerData.financialGoals.reduce(
+      (acc, e) => ({
+        minYear: Math.min(acc.minYear, e.getInvestmentStartYear()),
+        maxYear: Math.max(acc.maxYear, e.getTargetYear()),
+      }),
+      { minYear: Infinity, maxYear: 0 },
+    );
+    // Build an array of values between minYear and maxYear
+    const years = [];
+    for (let i = minMaxYears.minYear; i <= minMaxYears.maxYear; i++) {
+      years.push(i);
+    }
+    setYears(years);
+    setSelectedYear(years[0]);
+  }, [plannerData]);
 
   const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
 
-  const {
-    calculateInvestmentNeededForGoals,
-    calculateYearlyReturnValueBySuggestions,
-  } = useInvestmentCalculator(plannerData);
-  const investmentBreakdown = calculateInvestmentNeededForGoals(plannerData);
-  const yearlyReturnValuesForSuggestions =
-    calculateYearlyReturnValueBySuggestions(
-      plannerData.financialGoals,
-      investmentBreakdown,
-    );
+  const { calculateInvestmentNeededForGoals } =
+    useInvestmentCalculator(plannerData);
+  const investmentBreakdown = calculateInvestmentNeededForGoals(
+    plannerData,
+    selectedYear,
+  );
 
   const getAmountPerInvestmentOption = () => {
     const aggregatedAmounts: { [key: string]: number } = {};
@@ -103,6 +127,30 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
             <Tab label="Pie chart" {...a11yProps(1)} />
           </Tabs>
           <CustomTabPanel value={value} index={0}>
+            <Box
+              sx={{ width: '100%', display: 'flex' }}
+              justifyContent="flex-end"
+            >
+              <FormControl sx={{ width: '300px' }}>
+                <InputLabel id="year">For Year</InputLabel>
+                <Select
+                  labelId="year"
+                  id="yearSelect"
+                  label="Year"
+                  value={selectedYear}
+                  onChange={(e) =>
+                    setSelectedYear(parseInt(e.target.value as string))
+                  }
+                >
+                  {years.map((year) => (
+                    <MenuItem key={year} value={year}>
+                      {year}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
             <InvestmentSuggestionsTable
               suggestions={investmentBreakdown}
               investmentOptions={plannerData.investmentAllocationOptions}
@@ -124,11 +172,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
         </Box>
       </Grid>
       <Grid item xs={6}>
-        <PortfolioProjection
-          goalWiseReturns={yearlyReturnValuesForSuggestions}
-          financialGoals={plannerData.financialGoals}
-          investmentBreakdown={investmentBreakdown}
-        />
+        <PortfolioProjection plannerData={plannerData} />
       </Grid>
     </Grid>
   );

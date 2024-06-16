@@ -12,7 +12,7 @@ import React from 'react';
 import CustomTooltip from '../../atoms/CustomTooltip';
 import GoalWiseInvestmentSuggestion, {
   InvestmentPerOptionType,
-} from '../../atoms/GoalWiseInvestmentSuggestion';
+} from '../../compounds/GoalWiseInvestmentSuggestion';
 import { InvestmentOptionType } from '../../../domain/InvestmentOptions';
 
 type InvestmentSuggestionsTableProps = {
@@ -23,12 +23,15 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
   suggestions,
   investmentOptions,
 }) => {
-  const investmentOptionWiseSum = suggestions.reduce((acc, goal) => {
-    goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
-      acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
-    });
-    return acc;
-  }, {} as { [key: string]: number });
+  const investmentOptionWiseSum = suggestions.reduce(
+    (acc, goal) => {
+      goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
+        acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
+      });
+      return acc;
+    },
+    {} as { [key: string]: number },
+  );
 
   const assetSumArray = Object.entries(investmentOptionWiseSum).map(
     ([investmentOptionId, totalValue]) => ({
