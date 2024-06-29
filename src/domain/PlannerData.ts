@@ -18,7 +18,7 @@ export class PlannerData {
 
   constructor(
     financialGoals: FinancialGoal[] = [],
-    assets: InvestmentAllocationsType = {
+    investmentAllocations: InvestmentAllocationsType = {
       [TermType.LONG_TERM]: [],
       [TermType.MEDIUM_TERM]: [],
       [TermType.SHORT_TERM]: [],
@@ -26,7 +26,7 @@ export class PlannerData {
     investmentAllocationOptions?: InvestmentOptionType[],
   ) {
     this.financialGoals = financialGoals;
-    this.investmentAllocations = assets;
+    this.investmentAllocations = investmentAllocations;
     this.investmentAllocationOptions =
       investmentAllocationOptions ?? DEFAULT_INVESTMENT_OPTIONS;
   }

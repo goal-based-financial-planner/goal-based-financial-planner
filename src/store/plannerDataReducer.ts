@@ -12,7 +12,7 @@ export type PlannerDataAction = {
 
 export const initialPlannerData: PlannerData = getInitialData();
 
-function updateAssetAllocation(
+function updateInvestmentAllocation(
   state: PlannerData,
   action: PlannerDataAction,
   termType: TermType,
@@ -50,17 +50,17 @@ export function plannerDataReducer(
         [...state.investmentAllocationOptions, action.payload],
       );
 
-    case PlannerDataActionType.UPDATE_ASSETS:
+    case PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS:
       return new PlannerData(state.financialGoals, action.payload);
 
-    case PlannerDataActionType.UPDATE_SHORT_TERM_ASSET:
-      return updateAssetAllocation(state, action, TermType.SHORT_TERM);
+    case PlannerDataActionType.UPDATE_SHORT_TERM_INVESTMENT:
+      return updateInvestmentAllocation(state, action, TermType.SHORT_TERM);
 
-    case PlannerDataActionType.UPDATE_MEDIUM_TERM_ASSET:
-      return updateAssetAllocation(state, action, TermType.MEDIUM_TERM);
+    case PlannerDataActionType.UPDATE_MEDIUM_TERM_INVESTMENT:
+      return updateInvestmentAllocation(state, action, TermType.MEDIUM_TERM);
 
-    case PlannerDataActionType.UPDATE_LONG_TERM_ASSET:
-      return updateAssetAllocation(state, action, TermType.LONG_TERM);
+    case PlannerDataActionType.UPDATE_LONG_TERM_INVESTMENT:
+      return updateInvestmentAllocation(state, action, TermType.LONG_TERM);
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
       const financialGoals = [...state.financialGoals];

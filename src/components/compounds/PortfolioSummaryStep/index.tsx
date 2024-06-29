@@ -19,7 +19,7 @@ const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
       title={'Summary'}
       subtext="Alright! Based on the goals you have added and your choice of investments, we calculated how much you should invest into each of the investment options. Here is a summary of the investments you have added."
       isContinueDisabled={false}
-      summaryText={`You have added some assets here`}
+      summaryText={''}
       hideContinue={true}
     >
       <InvestmentSuggestions plannerData={plannerData} />

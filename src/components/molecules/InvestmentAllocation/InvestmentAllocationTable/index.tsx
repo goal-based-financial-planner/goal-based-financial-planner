@@ -48,22 +48,31 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   emptyBodyPlaceholder: addInvestmentOption,
   tooltipVisibilityState: termTooltipVisible,
 }) => {
-  const handleInputChangeForShortTerm = (assetId: string, value: any) => {
+  const handleInputChangeForShortTerm = (
+    investmentOptionId: string,
+    value: any,
+  ) => {
     setShortTermInvestmentPercentage(dispatch, {
-      id: assetId,
+      id: investmentOptionId,
       investmentPercentage: value,
     });
   };
 
-  const handleInputChangeForMidTerm = (assetId: string, value: any) => {
+  const handleInputChangeForMidTerm = (
+    investmentOptionId: string,
+    value: any,
+  ) => {
     setMidTermInvestmentPercentage(dispatch, {
-      id: assetId,
+      id: investmentOptionId,
       investmentPercentage: value,
     });
   };
-  const handleInputChangeForLongTerm = (assetId: string, value: any) => {
+  const handleInputChangeForLongTerm = (
+    investmentOptionId: string,
+    value: any,
+  ) => {
     setLongTermInvestmentPercentage(dispatch, {
-      id: assetId,
+      id: investmentOptionId,
       investmentPercentage: value,
     });
   };
@@ -135,7 +144,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: '140px' }}>Asset Type</TableCell>
+              <TableCell sx={{ width: '140px' }}>Investment Option</TableCell>
               <TableCell sx={{ width: '140px' }}>
                 Expected Percentage (%)
               </TableCell>

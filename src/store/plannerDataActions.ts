@@ -8,11 +8,11 @@ import {
 
 export enum PlannerDataActionType {
   ADD_FINANCIAL_GOAL = 'ADD_FINANCIAL_GOAL',
-  UPDATE_ASSETS = 'UPDATE_ASSETS',
+  UPDATE_INVESTMENT_ALLOCATIONS = 'UPDATE_INVESTMENT_ALLOCATIONS',
   DELETE_FINANCIAL_GOAL = 'DELETE_FINANCIAL_GOAL',
-  UPDATE_SHORT_TERM_ASSET = 'UPDATE_SHORT_TERM_ASSET',
-  UPDATE_MEDIUM_TERM_ASSET = 'UPDATE_MEDIUM_TERM_ASSET',
-  UPDATE_LONG_TERM_ASSET = 'UPDATE_LONG_TERM_ASSET',
+  UPDATE_SHORT_TERM_INVESTMENT = 'UPDATE_SHORT_TERM_INVESTMENT',
+  UPDATE_MEDIUM_TERM_INVESTMENT = 'UPDATE_MEDIUM_TERM_INVESTMENT',
+  UPDATE_LONG_TERM_INVESTMENT = 'UPDATE_LONG_TERM_INVESTMENT',
   ADD_INVESTMENT_OPTION = 'ADD_INVESTMENT_OPTION',
 }
 
@@ -42,7 +42,7 @@ export function setShortTermInvestmentPercentage(
 ) {
   dispatch({
     payload,
-    type: PlannerDataActionType.UPDATE_SHORT_TERM_ASSET,
+    type: PlannerDataActionType.UPDATE_SHORT_TERM_INVESTMENT,
   });
 }
 
@@ -52,7 +52,7 @@ export function setMidTermInvestmentPercentage(
 ) {
   dispatch({
     payload,
-    type: PlannerDataActionType.UPDATE_MEDIUM_TERM_ASSET,
+    type: PlannerDataActionType.UPDATE_MEDIUM_TERM_INVESTMENT,
   });
 }
 
@@ -62,7 +62,7 @@ export function setLongTermInvestmentPercentage(
 ) {
   dispatch({
     payload,
-    type: PlannerDataActionType.UPDATE_LONG_TERM_ASSET,
+    type: PlannerDataActionType.UPDATE_LONG_TERM_INVESTMENT,
   });
 }
 

@@ -6,7 +6,7 @@ import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { InvestmentAllocationsType } from '../domain/InvestmentOptions';
 
-describe.skip('Test useInvestmentCalculator', () => {
+describe('Test useInvestmentCalculator -> calculateInvestmentNeededForGoals', () => {
   const getGoal = (
     result: GoalWiseInvestmentSuggestions[],
     goalName: string,
@@ -14,24 +14,27 @@ describe.skip('Test useInvestmentCalculator', () => {
     return result.filter((e) => e.goalName === goalName)[0];
   };
 
-  const getAssetType = (
+  const getInvestmentSuggestion = (
     goal: GoalWiseInvestmentSuggestions,
-    assetType: string,
+    investmentOptionId: string,
   ) => {
     return goal.investmentSuggestions.filter(
-      (b) => b.investmentOptionId === assetType,
+      (b) => b.investmentOptionId === investmentOptionId,
     )[0];
   };
 
   const assertInvestmentValue = (
     result: GoalWiseInvestmentSuggestions[],
     goalName: string,
-    assetType: string,
+    investmentOptionId: string,
     expectedValue: number,
   ) => {
     const goal = getGoal(result, goalName);
-    const asset = getAssetType(goal, assetType);
-    expect(Math.floor(asset.amount)).toEqual(expectedValue);
+    const investmentSuggestion = getInvestmentSuggestion(
+      goal,
+      investmentOptionId,
+    );
+    expect(Math.floor(investmentSuggestion.amount)).toEqual(expectedValue);
   };
 
   it('should calculate investment breakdown given planner data with single goal', () => {
@@ -40,12 +43,15 @@ describe.skip('Test useInvestmentCalculator', () => {
     const financialGoals: FinancialGoal[] = [
       new FinancialGoal('goal1', 2024, 2030, 100000),
     ];
-    const assets: InvestmentAllocationsType = {
-      [TermType.LONG_TERM]: [{ id: 'assetType_1', investmentPercentage: 100 }],
+    const investmentAllocation: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [{ id: 'largecap', investmentPercentage: 100 }],
       [TermType.MEDIUM_TERM]: [],
       [TermType.SHORT_TERM]: [],
     };
-    const plannerData: PlannerData = new PlannerData(financialGoals, assets);
+    const plannerData: PlannerData = new PlannerData(
+      financialGoals,
+      investmentAllocation,
+    );
 
     // Act
     const { calculateInvestmentNeededForGoals } =
@@ -53,21 +59,24 @@ describe.skip('Test useInvestmentCalculator', () => {
     const result = calculateInvestmentNeededForGoals(plannerData, 2024);
 
     // Assert
-    assertInvestmentValue(result, 'goal1', 'assetType_1', 1267);
+    assertInvestmentValue(result, 'goal1', 'largecap', 1310);
   });
 
-  it('should calcualte investment breakdown given planner data with multiple goals', () => {
+  it('should calculate investment breakdown given planner data with multiple goals', () => {
     // Arrange
     const financialGoals: FinancialGoal[] = [
       new FinancialGoal('goal1', 2024, 2030, 100000),
       new FinancialGoal('goal2', 2024, 2026, 100000),
     ];
-    const assets: InvestmentAllocationsType = {
-      [TermType.LONG_TERM]: [{ id: 'assetType_1', investmentPercentage: 100 }],
+    const investmentAllocation: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [{ id: 'largecap', investmentPercentage: 100 }],
       [TermType.MEDIUM_TERM]: [],
-      [TermType.SHORT_TERM]: [{ id: 'assetType_3', investmentPercentage: 100 }],
+      [TermType.SHORT_TERM]: [{ id: 'smallcap', investmentPercentage: 100 }],
     };
-    const plannerData: PlannerData = new PlannerData(financialGoals, assets);
+    const plannerData: PlannerData = new PlannerData(
+      financialGoals,
+      investmentAllocation,
+    );
 
     // Act
     const { calculateInvestmentNeededForGoals } =
@@ -75,8 +84,8 @@ describe.skip('Test useInvestmentCalculator', () => {
     const result = calculateInvestmentNeededForGoals(plannerData, 2024);
 
     // Assert
-    assertInvestmentValue(result, 'goal1', 'assetType_1', 1267);
-    assertInvestmentValue(result, 'goal2', 'assetType_3', 4313);
+    assertInvestmentValue(result, 'goal1', 'largecap', 1310);
+    assertInvestmentValue(result, 'goal2', 'smallcap', 3855);
   });
 
   function getMockPlannerData() {
@@ -85,27 +94,27 @@ describe.skip('Test useInvestmentCalculator', () => {
       new FinancialGoal('goal2', 2024, 2028, 100000),
       new FinancialGoal('goal3', 2024, 2026, 100000),
     ];
-    const assets: InvestmentAllocationsType = {
+    const investmentAllocation: InvestmentAllocationsType = {
       [TermType.LONG_TERM]: [
-        { id: 'assetType_1', investmentPercentage: 80 },
+        { id: 'largecap', investmentPercentage: 80 },
         {
-          id: 'assetType_2',
+          id: 'midcap',
           investmentPercentage: 20,
         },
       ],
       [TermType.MEDIUM_TERM]: [
-        { id: 'assetType_2', investmentPercentage: 50 },
+        { id: 'midcap', investmentPercentage: 50 },
         {
-          id: 'assetType_3',
+          id: 'smallcap',
           investmentPercentage: 50,
         },
       ],
-      [TermType.SHORT_TERM]: [{ id: 'assetType_3', investmentPercentage: 100 }],
+      [TermType.SHORT_TERM]: [{ id: 'smallcap', investmentPercentage: 100 }],
     };
-    return new PlannerData(financialGoals, assets);
+    return new PlannerData(financialGoals, investmentAllocation);
   }
 
-  it('should calculate investment breakdown given planner data with multiple goals and multiple assets', () => {
+  it('should calculate investment breakdown given planner data with multiple goals and multiple allocations', () => {
     // Arrange
     const plannerData = getMockPlannerData();
 
@@ -115,11 +124,11 @@ describe.skip('Test useInvestmentCalculator', () => {
     const result = calculateInvestmentNeededForGoals(plannerData, 2024);
 
     // Assert
-    assertInvestmentValue(result, 'goal1', 'assetType_1', 10269);
-    assertInvestmentValue(result, 'goal1', 'assetType_2', 2567);
-    assertInvestmentValue(result, 'goal2', 'assetType_2', 1070);
-    assertInvestmentValue(result, 'goal2', 'assetType_3', 1070);
-    assertInvestmentValue(result, 'goal3', 'assetType_3', 4313);
+    assertInvestmentValue(result, 'goal1', 'largecap', 10301);
+    assertInvestmentValue(result, 'goal1', 'midcap', 2575);
+    assertInvestmentValue(result, 'goal2', 'midcap', 919);
+    assertInvestmentValue(result, 'goal2', 'smallcap', 919);
+    assertInvestmentValue(result, 'goal3', 'smallcap', 3855);
   });
 
   it('should compute return for generated investment suggestions for goals', () => {
@@ -142,10 +151,10 @@ describe.skip('Test useInvestmentCalculator', () => {
     expect(result[0].goalName).toEqual('goal1');
     expect(result[0].returnsPerInvestment.length).toEqual(2);
     expect(result[0].returnsPerInvestment[0].investmentOptionId).toEqual(
-      'assetType_1',
+      'largecap',
     );
     expect(result[0].returnsPerInvestment[1].investmentOptionId).toEqual(
-      'assetType_2',
+      'midcap',
     );
     const firstInvestmentReturns = getReturnsByYears(0, 0);
     expect(firstInvestmentReturns.length).toEqual(6);
@@ -163,10 +172,10 @@ describe.skip('Test useInvestmentCalculator', () => {
     expect(result[1].goalName).toEqual('goal2');
     expect(result[1].returnsPerInvestment.length).toEqual(2);
     expect(result[1].returnsPerInvestment[0].investmentOptionId).toEqual(
-      'assetType_2',
+      'midcap',
     );
     expect(result[1].returnsPerInvestment[1].investmentOptionId).toEqual(
-      'assetType_3',
+      'smallcap',
     );
     const firstInvestmentReturnsGoal2 = getReturnsByYears(1, 0);
     expect(firstInvestmentReturnsGoal2.length).toEqual(4);
@@ -185,7 +194,7 @@ describe.skip('Test useInvestmentCalculator', () => {
     expect(result[2].goalName).toEqual('goal3');
     expect(result[2].returnsPerInvestment.length).toEqual(1);
     expect(result[2].returnsPerInvestment[0].investmentOptionId).toEqual(
-      'assetType_3',
+      'smallcap',
     );
     const firstInvestmentReturnsGoal3 = getReturnsByYears(2, 0);
     expect(firstInvestmentReturnsGoal3.length).toEqual(2);
@@ -194,6 +203,105 @@ describe.skip('Test useInvestmentCalculator', () => {
         .return,
     ).toBeCloseTo(
       plannerData.financialGoals[2].getInflationAdjustedTargetAmount(),
+      0,
+    );
+  });
+});
+
+describe('Test useInvestmentCalculator -> calculateYearlyReturnValueBySuggestions', () => {
+  it('should return empty array if no goals are provided', () => {
+    // Arrange
+    const plannerData: PlannerData = new PlannerData(
+      [],
+      {} as InvestmentAllocationsType,
+    );
+
+    // Act
+    const { calculateYearlyReturnValueBySuggestions } =
+      useInvestmentCalculator(plannerData);
+    const result = calculateYearlyReturnValueBySuggestions(
+      plannerData.financialGoals,
+    );
+
+    // Assert
+    expect(result).toEqual([]);
+  });
+
+  it('should return yearly return for each goal', () => {
+    // Arrange
+    const financialGoals: FinancialGoal[] = [
+      new FinancialGoal('goal1', 2024, 2030, 1000000),
+      new FinancialGoal('goal2', 2024, 2028, 100000),
+    ];
+    const investmentAllocations: InvestmentAllocationsType = {
+      [TermType.LONG_TERM]: [
+        { id: 'largecap', investmentPercentage: 80 },
+        {
+          id: 'midcap',
+          investmentPercentage: 20,
+        },
+      ],
+      [TermType.MEDIUM_TERM]: [
+        { id: 'midcap', investmentPercentage: 50 },
+        {
+          id: 'smallcap',
+          investmentPercentage: 50,
+        },
+      ],
+      [TermType.SHORT_TERM]: [{ id: 'smallcap', investmentPercentage: 100 }],
+    };
+    const plannerData: PlannerData = new PlannerData(
+      financialGoals,
+      investmentAllocations,
+    );
+
+    // Act
+    const { calculateYearlyReturnValueBySuggestions } =
+      useInvestmentCalculator(plannerData);
+    const result = calculateYearlyReturnValueBySuggestions(
+      plannerData.financialGoals,
+    );
+
+    // Assert
+    expect(result.length).toEqual(2);
+    expect(result[0].goalName).toEqual('goal1');
+    expect(result[0].investmentSuggestions.length).toEqual(2);
+    expect(result[0].returnsPerInvestment.length).toEqual(2);
+    expect(result[1].goalName).toEqual('goal2');
+    expect(result[1].investmentSuggestions.length).toEqual(2);
+    expect(result[1].returnsPerInvestment.length).toEqual(2);
+
+    const goal1 = result[0];
+    const goal2 = result[1];
+    expect(goal1.returnsPerInvestment[0].investmentOptionId).toEqual(
+      'largecap',
+    );
+    expect(goal1.returnsPerInvestment[1].investmentOptionId).toEqual('midcap');
+    expect(goal2.returnsPerInvestment[0].investmentOptionId).toEqual('midcap');
+    expect(goal2.returnsPerInvestment[1].investmentOptionId).toEqual(
+      'smallcap',
+    );
+
+    const goal1Returns = goal1.returnsPerInvestment.map((e) => e.returnsByYear);
+    expect(goal1Returns[0].length).toEqual(6);
+    expect(goal1Returns[1].length).toEqual(6);
+    const goal2Returns = goal2.returnsPerInvestment.map((e) => e.returnsByYear);
+    expect(goal2Returns[0].length).toEqual(4);
+    expect(goal2Returns[1].length).toEqual(4);
+
+    //   Check last return to be equal to the target amount
+    expect(
+      goal1Returns[0][goal1Returns[0].length - 1].return +
+        goal1Returns[1][goal1Returns[1].length - 1].return,
+    ).toBeCloseTo(
+      plannerData.financialGoals[0].getInflationAdjustedTargetAmount(),
+      0,
+    );
+    expect(
+      goal2Returns[0][goal2Returns[0].length - 1].return +
+        goal2Returns[1][goal2Returns[1].length - 1].return,
+    ).toBeCloseTo(
+      plannerData.financialGoals[1].getInflationAdjustedTargetAmount(),
       0,
     );
   });

@@ -91,7 +91,7 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
   };
 
   const calculateTotalMonthlyInvestmentNeeded = (
-    assetDetails: {
+    investmentAllocations: {
       id: string;
       expectedReturnPercentage: number;
       investmentPercentage: number;
@@ -99,7 +99,7 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
     targetAmount: number,
     term: number,
   ) => {
-    const x = assetDetails.map((a) => {
+    const x = investmentAllocations.map((a) => {
       return calculateX(
         a.expectedReturnPercentage / 100 / 12,
         term * 12,

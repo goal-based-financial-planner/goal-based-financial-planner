@@ -33,7 +33,7 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
     {} as { [key: string]: number },
   );
 
-  const assetSumArray = Object.entries(investmentOptionWiseSum).map(
+  const investmentOptionSummary = Object.entries(investmentOptionWiseSum).map(
     ([investmentOptionId, totalValue]) => ({
       investmentOptionId,
       totalValue,
@@ -62,7 +62,7 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {assetSumArray.map((goal, index) => (
+          {investmentOptionSummary.map((goal, index) => (
             <TableRow key={index}>
               <TableCell>
                 {
