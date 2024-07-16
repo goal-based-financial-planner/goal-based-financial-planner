@@ -35,7 +35,6 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
         <TableHead>
           <TableRow>
             <TableCell>Goal name</TableCell>
-
             <TableCell>Start Year</TableCell>
             <TableCell>Target Year</TableCell>
             <TableCell>Capital Required</TableCell>

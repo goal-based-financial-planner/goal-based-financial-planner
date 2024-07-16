@@ -33,6 +33,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
         startIcon={<AddIcon />}
         variant="contained"
         color="secondary"
+        data-testid="add-goal-button"
         onClick={() => {
           setShowAddGoalsModal(true);
         }}

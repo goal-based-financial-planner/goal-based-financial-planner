@@ -126,6 +126,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
       <Paper
         component={Stack}
         p={3}
+        data-testid="add-goal"
         sx={{
           position: 'absolute',
           minWidth: {
