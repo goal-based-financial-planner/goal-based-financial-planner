@@ -61,7 +61,6 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
   const [years, setYears] = React.useState<number[]>([]);
 
   useEffect(() => {
-    debugger;
     const minMaxYears = plannerData.financialGoals.reduce(
       (acc, e) => ({
         minYear: Math.min(acc.minYear, e.getInvestmentStartYear()),

@@ -22,4 +22,8 @@ test('renders FinancialGoalsTable component', () => {
   // Check if the table has the correct number of body rows
   const tableBodyRows = screen.getAllByRole('row');
   expect(tableBodyRows.length).toBe(4);
+
+  // Check if the table has the correct number of cells
+  // const tableCells = screen.getAllByRole('cell');
+  // expect(tableCells.length).toBe(12);
 });
