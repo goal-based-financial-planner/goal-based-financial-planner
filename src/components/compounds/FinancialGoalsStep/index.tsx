@@ -7,10 +7,7 @@ import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import Step, { StepProps } from '../../molecules/Step';
 import { PlannerData } from '../../../domain/PlannerData';
 
-type FinancialGoalsProps = Pick<
-  StepProps,
-  'isExpanded' | 'onContinue' | 'onEdit'
-> & {
+type FinancialGoalsProps = {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
 };
@@ -18,9 +15,6 @@ type FinancialGoalsProps = Pick<
 const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   plannerData,
   dispatch,
-  isExpanded,
-  onContinue,
-  onEdit,
 }) => {
   const [showAddGoalsModal, setShowAddGoalsModal] = useState(false);
   const handleClose = () => {
@@ -57,15 +51,10 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
 
   return (
     <Step
-      isExpanded={isExpanded}
-      onContinue={onContinue}
-      onEdit={onEdit}
       title={'Financial Goals'}
       subtext="Let's start by adding your financial goals. A financial goal is inthe
             most cases an event for which you have to flush out a lumpsum of
             money..."
-      isContinueDisabled={plannerData.financialGoals.length === 0}
-      summaryText={`You have added ${plannerData.getGoalSummaryAsText()} goals`}
     >
       <>
         <Box

@@ -1,15 +1,21 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import {
   getInitialData,
   persistPlannerData,
   plannerDataReducer,
 } from '../../../store/plannerDataReducer';
-import { Box, Typography } from '@mui/material';
-import { PlannerState } from '../../../types/enums';
-import FinancialGoalsAccordion from './FinancialGoalsAccordion';
-import InvestmentAllocationAccordion from './InvestmentAllocationAccordion';
-import PortfolioSummaryAccordion from './PortdolioSummaryAccordion';
-import AcknowledgmentDialog from './AcknowledmentDialog';
+import {
+  Box,
+  Button,
+  Step,
+  StepLabel,
+  Stepper,
+  Typography,
+} from '@mui/material';
+import FinancialGoalsStep from '../FinancialGoalsStep';
+import InvestmentAllocationStep from '../InvestmentAllocationStep';
+import PortfolioSummaryStep from '../PortfolioSummaryStep';
+import { TermType } from '../../../types/enums';
 
 const Planner: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
@@ -17,88 +23,68 @@ const Planner: React.FC = () => {
     getInitialData(),
   );
 
-  const [currentState, setCurrentState] = useState<PlannerState>(
-    PlannerState.GOALS,
-  );
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [currentDialogStep, setCurrentDialogStep] =
-    useState<PlannerState | null>(null);
-  const [dialogMessage, setDialogMessage] = useState<string>('');
-
-  const [isFinancialGoalsExpanded, setIsFinancialGoalsExpanded] =
-    useState<boolean>(true);
-  const [isInvestmentAllocationExpanded, setIsInvestmentAllocationExpanded] =
-    useState<boolean>(false);
-  const [isInvestmentAllocationVisible, setIsInvestmentAllocationVisible] =
-    useState<boolean>(false);
-  const [isPortFolioSummaryExpanded, setIsPortFolioSummaryExpanded] =
-    useState<boolean>(false);
-  const [isPortFolioSummaryVisible, setIsPortFolioSummaryVisible] =
-    useState<boolean>(false);
-
-  const [isFinancialGoalsIconDisabled, setIsFinancialGoalsIconDisabled] =
-    useState<boolean>(false);
-  const [
-    isInvestmentAllocationIconDisabled,
-    setIsInvestmentAllocationIconDisabled,
-  ] = useState<boolean>(false);
-  const [isPortFolioSummaryIconDisabled, setIsPortFolioSummaryIconDisabled] =
-    useState<boolean>(false);
-
   useEffect(() => {
     persistPlannerData(plannerData);
   }, [plannerData]);
 
-  const goToStep = (nextStep: PlannerState) => {
-    setCurrentState(nextStep);
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const steps = [
+    'Financial Goals',
+    'Investment Allocation',
+    'Portfolio Summary',
+  ];
+
+  const stepComponents = [
+    <FinancialGoalsStep plannerData={plannerData} dispatch={dispatch} />,
+    <InvestmentAllocationStep plannerData={plannerData} dispatch={dispatch} />,
+    <PortfolioSummaryStep plannerData={plannerData} />,
+  ];
+
+  const areGoalsPresentOfType = (column: string) => {
+    return plannerData
+      .getFinancialGoalSummary()
+      .some((item) => item.termType === column && item.numberOfGoals > 0);
   };
 
-  const handleDialogOpen = (step: PlannerState, message: string) => {
-    setDialogMessage(message);
-    setCurrentDialogStep(step);
-    setIsDialogOpen(true);
+  const isInvestmentAllocationInvalid = (termType: TermType) => {
+    if (areGoalsPresentOfType(termType)) {
+      const termSum = plannerData.investmentAllocationOptions.reduce(
+        (sum, row) =>
+          sum +
+          Number(
+            plannerData.investmentAllocations[termType].filter(
+              (e) => e.id === row.id,
+            )[0]?.investmentPercentage || 0,
+          ),
+        0,
+      );
+
+      return termSum !== 100;
+    } else return false;
   };
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-    if (currentDialogStep === PlannerState.GOALS) {
-      setIsFinancialGoalsIconDisabled(true);
-    } else if (currentDialogStep === PlannerState.INVESTMENT_ALLOCATION) {
-      setIsInvestmentAllocationIconDisabled(true);
-    } else if (currentDialogStep === PlannerState.PORTFOLIO_SUMMARY) {
-      setIsPortFolioSummaryIconDisabled(true);
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const allowNext = () => {
+    switch (activeStep) {
+      case 0:
+        return plannerData.financialGoals.length > 0;
+      case 1:
+        return (
+          !isInvestmentAllocationInvalid(TermType.SHORT_TERM) &&
+          !isInvestmentAllocationInvalid(TermType.MEDIUM_TERM) &&
+          !isInvestmentAllocationInvalid(TermType.LONG_TERM)
+        );
+      default:
+        return true;
     }
-    setCurrentDialogStep(null);
-  };
-
-  useEffect(() => {
-    switch (currentState) {
-      case PlannerState.GOALS:
-        setIsFinancialGoalsExpanded(true);
-        setIsInvestmentAllocationVisible(false);
-        setIsPortFolioSummaryVisible(false);
-        break;
-      case PlannerState.INVESTMENT_ALLOCATION:
-        setIsFinancialGoalsExpanded(false);
-        setIsInvestmentAllocationExpanded(true);
-        setIsInvestmentAllocationVisible(true);
-        setIsPortFolioSummaryVisible(false);
-        break;
-      case PlannerState.PORTFOLIO_SUMMARY:
-        setIsInvestmentAllocationExpanded(false);
-        setIsPortFolioSummaryVisible(true);
-        setIsPortFolioSummaryExpanded(true);
-        break;
-    }
-  }, [currentState]);
-
-  const handleAccordionClick = (
-    event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    setExpanded: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setExpanded((prevExpanded) => !prevExpanded);
   };
 
   return (
@@ -106,7 +92,47 @@ const Planner: React.FC = () => {
       <Typography variant="h4" textAlign="center" m={4} fontWeight={500}>
         FINANCIAL PLANNER
       </Typography>
-      <Box sx={{ margin: 3 }}>
+
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps: { completed?: boolean } = {};
+          const labelProps: {
+            optional?: React.ReactNode;
+          } = {};
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+
+      {stepComponents[activeStep]}
+      <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+        {activeStep === 0 ? (
+          ''
+        ) : (
+          <Button
+            color="inherit"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+        )}
+
+        <Box sx={{ flex: '1 1 auto' }} />
+        {activeStep === steps.length - 1 ? (
+          ''
+        ) : (
+          <Button onClick={handleNext} disabled={!allowNext()}>
+            Next
+          </Button>
+        )}
+      </Box>
+
+      {/* <Box sx={{ margin: 3 }}>
         <FinancialGoalsAccordion
           isExpanded={isFinancialGoalsExpanded}
           onAccordionClick={(event) =>
@@ -162,7 +188,7 @@ const Planner: React.FC = () => {
         open={isDialogOpen}
         message={dialogMessage}
         onClose={handleDialogClose}
-      />
+      /> */}
     </>
   );
 };

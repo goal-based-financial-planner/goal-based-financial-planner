@@ -1,6 +1,6 @@
 import React, { Dispatch, useState } from 'react';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import Step, { StepProps } from '../../molecules/Step';
+import Step from '../../molecules/Step';
 import { TermType } from '../../../types/enums';
 import AddIcon from '@mui/icons-material/Add';
 import { PlannerData } from '../../../domain/PlannerData';
@@ -8,10 +8,7 @@ import AddInvestmentOptions from '../../molecules/InvestmentAllocation/AddInvest
 import { Box, Button } from '@mui/material';
 import InvestmentAllocationTable from '../../molecules/InvestmentAllocation/InvestmentAllocationTable';
 
-type InvestmentAllocationProps = Pick<
-  StepProps,
-  'isExpanded' | 'onContinue' | 'onEdit'
-> & {
+type InvestmentAllocationProps = {
   dispatch: Dispatch<PlannerDataAction>;
   plannerData: PlannerData;
 };
@@ -25,9 +22,6 @@ export interface ToolTipVisibilityState {
 const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   plannerData,
   dispatch,
-  isExpanded,
-  onContinue,
-  onEdit,
 }) => {
   const [showInvestmentOptionModal, setShowInvestmentOptionModal] =
     useState(false);
@@ -118,7 +112,6 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
         [TermType.MEDIUM_TERM]: false,
         [TermType.LONG_TERM]: false,
       });
-      onContinue();
     }
   };
 
@@ -136,13 +129,8 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
 
   return (
     <Step
-      isExpanded={isExpanded}
-      onContinue={handleStepContinue}
-      onEdit={onEdit}
       title={'Investment Allocation'}
       subtext="Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal"
-      isContinueDisabled={false}
-      summaryText={`You have added some investment options here`}
     >
       <Box
         sx={{

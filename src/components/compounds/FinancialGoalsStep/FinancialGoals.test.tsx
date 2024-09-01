@@ -26,18 +26,10 @@ jest.mock('../../molecules/FinancialGoals/AddFinancialGoals', () => {
 
 describe('FinancialGoalsStep', () => {
   const mockDispatch = jest.fn();
-  const mockOnContinue = jest.fn();
-  const mockOnEdit = jest.fn();
 
   const renderComponent = (plannerData: PlannerData) =>
     render(
-      <FinancialGoalsStep
-        plannerData={plannerData}
-        dispatch={mockDispatch}
-        isExpanded={true}
-        onContinue={mockOnContinue}
-        onEdit={mockOnEdit}
-      />,
+      <FinancialGoalsStep plannerData={plannerData} dispatch={mockDispatch} />,
     );
 
   it('renders empty body placeholder', () => {
