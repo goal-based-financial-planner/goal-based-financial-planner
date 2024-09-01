@@ -1,18 +1,21 @@
 import React, { Dispatch, ReactNode } from 'react';
 import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridRowId,
+  GridRowModel,
+  GridRowModes,
+  GridRowModesModel,
+  GridValueGetterParams,
+} from '@mui/x-data-grid';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
-import CustomTooltip from '../../../atoms/CustomTooltip';
-import { Delete } from '@mui/icons-material';
-import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
+import { Cancel, Delete, Edit, Save } from '@mui/icons-material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
+import {
+  deleteFinancialGoal,
+  updateFinancialGoal,
+} from '../../../../store/plannerDataActions';
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
@@ -25,82 +28,148 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
   emptyBodyPlaceholder: addGoalButton,
   dispatch,
 }) => {
-  const deleteGoal = (index: any) => {
-    deleteFinancialGoal(dispatch, index);
+  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
+    {},
+  );
+
+  const handleEditClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  };
+
+  const handleSaveClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  };
+
+  const handleDeleteClick = (id: GridRowId) => () => {
+    deleteFinancialGoal(dispatch, id as string);
+  };
+
+  const handleCancelClick = (id: GridRowId) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    // const editedRow = goals.find((row) => row.id === id);
+    // if (editedRow!) {
+    //   setRows(rows.filter((row) => row.id !== id));
+    // }
+  };
+
+  const processRowUpdate = (newRow: GridRowModel) => {
+    updateFinancialGoal(dispatch, newRow);
+    return { success: true };
+  };
+
+  const columns: GridColDef[] = [
+    { field: 'goalName', headerName: 'Goal Name', width: 180, editable: true },
+    {
+      field: 'startYear',
+      headerName: 'Start Year',
+      width: 180,
+      editable: true,
+    },
+    {
+      field: 'targetYear',
+      headerName: 'Target Year',
+      width: 180,
+      editable: true,
+    },
+    {
+      field: 'targetAmount',
+      headerName: 'Target Amount',
+      width: 180,
+      editable: true,
+      valueGetter: (params: GridValueGetterParams<FinancialGoal>) =>
+        params.row.getTargetAmount().toLocaleString(navigator.language),
+    },
+    {
+      field: 'term',
+      headerName: 'Term',
+      width: 180,
+      valueGetter: (params: GridValueGetterParams<FinancialGoal>) =>
+        params.row.getTerm(),
+      editable: false,
+    },
+    {
+      field: 'termType',
+      headerName: 'Term Type',
+      width: 180,
+      valueGetter: (params: GridValueGetterParams<FinancialGoal>) =>
+        params.row.getTermType(),
+      editable: false,
+    },
+    {
+      field: 'inflationAdjustedTargetAmount',
+      headerName: 'Capital Adjusted By Inflation',
+      width: 180,
+      valueGetter: (params: GridValueGetterParams<FinancialGoal>) =>
+        params.row
+          .getInflationAdjustedTargetAmount()
+          .toLocaleString(navigator.language),
+      editable: false,
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<Save />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<Cancel />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<Edit />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<Delete />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Goal name</TableCell>
-            <TableCell>Start Year</TableCell>
-            <TableCell>Target Year</TableCell>
-            <TableCell>Capital Required</TableCell>
-            <TableCell>
-              <span style={{ verticalAlign: 'middle' }}>Term</span>
-              <CustomTooltip tooltipText="Number of years you have to accumulate the capital " />
-            </TableCell>
-            <TableCell>
-              <span style={{ verticalAlign: 'middle' }}>Term type</span>
-              <CustomTooltip
-                tooltipText={
-                  <>
-                    <ul>
-                      <li>Short Term if the term is less than 4 years</li>
-                      <li>Medium Term if the term is less than 6 years</li>
-                      <li>Long Term if the term is more than 6 years</li>
-                    </ul>
-                  </>
-                }
-              />
-            </TableCell>
-            <TableCell>
-              <span style={{ verticalAlign: 'middle' }}>
-                Capital Adjusted by Inflation
-              </span>
-              <CustomTooltip tooltipText="Capital adjusted by taking inflation into account" />
-            </TableCell>
-            <TableCell align="right" />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {goals && goals.length > 0 ? (
-            goals.map((goal, index) => (
-              <TableRow key={index}>
-                <TableCell>{goal.goalName}</TableCell>
-                <TableCell>{goal.startYear}</TableCell>
-                <TableCell>{goal.targetYear}</TableCell>
-                <TableCell>
-                  {goal.targetAmount.toLocaleString(navigator.language, {
-                    maximumFractionDigits: 2,
-                  })}
-                </TableCell>
-                <TableCell>{goal.getTerm()}</TableCell>
-                <TableCell>{goal.getTermType()}</TableCell>
-                <TableCell>
-                  {goal
-                    .getInflationAdjustedTargetAmount()
-                    .toLocaleString(navigator.language, {
-                      maximumFractionDigits: 2,
-                    })}
-                </TableCell>
-                <TableCell align="right">
-                  <Delete color="error" onClick={() => deleteGoal(index)} />
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={7} style={{ textAlign: 'center' }}>
-                {addGoalButton}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <DataGrid
+      columns={columns}
+      rows={goals}
+      editMode="row"
+      hideFooterPagination={true}
+      rowModesModel={rowModesModel}
+      onRowModesModelChange={handleRowModesModelChange}
+      processRowUpdate={processRowUpdate}
+    />
   );
 };
 

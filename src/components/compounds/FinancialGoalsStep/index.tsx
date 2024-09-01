@@ -4,7 +4,7 @@ import { Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import Step, { StepProps } from '../../molecules/Step';
+import Step from '../../molecules/Step';
 import { PlannerData } from '../../../domain/PlannerData';
 
 type FinancialGoalsProps = {
@@ -64,9 +64,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
             alignItems: 'center',
           }}
         >
-          {plannerData.financialGoals.length > 0 ? (
-            <Box>{getAddGoalButton()}</Box>
-          ) : null}
+          <Box>{getAddGoalButton()}</Box>
         </Box>
 
         <FinancialGoalsTable

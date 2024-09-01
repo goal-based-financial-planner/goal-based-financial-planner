@@ -10,6 +10,7 @@ export enum PlannerDataActionType {
   ADD_FINANCIAL_GOAL = 'ADD_FINANCIAL_GOAL',
   UPDATE_INVESTMENT_ALLOCATIONS = 'UPDATE_INVESTMENT_ALLOCATIONS',
   DELETE_FINANCIAL_GOAL = 'DELETE_FINANCIAL_GOAL',
+  UPDATE_FINANCIAL_GOAL = 'UPDATE_FINANCIAL_GOAL',
   UPDATE_SHORT_TERM_INVESTMENT = 'UPDATE_SHORT_TERM_INVESTMENT',
   UPDATE_MEDIUM_TERM_INVESTMENT = 'UPDATE_MEDIUM_TERM_INVESTMENT',
   UPDATE_LONG_TERM_INVESTMENT = 'UPDATE_LONG_TERM_INVESTMENT',
@@ -28,11 +29,21 @@ export function addFinancialGoal(
 
 export function deleteFinancialGoal(
   dispatch: Dispatch<PlannerDataAction>,
-  financialGoal: FinancialGoal,
+  financialGoalId: string,
+) {
+  dispatch({
+    payload: financialGoalId,
+    type: PlannerDataActionType.DELETE_FINANCIAL_GOAL,
+  });
+}
+
+export function updateFinancialGoal(
+  dispatch: Dispatch<PlannerDataAction>,
+  financialGoal: any,
 ) {
   dispatch({
     payload: financialGoal,
-    type: PlannerDataActionType.DELETE_FINANCIAL_GOAL,
+    type: PlannerDataActionType.UPDATE_FINANCIAL_GOAL,
   });
 }
 

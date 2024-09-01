@@ -8,12 +8,14 @@ export class FinancialGoal {
     targetYear: number,
     targetAmount: number,
   ) {
+    this.id = Math.random().toString(36).substring(2, 9);
     this.goalName = goalName;
     this.startYear = startYear;
     this.targetYear = targetYear;
     this.targetAmount = targetAmount;
   }
 
+  id: string;
   goalName: string;
   startYear: number;
   targetYear: number;

@@ -65,7 +65,9 @@ export function plannerDataReducer(
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
       const financialGoals = [...state.financialGoals];
       const { investmentAllocations } = state;
-      financialGoals.splice(action.payload, 1);
+
+      const index = financialGoals.findIndex((g) => g.id === action.payload);
+      financialGoals.splice(index, 1);
 
       const allSelectedTermTypes = new Set(
         financialGoals.map((g) => g.getTermType()),
@@ -84,6 +86,23 @@ export function plannerDataReducer(
       }
 
       return new PlannerData(financialGoals, investmentAllocations);
+
+    case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
+      const financialGoals = [...state.financialGoals];
+      const updatedPayload = action.payload;
+      const goalToBeUpdated = financialGoals.find(
+        (g) => g.id === action.payload.id,
+      );
+
+      if (goalToBeUpdated) {
+        goalToBeUpdated.goalName = updatedPayload.goalName;
+        goalToBeUpdated.startYear = updatedPayload.startYear;
+        goalToBeUpdated.targetYear = updatedPayload.targetYear;
+        goalToBeUpdated.targetAmount = updatedPayload.targetAmount;
+      }
+
+      return new PlannerData(financialGoals, state.investmentAllocations);
+    }
 
     default:
       return state;
