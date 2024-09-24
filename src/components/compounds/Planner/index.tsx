@@ -7,6 +7,7 @@ import {
 import {
   Box,
   Button,
+  Container,
   Step,
   StepLabel,
   Stepper,
@@ -92,31 +93,35 @@ const Planner: React.FC = () => {
       <Typography variant="h4" textAlign="center" m={4} fontWeight={500}>
         FINANCIAL PLANNER
       </Typography>
-
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: {
-            optional?: React.ReactNode;
-          } = {};
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Stepper activeStep={activeStep} sx={{ width: '1000px' }}>
+          {steps.map((label) => {
+            const stepProps: { completed?: boolean } = {};
+            const labelProps: {
+              optional?: React.ReactNode;
+            } = {};
+            return (
+              <Step key={label} {...stepProps}>
+                <StepLabel {...labelProps}>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+      </Box>
 
       {stepComponents[activeStep]}
-      <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+      <Container
+        sx={{ display: 'flex', flexDirection: 'row' }}
+        maxWidth={false}
+      >
         {activeStep === 0 ? (
           ''
         ) : (
           <Button
-            color="inherit"
             disabled={activeStep === 0}
             onClick={handleBack}
             sx={{ mr: 1 }}
+            variant="outlined"
           >
             Back
           </Button>
@@ -126,69 +131,15 @@ const Planner: React.FC = () => {
         {activeStep === steps.length - 1 ? (
           ''
         ) : (
-          <Button onClick={handleNext} disabled={!allowNext()}>
+          <Button
+            onClick={handleNext}
+            disabled={!allowNext()}
+            variant="contained"
+          >
             Next
           </Button>
         )}
-      </Box>
-
-      {/* <Box sx={{ margin: 3 }}>
-        <FinancialGoalsAccordion
-          isExpanded={isFinancialGoalsExpanded}
-          onAccordionClick={(event) =>
-            handleAccordionClick(event, setIsFinancialGoalsExpanded)
-          }
-          onDialogOpen={() =>
-            handleDialogOpen(
-              PlannerState.GOALS,
-              'A financial goal is in the most cases an event for which you have to flush out a lumpsum of money...',
-            )
-          }
-          isIconDisabled={isFinancialGoalsIconDisabled}
-          plannerData={plannerData}
-          dispatch={dispatch}
-          goToStep={goToStep}
-        />
-
-        <InvestmentAllocationAccordion
-          isExpanded={isInvestmentAllocationExpanded}
-          isVisible={isInvestmentAllocationVisible}
-          onAccordionClick={(event) =>
-            handleAccordionClick(event, setIsInvestmentAllocationExpanded)
-          }
-          onDialogOpen={() =>
-            handleDialogOpen(
-              PlannerState.INVESTMENT_ALLOCATION,
-              'Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal',
-            )
-          }
-          isIconDisabled={isInvestmentAllocationIconDisabled}
-          plannerData={plannerData}
-          dispatch={dispatch}
-          goToStep={goToStep}
-        />
-
-        <PortfolioSummaryAccordion
-          isExpanded={isPortFolioSummaryExpanded}
-          isVisible={isPortFolioSummaryVisible}
-          onAccordionClick={(event) =>
-            handleAccordionClick(event, setIsPortFolioSummaryExpanded)
-          }
-          onDialogOpen={() =>
-            handleDialogOpen(
-              PlannerState.PORTFOLIO_SUMMARY,
-              'Alright! Based on the goals you have added and your choice of investments, we calculated how much you should invest into each of the investment options. Here is a summary of the investments you have added.',
-            )
-          }
-          isIconDisabled={isPortFolioSummaryIconDisabled}
-          plannerData={plannerData}
-        />
-      </Box>
-      <AcknowledgmentDialog
-        open={isDialogOpen}
-        message={dialogMessage}
-        onClose={handleDialogClose}
-      /> */}
+      </Container>
     </>
   );
 };

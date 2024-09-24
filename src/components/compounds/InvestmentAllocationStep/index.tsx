@@ -128,10 +128,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   };
 
   return (
-    <Step
-      title={'Investment Allocation'}
-      subtext="Now that you have added your financial goals, choose the investments that you are comfortable investing in. Just put the percentage of investment next each option under the type of goal"
-    >
+    <Step title={'Investment Allocation'}>
       <Box
         sx={{
           display: 'flex',

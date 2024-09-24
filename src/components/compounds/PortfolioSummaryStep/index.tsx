@@ -11,10 +11,7 @@ const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
   plannerData,
 }) => {
   return (
-    <Step
-      title={'Summary'}
-      subtext="Alright! Based on the goals you have added and your choice of investments, we calculated how much you should invest into each of the investment options. Here is a summary of the investments you have added."
-    >
+    <Step title={'Summary'}>
       <InvestmentSuggestions plannerData={plannerData} />
     </Step>
   );

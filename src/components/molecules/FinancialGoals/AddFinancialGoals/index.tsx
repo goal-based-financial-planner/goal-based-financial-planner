@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Unstable_Grid2 as Grid,
   Modal,
@@ -116,142 +117,108 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
   };
 
   return (
-    <Modal
-      component={Stack}
-      open={showAddGoalsModal}
-      alignItems="center"
-      justifyContent="center"
-      onClose={handleClose}
+    <Box
+      sx={{
+        backgroundColor: '#f0f4f8',
+        border: '1px solid #d1d9e6',
+        borderRadius: '8px' /* Rounded corners */,
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        padding: '20px',
+      }}
     >
-      <Paper
-        component={Stack}
-        p={3}
-        data-testid="add-goal"
-        sx={{
-          position: 'absolute',
-          minWidth: {
-            xs: '90%',
-            sm: null,
-            md: 600,
-          },
-          maxWidth: 400,
-          width: {
-            xs: '80%',
-            md: 600,
-          },
-        }}
-      >
-        <h2 style={{ marginTop: 0 }}>Add Goal</h2>
-
-        <Grid container spacing={5} alignItems="center" mt={0.5}>
-          <Grid xs={6}>
-            <CustomTextField
-              label="Goal Name"
-              placeholder='Eg: "Child Education"'
-              sx={{ minWidth: '270px', minHeight: 80 }}
-              helperText="Enter valid Goal Name"
-              required
-              error={validationErrors.goalName}
-              value={goalName}
-              onChange={handleGoalNameChange}
-              regex={ALPHANUMERIC_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="Give your goal a name" />
-                ),
-              }}
-            />
-          </Grid>
-
-          <Grid xs={6}>
-            <CustomTextField
-              label="Capital Needed"
-              placeholder='Eg: "1000000"'
-              sx={{ minWidth: '270px', minHeight: 80 }}
-              required
-              helperText="Enter valid Amount"
-              error={validationErrors.targetAmount}
-              value={targetAmount}
-              onChange={handleTargetAmountChange}
-              regex={NUMBER_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
-                ),
-              }}
-            />
-          </Grid>
-          <Grid xs={6}>
-            <CustomTextField
-              sx={{ minWidth: '270px', minHeight: 80 }}
-              helperText="Enter valid start year"
-              placeholder='Eg: "2024"'
-              label="Investment Start Year"
-              required
-              error={validationErrors.startYear}
-              value={startYear}
-              onChange={handleStartYearChange}
-              regex={YEAR_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="When are you planning to start investing?" />
-                ),
-              }}
-            />
-          </Grid>
-          <Grid xs={6}>
-            <CustomTextField
-              sx={{ minWidth: '270px', minHeight: 80 }}
-              helperText="Enter valid target year"
-              placeholder='Eg: "2040"'
-              label="Investment End Year"
-              required
-              value={targetYear}
-              error={
-                validationErrors.targetYear ||
-                (isTargetYearValid && Number(targetYear) < Number(startYear))
-              }
-              additionalHelperText="Target year should be greater than start year"
-              onChange={handleTargetYearChange}
-              onBlur={handleTargetYearBlur}
-              regex={YEAR_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="When do you want to meet this goal by? " />
-                ),
-              }}
-            />
-          </Grid>
-          <Grid xs={6}>
-            <Button
-              startIcon={<CancelRounded />}
-              variant="outlined"
-              color="secondary"
-              onClick={handleCloseAndReset}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid
-            xs={6}
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'flex-end',
+      <Grid container columnGap={2} sx={{ justifyContent: 'center' }}>
+        <Grid xs={2}>
+          <CustomTextField
+            label="Goal Name"
+            placeholder='Eg: "Child Education"'
+            fullWidth
+            helperText="Enter valid Goal Name"
+            required
+            error={validationErrors.goalName}
+            value={goalName}
+            onChange={handleGoalNameChange}
+            regex={ALPHANUMERIC_PATTERN}
+            InputProps={{
+              endAdornment: (
+                <CustomTooltip tooltipText="Give your goal a name" />
+              ),
             }}
-          >
-            <Button
-              startIcon={<Add />}
-              onClick={handleAdd}
-              variant="contained"
-              color="secondary"
-            >
-              Add
-            </Button>
-          </Grid>
+          />
         </Grid>
-      </Paper>
-    </Modal>
+
+        <Grid xs={2}>
+          <CustomTextField
+            label="Capital Needed"
+            placeholder='Eg: "1000000"'
+            fullWidth
+            required
+            helperText="Enter valid Amount"
+            error={validationErrors.targetAmount}
+            value={targetAmount}
+            onChange={handleTargetAmountChange}
+            regex={NUMBER_PATTERN}
+            InputProps={{
+              endAdornment: (
+                <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
+              ),
+            }}
+          />
+        </Grid>
+        <Grid xs={2}>
+          <CustomTextField
+            fullWidth
+            helperText="Enter valid start year"
+            placeholder='Eg: "2024"'
+            label="Investment Start Year"
+            required
+            error={validationErrors.startYear}
+            value={startYear}
+            onChange={handleStartYearChange}
+            regex={YEAR_PATTERN}
+            InputProps={{
+              endAdornment: (
+                <CustomTooltip tooltipText="When are you planning to start investing?" />
+              ),
+            }}
+          />
+        </Grid>
+        <Grid xs={2} justifyContent={'start'}>
+          <CustomTextField
+            fullWidth
+            helperText="Enter valid target year"
+            placeholder='Eg: "2040"'
+            label="Investment End Year"
+            required
+            value={targetYear}
+            error={
+              validationErrors.targetYear ||
+              (isTargetYearValid && Number(targetYear) < Number(startYear))
+            }
+            additionalHelperText="Target year should be greater than start year"
+            onChange={handleTargetYearChange}
+            onBlur={handleTargetYearBlur}
+            regex={YEAR_PATTERN}
+            InputProps={{
+              endAdornment: (
+                <CustomTooltip tooltipText="When do you want to meet this goal by? " />
+              ),
+            }}
+          />
+        </Grid>
+
+        <Grid xs={2} justifyContent={'start'}>
+          <Button
+            startIcon={<Add />}
+            onClick={handleAdd}
+            variant="contained"
+            color="secondary"
+            sx={{ mt: 1 }}
+          >
+            Add
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

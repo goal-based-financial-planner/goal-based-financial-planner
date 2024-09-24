@@ -19,10 +19,9 @@ const CustomPaper = forwardRef<HTMLDivElement, CustomPaperProps>(
         <Stack gap={3} sx={{ minHeight: 1 }} mb={1} flexDirection="column">
           <Paper
             sx={{
-              padding: '24px',
+              padding: 6,
               flex: 1,
             }}
-            elevation={1}
           >
             {children}
           </Paper>

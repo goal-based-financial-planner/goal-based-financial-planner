@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import FinancialGoalsTable from '.';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { screen } from '@testing-library/react';
-import { Button } from '@mui/material';
 
 test('renders FinancialGoalsTable component', () => {
   const goals: FinancialGoal[] = [];
@@ -11,13 +10,7 @@ test('renders FinancialGoalsTable component', () => {
   goals.push(new FinancialGoal('Goal 2', 2021, 2025, 50000));
   goals.push(new FinancialGoal('Goal 3', 2021, 2035, 100000));
 
-  render(
-    <FinancialGoalsTable
-      goals={goals}
-      emptyBodyPlaceholder={<Button></Button>}
-      dispatch={() => {}}
-    />,
-  );
+  render(<FinancialGoalsTable goals={goals} dispatch={() => {}} />);
 
   // Check if the table has the correct number of body rows
   const tableBodyRows = screen.getAllByRole('row');

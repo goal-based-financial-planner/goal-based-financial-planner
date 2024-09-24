@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode } from 'react';
+import React, { Dispatch } from 'react';
 import {
   DataGrid,
   GridActionsCellItem,
@@ -10,7 +10,7 @@ import {
   GridValueGetterParams,
 } from '@mui/x-data-grid';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
-import { Cancel, Delete, Edit, Save } from '@mui/icons-material';
+import { Cancel, Delete } from '@mui/icons-material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import {
   deleteFinancialGoal,
@@ -19,26 +19,16 @@ import {
 
 interface FinancialGoalsTableProps {
   goals: FinancialGoal[];
-  emptyBodyPlaceholder: ReactNode;
   dispatch: Dispatch<PlannerDataAction>;
 }
 
 const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
   goals,
-  emptyBodyPlaceholder: addGoalButton,
   dispatch,
 }) => {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {},
   );
-
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
 
   const handleDeleteClick = (id: GridRowId) => () => {
     deleteFinancialGoal(dispatch, id as string);
@@ -121,14 +111,6 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
         if (isInEditMode) {
           return [
             <GridActionsCellItem
-              icon={<Save />}
-              label="Save"
-              sx={{
-                color: 'primary.main',
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
               icon={<Cancel />}
               label="Cancel"
               className="textPrimary"
@@ -139,13 +121,6 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
         }
 
         return [
-          <GridActionsCellItem
-            icon={<Edit />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
           <GridActionsCellItem
             icon={<Delete />}
             label="Delete"
