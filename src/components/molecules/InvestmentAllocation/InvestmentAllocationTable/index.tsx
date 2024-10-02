@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 import React, { Dispatch, ReactNode } from 'react';
-import CustomAmountField from '../CustomAmountField';
+import CustomAmountField from '../../../atoms/CustomAmountField';
 import {
   setLongTermInvestmentPercentage,
   setMidTermInvestmentPercentage,
