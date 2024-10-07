@@ -2,24 +2,62 @@ import { Grid } from '@mui/material';
 import CustomPieChart from '../../../atoms/CustomPieChart';
 import CustomInputSlider from '../../../atoms/CustomInputSlider';
 import CustomMenu from '../../../atoms/CustomMenu';
-import { useState } from 'react';
+import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
+import {
+  setLongTermInvestmentPercentage,
+  setMidTermInvestmentPercentage,
+  setShortTermInvestmentPercentage,
+} from '../../../../store/plannerDataActions';
+import { TermType } from '../../../../types/enums';
 
-const InvestmentAllocation = () => {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+const investmentActions = {
+  [TermType.SHORT_TERM]: setShortTermInvestmentPercentage,
+  [TermType.MEDIUM_TERM]: setMidTermInvestmentPercentage,
+  [TermType.LONG_TERM]: setLongTermInvestmentPercentage,
+};
 
-  const handleSetSelectedOption = (newOption: string) => {
-    setSelectedOptions((prevOptions) => {
-      if (!prevOptions.includes(newOption)) {
-        return [...prevOptions, newOption];
-      }
-      return prevOptions;
+const InvestmentAllocation = ({
+  dispatch,
+  allocations,
+  type,
+}: {
+  dispatch: any;
+  allocations: InvestmentChoiceType[];
+  type: keyof typeof investmentActions;
+}) => {
+  const setInvestmentPercentage = (
+    selectedOption: string,
+    updatedPercent: number,
+  ) => {
+    const setPercentage = investmentActions[type];
+    setPercentage(dispatch, {
+      id: selectedOption,
+      investmentPercentage: updatedPercent,
     });
+  };
+
+  const handleMenuChange = (selectedOption: string) => {
+    setInvestmentPercentage(selectedOption, 30);
+  };
+
+  const handleInputChange = (
+    updatedPercent: number,
+    selectedOption: string,
+  ) => {
+    setInvestmentPercentage(selectedOption, updatedPercent);
+  };
+
+  const handleSliderChange = (
+    updatedPercent: number | number[],
+    selectedOption: string,
+  ) => {
+    setInvestmentPercentage(selectedOption, Number(updatedPercent));
   };
 
   return (
     <Grid container>
       <Grid xs={12}>
-        <CustomPieChart />
+        <CustomPieChart allocations={allocations} type={type} />
       </Grid>
       <Grid
         xs={12}
@@ -31,13 +69,19 @@ const InvestmentAllocation = () => {
         }}
       >
         <CustomMenu
-          setSelectedOption={handleSetSelectedOption}
-          selectedOptions={selectedOptions}
+          allocations={allocations}
+          handleMenuChange={handleMenuChange}
         />
       </Grid>
       <Grid xs={12} sx={{ paddingX: 10, paddingY: 3 }}>
-        {selectedOptions.map((option, index) => (
-          <CustomInputSlider key={index} selectedOption={option} />
+        {allocations.map((option) => (
+          <CustomInputSlider
+            key={option.id}
+            selectedOption={option.id}
+            percent={option.investmentPercentage}
+            handleInputChange={handleInputChange}
+            handleSliderChange={handleSliderChange}
+          />
         ))}
       </Grid>
     </Grid>

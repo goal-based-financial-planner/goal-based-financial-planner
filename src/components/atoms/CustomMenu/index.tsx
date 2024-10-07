@@ -5,6 +5,7 @@ import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { DEFAULT_INVESTMENT_OPTIONS } from '../../../domain/constants';
+import { InvestmentChoiceType } from '../../../domain/InvestmentOptions';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -42,11 +43,12 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 const CustomMenu = ({
-  selectedOptions,
-  setSelectedOption,
+  allocations,
+  handleMenuChange,
 }: {
-  selectedOptions: string[];
-  setSelectedOption: (option: string) => void;
+  allocations: InvestmentChoiceType[];
+
+  handleMenuChange: (option: string) => void;
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -58,13 +60,13 @@ const CustomMenu = ({
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (option: string) => {
-    setSelectedOption(option);
+  const handleMenuItemClick = (selectedOption: string) => {
+    handleMenuChange(selectedOption);
     handleClose();
   };
 
   const filteredOptions = DEFAULT_INVESTMENT_OPTIONS.filter(
-    (opt) => !selectedOptions.includes(opt.investmentName),
+    (opt) => !allocations.map((a) => a.id).includes(opt.investmentName),
   );
   return (
     <div>

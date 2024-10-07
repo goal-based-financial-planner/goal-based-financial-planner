@@ -25,13 +25,25 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
     <Step title={'Investment Allocation'}>
       <Grid container>
         <Grid xs={4}>
-          <InvestmentAllocation />
+          <InvestmentAllocation
+            dispatch={dispatch}
+            allocations={plannerData.investmentAllocations['Short Term']}
+            type={TermType.SHORT_TERM}
+          />
         </Grid>
         <Grid xs={4}>
-          <InvestmentAllocation />
+          <InvestmentAllocation
+            dispatch={dispatch}
+            allocations={plannerData.investmentAllocations['Medium Term']}
+            type={TermType.MEDIUM_TERM}
+          />
         </Grid>
         <Grid xs={4}>
-          <InvestmentAllocation />
+          <InvestmentAllocation
+            dispatch={dispatch}
+            allocations={plannerData.investmentAllocations['Long Term']}
+            type={TermType.LONG_TERM}
+          />
         </Grid>
       </Grid>
     </Step>

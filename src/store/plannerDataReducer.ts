@@ -17,9 +17,16 @@ function updateInvestmentAllocation(
   action: PlannerDataAction,
   termType: TermType,
 ) {
-  let allocations = state.investmentAllocations[termType];
-  allocations = allocations.filter((e) => e.id !== action.payload.id);
-  allocations.push(action.payload);
+  const allocations = state.investmentAllocations[termType];
+  const allocationIndex = allocations.findIndex(
+    (e) => e.id === action.payload.id,
+  );
+
+  if (allocationIndex === -1) {
+    allocations.push(action.payload);
+  } else {
+    allocations.splice(allocationIndex, 1, action.payload);
+  }
 
   return new PlannerData(
     state.financialGoals,
@@ -51,7 +58,11 @@ export function plannerDataReducer(
       );
 
     case PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS:
-      return new PlannerData(state.financialGoals, action.payload);
+      return new PlannerData(
+        state.financialGoals,
+        action.payload,
+        state.investmentAllocationOptions,
+      );
 
     case PlannerDataActionType.UPDATE_SHORT_TERM_INVESTMENT:
       return updateInvestmentAllocation(state, action, TermType.SHORT_TERM);
@@ -85,7 +96,11 @@ export function plannerDataReducer(
         investmentAllocations['Long Term'] = [];
       }
 
-      return new PlannerData(financialGoals, investmentAllocations);
+      return new PlannerData(
+        financialGoals,
+        investmentAllocations,
+        state.investmentAllocationOptions,
+      );
 
     case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
       const financialGoals = [...state.financialGoals];

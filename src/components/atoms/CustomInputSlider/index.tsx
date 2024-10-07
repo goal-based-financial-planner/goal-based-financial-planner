@@ -9,23 +9,36 @@ const Input = styled(MuiInput)`
   width: 42px;
 `;
 
-const CustomInputSlider = ({ selectedOption }: { selectedOption: string }) => {
-  const [percentage, setPercentage] = React.useState(30);
-
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    setPercentage(newValue as number);
+const CustomInputSlider = ({
+  selectedOption,
+  percent,
+  handleInputChange,
+  handleSliderChange,
+}: {
+  selectedOption: string;
+  percent: number;
+  handleInputChange: (updatedPercent: number, selectedOption: string) => void;
+  handleSliderChange: (
+    updatedPercentFromSlider: number | number[],
+    selectedOption: string,
+  ) => void;
+}) => {
+  const handleSlider = (event: Event, newValue: number | number[]) => {
+    handleSliderChange(newValue, selectedOption);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPercentage(event.target.value === '' ? 0 : Number(event.target.value));
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedPercent =
+      event.target.value === '' ? 0 : Number(event.target.value);
+    handleInputChange(updatedPercent, selectedOption);
   };
 
   const handleBlur = () => {
-    if (percentage < 0) {
-      setPercentage(0);
-    } else if (percentage > 100) {
-      setPercentage(100);
-    }
+    // if (percentage < 0) {
+    //   setPercentage(0);
+    // } else if (percentage > 100) {
+    //   setPercentage(100);
+    // }
   };
 
   return (
@@ -35,9 +48,9 @@ const CustomInputSlider = ({ selectedOption }: { selectedOption: string }) => {
       </Grid>
       <Grid item xs={2}>
         <Input
-          value={percentage}
+          value={percent}
           size="small"
-          onChange={handleInputChange}
+          onChange={handleInput}
           onBlur={handleBlur}
           inputProps={{
             step: 10,
@@ -50,8 +63,8 @@ const CustomInputSlider = ({ selectedOption }: { selectedOption: string }) => {
       </Grid>
       <Grid item xs={12}>
         <Slider
-          value={typeof percentage === 'number' ? percentage : 0}
-          onChange={handleSliderChange}
+          value={typeof percent === 'number' ? percent : 0}
+          onChange={handleSlider}
           aria-labelledby="input-slider"
         />
       </Grid>
