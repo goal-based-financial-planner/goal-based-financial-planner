@@ -4,8 +4,6 @@ import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { DEFAULT_INVESTMENT_OPTIONS } from '../../../domain/constants';
-import { InvestmentChoiceType } from '../../../domain/InvestmentOptions';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -43,11 +41,10 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 const CustomMenu = ({
-  allocations,
+  options,
   handleMenuChange,
 }: {
-  allocations: InvestmentChoiceType[];
-
+  options: { label: string; value: string }[];
   handleMenuChange: (option: string) => void;
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -65,9 +62,6 @@ const CustomMenu = ({
     handleClose();
   };
 
-  const filteredOptions = DEFAULT_INVESTMENT_OPTIONS.filter(
-    (opt) => !allocations.map((a) => a.id).includes(opt.investmentName),
-  );
   return (
     <div>
       <Button
@@ -91,12 +85,12 @@ const CustomMenu = ({
         open={open}
         onClose={handleClose}
       >
-        {filteredOptions.map((option) => (
+        {options.map((option) => (
           <MenuItem
-            onClick={() => handleMenuItemClick(option.investmentName)}
+            onClick={() => handleMenuItemClick(option.value)}
             disableRipple
           >
-            {option.investmentName}
+            {option.label}
           </MenuItem>
         ))}
       </StyledMenu>

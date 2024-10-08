@@ -1,63 +1,41 @@
 import { Grid } from '@mui/material';
-import CustomPieChart from '../../../atoms/CustomPieChart';
+import InvestmentPieChart from '../../InvestmentPieChart';
 import CustomInputSlider from '../../../atoms/CustomInputSlider';
 import CustomMenu from '../../../atoms/CustomMenu';
 import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
-import {
-  setLongTermInvestmentPercentage,
-  setMidTermInvestmentPercentage,
-  setShortTermInvestmentPercentage,
-} from '../../../../store/plannerDataActions';
-import { TermType } from '../../../../types/enums';
-
-const investmentActions = {
-  [TermType.SHORT_TERM]: setShortTermInvestmentPercentage,
-  [TermType.MEDIUM_TERM]: setMidTermInvestmentPercentage,
-  [TermType.LONG_TERM]: setLongTermInvestmentPercentage,
-};
+import { DEFAULT_INVESTMENT_OPTIONS } from '../../../../domain/constants';
 
 const InvestmentAllocation = ({
-  dispatch,
   allocations,
-  type,
+  handlePercentageChange,
 }: {
-  dispatch: any;
   allocations: InvestmentChoiceType[];
-  type: keyof typeof investmentActions;
+  handlePercentageChange: any;
 }) => {
-  const setInvestmentPercentage = (
-    selectedOption: string,
-    updatedPercent: number,
-  ) => {
-    const setPercentage = investmentActions[type];
-    setPercentage(dispatch, {
-      id: selectedOption,
-      investmentPercentage: updatedPercent,
-    });
-  };
-
   const handleMenuChange = (selectedOption: string) => {
-    setInvestmentPercentage(selectedOption, 30);
+    handlePercentageChange(selectedOption, 30);
   };
 
   const handleInputChange = (
     updatedPercent: number,
     selectedOption: string,
   ) => {
-    setInvestmentPercentage(selectedOption, updatedPercent);
+    handlePercentageChange(selectedOption, updatedPercent);
   };
 
-  const handleSliderChange = (
-    updatedPercent: number | number[],
-    selectedOption: string,
-  ) => {
-    setInvestmentPercentage(selectedOption, Number(updatedPercent));
-  };
+  const filteredOptions = DEFAULT_INVESTMENT_OPTIONS.filter(
+    (opt) => !allocations.map((a) => a.id).includes(opt.id),
+  ).map((a) => {
+    return {
+      label: a.investmentName,
+      value: a.id,
+    };
+  });
 
   return (
     <Grid container>
       <Grid xs={12}>
-        <CustomPieChart allocations={allocations} type={type} />
+        <InvestmentPieChart allocations={allocations} />
       </Grid>
       <Grid
         xs={12}
@@ -69,7 +47,7 @@ const InvestmentAllocation = ({
         }}
       >
         <CustomMenu
-          allocations={allocations}
+          options={filteredOptions}
           handleMenuChange={handleMenuChange}
         />
       </Grid>
@@ -77,10 +55,12 @@ const InvestmentAllocation = ({
         {allocations.map((option) => (
           <CustomInputSlider
             key={option.id}
-            selectedOption={option.id}
+            label={
+              DEFAULT_INVESTMENT_OPTIONS.filter((a) => a.id === option.id)[0]
+                .investmentName
+            }
             percent={option.investmentPercentage}
-            handleInputChange={handleInputChange}
-            handleSliderChange={handleSliderChange}
+            onChange={(value) => handleInputChange(value, option.id)}
           />
         ))}
       </Grid>

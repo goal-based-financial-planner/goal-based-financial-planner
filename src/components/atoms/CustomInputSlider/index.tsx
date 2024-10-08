@@ -10,27 +10,22 @@ const Input = styled(MuiInput)`
 `;
 
 const CustomInputSlider = ({
-  selectedOption,
+  label,
   percent,
-  handleInputChange,
-  handleSliderChange,
+  onChange,
 }: {
-  selectedOption: string;
+  label: string;
   percent: number;
-  handleInputChange: (updatedPercent: number, selectedOption: string) => void;
-  handleSliderChange: (
-    updatedPercentFromSlider: number | number[],
-    selectedOption: string,
-  ) => void;
+  onChange: (updatedPercent: number) => void;
 }) => {
   const handleSlider = (event: Event, newValue: number | number[]) => {
-    handleSliderChange(newValue, selectedOption);
+    onChange(Number(newValue));
   };
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const updatedPercent =
       event.target.value === '' ? 0 : Number(event.target.value);
-    handleInputChange(updatedPercent, selectedOption);
+    onChange(updatedPercent);
   };
 
   const handleBlur = () => {
@@ -44,7 +39,7 @@ const CustomInputSlider = ({
   return (
     <Grid container spacing={2} sx={{ alignItems: 'center' }}>
       <Grid item xs={10}>
-        <Typography>{selectedOption}</Typography>
+        <Typography>{label}</Typography>
       </Grid>
       <Grid item xs={2}>
         <Input
