@@ -4,6 +4,7 @@ import CustomInputSlider from '../../../atoms/CustomInputSlider';
 import CustomMenu from '../../../atoms/CustomMenu';
 import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
 import { DEFAULT_INVESTMENT_OPTIONS } from '../../../../domain/constants';
+import CustomPaper from '../../../atoms/CustomPaper';
 
 const InvestmentAllocation = ({
   allocations,

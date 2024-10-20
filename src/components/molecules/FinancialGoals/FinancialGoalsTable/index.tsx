@@ -39,11 +39,6 @@ const FinancialGoalsTable: React.FC<FinancialGoalsTableProps> = ({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
-
-    // const editedRow = goals.find((row) => row.id === id);
-    // if (editedRow!) {
-    //   setRows(rows.filter((row) => row.id !== id));
-    // }
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {

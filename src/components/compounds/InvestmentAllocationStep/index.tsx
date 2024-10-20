@@ -4,12 +4,13 @@ import Step from '../../molecules/Step';
 import { TermType } from '../../../types/enums';
 import { PlannerData } from '../../../domain/PlannerData';
 import InvestmentAllocation from '../../molecules/InvestmentAllocation/InvesmentAllocation';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Paper, Typography } from '@mui/material';
 import {
   setShortTermInvestmentPercentage,
   setMidTermInvestmentPercentage,
   setLongTermInvestmentPercentage,
 } from '../../../store/plannerDataActions';
+import CustomPaper from '../../atoms/CustomPaper';
 
 type InvestmentAllocationProps = {
   dispatch: Dispatch<PlannerDataAction>;
@@ -63,26 +64,30 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
 
   return (
     <Step title={'Investment Allocation'}>
-      <Grid container>
+      <Grid container columnGap={1}>
         {Object.values(TermType).map((termType) => {
           const shouldHidePieChart = areGoalsPresentOfType(termType);
           if (shouldHidePieChart) {
             return (
-              <Grid xs={4}>
-                <Typography sx={{ mb: 3 }}>{termType}</Typography>
-                <InvestmentAllocation
-                  allocations={plannerData.investmentAllocations[termType]}
-                  handlePercentageChange={(
-                    selectedOption: string,
-                    percent: number,
-                  ) =>
-                    handlePercentageChangeForTerm(
-                      selectedOption,
-                      percent,
-                      termType,
-                    )
-                  }
-                />
+              <Grid xs={3.9}>
+                <Paper>
+                  <Typography variant={'h6'} sx={{ textAlign: 'center' }}>
+                    {termType}
+                  </Typography>
+                  <InvestmentAllocation
+                    allocations={plannerData.investmentAllocations[termType]}
+                    handlePercentageChange={(
+                      selectedOption: string,
+                      percent: number,
+                    ) =>
+                      handlePercentageChangeForTerm(
+                        selectedOption,
+                        percent,
+                        termType,
+                      )
+                    }
+                  />
+                </Paper>
               </Grid>
             );
           }
