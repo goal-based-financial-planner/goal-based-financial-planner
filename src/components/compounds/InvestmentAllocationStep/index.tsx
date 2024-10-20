@@ -4,7 +4,7 @@ import Step from '../../molecules/Step';
 import { TermType } from '../../../types/enums';
 import { PlannerData } from '../../../domain/PlannerData';
 import InvestmentAllocation from '../../molecules/InvestmentAllocation/InvesmentAllocation';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import {
   setShortTermInvestmentPercentage,
   setMidTermInvestmentPercentage,
@@ -55,27 +55,38 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
     }
   };
 
+  const areGoalsPresentOfType = (column: TermType) => {
+    return plannerData
+      .getFinancialGoalSummary()
+      .some((item) => item.termType === column && item.numberOfGoals > 0);
+  };
+
   return (
     <Step title={'Investment Allocation'}>
       <Grid container>
         {Object.values(TermType).map((termType) => {
-          return (
-            <Grid xs={4}>
-              <InvestmentAllocation
-                allocations={plannerData.investmentAllocations[termType]}
-                handlePercentageChange={(
-                  selectedOption: string,
-                  percent: number,
-                ) =>
-                  handlePercentageChangeForTerm(
-                    selectedOption,
-                    percent,
-                    termType,
-                  )
-                }
-              />
-            </Grid>
-          );
+          const shouldHidePieChart = areGoalsPresentOfType(termType);
+          if (shouldHidePieChart) {
+            return (
+              <Grid xs={4}>
+                <Typography sx={{ mb: 3 }}>{termType}</Typography>
+                <InvestmentAllocation
+                  allocations={plannerData.investmentAllocations[termType]}
+                  handlePercentageChange={(
+                    selectedOption: string,
+                    percent: number,
+                  ) =>
+                    handlePercentageChangeForTerm(
+                      selectedOption,
+                      percent,
+                      termType,
+                    )
+                  }
+                />
+              </Grid>
+            );
+          }
+          return null;
         })}
       </Grid>
     </Step>

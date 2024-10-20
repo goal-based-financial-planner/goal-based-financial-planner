@@ -61,10 +61,16 @@ const Planner: React.FC = () => {
         0,
       );
 
+      console.log(termSum);
       return termSum !== 100;
     } else return false;
   };
 
+  console.log(
+    isInvestmentAllocationInvalid(TermType.SHORT_TERM),
+    !isInvestmentAllocationInvalid(TermType.MEDIUM_TERM),
+    isInvestmentAllocationInvalid(TermType.LONG_TERM),
+  );
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -133,7 +139,7 @@ const Planner: React.FC = () => {
         ) : (
           <Button
             onClick={handleNext}
-            disabled={!allowNext()}
+            //  disabled={!allowNext()}
             variant="contained"
           >
             Next
