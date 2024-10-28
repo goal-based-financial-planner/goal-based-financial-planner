@@ -10,13 +10,6 @@ const FinancialGoalCard = ({ goal }: FinancialGoalCardProps) => {
   return (
     <Card sx={{ height: '250px' }}>
       <CardContent>
-        <IconButton
-          aria-label="close"
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-          onClick={() => console.log('Close button clicked')}
-        >
-          <Icon>close</Icon>
-        </IconButton>
         <Typography variant="h4">{goal.getGoalName()}</Typography>
         <Typography variant="body1">
           {goal.getInvestmentStartYear()} - {goal.getTargetYear()}

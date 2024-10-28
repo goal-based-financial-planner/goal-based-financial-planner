@@ -13,7 +13,7 @@ const FinancialGoalsGrid: React.FC<FinancialGoalsGridProps> = ({
   return (
     <Grid container rowGap={6} columnGap={3}>
       {financialGoals.map((goal) => (
-        <Grid item xs={2} key={goal.id}>
+        <Grid item xs={2} key={goal.id} sx={{ mb: 2 }}>
           <FinancialGoalCard goal={goal} />
         </Grid>
       ))}

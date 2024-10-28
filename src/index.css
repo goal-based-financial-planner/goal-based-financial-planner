@@ -5,11 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(
-    to bottom,
-    #f0f8ff,
-    #ffffff
-  ); /* Replace these color codes with your desired light blue gradient */
   height: 100vh; /* Add this line to make the body take the full height of the page */
 }
 
