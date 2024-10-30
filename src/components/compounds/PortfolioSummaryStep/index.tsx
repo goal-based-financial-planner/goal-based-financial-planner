@@ -11,7 +11,7 @@ const PortfolioSummaryStep: React.FC<PortFolioSummaryProps> = ({
   plannerData,
 }) => {
   return (
-    <Step title={'Summary'}>
+    <Step>
       <InvestmentSuggestions plannerData={plannerData} />
     </Step>
   );

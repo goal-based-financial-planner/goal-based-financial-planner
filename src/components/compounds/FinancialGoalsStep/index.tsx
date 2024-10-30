@@ -17,7 +17,7 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   dispatch,
 }) => {
   return (
-    <Step title={'Financial Goals'}>
+    <Step>
       <Grid container rowGap={6}>
         <Grid container justifyContent="center" minHeight="80px">
           <Box>

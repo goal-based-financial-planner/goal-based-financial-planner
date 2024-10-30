@@ -8,7 +8,9 @@ import {
   Box,
   Button,
   Container,
+  Grid,
   Step,
+  StepContent,
   StepLabel,
   Stepper,
   Typography,
@@ -31,9 +33,21 @@ const Planner: React.FC = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   const steps = [
-    'Financial Goals',
-    'Investment Allocation',
-    'Portfolio Summary',
+    {
+      label: 'Add Your Financial Goals',
+      description:
+        'Add the financial goals you have in this step. Choose the year you want to achieve them by and the amount you need to achieve them. Enter the amount in today’s value. The amount will be adjusted for inflation. Click Next once you have added all your goals.',
+    },
+    {
+      label: 'Choose Your Investment Allocation',
+      description:
+        'We categorised your investment goals into short, medium and long term and have provided some suggestions for each category. You can adjust the allocations as per your preference. Make sure the total allocation is 100%. Click Next once you have adjusted the allocations.',
+    },
+    {
+      label: 'View Suggestions',
+      description:
+        'Based on your inputs, this is the suggested portfolio allocation. You can view goal wise allocation and the overall portfolio allocation.',
+    },
   ];
 
   const stepComponents = [
@@ -61,7 +75,6 @@ const Planner: React.FC = () => {
         0,
       );
 
-      console.log(termSum);
       return termSum !== 100;
     } else return false;
   };
@@ -99,53 +112,60 @@ const Planner: React.FC = () => {
       <Typography variant="h4" textAlign="center" m={4} fontWeight={500}>
         FINANCIAL PLANNER
       </Typography>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Stepper activeStep={activeStep} sx={{ width: '1000px' }}>
-          {steps.map((label) => {
-            const stepProps: { completed?: boolean } = {};
-            const labelProps: {
-              optional?: React.ReactNode;
-            } = {};
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-      </Box>
+      <Grid container>
+        <Grid xs={2} item>
+          <Box p={2}>
+            <Stepper activeStep={activeStep} orientation={'vertical'}>
+              {steps.map(({ label, description }) => {
+                return (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                    <StepContent>
+                      <Typography variant={'caption'}>{description}</Typography>
+                    </StepContent>
+                  </Step>
+                );
+              })}
+            </Stepper>
+          </Box>
+        </Grid>
 
-      {stepComponents[activeStep]}
-      <Container
-        sx={{ display: 'flex', flexDirection: 'row' }}
-        maxWidth={false}
-      >
-        {activeStep === 0 ? (
-          ''
-        ) : (
-          <Button
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            sx={{ mr: 1 }}
-            variant="outlined"
-          >
-            Back
-          </Button>
-        )}
+        <Grid item xs={10}>
+          <Box p={2}>
+            {stepComponents[activeStep]}
+            <Container
+              sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}
+              maxWidth={false}
+            >
+              {activeStep === 0 ? (
+                ''
+              ) : (
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mr: 1 }}
+                  variant="outlined"
+                >
+                  Back
+                </Button>
+              )}
 
-        <Box sx={{ flex: '1 1 auto' }} />
-        {activeStep === steps.length - 1 ? (
-          ''
-        ) : (
-          <Button
-            onClick={handleNext}
-            //  disabled={!allowNext()}
-            variant="contained"
-          >
-            Next
-          </Button>
-        )}
-      </Container>
+              <Box sx={{ flex: '1 1 auto' }} />
+              {activeStep === steps.length - 1 ? (
+                ''
+              ) : (
+                <Button
+                  onClick={handleNext}
+                  //  disabled={!allowNext()}
+                  variant="contained"
+                >
+                  Next
+                </Button>
+              )}
+            </Container>
+          </Box>
+        </Grid>
+      </Grid>
     </>
   );
 };

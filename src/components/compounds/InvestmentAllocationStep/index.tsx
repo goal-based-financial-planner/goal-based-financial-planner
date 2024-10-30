@@ -63,7 +63,7 @@ const InvestmentAllocationStep: React.FC<InvestmentAllocationProps> = ({
   };
 
   return (
-    <Step title={'Investment Allocation'}>
+    <Step>
       <Grid container columnGap={1}>
         {Object.values(TermType).map((termType) => {
           const shouldHidePieChart = areGoalsPresentOfType(termType);
