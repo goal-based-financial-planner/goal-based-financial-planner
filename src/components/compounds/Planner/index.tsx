@@ -14,6 +14,7 @@ import {
   StepLabel,
   Stepper,
   Typography,
+  useTheme,
 } from '@mui/material';
 import FinancialGoalsStep from '../FinancialGoalsStep';
 import InvestmentAllocationStep from '../InvestmentAllocationStep';
@@ -107,66 +108,76 @@ const Planner: React.FC = () => {
     }
   };
 
+  const theme = useTheme();
   return (
-    <>
-      <Typography variant="h4" textAlign="center" m={4} fontWeight={500}>
-        FINANCIAL PLANNER
-      </Typography>
-      <Grid container>
-        <Grid xs={2} item>
-          <Box p={2}>
-            <Stepper activeStep={activeStep} orientation={'vertical'}>
-              {steps.map(({ label, description }) => {
-                return (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                    <StepContent>
-                      <Typography variant={'caption'}>{description}</Typography>
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
-          </Box>
-        </Grid>
-
-        <Grid item xs={10}>
-          <Box p={2}>
-            {stepComponents[activeStep]}
-            <Container
-              sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}
-              maxWidth={false}
-            >
-              {activeStep === 0 ? (
-                ''
-              ) : (
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mr: 1 }}
-                  variant="outlined"
-                >
-                  Back
-                </Button>
-              )}
-
-              <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep === steps.length - 1 ? (
-                ''
-              ) : (
-                <Button
-                  onClick={handleNext}
-                  //  disabled={!allowNext()}
-                  variant="contained"
-                >
-                  Next
-                </Button>
-              )}
-            </Container>
-          </Box>
-        </Grid>
+    <Grid container>
+      <Grid
+        xs={2.5}
+        item
+        sx={{
+          backgroundColor: theme.palette.leftPanel.main,
+          height: 'calc(100vh)',
+        }}
+      >
+        <Box p={2}>
+          <Stepper activeStep={activeStep} orientation={'vertical'}>
+            {steps.map(({ label, description }) => {
+              return (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent>
+                    <Typography variant={'caption'}>{description}</Typography>
+                  </StepContent>
+                </Step>
+              );
+            })}
+          </Stepper>
+        </Box>
       </Grid>
-    </>
+
+      <Grid
+        item
+        xs={9.5}
+        sx={{
+          backgroundColor: theme.palette.rightPanel.main,
+          minHeight: 'calc(100vh - 70px)',
+        }}
+      >
+        <Box p={2}>
+          {stepComponents[activeStep]}
+          <Container
+            sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}
+            maxWidth={false}
+          >
+            {activeStep === 0 ? (
+              ''
+            ) : (
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+                variant="outlined"
+              >
+                Back
+              </Button>
+            )}
+
+            <Box sx={{ flex: '1 1 auto' }} />
+            {activeStep === steps.length - 1 ? (
+              ''
+            ) : (
+              <Button
+                onClick={handleNext}
+                //  disabled={!allowNext()}
+                variant="contained"
+              >
+                Next
+              </Button>
+            )}
+          </Container>
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -14,7 +14,6 @@ import {
   NUMBER_PATTERN,
 } from '../../../../types/constants';
 import CustomTextField from '../../../atoms/CustomTextField';
-import CustomTooltip from '../../../atoms/CustomTooltip';
 
 interface AddFinancialGoalsProps {
   showAddInvesmentOptionsModal: boolean;
@@ -90,11 +89,11 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
               value={invesmentOptionName}
               onChange={handleInvestmentOptionChange}
               regex={ALPHANUMERIC_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="Give your goal a name" />
-                ),
-              }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <CustomTooltip tooltipText="Give your goal a name" />
+              //   ),
+              // }}
             />
           </Grid>
 
@@ -108,11 +107,11 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
               value={expectedPercentage}
               onChange={handleExpectedPercentChange}
               regex={NUMBER_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
-                ),
-              }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
+              //   ),
+              // }}
             />
           </Grid>
 

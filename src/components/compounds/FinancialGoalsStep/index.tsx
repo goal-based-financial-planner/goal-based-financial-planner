@@ -1,11 +1,10 @@
-import React, { Dispatch, useState } from 'react';
-import FinancialGoalsTable from '../../molecules/FinancialGoals/FinancialGoalsTable';
-import { Box, Grid } from '@mui/material';
-import AddFinancialGoals from '../../molecules/FinancialGoals/AddFinancialGoals';
+import React, { Dispatch } from 'react';
+import { Grid } from '@mui/material';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import Step from '../../molecules/Step';
 import { PlannerData } from '../../../domain/PlannerData';
 import FinancialGoalsGrid from '../../molecules/FinancialGoals/FinancialGoalsGrid';
+import FinancialGoalForm from '../../molecules/FinancialGoals/FinancialGoalForm';
 
 type FinancialGoalsProps = {
   dispatch: Dispatch<PlannerDataAction>;
@@ -17,19 +16,25 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   dispatch,
 }) => {
   return (
-    <Step>
-      <Grid container rowGap={6}>
-        <Grid container justifyContent="center" minHeight="80px">
-          <Box>
-            <AddFinancialGoals dispatch={dispatch} />
-          </Box>
-        </Grid>
+    <Grid container rowGap={6} columnGap={3}>
+      {plannerData.financialGoals.length ? (
+        <FinancialGoalsGrid
+          financialGoals={plannerData.financialGoals}
+          dispatch={dispatch}
+        />
+      ) : null}
 
-        {plannerData.financialGoals.length ? (
-          <FinancialGoalsGrid financialGoals={plannerData.financialGoals} />
-        ) : null}
+      <Grid xs={3} item>
+        <FinancialGoalForm
+          dispatch={dispatch}
+          label={
+            plannerData.financialGoals.length > 0
+              ? 'Add More'
+              : 'Add your first goal'
+          }
+        />
       </Grid>
-    </Step>
+    </Grid>
   );
 };
 

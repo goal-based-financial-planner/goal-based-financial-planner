@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #dae5ed;
   height: 100vh; /* Add this line to make the body take the full height of the page */
 }
 

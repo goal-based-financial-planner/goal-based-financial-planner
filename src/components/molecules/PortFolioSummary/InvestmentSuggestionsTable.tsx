@@ -6,10 +6,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
 } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../../hooks/useInvestmentCalculator';
 import React from 'react';
-import CustomTooltip from '../../atoms/CustomTooltip';
 import GoalWiseInvestmentSuggestion, {
   InvestmentPerOptionType,
 } from '../../compounds/GoalWiseInvestmentSuggestion';
@@ -76,7 +76,15 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
                 {goal.totalValue.toLocaleString(navigator.language, {
                   maximumFractionDigits: 0,
                 })}
-                <CustomTooltip
+                <Tooltip title={undefined}>
+                  <GoalWiseInvestmentSuggestion
+                    investmentPerOption={getAmountPerGoalForInvestmentOption(
+                      goal.investmentOptionId,
+                    )}
+                  />
+                </Tooltip>
+
+                {/* <CustomTooltip
                   tooltipText={
                     <GoalWiseInvestmentSuggestion
                       investmentPerOption={getAmountPerGoalForInvestmentOption(
@@ -84,7 +92,7 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
                       )}
                     />
                   }
-                />
+                /> */}
               </TableCell>
             </TableRow>
           ))}

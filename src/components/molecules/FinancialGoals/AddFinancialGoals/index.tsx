@@ -7,6 +7,7 @@ import {
   Stack,
   Card,
   CardContent,
+  Tooltip,
 } from '@mui/material';
 import React, { Dispatch, useState } from 'react';
 import { Add, CancelRounded } from '@mui/icons-material';
@@ -19,14 +20,13 @@ import {
   NUMBER_PATTERN,
   YEAR_PATTERN,
 } from '../../../../types/constants';
-import CustomTooltip from '../../../atoms/CustomTooltip';
 
 interface AddFinancialGoalsProps {
-  dispatch: Dispatch<PlannerDataAction>;
+  onAddGoal: (financialGoal: FinancialGoal) => void;
 }
 
 const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
-  dispatch,
+  onAddGoal,
 }: AddFinancialGoalsProps) => {
   const resetForm = () => {
     setValidationErrors({});
@@ -100,8 +100,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
       return;
     }
 
-    addFinancialGoal(
-      dispatch,
+    onAddGoal(
       new FinancialGoal(
         goalName,
         Number(startYear),
@@ -116,8 +115,8 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
   return (
     <Card sx={{ borderRadius: 5, border: '1px solid #d1d9e6' }}>
       <CardContent>
-        <Grid container columnGap={2} sx={{ justifyContent: 'center' }}>
-          <Grid xs={2}>
+        <Grid container rowGap={2} sx={{ justifyContent: 'center' }}>
+          <Grid xs={12}>
             <CustomTextField
               label="Goal Name"
               placeholder='Eg: "Child Education"'
@@ -129,15 +128,13 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               variant={'outlined'}
               onChange={handleGoalNameChange}
               regex={ALPHANUMERIC_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="Give your goal a name" />
-                ),
-              }}
+              // InputProps={{
+              //   endAdornment: <Tooltip tooltipText="Give your goal a name" />,
+              // }}
             />
           </Grid>
 
-          <Grid xs={2}>
+          <Grid xs={12}>
             <CustomTextField
               label="Capital Needed"
               placeholder='Eg: "1000000"'
@@ -149,14 +146,14 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               variant={'outlined'}
               onChange={handleTargetAmountChange}
               regex={NUMBER_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
-                ),
-              }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
+              //   ),
+              // }}
             />
           </Grid>
-          <Grid xs={2}>
+          <Grid xs={12}>
             <CustomTextField
               fullWidth
               helperText="Enter valid start year"
@@ -168,14 +165,14 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               variant={'outlined'}
               onChange={handleStartYearChange}
               regex={YEAR_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="When are you planning to start investing?" />
-                ),
-              }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <CustomTooltip tooltipText="When are you planning to start investing?" />
+              //   ),
+              // }}
             />
           </Grid>
-          <Grid xs={2} justifyContent={'start'}>
+          <Grid xs={12} justifyContent={'start'}>
             <CustomTextField
               fullWidth
               helperText="Enter valid target year"
@@ -192,11 +189,11 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               onChange={handleTargetYearChange}
               onBlur={handleTargetYearBlur}
               regex={YEAR_PATTERN}
-              InputProps={{
-                endAdornment: (
-                  <CustomTooltip tooltipText="When do you want to meet this goal by? " />
-                ),
-              }}
+              // InputProps={{
+              //   endAdornment: (
+              //     <CustomTooltip tooltipText="When do you want to meet this goal by? " />
+              //   ),
+              // }}
             />
           </Grid>
 
@@ -205,7 +202,6 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               startIcon={<Add />}
               onClick={handleAdd}
               variant="contained"
-              color="secondary"
               sx={{ mt: 1 }}
             >
               Add

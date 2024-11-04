@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Icon, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardContent, Tooltip, Typography } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 
 type FinancialGoalCardProps = {
@@ -8,18 +8,44 @@ type FinancialGoalCardProps = {
 
 const FinancialGoalCard = ({ goal }: FinancialGoalCardProps) => {
   return (
-    <Card sx={{ height: '250px' }}>
-      <CardContent>
-        <Typography variant="h4">{goal.getGoalName()}</Typography>
-        <Typography variant="body1">
-          {goal.getInvestmentStartYear()} - {goal.getTargetYear()}
-        </Typography>
-        <Typography variant="h5" align="right">
-          {goal
-            .getInflationAdjustedTargetAmount()
-            .toLocaleString(navigator.language)}
-          <Typography variant={'overline'}>*</Typography>
-        </Typography>
+    <Card sx={{ borderRadius: 4 }}>
+      <CardContent sx={{ padding: 1 }}>
+        <Box
+          sx={{
+            minHeight: '180px',
+            backgroundColor: '#BCE6FF',
+            padding: 2,
+            borderRadius: 4,
+          }}
+        >
+          <Box sx={{ textAlign: 'right' }}>
+            <span className="material-symbols-rounded">close</span>{' '}
+          </Box>
+
+          <Tooltip title={goal.getGoalName()} placement="top">
+            <Box
+              sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: 'block',
+              }}
+            >
+              <Typography variant="h4">{goal.getGoalName()}</Typography>
+            </Box>
+          </Tooltip>
+
+          <Typography variant="body1">
+            {goal.getInvestmentStartYear()} - {goal.getTargetYear()}
+          </Typography>
+        </Box>
+
+        <Box sx={{ padding: 1 }}>
+          <Typography variant="h5">
+            {goal
+              .getInflationAdjustedTargetAmount()
+              .toLocaleString(navigator.language)}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
