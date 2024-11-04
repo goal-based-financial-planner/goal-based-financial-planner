@@ -1,7 +1,6 @@
 import React, { Dispatch } from 'react';
 import { Grid } from '@mui/material';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
-import Step from '../../molecules/Step';
 import { PlannerData } from '../../../domain/PlannerData';
 import FinancialGoalsGrid from '../../molecules/FinancialGoals/FinancialGoalsGrid';
 import FinancialGoalForm from '../../molecules/FinancialGoals/FinancialGoalForm';

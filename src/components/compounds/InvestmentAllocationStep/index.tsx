@@ -10,7 +10,6 @@ import {
   setMidTermInvestmentPercentage,
   setLongTermInvestmentPercentage,
 } from '../../../store/plannerDataActions';
-import CustomPaper from '../../atoms/CustomPaper';
 
 type InvestmentAllocationProps = {
   dispatch: Dispatch<PlannerDataAction>;
