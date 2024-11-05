@@ -12,7 +12,7 @@ const FinancialGoalCard = ({ goal }: FinancialGoalCardProps) => {
       <CardContent sx={{ padding: 1 }}>
         <Box
           sx={{
-            minHeight: '180px',
+            height: '180px',
             backgroundColor: '#BCE6FF',
             padding: 2,
             borderRadius: 4,
@@ -39,12 +39,10 @@ const FinancialGoalCard = ({ goal }: FinancialGoalCardProps) => {
           </Typography>
         </Box>
 
-        <Box sx={{ padding: 1 }}>
-          <Typography variant="h5">
-            {goal
-              .getInflationAdjustedTargetAmount()
-              .toLocaleString(navigator.language)}
-          </Typography>
+        <Box sx={{ padding: 1, height: '20px' }}>
+          {goal
+            .getInflationAdjustedTargetAmount()
+            .toLocaleString(navigator.language)}
         </Box>
       </CardContent>
     </Card>

@@ -1,10 +1,4 @@
-import {
-  Button,
-  Unstable_Grid2 as Grid,
-  Modal,
-  Paper,
-  Stack,
-} from '@mui/material';
+import { Button, Modal, Paper, Stack } from '@mui/material';
 import React, { Dispatch, useState } from 'react';
 import { Add, CancelRounded } from '@mui/icons-material';
 import { addInvestmentOption } from '../../../../store/plannerDataActions';
@@ -13,6 +7,7 @@ import {
   ALPHANUMERIC_PATTERN,
   NUMBER_PATTERN,
 } from '../../../../types/constants';
+import Grid from '@mui/material/Grid';
 import CustomTextField from '../../../atoms/CustomTextField';
 
 interface AddFinancialGoalsProps {
@@ -89,11 +84,6 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
               value={invesmentOptionName}
               onChange={handleInvestmentOptionChange}
               regex={ALPHANUMERIC_PATTERN}
-              // InputProps={{
-              //   endAdornment: (
-              //     <CustomTooltip tooltipText="Give your goal a name" />
-              //   ),
-              // }}
             />
           </Grid>
 
@@ -107,11 +97,6 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
               value={expectedPercentage}
               onChange={handleExpectedPercentChange}
               regex={NUMBER_PATTERN}
-              // InputProps={{
-              //   endAdornment: (
-              //     <CustomTooltip tooltipText="This is the capital you think you would need as of today" />
-              //   ),
-              // }}
             />
           </Grid>
 

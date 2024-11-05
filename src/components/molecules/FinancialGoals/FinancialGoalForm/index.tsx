@@ -4,6 +4,7 @@ import AddFinancialGoals from '../AddFinancialGoals';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import FinancialGoalDetails from '../FinancialGoalDetails';
 
 const FinancialGoalForm = ({
   label,
@@ -21,42 +22,48 @@ const FinancialGoalForm = ({
   };
 
   return (
-    <Card sx={{ borderRadius: 4, width: '100%' }}>
+    <Card sx={{ borderRadius: 4 }}>
       <CardContent sx={{ padding: 1 }}>
         {isEditable ? (
-          <AddFinancialGoals onAddGoal={handleAddGoal} />
+          <FinancialGoalDetails onAddGoal={handleAddGoal} />
         ) : (
-          <Box
-            onClick={() => setIsEditable(true)}
-            sx={{
-              minHeight: '180px',
-              backgroundColor: '#BCE6FF',
-              padding: 2,
-              borderRadius: 4,
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              '&:hover': {
-                cursor: 'pointer',
-              },
-            }}
-          >
-            <Box>
-              <span
-                className="material-symbols-rounded"
-                style={{ fontSize: '50px', color: theme.palette.primary.main }}
-              >
-                add_circle
-              </span>
-            </Box>
+          <>
+            <Box
+              onClick={() => setIsEditable(true)}
+              sx={{
+                minHeight: '180px',
+                backgroundColor: '#BCE6FF',
+                padding: 2,
+                borderRadius: 4,
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                '&:hover': {
+                  cursor: 'pointer',
+                },
+              }}
+            >
+              <Box>
+                <span
+                  className="material-symbols-rounded"
+                  style={{
+                    fontSize: '50px',
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  add_circle
+                </span>
+              </Box>
 
-            <Box>
-              <Typography sx={{ color: theme.palette.primary.main }}>
-                {label}
-              </Typography>
+              <Box>
+                <Typography sx={{ color: theme.palette.primary.main }}>
+                  {label}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
+            <Box sx={{ padding: 1, height: '20px' }}></Box>
+          </>
         )}
       </CardContent>
     </Card>

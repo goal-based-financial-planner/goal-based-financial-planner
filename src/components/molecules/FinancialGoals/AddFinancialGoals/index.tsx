@@ -1,18 +1,11 @@
 import {
-  Box,
   Button,
   Unstable_Grid2 as Grid,
-  Modal,
-  Paper,
-  Stack,
   Card,
   CardContent,
-  Tooltip,
 } from '@mui/material';
-import React, { Dispatch, useState } from 'react';
-import { Add, CancelRounded } from '@mui/icons-material';
-import { PlannerDataAction } from '../../../../store/plannerDataReducer';
-import { addFinancialGoal } from '../../../../store/plannerDataActions';
+import React, { useState } from 'react';
+import { Add } from '@mui/icons-material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import CustomTextField from '../../../atoms/CustomTextField';
 import {

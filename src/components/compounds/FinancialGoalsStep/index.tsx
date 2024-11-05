@@ -17,13 +17,10 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   return (
     <Grid container rowGap={6} columnGap={3}>
       {plannerData.financialGoals.length ? (
-        <FinancialGoalsGrid
-          financialGoals={plannerData.financialGoals}
-          dispatch={dispatch}
-        />
+        <FinancialGoalsGrid financialGoals={plannerData.financialGoals} />
       ) : null}
 
-      <Grid xs={3} item>
+      <Grid xs={2.5} item>
         <FinancialGoalForm
           dispatch={dispatch}
           label={
