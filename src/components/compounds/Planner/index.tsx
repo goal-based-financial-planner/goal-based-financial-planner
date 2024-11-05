@@ -111,7 +111,7 @@ const Planner: React.FC = () => {
   const theme = useTheme();
   return (
     <Grid container>
-      <Grid
+      {/* <Grid
         xs={2.5}
         item
         sx={{
@@ -149,6 +149,7 @@ const Planner: React.FC = () => {
             sx={{ display: 'flex', flexDirection: 'row', mt: 2 }}
             maxWidth={false}
           >
+            <Box sx={{ flex: '1 1 auto' }} />
             {activeStep === 0 ? (
               ''
             ) : (
@@ -156,13 +157,11 @@ const Planner: React.FC = () => {
                 disabled={activeStep === 0}
                 onClick={handleBack}
                 sx={{ mr: 1 }}
-                variant="outlined"
               >
-                Back
+                {'<- '}Back
               </Button>
             )}
 
-            <Box sx={{ flex: '1 1 auto' }} />
             {activeStep === steps.length - 1 ? (
               ''
             ) : (
@@ -170,13 +169,17 @@ const Planner: React.FC = () => {
                 onClick={handleNext}
                 //  disabled={!allowNext()}
                 variant="contained"
+                sx={{ borderRadius: 5 }}
               >
-                Next
+                Next {'->'}
               </Button>
             )}
           </Container>
         </Box>
-      </Grid>
+      </Grid> */}
+      <FinancialGoalsStep plannerData={plannerData} dispatch={dispatch} />,
+      <InvestmentAllocationStep plannerData={plannerData} dispatch={dispatch} />
+      <PortfolioSummaryStep plannerData={plannerData} />,
     </Grid>
   );
 };

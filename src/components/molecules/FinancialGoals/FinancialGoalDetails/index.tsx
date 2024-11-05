@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Box } from '@mui/material';
-import CustomTextField from '../../../atoms/CustomTextField';
+import { Box, TextField, useTheme } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import {
   ALPHANUMERIC_PATTERN,
@@ -11,7 +10,9 @@ import {
 interface AddFinancialGoalsProps {
   onAddGoal: (financialGoal: FinancialGoal) => void;
 }
+
 const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
+  const theme = useTheme();
   const resetForm = () => {
     setValidationErrors({});
     setGoalName('');
@@ -32,24 +33,24 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
     Record<string, boolean>
   >({});
 
-  const handleGoalNameChange = (value: string) => {
+  const handleGoalNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationErrors({ ...validationErrors, goalName: false });
-    setGoalName(value);
+    setGoalName(e.target.value);
   };
 
-  const handleStartYearChange = (value: any) => {
+  const handleStartYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationErrors({ ...validationErrors, startYear: false });
-    setStartYear(value);
+    setStartYear(e.target.value);
   };
 
-  const handleTargetYearChange = (value: any) => {
+  const handleTargetYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationErrors({ ...validationErrors, targetYear: false });
-    setTargetYear(value);
+    setTargetYear(e.target.value);
   };
 
-  const handleTargetAmountChange = (value: any) => {
+  const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationErrors({ ...validationErrors, targetAmount: false });
-    setTargetAmount(value);
+    setTargetAmount(e.target.value);
   };
 
   const handleTargetYearBlur = () => {
@@ -95,31 +96,30 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
 
     resetForm();
   };
+
   return (
     <>
       <Box
         sx={{
           height: '180px',
-          backgroundColor: '#BCE6FF',
+          backgroundColor: theme.palette.cardBackGround.main,
           padding: 2,
           borderRadius: 4,
         }}
       >
         <Box sx={{ textAlign: 'right' }}>
-          <span className="material-symbols-rounded">close</span>{' '}
+          <span className="material-symbols-rounded">close</span>
         </Box>
 
         <Box pb={1}>
-          <CustomTextField
+          <TextField
             fullWidth
-            label="Goal Name"
-            placeholder='Eg: "Child Education"'
-            helperText="Enter valid Goal Name"
+            variant="standard"
+            placeholder="Child Education"
             required
             error={validationErrors.goalName}
             value={goalName}
             onChange={handleGoalNameChange}
-            regex={ALPHANUMERIC_PATTERN}
           />
         </Box>
 
@@ -129,31 +129,26 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
           justifyContent="space-between"
           gap={4}
         >
-          <CustomTextField
-            helperText="Enter valid start year"
-            placeholder='Eg: "2024"'
-            label="Investment Start Year"
+          <TextField
+            placeholder="2024"
+            variant="standard"
             required
             error={validationErrors.startYear}
             value={startYear}
             onChange={handleStartYearChange}
-            regex={YEAR_PATTERN}
           />
 
-          <CustomTextField
-            helperText="Enter valid target year"
-            placeholder='Eg: "2040"'
-            label="Investment End Year"
+          <TextField
+            placeholder="2040"
+            variant="standard"
             required
-            value={targetYear}
             error={
               validationErrors.targetYear ||
               (isTargetYearValid && Number(targetYear) < Number(startYear))
             }
-            additionalHelperText="Target year should be greater than start year"
+            value={targetYear}
             onChange={handleTargetYearChange}
             onBlur={handleTargetYearBlur}
-            regex={YEAR_PATTERN}
           />
         </Box>
       </Box>
@@ -163,17 +158,15 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
         flexDirection="row"
         justifyContent="space-between"
         gap={4}
-        height="20px"
+        height="25px"
       >
-        <CustomTextField
-          label="Capital Needed"
+        <TextField
+          variant="standard"
           required
-          helperText="Enter valid Amount"
           error={validationErrors.targetAmount}
           value={targetAmount}
           onChange={handleTargetAmountChange}
-          regex={NUMBER_PATTERN}
-          placeholder='Eg: "1000000"'
+          placeholder="1000000"
         />
         <Box
           onClick={handleAdd}
@@ -189,7 +182,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
             },
             height: '3px',
             width: '3px',
-            backgroundColor: '#BCE6FF',
+            backgroundColor: theme.palette.cardBackGround.main,
           }}
         >
           <span className="material-symbols-rounded">check</span>

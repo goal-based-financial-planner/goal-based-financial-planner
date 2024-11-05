@@ -18,6 +18,9 @@ export const theme = responsiveFontSizes(
       header: {
         main: '#6E7F9A',
       },
+      cardBackGround: {
+        main: '#BCE6FF',
+      },
     },
   }),
 );

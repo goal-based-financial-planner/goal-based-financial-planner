@@ -4,6 +4,7 @@ interface AdditionalPalette {
   header: SimplePaletteColorOptions;
   leftPanel: SimplePaletteColorOptions;
   rightPanel: SimplePaletteColorOptions;
+  cardBackGround: SimplePaletteColorOptions;
 }
 
 declare module '@mui/material/styles' {

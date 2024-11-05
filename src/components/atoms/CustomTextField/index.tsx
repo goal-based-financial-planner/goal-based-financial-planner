@@ -136,7 +136,6 @@ const CustomTextField = ({
       variant="standard"
       id={id}
       required={required}
-      label={label}
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
