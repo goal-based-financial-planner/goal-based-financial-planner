@@ -108,7 +108,6 @@ const Planner: React.FC = () => {
     }
   };
 
-  const theme = useTheme();
   return (
     <Grid container>
       {/* <Grid
@@ -177,9 +176,17 @@ const Planner: React.FC = () => {
           </Container>
         </Box>
       </Grid> */}
-      <FinancialGoalsStep plannerData={plannerData} dispatch={dispatch} />,
-      <InvestmentAllocationStep plannerData={plannerData} dispatch={dispatch} />
-      <PortfolioSummaryStep plannerData={plannerData} />,
+      <FinancialGoalsStep plannerData={plannerData} dispatch={dispatch} />
+      {plannerData.financialGoals.length > 0 ? (
+        <InvestmentAllocationStep
+          plannerData={plannerData}
+          dispatch={dispatch}
+        />
+      ) : null}
+
+      {plannerData.financialGoals.length > 0 ? (
+        <PortfolioSummaryStep plannerData={plannerData} />
+      ) : null}
     </Grid>
   );
 };

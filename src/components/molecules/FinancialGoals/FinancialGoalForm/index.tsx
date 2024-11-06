@@ -1,15 +1,25 @@
-import { Box, Card, CardContent, Typography, useTheme } from '@mui/material';
-import { Dispatch, useState } from 'react';
-import { keyframes } from '@emotion/react';
+import { keyframes, styled } from '@mui/material/styles';
+import { Box, Card, CardContent, SxProps, Theme } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
-import { addFinancialGoal } from '../../../../store/plannerDataActions';
-import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import { Dispatch } from 'react';
+import { PlannerData } from '../../../../domain/PlannerData';
 import FinancialGoalDetails from '../FinancialGoalDetails';
+import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import { addFinancialGoal } from '../../../../store/plannerDataActions';
 
-const bounceAnimation = keyframes`
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-`;
+const StyledBackdrop = styled('div')(({ theme }) => ({
+  zIndex: theme.zIndex.modal + 1,
+  color: '#fff',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+}));
 
 const fadeInAnimation = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -17,92 +27,58 @@ const fadeInAnimation = keyframes`
 `;
 
 const FinancialGoalForm = ({
-  label,
+  sx,
   dispatch,
+  close,
 }: {
-  label: string;
+  sx?: SxProps<Theme>;
   dispatch: Dispatch<PlannerDataAction>;
+  plannerData: PlannerData;
+  close: () => void;
 }) => {
-  const theme = useTheme();
-  const [isEditable, setIsEditable] = useState(false);
-
   const handleAddGoal = (financialGoal: FinancialGoal) => {
     addFinancialGoal(dispatch, financialGoal);
-    setIsEditable(false);
+    close();
   };
 
   return (
-    <Card
-      sx={{
-        borderRadius: 4,
-        overflow: 'hidden',
-        transition: 'all 0.3s ease',
-        animation: isEditable ? `${fadeInAnimation} 0.5s ease-out` : 'none', // Apply fade-in animation
-      }}
-    >
-      <CardContent sx={{ padding: 1, '&:last-child': { paddingBottom: 1.3 } }}>
-        {isEditable ? (
-          <Box
-            sx={{
-              animation: `${fadeInAnimation} 0.5s ease-out`, // Fade in FinancialGoalDetails
-            }}
+    <StyledBackdrop sx={sx} onClick={close}>
+      <Box
+        sx={{
+          position: 'absolute',
+          left: '280px',
+          top: '20px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Card
+          sx={{
+            borderRadius: 4,
+            overflow: 'hidden',
+            transition: 'all 0.3s ease',
+            animation: `${fadeInAnimation} 0.5s ease-out`,
+            width: '300px',
+          }}
+        >
+          <CardContent
+            sx={{ padding: 1, '&:last-child': { paddingBottom: 1.3 } }}
           >
-            <FinancialGoalDetails onAddGoal={handleAddGoal} />
-          </Box>
-        ) : (
-          <>
             <Box
-              onClick={() => setIsEditable(true)}
               sx={{
-                minHeight: '180px',
-                backgroundColor: theme.palette.cardBackGround.main,
-                padding: 2,
-                borderRadius: 4,
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.3s ease, background-color 0.3s ease',
-                '&:hover': {
-                  cursor: 'pointer',
-                  transform: 'scale(1.05)',
-                },
+                animation: `${fadeInAnimation} 0.5s ease-out`,
               }}
             >
-              <Box
-                sx={{
-                  animation: `${bounceAnimation} 1s ease-in-out infinite`, // Bounce animation on hover
-                }}
-              >
-                <span
-                  className="material-symbols-rounded"
-                  style={{
-                    fontSize: '50px',
-                    color: theme.palette.primary.main,
-                    transition: 'color 0.3s ease',
-                  }}
-                >
-                  add_circle
-                </span>
-              </Box>
-
-              <Box>
-                <Typography
-                  sx={{
-                    color: theme.palette.primary.main,
-                    transition: 'color 0.3s ease',
-                  }}
-                >
-                  {label}
-                </Typography>
-              </Box>
+              <FinancialGoalDetails onAddGoal={handleAddGoal} />
             </Box>
-            <Box sx={{ padding: 1, height: '25px' }} />
-          </>
-        )}
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      </Box>
+    </StyledBackdrop>
   );
 };
 
 export default FinancialGoalForm;
+
+FinancialGoalForm.defaultProps = {
+  sx: {},
+};

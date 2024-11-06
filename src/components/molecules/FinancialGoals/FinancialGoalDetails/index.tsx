@@ -101,17 +101,13 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
     <>
       <Box
         sx={{
-          height: '180px',
+          height: '150px',
           backgroundColor: theme.palette.cardBackGround.main,
-          padding: 2,
+          padding: 3,
           borderRadius: 4,
         }}
       >
-        <Box sx={{ textAlign: 'right' }}>
-          <span className="material-symbols-rounded">close</span>
-        </Box>
-
-        <Box pb={1}>
+        <Box>
           <TextField
             fullWidth
             variant="standard"
@@ -128,6 +124,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
           flexDirection="row"
           justifyContent="space-between"
           gap={4}
+          pt={2}
         >
           <TextField
             placeholder="2024"
@@ -153,15 +150,16 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
         </Box>
       </Box>
       <Box
-        sx={{ padding: 1 }}
+        sx={{ padding: 2 }}
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
         gap={4}
-        height="25px"
+        height="35px"
       >
         <TextField
           variant="standard"
+          size="small"
           required
           error={validationErrors.targetAmount}
           value={targetAmount}
@@ -171,7 +169,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
         <Box
           onClick={handleAdd}
           sx={{
-            padding: 2,
+            padding: 1,
             borderRadius: 100,
             justifyContent: 'center',
             alignItems: 'center',
@@ -180,8 +178,8 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
             '&:hover': {
               cursor: 'pointer',
             },
-            height: '3px',
-            width: '3px',
+            height: '18px',
+            width: '18px',
             backgroundColor: theme.palette.cardBackGround.main,
           }}
         >

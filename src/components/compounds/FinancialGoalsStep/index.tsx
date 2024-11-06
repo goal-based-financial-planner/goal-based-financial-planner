@@ -1,8 +1,10 @@
-import React, { Dispatch } from 'react';
-import { Grid } from '@mui/material';
+import React, { Dispatch, useState } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import { PlannerData } from '../../../domain/PlannerData';
 import FinancialGoalsGrid from '../../molecules/FinancialGoals/FinancialGoalsGrid';
+import { theme } from '../../../theme';
+import BackDropLoader from '../../molecules/FinancialGoals/FinancialGoalForm';
 import FinancialGoalForm from '../../molecules/FinancialGoals/FinancialGoalForm';
 
 type FinancialGoalsProps = {
@@ -14,23 +16,63 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   plannerData,
   dispatch,
 }) => {
-  return (
-    <Grid container rowGap={6} columnGap={3}>
-      {plannerData.financialGoals.length ? (
-        <FinancialGoalsGrid financialGoals={plannerData.financialGoals} />
-      ) : null}
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-      <Grid xs={2.5} item>
-        <FinancialGoalForm
-          dispatch={dispatch}
-          label={
-            plannerData.financialGoals.length > 0
-              ? 'Add More'
-              : 'Add your first goal'
-          }
-        />
+  const handleAdd = () => {
+    setIsFormOpen(true);
+  };
+  return (
+    <>
+      <Grid xs={12} container p={3}>
+        <Grid>
+          <Typography variant="h4">Your Goals</Typography>
+        </Grid>
+        <Grid>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            ml={3}
+            onClick={handleAdd}
+            sx={{
+              '&:hover': {
+                cursor: 'pointer',
+                transform: 'scale(1.05)',
+              },
+            }}
+          >
+            <span
+              className="material-symbols-rounded"
+              style={{
+                fontSize: '40px',
+                color: theme.palette.primary.main,
+                transition: 'color 0.3s ease',
+              }}
+            >
+              add_circle
+            </span>
+          </Box>
+        </Grid>
+        {isFormOpen ? (
+          <Grid>
+            <FinancialGoalForm
+              plannerData={plannerData}
+              dispatch={dispatch}
+              close={() => setIsFormOpen(false)}
+            />
+          </Grid>
+        ) : null}
       </Grid>
-    </Grid>
+
+      <Grid container rowGap={6} columnGap={3}>
+        {plannerData.financialGoals.length ? (
+          <FinancialGoalsGrid
+            financialGoals={plannerData.financialGoals}
+            dispatch={dispatch}
+          />
+        ) : null}
+      </Grid>
+    </>
   );
 };
 
