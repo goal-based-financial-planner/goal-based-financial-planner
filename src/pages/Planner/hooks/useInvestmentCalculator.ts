@@ -68,7 +68,7 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
       (entry) => {
         const { id, investmentPercentage } = entry;
         const { expectedReturnPercentage } =
-          plannerData.investmentAllocationOptions.filter((e) => e.id === id)[0];
+          plannerData.investmentOptions.filter((e) => e.id === id)[0];
 
         return {
           id,
@@ -138,10 +138,9 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
 
     for (let i = startYear + 1; i <= endYear; i++) {
       const termInMonths = (i - startYear) * 12;
-      const expectedReturnPercentage =
-        plannerData.investmentAllocationOptions.filter(
-          (e) => e.id === investmentSuggestion.investmentOptionId,
-        )[0].expectedReturnPercentage;
+      const expectedReturnPercentage = plannerData.investmentOptions.filter(
+        (e) => e.id === investmentSuggestion.investmentOptionId,
+      )[0].expectedReturnPercentage;
       const returnOfTheYear = calculateReturnOnInvestment(
         investmentSuggestion.amount,
         termInMonths,

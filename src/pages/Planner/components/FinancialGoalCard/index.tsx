@@ -22,15 +22,33 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
     deleteFinancialGoal(dispatch, goal.id);
   };
   return (
-    <Card sx={{ borderRadius: 4 }}>
+    <Card
+      sx={{
+        borderRadius: 2,
+        overflow: 'hidden',
+        position: 'relative',
+        '&:hover .hover-buttons': {
+          right: 0,
+        },
+        '&:hover .card-content': {
+          transform: 'translateX(-40px)',
+          transition: 'transform 0.3s ease',
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
+        },
+      }}
+    >
+      {/* Card Content */}
       <Box
+        className="card-content"
         sx={{
           display: 'flex',
           backgroundColor: theme.palette.cardBackGround.main,
           px: 2,
           py: 1,
-          borderRadius: 4,
+          borderRadius: 2,
           justifyContent: 'space-between',
+          transition: 'transform 0.3s ease',
         }}
       >
         <Box>
@@ -53,12 +71,12 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
         </Box>
 
         <Box sx={{ display: 'flex' }}>
-          <Typography sx={{ fontSize: '32px' }}>
+          <Typography sx={{ fontSize: '24px' }}>
             {goal
               .getInflationAdjustedTargetAmount()
               .toLocaleString(navigator.language)}
           </Typography>
-          <Tooltip title="Inflation Adjusted Amount" placement="top">
+          {/* <Tooltip title="Inflation Adjusted Amount" placement="top">
             <span
               className="material-symbols-rounded"
               style={{
@@ -70,7 +88,52 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
             >
               info
             </span>
-          </Tooltip>
+          </Tooltip> */}
+        </Box>
+      </Box>
+
+      {/* Hover Buttons */}
+      <Box
+        className="hover-buttons"
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: '-40px',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          transition: 'right 0.3s ease',
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'blue',
+            color: 'white',
+            padding: 1,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '50%',
+          }}
+        >
+          <span className="material-symbols-rounded">info</span>
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: 'red',
+            color: 'white',
+            padding: 1,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '50%',
+          }}
+          onClick={handleDelete}
+        >
+          <span className="material-symbols-rounded">delete</span>
         </Box>
       </Box>
     </Card>

@@ -1,21 +1,11 @@
 import * as React from 'react';
 import { ChangeEvent, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import InvestmentSuggestionsTable from './InvestmentSuggestionsTable';
-import {
-  FormControl,
-  Grid2 as Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Tabs,
-  Typography,
-} from '@mui/material';
+import { Grid2 as Grid, Typography } from '@mui/material';
 import { PlannerData } from '../../../../domain/PlannerData';
 import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
 import { PieChart } from '@mui/x-charts/PieChart';
-import InvestmentSuggestionCard from './InvesmentSuggestionCard';
+import InvestmentSuggestionsGrid from './InvestmentSuggestionsGrid';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,22 +33,13 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
 type InvestmentSuggestionsProps = {
   plannerData: PlannerData;
 };
 const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
   plannerData,
 }) => {
-  const [value, setValue] = React.useState(0);
   const [selectedYear, setSelectedYear] = React.useState(0);
-  const [years, setYears] = React.useState<number[]>([]);
 
   useEffect(() => {
     const minMaxYears = plannerData.financialGoals.reduce(
@@ -73,13 +54,8 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
     for (let i = minMaxYears.minYear; i <= minMaxYears.maxYear; i++) {
       years.push(i);
     }
-    setYears(years);
     setSelectedYear(years[0]);
   }, [plannerData]);
-
-  const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-  };
 
   const { calculateInvestmentNeededForGoals } =
     useInvestmentCalculator(plannerData);
@@ -105,7 +81,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
 
     return Object.entries(aggregatedAmounts).map(
       ([investmentOptionId, totalAmount]) => {
-        const investmentName = plannerData.investmentAllocationOptions.find(
+        const investmentName = plannerData.investmentOptions.find(
           (o) => o.id === investmentOptionId,
         )?.investmentName;
         return { label: investmentName, value: Math.round(totalAmount) };
@@ -114,21 +90,10 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
   };
 
   return (
-    <Grid container>
-      <Grid size={4}>
-        <PieChart
-          series={[
-            {
-              data: getAmountPerInvestmentOption(),
-              cx: 100,
-              cy: 100,
-            },
-          ]}
-          width={400}
-          height={200}
-        />
-      </Grid>
-    </Grid>
+    <InvestmentSuggestionsGrid
+      suggestions={investmentBreakdown}
+      investmentOptions={plannerData.investmentOptions}
+    />
   );
 };
 

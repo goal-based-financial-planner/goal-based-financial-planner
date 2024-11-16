@@ -10,10 +10,14 @@ type PortFolioSummaryProps = {
 
 const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({ plannerData }) => {
   return (
-    <Box sx={{ padding: 3, width: '100%' }}>
-      <Header title="Your Investment Suggestions" />
-      <InvestmentSuggestions plannerData={plannerData} />
-    </Box>
+    <>
+      <Box sx={{ padding: 3, width: '100%' }}>
+        <Header title="Your Investment Suggestions" />
+      </Box>
+      <Box sx={{ px: 3 }}>
+        <InvestmentSuggestions plannerData={plannerData} />
+      </Box>
+    </>
   );
 };
 

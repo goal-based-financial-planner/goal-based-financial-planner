@@ -1,5 +1,5 @@
 import React, { Dispatch, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
 import { PlannerData } from '../../domain/PlannerData';
 import FinancialGoalsGrid from '../../pages/Planner/components/FinancialGoalsGrid';

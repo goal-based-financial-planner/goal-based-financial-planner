@@ -1,3 +1,4 @@
+import { DEFAULT_INVESTMENT_ALLOCATIONS } from '../domain/constants';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerData } from '../domain/PlannerData';
 import { TermType } from '../types/enums';
@@ -34,7 +35,7 @@ function updateInvestmentAllocation(
       ...state.investmentAllocations,
       [termType]: allocations,
     },
-    state.investmentAllocationOptions,
+    state.investmentOptions,
   );
 }
 
@@ -43,25 +44,61 @@ export function plannerDataReducer(
   action: PlannerDataAction,
 ): PlannerData {
   switch (action.type) {
-    case PlannerDataActionType.ADD_FINANCIAL_GOAL:
-      return new PlannerData(
-        [...state.financialGoals, action.payload],
-        state.investmentAllocations,
-        state.investmentAllocationOptions,
+    case PlannerDataActionType.ADD_FINANCIAL_GOAL: {
+      const updatedFinancialGoals = [...state.financialGoals, action.payload];
+      const updatedInvestmentAllocations = { ...state.investmentAllocations };
+
+      // Get all goal term types from the updated financial goals. If invetment allocation is not present for that type add an empty array
+      const allSelectedTermTypes = new Set(
+        updatedFinancialGoals.map((g) => g.getTermType()),
       );
+
+      if (
+        allSelectedTermTypes.has(TermType.SHORT_TERM) &&
+        updatedInvestmentAllocations['Short Term'].length === 0
+      ) {
+        updatedInvestmentAllocations['Short Term'] = [
+          ...DEFAULT_INVESTMENT_ALLOCATIONS[TermType.SHORT_TERM],
+        ];
+      }
+
+      if (
+        allSelectedTermTypes.has(TermType.MEDIUM_TERM) &&
+        updatedInvestmentAllocations['Medium Term'].length === 0
+      ) {
+        updatedInvestmentAllocations['Medium Term'] = [
+          ...DEFAULT_INVESTMENT_ALLOCATIONS[TermType.MEDIUM_TERM],
+        ];
+      }
+
+      if (
+        allSelectedTermTypes.has(TermType.LONG_TERM) &&
+        updatedInvestmentAllocations['Long Term'].length === 0
+      ) {
+        updatedInvestmentAllocations['Long Term'] = [
+          ...DEFAULT_INVESTMENT_ALLOCATIONS[TermType.LONG_TERM],
+        ];
+      }
+
+      return new PlannerData(
+        updatedFinancialGoals,
+        updatedInvestmentAllocations,
+        state.investmentOptions,
+      );
+    }
 
     case PlannerDataActionType.ADD_INVESTMENT_OPTION:
       return new PlannerData(
         state.financialGoals,
         state.investmentAllocations,
-        [...state.investmentAllocationOptions, action.payload],
+        [...state.investmentOptions, action.payload],
       );
 
     case PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS:
       return new PlannerData(
         state.financialGoals,
         action.payload,
-        state.investmentAllocationOptions,
+        state.investmentOptions,
       );
 
     case PlannerDataActionType.UPDATE_SHORT_TERM_INVESTMENT:
@@ -73,7 +110,7 @@ export function plannerDataReducer(
     case PlannerDataActionType.UPDATE_LONG_TERM_INVESTMENT:
       return updateInvestmentAllocation(state, action, TermType.LONG_TERM);
 
-    case PlannerDataActionType.DELETE_FINANCIAL_GOAL:
+    case PlannerDataActionType.DELETE_FINANCIAL_GOAL: {
       const financialGoals = [...state.financialGoals];
       const { investmentAllocations } = state;
 
@@ -99,8 +136,9 @@ export function plannerDataReducer(
       return new PlannerData(
         financialGoals,
         investmentAllocations,
-        state.investmentAllocationOptions,
+        state.investmentOptions,
       );
+    }
 
     case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
       const financialGoals = [...state.financialGoals];
@@ -143,7 +181,7 @@ export function getInitialData() {
       return new PlannerData(
         financialGoals,
         parsedState.investmentAllocations,
-        parsedState.investmentAllocationOptions,
+        parsedState.investmentOptions,
       );
     } catch {}
   }

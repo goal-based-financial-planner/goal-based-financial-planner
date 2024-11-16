@@ -14,7 +14,7 @@ export type FinancialGoalSummary = Array<{
 export class PlannerData {
   financialGoals: FinancialGoal[];
   investmentAllocations: InvestmentAllocationsType;
-  investmentAllocationOptions: InvestmentOptionType[];
+  investmentOptions: InvestmentOptionType[];
 
   constructor(
     financialGoals: FinancialGoal[] = [],
@@ -23,12 +23,11 @@ export class PlannerData {
       [TermType.MEDIUM_TERM]: [],
       [TermType.SHORT_TERM]: [],
     },
-    investmentAllocationOptions?: InvestmentOptionType[],
+    investmentOptions?: InvestmentOptionType[],
   ) {
     this.financialGoals = financialGoals;
     this.investmentAllocations = investmentAllocations;
-    this.investmentAllocationOptions =
-      investmentAllocationOptions ?? DEFAULT_INVESTMENT_OPTIONS;
+    this.investmentOptions = investmentOptions ?? DEFAULT_INVESTMENT_OPTIONS;
   }
 
   getFinancialGoalSummary(): FinancialGoalSummary {

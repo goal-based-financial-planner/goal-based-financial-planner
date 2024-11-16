@@ -27,7 +27,7 @@ const Planner: React.FC = () => {
 
   const isInvestmentAllocationInvalid = (termType: TermType) => {
     if (areGoalsPresentOfType(termType)) {
-      const termSum = plannerData.investmentAllocationOptions.reduce(
+      const termSum = plannerData.investmentOptions.reduce(
         (sum, row) =>
           sum +
           Number(
@@ -44,12 +44,12 @@ const Planner: React.FC = () => {
 
   return (
     <Grid container>
-      <Grid size={3}>
+      <Grid size={4}>
         <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
       </Grid>
 
       {plannerData.financialGoals.length > 0 ? (
-        <Grid size={9}>
+        <Grid size={8}>
           <PortfolioSummary plannerData={plannerData} />
         </Grid>
       ) : null}

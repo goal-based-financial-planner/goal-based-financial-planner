@@ -128,7 +128,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
     );
   };
 
-  const rows = plannerData.investmentAllocationOptions.map((option, index) => ({
+  const rows = plannerData.investmentOptions.map((option, index) => ({
     id: option.id,
     investmentName: option.investmentName,
     expectedReturnPercentage: option.expectedReturnPercentage,
@@ -199,7 +199,7 @@ const InvestmentAllocationTable: React.FC<InvestmentAllocationTableProps> = ({
   return (
     <DataGrid
       columns={columns}
-      rows={plannerData.investmentAllocationOptions}
+      rows={plannerData.investmentOptions}
       hideFooterPagination={true}
     />
     // <Box sx={{ display: 'flex', justifyContent: 'center' }}>
