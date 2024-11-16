@@ -73,7 +73,7 @@ const CustomMenu = ({
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
-        Options
+        Add
       </Button>
       <StyledMenu
         id="demo-customized-menu"

@@ -1,10 +1,9 @@
 import React, { Dispatch, useState } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { PlannerDataAction } from '../../../store/plannerDataReducer';
 import { PlannerData } from '../../../domain/PlannerData';
 import FinancialGoalsGrid from '../../molecules/FinancialGoals/FinancialGoalsGrid';
 import { theme } from '../../../theme';
-import BackDropLoader from '../../molecules/FinancialGoals/FinancialGoalForm';
 import FinancialGoalForm from '../../molecules/FinancialGoals/FinancialGoalForm';
 
 type FinancialGoalsProps = {
@@ -23,55 +22,47 @@ const FinancialGoalsStep: React.FC<FinancialGoalsProps> = ({
   };
   return (
     <>
-      <Grid xs={12} container p={3}>
-        <Grid>
-          <Typography variant="h4">Your Goals</Typography>
-        </Grid>
-        <Grid>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            ml={3}
-            onClick={handleAdd}
-            sx={{
-              '&:hover': {
-                cursor: 'pointer',
-                transform: 'scale(1.05)',
-              },
+      <Box sx={{ display: 'flex', flexDirection: 'row', padding: 3 }}>
+        <Typography variant="h4">Your Goals</Typography>
+        <Box
+          ml={3}
+          onClick={handleAdd}
+          sx={{
+            '&:hover': {
+              cursor: 'pointer',
+              transform: 'scale(1.05)',
+            },
+          }}
+        >
+          <span
+            className="material-symbols-rounded"
+            style={{
+              fontSize: '40px',
+              color: theme.palette.primary.main,
+              transition: 'color 0.3s ease',
             }}
           >
-            <span
-              className="material-symbols-rounded"
-              style={{
-                fontSize: '40px',
-                color: theme.palette.primary.main,
-                transition: 'color 0.3s ease',
-              }}
-            >
-              add_circle
-            </span>
-          </Box>
-        </Grid>
-        {isFormOpen ? (
-          <Grid>
-            <FinancialGoalForm
-              plannerData={plannerData}
-              dispatch={dispatch}
-              close={() => setIsFormOpen(false)}
-            />
-          </Grid>
-        ) : null}
-      </Grid>
+            add_circle
+          </span>
+        </Box>
+      </Box>
 
-      <Grid container rowGap={6} columnGap={3}>
+      <Box sx={{ width: '100vw', px: 3 }}>
         {plannerData.financialGoals.length ? (
           <FinancialGoalsGrid
             financialGoals={plannerData.financialGoals}
             dispatch={dispatch}
           />
         ) : null}
-      </Grid>
+      </Box>
+
+      {isFormOpen ? (
+        <FinancialGoalForm
+          plannerData={plannerData}
+          dispatch={dispatch}
+          close={() => setIsFormOpen(false)}
+        />
+      ) : null}
     </>
   );
 };

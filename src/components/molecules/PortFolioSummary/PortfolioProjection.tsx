@@ -51,6 +51,7 @@ const PortfolioProjection: React.FC<PortfolioProjectionProps> = ({
       (gr) => gr.goalName === selectedGoal.goalName,
     )!;
 
+    console.log('****', selectedGoalWiseReturn);
     const investmentPerOneYear =
       selectedGoalWiseReturn.investmentSuggestions.reduce((acc, investment) => {
         return acc + investment.amount;

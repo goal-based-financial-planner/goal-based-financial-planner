@@ -52,7 +52,7 @@ const InvestmentAllocation = ({
           handleMenuChange={handleMenuChange}
         />
       </Grid>
-      <Grid xs={12} sx={{ paddingX: 10, paddingY: 3 }}>
+      <Grid xs={12} sx={{ paddingY: 3 }}>
         {allocations.map((option) => (
           <CustomInputSlider
             key={option.id}

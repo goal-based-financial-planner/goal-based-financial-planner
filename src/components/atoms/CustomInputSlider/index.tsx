@@ -57,11 +57,11 @@ const CustomInputSlider = ({
         />
       </Grid>
       <Grid item xs={12}>
-        <Slider
+        {/* <Slider
           value={typeof percent === 'number' ? percent : 0}
           onChange={handleSlider}
           aria-labelledby="input-slider"
-        />
+        /> */}
       </Grid>
     </Grid>
   );

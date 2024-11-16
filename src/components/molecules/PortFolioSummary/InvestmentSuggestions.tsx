@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 import { PlannerData } from '../../../domain/PlannerData';
 import useInvestmentCalculator from '../../../hooks/useInvestmentCalculator';
-import PortfolioProjection from './PortfolioProjection';
 import { PieChart } from '@mui/x-charts/PieChart';
+import InvestmentSuggestionCard from './InvesmentSuggestionCard';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -114,64 +114,54 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={6}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            onChange={handleChange}
-            aria-label="lab API tabs example"
-            value={value}
-          >
-            <Tab label="Investment Suggestions" {...a11yProps(0)} />
-            <Tab label="Pie chart" {...a11yProps(1)} />
-          </Tabs>
-          <CustomTabPanel value={value} index={0}>
-            <Box
-              sx={{ width: '100%', display: 'flex' }}
-              justifyContent="flex-end"
-            >
-              <FormControl sx={{ width: '300px' }}>
-                <InputLabel id="year">For Year</InputLabel>
-                <Select
-                  labelId="year"
-                  id="yearSelect"
-                  label="Year"
-                  value={selectedYear}
-                  onChange={(e) =>
-                    setSelectedYear(parseInt(e.target.value as string))
-                  }
-                >
-                  {years.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      {year}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-
-            <InvestmentSuggestionsTable
-              suggestions={investmentBreakdown}
-              investmentOptions={plannerData.investmentAllocationOptions}
-            />
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            <PieChart
-              series={[
-                {
-                  data: getAmountPerInvestmentOption(),
-                  cx: 100,
-                  cy: 100,
-                },
-              ]}
-              width={400}
-              height={200}
-            />
-          </CustomTabPanel>
-        </Box>
+    <Grid container>
+      <Grid item xs={4}>
+        <PieChart
+          series={[
+            {
+              data: getAmountPerInvestmentOption(),
+              cx: 100,
+              cy: 100,
+            },
+          ]}
+          width={400}
+          height={200}
+        />
       </Grid>
-      <Grid item xs={6}>
-        <PortfolioProjection plannerData={plannerData} />
+
+      <Grid item xs={8}>
+        <Grid container>
+          <Grid item xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid item xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+          <Grid xs={3}>
+            <InvestmentSuggestionCard />
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

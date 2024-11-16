@@ -33,30 +33,6 @@ const Planner: React.FC = () => {
 
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const steps = [
-    {
-      label: 'Add Your Financial Goals',
-      description:
-        'Add the financial goals you have in this step. Choose the year you want to achieve them by and the amount you need to achieve them. Enter the amount in today’s value. The amount will be adjusted for inflation. Click Next once you have added all your goals.',
-    },
-    {
-      label: 'Choose Your Investment Allocation',
-      description:
-        'We categorised your investment goals into short, medium and long term and have provided some suggestions for each category. You can adjust the allocations as per your preference. Make sure the total allocation is 100%. Click Next once you have adjusted the allocations.',
-    },
-    {
-      label: 'View Suggestions',
-      description:
-        'Based on your inputs, this is the suggested portfolio allocation. You can view goal wise allocation and the overall portfolio allocation.',
-    },
-  ];
-
-  const stepComponents = [
-    <FinancialGoalsStep plannerData={plannerData} dispatch={dispatch} />,
-    <InvestmentAllocationStep plannerData={plannerData} dispatch={dispatch} />,
-    <PortfolioSummaryStep plannerData={plannerData} />,
-  ];
-
   const areGoalsPresentOfType = (column: string) => {
     return plannerData
       .getFinancialGoalSummary()
@@ -177,12 +153,12 @@ const Planner: React.FC = () => {
         </Box>
       </Grid> */}
       <FinancialGoalsStep plannerData={plannerData} dispatch={dispatch} />
-      {plannerData.financialGoals.length > 0 ? (
+      {/* {plannerData.financialGoals.length > 0 ? (
         <InvestmentAllocationStep
           plannerData={plannerData}
           dispatch={dispatch}
         />
-      ) : null}
+      ) : null} */}
 
       {plannerData.financialGoals.length > 0 ? (
         <PortfolioSummaryStep plannerData={plannerData} />

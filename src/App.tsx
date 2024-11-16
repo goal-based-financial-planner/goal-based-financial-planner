@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import Planner from './components/compounds/Planner';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from './theme';
+import Planner from './components/compounds/Planner';
 
 function App() {
   return (

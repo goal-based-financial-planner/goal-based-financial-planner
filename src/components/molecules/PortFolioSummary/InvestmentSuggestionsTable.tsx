@@ -76,13 +76,13 @@ const InvestmentSuggestionsTable: React.FC<InvestmentSuggestionsTableProps> = ({
                 {goal.totalValue.toLocaleString(navigator.language, {
                   maximumFractionDigits: 0,
                 })}
-                <Tooltip title={undefined}>
+                {/* <Tooltip title={undefined}>
                   <GoalWiseInvestmentSuggestion
                     investmentPerOption={getAmountPerGoalForInvestmentOption(
                       goal.investmentOptionId,
                     )}
                   />
-                </Tooltip>
+                </Tooltip> */}
 
                 {/* <CustomTooltip
                   tooltipText={
