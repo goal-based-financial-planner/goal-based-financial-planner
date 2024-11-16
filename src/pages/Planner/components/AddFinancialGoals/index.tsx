@@ -1,9 +1,4 @@
-import {
-  Button,
-  Unstable_Grid2 as Grid,
-  Card,
-  CardContent,
-} from '@mui/material';
+import { Button, Grid2 as Grid, Card, CardContent } from '@mui/material';
 import React, { useState } from 'react';
 import { Add } from '@mui/icons-material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
@@ -109,7 +104,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
     <Card sx={{ borderRadius: 5, border: '1px solid #d1d9e6' }}>
       <CardContent>
         <Grid container rowGap={2} sx={{ justifyContent: 'center' }}>
-          <Grid xs={12}>
+          <Grid size={12}>
             <CustomTextField
               label="Goal Name"
               placeholder='Eg: "Child Education"'
@@ -127,7 +122,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             />
           </Grid>
 
-          <Grid xs={12}>
+          <Grid size={12}>
             <CustomTextField
               label="Capital Needed"
               placeholder='Eg: "1000000"'
@@ -146,7 +141,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               // }}
             />
           </Grid>
-          <Grid xs={12}>
+          <Grid size={12}>
             <CustomTextField
               fullWidth
               helperText="Enter valid start year"
@@ -165,7 +160,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
               // }}
             />
           </Grid>
-          <Grid xs={12} justifyContent={'start'}>
+          <Grid size={12} justifyContent={'start'}>
             <CustomTextField
               fullWidth
               helperText="Enter valid target year"
@@ -190,7 +185,7 @@ const AddFinancialGoals: React.FC<AddFinancialGoalsProps> = ({
             />
           </Grid>
 
-          <Grid xs={2} justifyContent={'start'}>
+          <Grid size={2} justifyContent={'start'}>
             <Button
               startIcon={<Add />}
               onClick={handleAdd}

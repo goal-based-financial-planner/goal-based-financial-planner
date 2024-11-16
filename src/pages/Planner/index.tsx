@@ -4,7 +4,7 @@ import {
   persistPlannerData,
   plannerDataReducer,
 } from '../../store/plannerDataReducer';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import FinancialGoals from '../../components/FinancialGoalsStep';
 import PortfolioSummary from '../../components/PortfolioSummaryStep';
 import { TermType } from '../../types/enums';
