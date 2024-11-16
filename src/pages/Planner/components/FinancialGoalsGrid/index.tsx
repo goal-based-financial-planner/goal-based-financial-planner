@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import FinancialGoalCard from '../FinancialGoalCard';
-import { Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 type FinancialGoalsGridProps = {
@@ -14,13 +14,11 @@ const FinancialGoalsGrid: React.FC<FinancialGoalsGridProps> = ({
   dispatch,
 }) => {
   return (
-    <Grid container rowGap={6} columnGap={3}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       {financialGoals.map((goal) => (
-        <Grid xs={1.25} key={goal.id} sx={{ mb: 2 }}>
-          <FinancialGoalCard goal={goal} dispatch={dispatch} />
-        </Grid>
+        <FinancialGoalCard goal={goal} dispatch={dispatch} />
       ))}
-    </Grid>
+    </Box>
   );
 };
 

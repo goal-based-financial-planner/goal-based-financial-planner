@@ -5,6 +5,7 @@ import { PlannerData } from '../../domain/PlannerData';
 import FinancialGoalsGrid from '../../pages/Planner/components/FinancialGoalsGrid';
 import { theme } from '../../theme';
 import FinancialGoalForm from '../../pages/Planner/components/FinancialGoalForm';
+import Header from '../Header';
 
 type FinancialGoalsProps = {
   dispatch: Dispatch<PlannerDataAction>;
@@ -22,8 +23,15 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   };
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', padding: 3 }}>
-        <Typography variant="h4">Your Goals</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          padding: 3,
+          alignItems: 'center',
+        }}
+      >
+        <Header title="Your Goals" />
         <Box
           ml={3}
           onClick={handleAdd}
@@ -47,7 +55,7 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
         </Box>
       </Box>
 
-      <Box sx={{ width: '100vw', px: 3 }}>
+      <Box sx={{ px: 3 }}>
         {plannerData.financialGoals.length ? (
           <FinancialGoalsGrid
             financialGoals={plannerData.financialGoals}

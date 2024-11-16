@@ -5,7 +5,7 @@ import {
   plannerDataReducer,
 } from '../../store/plannerDataReducer';
 import { Grid2 as Grid } from '@mui/material';
-import FinancialGoals from '../../components/FinancialGoalsStep';
+import FinancialGoals from '../../components/FinancialGoals';
 import PortfolioSummary from '../../components/PortfolioSummaryStep';
 import { TermType } from '../../types/enums';
 
@@ -44,10 +44,14 @@ const Planner: React.FC = () => {
 
   return (
     <Grid container>
-      <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
+      <Grid size={3}>
+        <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
+      </Grid>
 
       {plannerData.financialGoals.length > 0 ? (
-        <PortfolioSummary plannerData={plannerData} />
+        <Grid size={9}>
+          <PortfolioSummary plannerData={plannerData} />
+        </Grid>
       ) : null}
     </Grid>
   );

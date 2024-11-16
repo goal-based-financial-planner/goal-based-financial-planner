@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import InvestmentSuggestionsTable from './InvestmentSuggestionsTable';
 import {
   FormControl,
-  Grid,
+  Grid2 as Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -115,7 +115,7 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
 
   return (
     <Grid container>
-      <Grid item xs={4}>
+      <Grid size={4}>
         <PieChart
           series={[
             {
@@ -127,41 +127,6 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
           width={400}
           height={200}
         />
-      </Grid>
-
-      <Grid item xs={8}>
-        <Grid container>
-          <Grid item xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid item xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-          <Grid xs={3}>
-            <InvestmentSuggestionCard />
-          </Grid>
-        </Grid>
       </Grid>
     </Grid>
   );

@@ -1,7 +1,8 @@
 import InvestmentSuggestions from '../../pages/Planner/components/PortFolioSummary/InvestmentSuggestions';
 import React from 'react';
 import { PlannerData } from '../../domain/PlannerData';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import Header from '../Header';
 
 type PortFolioSummaryProps = {
   plannerData: PlannerData;
@@ -10,7 +11,7 @@ type PortFolioSummaryProps = {
 const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({ plannerData }) => {
   return (
     <Box sx={{ padding: 3, width: '100%' }}>
-      <Typography variant="h4">Your Investment Suggestions </Typography>
+      <Header title="Your Investment Suggestions" />
       <InvestmentSuggestions plannerData={plannerData} />
     </Box>
   );
