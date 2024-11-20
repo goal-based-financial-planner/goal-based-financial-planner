@@ -1,5 +1,5 @@
 import { PieChart } from '@mui/x-charts';
-import { Grid } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
 
 const InvestmentPieChart = ({
@@ -13,6 +13,17 @@ const InvestmentPieChart = ({
     label: a.id,
   }));
 
+  const palette = [
+    '#CDB3A1',
+    '#AFAEA0',
+    '#636667',
+    '#F3EDD8',
+    '#F6B7AA',
+    '#6D7B7B',
+    '#B4C1B0',
+    '#BDBEAB',
+  ];
+
   const pieParams = {
     height: 200,
     margin: { right: 5 },
@@ -21,8 +32,9 @@ const InvestmentPieChart = ({
 
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={12}>
+      <Grid size={12}>
         <PieChart
+          colors={palette}
           series={[
             {
               data: values,

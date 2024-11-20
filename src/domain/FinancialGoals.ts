@@ -45,11 +45,12 @@ export class FinancialGoal {
     const term = this.getTerm();
     if (term <= 3) {
       return TermType.SHORT_TERM;
-    } else if (term <= 5) {
+    } else if (term > 3 && term <= 5) {
       return TermType.MEDIUM_TERM;
-    } else {
+    } else if (term > 5) {
       return TermType.LONG_TERM;
     }
+    return TermType.LONG_TERM;
   }
 
   getInflationAdjustedTargetAmount(): number {

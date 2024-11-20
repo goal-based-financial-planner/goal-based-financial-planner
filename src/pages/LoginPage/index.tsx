@@ -3,28 +3,86 @@ import { Box, Button, Card, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import loginImage from '../../assets/Image3.jpg';
 
+const StyledContainer = styled(Box)(({ theme }) => ({
+  height: '80vh',
+  width: '100%',
+  position: 'relative',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const BackdropImage = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundImage: `url(${loginImage})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  opacity: 0.6,
+});
+
+const BlackOverlay = styled(Box)({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'rgba(0, 0, 0, 0.6)',
+});
+
+const StyledCardContainer = styled(Box)(() => ({
+  display: 'flex',
+  gap: '16px',
+  position: 'absolute',
+  bottom: '12%',
+  justifyContent: 'space-evenly',
+  alignItems: 'center',
+  width: '100vw',
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  width: '250px',
+  height: '100px',
+  borderRadius: 10,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledCardDetails = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
+  gap: 1,
+}));
+
+const WelcomeCard = styled(Card)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '8px',
+  padding: '4px 8px',
+  position: 'absolute',
+  top: 120,
+  left: 250,
+  backgroundColor: 'rgba(250, 250, 250, 0.08)',
+  color: '#fff',
+  zIndex: 2,
+  borderRadius: '30px',
+}));
+
 const LoginPage = () => {
   return (
     <>
       <StyledContainer>
         <BackdropImage />
         <BlackOverlay />
-        <Card
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 2,
-            px: 2,
-            py: 1,
-            position: 'absolute',
-            top: 100,
-            left: 250,
-            backgroundColor: 'rgba(250, 250, 250, 0.05)',
-            color: '#fff',
-            zIndex: 2,
-            borderRadius: 10,
-          }}
-        >
+        <WelcomeCard>
           <Typography
             sx={{
               color: 'orange',
@@ -40,7 +98,7 @@ const LoginPage = () => {
             Welcome
           </Typography>
           <Typography>Start adding your goals</Typography>
-        </Card>
+        </WelcomeCard>
         <Typography
           variant="h1"
           sx={{
@@ -86,143 +144,32 @@ const LoginPage = () => {
       </StyledContainer>
 
       <StyledCardContainer>
-        <StyledCard>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              gap: 1,
-            }}
-          >
-            <span
-              className="material-symbols-rounded"
-              style={{ color: 'orange', fontSize: '50px' }}
-            >
-              add_task
-            </span>
-            <Typography
-              variant="body1"
-              sx={{
-                color: 'black',
-                fontWeight: 'bold',
-                p: 3,
-              }}
-            >
-              Add your Goals
-            </Typography>
-          </Box>
-        </StyledCard>
-
-        <StyledCard>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              gap: 1,
-            }}
-          >
-            <span
-              className="material-symbols-rounded"
-              style={{ color: 'orange', fontSize: '50px', paddingLeft: '12px' }}
-            >
-              ballot
-            </span>
-            {/* Adjust size and color as needed */}
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 'bold', color: 'black', pr: 2 }}
-            >
-              Add Your Investment Allocations
-            </Typography>
-          </Box>
-        </StyledCard>
-        <StyledCard>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              gap: 1,
-            }}
-          >
-            <span
-              className="material-symbols-rounded"
-              style={{ color: 'orange', fontSize: '50px', paddingLeft: '12px' }}
-            >
-              monitoring
-            </span>
-            {/* Adjust size and color as needed */}
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: 'bold', color: 'black', pr: 2 }}
-            >
-              Check your Invesment Summary{' '}
-            </Typography>
-          </Box>
-        </StyledCard>
+        {[
+          { icon: 'add_task', text: 'Add your Goals' },
+          { icon: 'ballot', text: 'Add Your Investment Allocations' },
+          { icon: 'monitoring', text: 'Check  Investment Summary' },
+        ].map(({ icon, text }) => (
+          <StyledCard key={text}>
+            <StyledCardDetails>
+              <span
+                className="material-symbols-rounded"
+                style={{
+                  color: 'orange',
+                  fontSize: '50px',
+                  paddingLeft: '12px',
+                }}
+              >
+                {icon}
+              </span>
+              <Typography sx={{ fontWeight: 'bold', color: 'black', px: 1 }}>
+                {text}
+              </Typography>
+            </StyledCardDetails>
+          </StyledCard>
+        ))}
       </StyledCardContainer>
     </>
   );
 };
 
 export default LoginPage;
-
-const StyledContainer = styled(Box)(({ theme }) => ({
-  height: '80vh',
-  width: '100%',
-  position: 'relative',
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const BackdropImage = styled(Box)({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  backgroundImage: `url(${loginImage})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  opacity: 0.6,
-  animation: 'fadeIn 2s ease-in-out forwards',
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-});
-
-const BlackOverlay = styled(Box)({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-});
-
-const StyledCardContainer = styled(Box)(() => ({
-  display: 'flex',
-  gap: '16px',
-  position: 'absolute',
-  bottom: '12%',
-  justifyContent: 'space-evenly',
-  alignItems: 'center',
-  width: '100vw',
-}));
-
-const StyledCard = styled(Card)(({ theme }) => ({
-  width: '250px',
-  height: '100px',
-  borderRadius: 10,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));

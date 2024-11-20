@@ -23,38 +23,7 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   };
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          padding: 3,
-          alignItems: 'center',
-        }}
-      >
-        <Header title="Your Goals" />
-        <Box
-          ml={3}
-          onClick={handleAdd}
-          sx={{
-            '&:hover': {
-              cursor: 'pointer',
-              transform: 'scale(1.05)',
-            },
-          }}
-        >
-          <span
-            className="material-symbols-rounded"
-            style={{
-              fontSize: '40px',
-              color: theme.palette.primary.main,
-              transition: 'color 0.3s ease',
-            }}
-          >
-            add_circle
-          </span>
-        </Box>
-      </Box>
-
+      <Header title="Your Goals" iconName="add_circle" onAction={handleAdd} />
       <Box sx={{ px: 3 }}>
         {plannerData.financialGoals.length ? (
           <FinancialGoalsGrid

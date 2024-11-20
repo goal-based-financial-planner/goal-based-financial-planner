@@ -2,6 +2,7 @@ import { Dispatch } from 'react';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerDataAction } from './plannerDataReducer';
 import {
+  InvestmentAllocationsType,
   InvestmentChoiceType,
   InvestmentOptionType,
 } from '../domain/InvestmentOptions';
@@ -84,5 +85,15 @@ export function addInvestmentOption(
   dispatch({
     payload,
     type: PlannerDataActionType.ADD_INVESTMENT_OPTION,
+  });
+}
+
+export function updateInvestmentAllocation(
+  dispatch: Dispatch<PlannerDataAction>,
+  payload: InvestmentAllocationsType,
+) {
+  dispatch({
+    payload,
+    type: PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS,
   });
 }

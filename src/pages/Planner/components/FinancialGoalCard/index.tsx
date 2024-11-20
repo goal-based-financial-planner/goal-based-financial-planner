@@ -43,7 +43,7 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
         className="card-content"
         sx={{
           display: 'flex',
-          backgroundColor: theme.palette.cardBackGround.main,
+          backgroundColor: '#CBC5B5',
           px: 2,
           py: 1,
           borderRadius: 2,

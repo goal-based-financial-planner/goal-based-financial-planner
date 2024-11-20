@@ -63,18 +63,6 @@ const CustomMenu = ({
 
   return (
     <div>
-      <Button
-        id="demo-customized-button"
-        aria-controls={open ? 'demo-customized-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        variant="contained"
-        disableElevation
-        onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}
-      >
-        Add
-      </Button>
       <StyledMenu
         id="demo-customized-menu"
         MenuListProps={{
@@ -93,6 +81,13 @@ const CustomMenu = ({
           </MenuItem>
         ))}
       </StyledMenu>
+      <Button
+        variant="contained"
+        onClick={handleClick}
+        endIcon={<KeyboardArrowDownIcon />}
+      >
+        Add
+      </Button>
     </div>
   );
 };

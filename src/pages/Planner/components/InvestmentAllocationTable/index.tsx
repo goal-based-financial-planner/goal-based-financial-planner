@@ -16,7 +16,7 @@ import {
 } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { PlannerData } from '../../../../domain/PlannerData';
-import { ToolTipVisibilityState } from '../../../../components/InvestmentAllocationStep';
+import { ToolTipVisibilityState } from '../../../../components/InvestmentAllocations';
 import { TermType } from '../../../../types/enums';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { InvestmentOptionType } from '../../../../domain/InvestmentOptions';

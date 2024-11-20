@@ -17,12 +17,16 @@ const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
     '#CBC5B5',
     '#CDB3A1',
     '#AFAEA0',
-    '#A9A899',
-    '#ACA392',
-    '#A6A191',
-    '#A29F91',
-    '#928F86',
     '#636667',
+    '#F3EDD8',
+    '#F6B7AA',
+    '#6D7B7B',
+    '#E3E1CD',
+    '#B4C1B0',
+    '#BDBEAB',
+    '#DDDBCA',
+    '#B3B4AD',
+    '#A9A696',
   ];
 
   const investmentOptionWiseSum = suggestions.reduce(
