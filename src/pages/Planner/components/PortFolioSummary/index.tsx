@@ -1,11 +1,10 @@
-import InvestmentSuggestions from '../../pages/Planner/components/PortFolioSummary/InvestmentSuggestions';
+import InvestmentSuggestions from './InvestmentSuggestions';
 import React, { useState } from 'react';
-import { PlannerData } from '../../domain/PlannerData';
-import { Box, Button, Modal, Typography } from '@mui/material';
-import Header from '../Header';
+import { PlannerData } from '../../../../domain/PlannerData';
+import { Box, Modal, Typography } from '@mui/material';
+import Header from '../../../../components/Header';
 import InvestmentAllocations from '../InvestmentAllocations';
-import { PlannerDataAction } from '../../store/plannerDataReducer';
-import { updateInvestmentAllocation } from '../../store/plannerDataActions';
+import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 type PortFolioSummaryProps = {
   plannerData: PlannerData;
@@ -23,7 +22,6 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
   const handleClose = () => setShowModal(false);
 
   const handleSubmit = () => {
-    updateInvestmentAllocation(dispatch, plannerData.investmentAllocations);
     setShowModal(false);
   };
   return (
@@ -84,18 +82,8 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
           <InvestmentAllocations
             dispatch={dispatch}
             plannerData={plannerData}
+            onSubmit={handleSubmit}
           />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#B401B0',
-              }}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
-          </Box>
         </Box>
       </Modal>
     </>

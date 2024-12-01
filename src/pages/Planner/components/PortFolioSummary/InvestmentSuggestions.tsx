@@ -64,37 +64,31 @@ const InvestmentSuggestions: React.FC<InvestmentSuggestionsProps> = ({
     selectedYear,
   );
 
-  const getAmountPerInvestmentOption = () => {
-    const aggregatedAmounts: { [key: string]: number } = {};
+  // const getAmountPerInvestmentOption = () => {
+  //   const aggregatedAmounts: { [key: string]: number } = {};
+  //   investmentBreakdown.forEach((suggestion) => {
+  //     suggestion.investmentSuggestions.forEach((i) => {
+  //       const investmentOptionId = i.investmentOptionId;
+  //       const amount = i.amount;
+  //       if (aggregatedAmounts.hasOwnProperty(investmentOptionId)) {
+  //         aggregatedAmounts[investmentOptionId] += amount;
+  //       } else {
+  //         aggregatedAmounts[investmentOptionId] = amount;
+  //       }
+  //     });
+  //   });
 
-    investmentBreakdown.forEach((suggestion) => {
-      suggestion.investmentSuggestions.forEach((i) => {
-        const investmentOptionId = i.investmentOptionId;
-        const amount = i.amount;
-        if (aggregatedAmounts.hasOwnProperty(investmentOptionId)) {
-          aggregatedAmounts[investmentOptionId] += amount;
-        } else {
-          aggregatedAmounts[investmentOptionId] = amount;
-        }
-      });
-    });
+  //   return Object.entries(aggregatedAmounts).map(
+  //     ([investmentOptionId, totalAmount]) => {
+  //       const investmentName = plannerData.investmentOptions.find(
+  //         (o) => o.id === investmentOptionId,
+  //       )?.investmentName;
+  //       return { label: investmentName, value: Math.round(totalAmount) };
+  //     },
+  //   );
+  // };
 
-    return Object.entries(aggregatedAmounts).map(
-      ([investmentOptionId, totalAmount]) => {
-        const investmentName = plannerData.investmentOptions.find(
-          (o) => o.id === investmentOptionId,
-        )?.investmentName;
-        return { label: investmentName, value: Math.round(totalAmount) };
-      },
-    );
-  };
-
-  return (
-    <InvestmentSuggestionsGrid
-      suggestions={investmentBreakdown}
-      investmentOptions={plannerData.investmentOptions}
-    />
-  );
+  return <InvestmentSuggestionsGrid suggestions={investmentBreakdown} />;
 };
 
 export default InvestmentSuggestions;

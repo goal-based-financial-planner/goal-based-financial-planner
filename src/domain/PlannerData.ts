@@ -4,7 +4,6 @@ import {
   InvestmentOptionType,
 } from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
-import { DEFAULT_INVESTMENT_OPTIONS } from './constants';
 
 export type FinancialGoalSummary = Array<{
   termType: TermType;
@@ -14,7 +13,6 @@ export type FinancialGoalSummary = Array<{
 export class PlannerData {
   financialGoals: FinancialGoal[];
   investmentAllocations: InvestmentAllocationsType;
-  investmentOptions: InvestmentOptionType[];
 
   constructor(
     financialGoals: FinancialGoal[] = [],
@@ -27,7 +25,6 @@ export class PlannerData {
   ) {
     this.financialGoals = financialGoals;
     this.investmentAllocations = investmentAllocations;
-    this.investmentOptions = investmentOptions ?? DEFAULT_INVESTMENT_OPTIONS;
   }
 
   getFinancialGoalSummary(): FinancialGoalSummary {

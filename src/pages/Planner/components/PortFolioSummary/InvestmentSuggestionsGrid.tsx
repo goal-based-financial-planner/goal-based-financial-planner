@@ -2,15 +2,13 @@ import { Box, Card, Grid2 as Grid, Typography } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import React from 'react';
 import { InvestmentPerOptionType } from '../../../../components/GoalWiseInvestmentSuggestion';
-import { InvestmentOptionType } from '../../../../domain/InvestmentOptions';
+import { DEFAULT_INVESTMENT_OPTIONS } from '../../../../domain/constants';
 
 type InvestmentSuggestionsGridProps = {
   suggestions: GoalWiseInvestmentSuggestions[];
-  investmentOptions: InvestmentOptionType[];
 };
 const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
   suggestions,
-  investmentOptions,
 }) => {
   const colorPalette = [
     '#E1E0D0',
@@ -31,8 +29,8 @@ const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
 
   const investmentOptionWiseSum = suggestions.reduce(
     (acc, goal) => {
-      goal.investmentSuggestions.forEach(({ investmentOptionId, amount }) => {
-        acc[investmentOptionId] = (acc[investmentOptionId] || 0) + amount;
+      goal.investmentSuggestions.forEach(({ investmentName, amount }) => {
+        acc[investmentName] = (acc[investmentName] || 0) + amount;
       });
       return acc;
     },
@@ -41,16 +39,16 @@ const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
 
   const investmentAllocationSummary = Object.entries(
     investmentOptionWiseSum,
-  ).map(([investmentOptionId, totalValue]) => ({
-    investmentOptionId,
+  ).map(([investmentName, totalValue]) => ({
+    investmentName,
     totalValue,
   }));
 
-  const getAmountPerGoalForInvestmentOption = (investmentOptionId: string) => {
+  const getAmountPerGoalForInvestmentOption = (investmentName: string) => {
     const arr: InvestmentPerOptionType[] = [];
     suggestions.forEach((suggestion) => {
       suggestion.investmentSuggestions.forEach((i) => {
-        if (i.investmentOptionId === investmentOptionId) {
+        if (i.investmentName === investmentName) {
           arr.push({ goalName: suggestion.goalName, amount: i.amount });
         }
       });
@@ -91,8 +89,8 @@ const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
                     className="material-symbols-rounded"
                     style={{ fontSize: '64px', color: '#000000' }}
                   >
-                    {investmentOptions.find(
-                      (o) => o.id === option.investmentOptionId,
+                    {DEFAULT_INVESTMENT_OPTIONS.find(
+                      (o) => o.investmentName === option.investmentName,
                     )?.materialIconName || 'account_balance'}
                   </span>
                 </Box>
@@ -104,9 +102,7 @@ const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
                     fontSize: '16px',
                   }}
                 >
-                  {investmentOptions.find(
-                    (o) => o.id === option.investmentOptionId,
-                  )?.investmentName || ''}
+                  {option.investmentName || ''}
                 </Typography>
               </Box>
               <Box
@@ -123,13 +119,6 @@ const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
                   {option.totalValue.toLocaleString(navigator.language, {
                     maximumFractionDigits: 0,
                   })}
-                </Typography>
-                <Typography sx={{ fontSize: '12px', fontWeight: 'italic' }}>
-                  @
-                  {investmentOptions.find(
-                    (o) => o.id === option.investmentOptionId,
-                  )?.expectedReturnPercentage || 0}
-                  %
                 </Typography>
               </Box>
             </Card>

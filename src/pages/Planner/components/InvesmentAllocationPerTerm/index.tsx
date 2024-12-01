@@ -1,75 +1,104 @@
-import { Grid2 as Grid } from '@mui/material';
-import InvestmentPieChart from '../InvestmentPieChart';
-import CustomInput from '../../../../components/CustomInput';
-import CustomMenu from '../../../../components/CustomMenu';
-import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
-import { DEFAULT_INVESTMENT_OPTIONS } from '../../../../domain/constants';
+import React from 'react';
+import { useFieldArray, Controller } from 'react-hook-form';
+import { Box, Button, Grid2 as Grid } from '@mui/material';
+import CustomTextField from '../../../../components/CustomTextField';
 
 const InvestmentAllocationPerTerm = ({
-  allocations,
-  handlePercentageChange,
+  control,
+  name,
 }: {
-  allocations: InvestmentChoiceType[];
-  handlePercentageChange: any;
+  control: any;
+  name: string;
 }) => {
-  const handleMenuChange = (selectedOption: string) => {
-    handlePercentageChange(selectedOption, 30);
-  };
-
-  const handleInputChange = (
-    updatedPercent: number,
-    selectedOption: string,
-  ) => {
-    handlePercentageChange(selectedOption, updatedPercent);
-  };
-
-  const filteredOptions = DEFAULT_INVESTMENT_OPTIONS.filter(
-    (opt) => !allocations.map((a) => a.id).includes(opt.id),
-  ).map((a) => {
-    return {
-      label: a.investmentName,
-      value: a.id,
-    };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name,
   });
 
   return (
-    <Grid container>
-      <Grid size={6} sx={{ py: 3 }}>
-        <Grid container>
-          <Grid container size={12} rowGap={2}>
-            {allocations.map((option) => (
-              <CustomInput
-                key={option.id}
-                label={
-                  DEFAULT_INVESTMENT_OPTIONS.filter(
-                    (a) => a.id === option.id,
-                  )[0].investmentName
-                }
-                percent={option.investmentPercentage}
-                onChange={(value) => handleInputChange(value, option.id)}
-              />
-            ))}
-          </Grid>
-          <Grid
-            size={12}
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              marginTop: 4,
-              alignItems: 'center',
-            }}
-          >
-            <CustomMenu
-              options={filteredOptions}
-              handleMenuChange={handleMenuChange}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-
+    <Grid container spacing={2}>
       <Grid size={6}>
-        <InvestmentPieChart allocations={allocations} />
+        <Grid
+          container
+          spacing={2}
+          display={'flex'}
+          justifyContent="center"
+          alignItems="center"
+        >
+          {fields.map((field, index) => (
+            <Grid container key={field.id} spacing={2}>
+              <Grid size={6}>
+                <Controller
+                  name={`${name}.${index}.investmentName`}
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField {...field} placeholder="Investment Name" />
+                  )}
+                />
+              </Grid>
+              <Grid size={2}>
+                <Controller
+                  name={`${name}.${index}.expectedReturnPercentage`}
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      type="number"
+                      placeholder="Expected Return (%)"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid size={2}>
+                <Controller
+                  name={`${name}.${index}.investmentPercentage`}
+                  control={control}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      type="number"
+                      placeholder="Allocation (%)"
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid size={2}>
+                <Box
+                  sx={{
+                    '&:hover': {
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
+                  <span
+                    className="material-symbols-rounded"
+                    onClick={() => remove(index)}
+                  >
+                    delete
+                  </span>
+                </Box>
+              </Grid>
+            </Grid>
+          ))}
+        </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mt: 4 }}
+          onClick={() =>
+            append({
+              investmentName: '',
+              expectedReturnPercentage: 0,
+              investmentPercentage: 0,
+            })
+          }
+        >
+          Add Investment
+        </Button>
       </Grid>
+      {/* <Grid size={6}>
+        <InvestmentPieChart allocations={fields} />
+      </Grid> */}
     </Grid>
   );
 };

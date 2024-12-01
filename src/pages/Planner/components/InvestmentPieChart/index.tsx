@@ -8,9 +8,8 @@ const InvestmentPieChart = ({
   allocations: InvestmentChoiceType[];
 }) => {
   const values = allocations.map((a) => ({
-    id: a.id,
     value: a.investmentPercentage,
-    label: a.id,
+    label: a.investmentName,
   }));
 
   const palette = [

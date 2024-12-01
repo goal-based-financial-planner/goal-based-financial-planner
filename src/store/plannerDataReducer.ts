@@ -13,32 +13,6 @@ export type PlannerDataAction = {
 
 export const initialPlannerData: PlannerData = getInitialData();
 
-function updateInvestmentAllocation(
-  state: PlannerData,
-  action: PlannerDataAction,
-  termType: TermType,
-) {
-  const allocations = state.investmentAllocations[termType];
-  const allocationIndex = allocations.findIndex(
-    (e) => e.id === action.payload.id,
-  );
-
-  if (allocationIndex === -1) {
-    allocations.push(action.payload);
-  } else {
-    allocations.splice(allocationIndex, 1, action.payload);
-  }
-
-  return new PlannerData(
-    state.financialGoals,
-    {
-      ...state.investmentAllocations,
-      [termType]: allocations,
-    },
-    state.investmentOptions,
-  );
-}
-
 export function plannerDataReducer(
   state = initialPlannerData,
   action: PlannerDataAction,
@@ -83,32 +57,11 @@ export function plannerDataReducer(
       return new PlannerData(
         updatedFinancialGoals,
         updatedInvestmentAllocations,
-        state.investmentOptions,
       );
     }
 
-    case PlannerDataActionType.ADD_INVESTMENT_OPTION:
-      return new PlannerData(
-        state.financialGoals,
-        state.investmentAllocations,
-        [...state.investmentOptions, action.payload],
-      );
-
     case PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS:
-      return new PlannerData(
-        state.financialGoals,
-        action.payload,
-        state.investmentOptions,
-      );
-
-    case PlannerDataActionType.UPDATE_SHORT_TERM_INVESTMENT:
-      return updateInvestmentAllocation(state, action, TermType.SHORT_TERM);
-
-    case PlannerDataActionType.UPDATE_MEDIUM_TERM_INVESTMENT:
-      return updateInvestmentAllocation(state, action, TermType.MEDIUM_TERM);
-
-    case PlannerDataActionType.UPDATE_LONG_TERM_INVESTMENT:
-      return updateInvestmentAllocation(state, action, TermType.LONG_TERM);
+      return new PlannerData(state.financialGoals, action.payload);
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL: {
       const financialGoals = [...state.financialGoals];
@@ -133,11 +86,7 @@ export function plannerDataReducer(
         investmentAllocations['Long Term'] = [];
       }
 
-      return new PlannerData(
-        financialGoals,
-        investmentAllocations,
-        state.investmentOptions,
-      );
+      return new PlannerData(financialGoals, investmentAllocations);
     }
 
     case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
@@ -178,11 +127,7 @@ export function getInitialData() {
           ),
       );
 
-      return new PlannerData(
-        financialGoals,
-        parsedState.investmentAllocations,
-        parsedState.investmentOptions,
-      );
+      return new PlannerData(financialGoals, parsedState.investmentAllocations);
     } catch {}
   }
   return new PlannerData();

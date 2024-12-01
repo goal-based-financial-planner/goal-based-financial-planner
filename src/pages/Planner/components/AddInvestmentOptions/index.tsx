@@ -7,7 +7,7 @@ import {
   ALPHANUMERIC_PATTERN,
   NUMBER_PATTERN,
 } from '../../../../types/constants';
-import Grid from '@mui/material/Grid';
+import { Grid2 as Grid } from '@mui/material';
 import CustomTextField from '../../../../components/CustomTextField';
 
 interface AddFinancialGoalsProps {
@@ -40,9 +40,7 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
 
   const handleAdd = () => {
     addInvestmentOption(dispatch, {
-      id: invesmentOptionName,
       investmentName: invesmentOptionName,
-      expectedReturnPercentage: expectedPercentage,
     });
     handleCloseAndReset();
   };
@@ -74,7 +72,7 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
       >
         <h2 style={{ marginTop: 0 }}>Add Investment Option</h2>
         <Grid container spacing={5} alignItems="center" mt={0.5}>
-          <Grid xs={6}>
+          <Grid size={6}>
             <CustomTextField
               label="Investment option name"
               placeholder='Eg: "Gold"'
@@ -87,7 +85,7 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
             />
           </Grid>
 
-          <Grid xs={6}>
+          <Grid size={6}>
             <CustomTextField
               label="Expected Percentage"
               placeholder='Eg: "1000000"'
@@ -100,7 +98,7 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
             />
           </Grid>
 
-          <Grid xs={6}>
+          <Grid size={6}>
             <Button
               startIcon={<CancelRounded />}
               variant="outlined"
@@ -111,7 +109,7 @@ const AddInvestmentOptions: React.FC<AddFinancialGoalsProps> = ({
             </Button>
           </Grid>
           <Grid
-            xs={6}
+            size={6}
             sx={{
               display: 'flex',
               justifyContent: 'flex-end',
