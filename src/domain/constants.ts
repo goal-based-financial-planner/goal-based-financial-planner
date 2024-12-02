@@ -73,16 +73,63 @@ export const DEFAULT_INVESTMENT_ALLOCATIONS: InvestmentAllocationsType = {
   [TermType.SHORT_TERM]: [
     {
       investmentName: 'Recurring Deposit',
-      expectedReturnPercentage: 10,
-      investmentPercentage: 50,
+      expectedReturnPercentage: 6,
+      investmentPercentage: 100,
     },
   ],
   [TermType.MEDIUM_TERM]: [
     {
       investmentName: 'Recurring Deposit',
+      expectedReturnPercentage: 6,
+      investmentPercentage: 70,
+    },
+    {
+      investmentName: 'Large Cap Mutual Funds',
+      expectedReturnPercentage: 8,
+      investmentPercentage: 12,
+    },
+    {
+      investmentName: 'Mid Cap Mutual Funds',
       expectedReturnPercentage: 10,
-      investmentPercentage: 50,
+      investmentPercentage: 12,
+    },
+    {
+      investmentName: 'Small Cap Mutual Funds',
+      expectedReturnPercentage: 12,
+      investmentPercentage: 6,
     },
   ],
-  [TermType.LONG_TERM]: [],
+  [TermType.LONG_TERM]: [
+    {
+      investmentName: 'Recurring Deposit',
+      expectedReturnPercentage: 6,
+      investmentPercentage: 15,
+    },
+    {
+      investmentName: 'Gold',
+      expectedReturnPercentage: 10,
+      investmentPercentage: 5,
+    },
+    {
+      investmentName: 'Real Estate Funds',
+      expectedReturnPercentage: 12,
+      investmentPercentage: 10,
+    },
+
+    {
+      investmentName: 'Large Cap Mutual Funds',
+      expectedReturnPercentage: 8,
+      investmentPercentage: 14,
+    },
+    {
+      investmentName: 'Mid Cap Mutual Funds',
+      expectedReturnPercentage: 10,
+      investmentPercentage: 28,
+    },
+    {
+      investmentName: 'Small Cap Mutual Funds',
+      expectedReturnPercentage: 12,
+      investmentPercentage: 28,
+    },
+  ],
 };

@@ -1,37 +1,8 @@
 import * as React from 'react';
-import { ChangeEvent, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { useEffect } from 'react';
 import { PlannerData } from '../../../../domain/PlannerData';
 import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
-import { PieChart } from '@mui/x-charts/PieChart';
 import InvestmentSuggestionsGrid from './InvestmentSuggestionsGrid';
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
 
 type InvestmentSuggestionsProps = {
   plannerData: PlannerData;

@@ -16,9 +16,6 @@ import { PlannerData } from '../../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 
-interface FormType {
-  investmentAllocations: InvestmentAllocationsType;
-}
 const InvestmentAllocations = ({
   plannerData,
   dispatch,
@@ -28,10 +25,10 @@ const InvestmentAllocations = ({
   dispatch: React.Dispatch<PlannerDataAction>;
   onSubmit: () => void;
 }) => {
-  const { control, handleSubmit } = useForm<FormType>({
-    defaultValues: {
-      investmentAllocations: plannerData.investmentAllocations,
-    },
+  const { control, handleSubmit } = useForm<InvestmentAllocationsType>({
+    defaultValues: plannerData.investmentAllocations,
+    reValidateMode: 'onChange',
+    mode: 'onBlur',
   });
   const [showSnackBar, setShowSnackBar] = useState(false);
 
@@ -55,9 +52,9 @@ const InvestmentAllocations = ({
     return isFormValid;
   };
 
-  const onSubmitForm = (data: any) => {
-    if (areInvestmentAllocationsValid(data.investmentAllocations)) {
-      updateInvestmentAllocation(dispatch, data.investmentAllocations);
+  const onSubmitForm = (data: InvestmentAllocationsType) => {
+    if (areInvestmentAllocationsValid(data)) {
+      updateInvestmentAllocation(dispatch, data);
       onSubmit();
     } else {
       setShowSnackBar(true);
@@ -75,7 +72,7 @@ const InvestmentAllocations = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmitForm)}>
+      <form onSubmit={handleSubmit(onSubmitForm)} noValidate>
         <Box>
           <Tabs value={value} onChange={handleChange}>
             {Object.values(TermType).map((termType) => {
@@ -100,7 +97,7 @@ const InvestmentAllocations = ({
                 <Typography component="div">
                   <InvestmentAllocationPerTerm
                     control={control}
-                    name={`investmentAllocations.${termType}`}
+                    name={termType}
                   />
                 </Typography>
               </Box>

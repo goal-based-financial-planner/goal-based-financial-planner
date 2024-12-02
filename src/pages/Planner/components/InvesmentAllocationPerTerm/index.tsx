@@ -1,86 +1,152 @@
 import React from 'react';
-import { useFieldArray, Controller } from 'react-hook-form';
-import { Box, Button, Grid2 as Grid } from '@mui/material';
-import CustomTextField from '../../../../components/CustomTextField';
+import { useFieldArray, Controller, Control, useWatch } from 'react-hook-form';
+import {
+  Box,
+  Button,
+  Grid2 as Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
+import InvestmentPieChart from '../InvestmentPieChart';
+import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
+import { TermType } from '../../../../types/enums';
 
 const InvestmentAllocationPerTerm = ({
   control,
   name,
 }: {
-  control: any;
-  name: string;
+  control: Control<InvestmentAllocationsType, any>;
+  name: TermType;
 }) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name,
   });
 
+  const watchedFields = useWatch({
+    control,
+    name,
+  });
+
+  const pieChartData = watchedFields
+    .map((field) => ({
+      label: field.investmentName,
+      value: field.investmentPercentage || 0,
+    }))
+    .reduce((acc: { label: string; value: number }[], curr) => {
+      const existing = acc.find((item) => item.label === curr.label);
+      if (existing) {
+        existing.value = Number(existing.value) + Number(curr.value);
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
   return (
     <Grid container spacing={2}>
-      <Grid size={6}>
-        <Grid
-          container
-          spacing={2}
-          display={'flex'}
-          justifyContent="center"
-          alignItems="center"
-        >
-          {fields.map((field, index) => (
-            <Grid container key={field.id} spacing={2}>
-              <Grid size={6}>
-                <Controller
-                  name={`${name}.${index}.investmentName`}
-                  control={control}
-                  render={({ field }) => (
-                    <CustomTextField {...field} placeholder="Investment Name" />
-                  )}
-                />
-              </Grid>
-              <Grid size={2}>
-                <Controller
-                  name={`${name}.${index}.expectedReturnPercentage`}
-                  control={control}
-                  render={({ field }) => (
-                    <CustomTextField
-                      {...field}
-                      type="number"
-                      placeholder="Expected Return (%)"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid size={2}>
-                <Controller
-                  name={`${name}.${index}.investmentPercentage`}
-                  control={control}
-                  render={({ field }) => (
-                    <CustomTextField
-                      {...field}
-                      type="number"
-                      placeholder="Allocation (%)"
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid size={2}>
-                <Box
-                  sx={{
-                    '&:hover': {
-                      cursor: 'pointer',
-                    },
-                  }}
-                >
-                  <span
-                    className="material-symbols-rounded"
-                    onClick={() => remove(index)}
-                  >
-                    delete
-                  </span>
-                </Box>
-              </Grid>
-            </Grid>
-          ))}
+      <Grid size={8}>
+        <Grid container spacing={2}>
+          <Grid size={6}>
+            <Typography fontWeight="bold">Investment Name</Typography>
+          </Grid>
+          <Grid size={2.5}>
+            <Typography fontWeight="bold" textAlign="center">
+              Expected Return (%)
+            </Typography>
+          </Grid>
+          <Grid size={2.5}>
+            <Typography fontWeight="bold" textAlign="center">
+              Investment (%){' '}
+            </Typography>
+          </Grid>
+          <Grid size={1}></Grid>
         </Grid>
+        {fields.map((field, index) => (
+          <Grid container key={field.id} spacing={2}>
+            <Grid size={6}>
+              <Controller
+                name={`${name}.${index}.investmentName`}
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    sx={{ width: '100%' }}
+                    variant="standard"
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={2.5}>
+              <Controller
+                name={`${name}.${index}.expectedReturnPercentage`}
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="number"
+                    sx={{ width: '100%' }}
+                    variant="standard"
+                    slotProps={{
+                      input: {
+                        inputProps: {
+                          min: 1,
+                          inputMode: 'numeric',
+                        },
+                      },
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={2.5}>
+              <Controller
+                name={`${name}.${index}.investmentPercentage`}
+                control={control}
+                rules={{
+                  validate: (value) => value <= 100,
+                }}
+                render={({ field, fieldState: { error } }) => {
+                  return (
+                    <TextField
+                      {...field}
+                      type="number"
+                      error={!!error}
+                      slotProps={{
+                        input: {
+                          inputProps: {
+                            min: 1,
+                            max: 100,
+                            inputMode: 'numeric',
+                          },
+                        },
+                      }}
+                      sx={{ width: '100%' }}
+                      variant="standard"
+                    />
+                  );
+                }}
+              />
+            </Grid>
+            <Grid size={1}>
+              <Box
+                sx={{
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+              >
+                <span
+                  className="material-symbols-rounded"
+                  onClick={() => remove(index)}
+                >
+                  delete
+                </span>
+              </Box>
+            </Grid>
+          </Grid>
+        ))}
+
         <Button
           variant="contained"
           color="primary"
@@ -96,9 +162,9 @@ const InvestmentAllocationPerTerm = ({
           Add Investment
         </Button>
       </Grid>
-      {/* <Grid size={6}>
-        <InvestmentPieChart allocations={fields} />
-      </Grid> */}
+      <Grid size={4}>
+        <InvestmentPieChart allocations={pieChartData} />
+      </Grid>
     </Grid>
   );
 };

@@ -1,17 +1,11 @@
 import { PieChart } from '@mui/x-charts';
 import { Grid2 as Grid } from '@mui/material';
-import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
 
-const InvestmentPieChart = ({
-  allocations,
-}: {
-  allocations: InvestmentChoiceType[];
-}) => {
-  const values = allocations.map((a) => ({
-    value: a.investmentPercentage,
-    label: a.investmentName,
-  }));
-
+interface SeriesType {
+  value: number;
+  label: string;
+}
+const InvestmentPieChart = ({ allocations }: { allocations: SeriesType[] }) => {
   const palette = [
     '#CDB3A1',
     '#AFAEA0',
@@ -36,7 +30,7 @@ const InvestmentPieChart = ({
           colors={palette}
           series={[
             {
-              data: values,
+              data: allocations,
             },
           ]}
           {...pieParams}
