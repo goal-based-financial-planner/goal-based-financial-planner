@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFieldArray, Controller, Control, useWatch } from 'react-hook-form';
 import {
+  Autocomplete,
   Box,
   Button,
   Grid2 as Grid,
@@ -10,6 +11,7 @@ import {
 import InvestmentPieChart from '../InvestmentPieChart';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 import { TermType } from '../../../../types/enums';
+import investmentNames from '../../../../domain/investmentAllocations';
 
 const InvestmentAllocationPerTerm = ({
   control,
@@ -69,10 +71,25 @@ const InvestmentAllocationPerTerm = ({
                 name={`${name}.${index}.investmentName`}
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ width: '100%' }}
-                    variant="standard"
+                  <Autocomplete
+                    options={investmentNames}
+                    freeSolo
+                    value={field.value || ''}
+                    onChange={(event, newValue) => {
+                      field.onChange(newValue);
+                    }}
+                    onInputChange={(event, newInputValue) => {
+                      if (event?.type === 'change') {
+                        field.onChange(newInputValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="standard"
+                        sx={{ width: '100%' }}
+                      />
+                    )}
                   />
                 )}
               />

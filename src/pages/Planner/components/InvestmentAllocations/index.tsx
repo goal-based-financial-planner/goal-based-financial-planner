@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 import {
   Alert,
   Box,
@@ -53,6 +53,7 @@ const InvestmentAllocations = ({
   };
 
   const onSubmitForm = (data: InvestmentAllocationsType) => {
+    console.log(data);
     if (areInvestmentAllocationsValid(data)) {
       updateInvestmentAllocation(dispatch, data);
       onSubmit();
@@ -60,19 +61,34 @@ const InvestmentAllocations = ({
       setShowSnackBar(true);
     }
   };
+  const [value, setValue] = React.useState(0);
+
+  const onError = (errors: FieldErrors<InvestmentAllocationsType>) => {
+    const presentTermTypes: string[] = Object.values(TermType).filter(
+      (termType) => areGoalsPresentOfType(termType),
+    );
+    const tabWithError = Object.keys(errors).find((a) =>
+      presentTermTypes.includes(a),
+    );
+
+    if (tabWithError) {
+      const tabIndex = presentTermTypes.indexOf(tabWithError as TermType);
+      setValue(tabIndex);
+    }
+  };
+
   const areGoalsPresentOfType = (column: TermType) =>
     plannerData
       .getFinancialGoalSummary()
       .some((item) => item.termType === column && item.numberOfGoals > 0);
 
-  const [value, setValue] = React.useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmitForm)} noValidate>
+      <form onSubmit={handleSubmit(onSubmitForm, onError)} noValidate>
         <Box>
           <Tabs value={value} onChange={handleChange}>
             {Object.values(TermType).map((termType) => {
