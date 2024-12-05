@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { PlannerData } from '../../../../domain/PlannerData';
 import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
-import InvestmentSuggestionsGrid from './InvestmentSuggestionsGrid';
+import InvestmentSuggestionsGrid from './InvesmentSuggestionsGrid';
 
 type InvestmentSuggestionsProps = {
   plannerData: PlannerData;
