@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
 import { PlannerData } from '../../domain/PlannerData';
 import FinancialGoalsGrid from '../../pages/Planner/components/FinancialGoalsGrid';
-import { theme } from '../../theme';
 import FinancialGoalForm from '../../pages/Planner/components/FinancialGoalForm';
 import Header from '../Header';
 

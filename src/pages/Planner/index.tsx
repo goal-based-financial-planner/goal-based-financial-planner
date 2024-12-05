@@ -20,12 +20,12 @@ const Planner: React.FC = () => {
 
   return (
     <Grid container>
-      <Grid size={4}>
+      <Grid size={3}>
         <FinancialGoals plannerData={plannerData} dispatch={dispatch} />
       </Grid>
 
       {plannerData.financialGoals.length > 0 ? (
-        <Grid size={8}>
+        <Grid size={9}>
           <PortfolioSummary plannerData={plannerData} dispatch={dispatch} />
         </Grid>
       ) : null}

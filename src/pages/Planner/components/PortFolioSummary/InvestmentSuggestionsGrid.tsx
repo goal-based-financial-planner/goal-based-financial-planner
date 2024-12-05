@@ -7,7 +7,7 @@ import { InvestmentPerOptionType } from '../../../../components/GoalWiseInvestme
 type InvestmentSuggestionsGridProps = {
   suggestions: GoalWiseInvestmentSuggestions[];
 };
-const InvesmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
+const InvestmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
   suggestions,
 }) => {
   const investmentOptionWiseSum = suggestions.reduce(
@@ -42,7 +42,7 @@ const InvesmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
   return (
     <Grid container rowGap={2} columnGap={2}>
       {investmentAllocationSummary.map((option, index) => (
-        <Grid size={2} key={index}>
+        <Grid size={1.7} key={index}>
           <Box
             sx={{
               display: 'flex',
@@ -65,4 +65,4 @@ const InvesmentSuggestionsGrid: React.FC<InvestmentSuggestionsGridProps> = ({
   );
 };
 
-export default InvesmentSuggestionsGrid;
+export default InvestmentSuggestionsGrid;

@@ -1,10 +1,20 @@
-import InvestmentSuggestions from './InvestmentSuggestions';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlannerData } from '../../../../domain/PlannerData';
-import { Box, Modal, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from '@mui/material';
 import Header from '../../../../components/Header';
 import InvestmentAllocations from '../InvestmentAllocations';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
+import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
+import InvestmentSuggestionsGrid from './InvestmentSuggestionsGrid';
 
 type PortFolioSummaryProps = {
   plannerData: PlannerData;
@@ -24,16 +34,64 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
   const handleSubmit = () => {
     setShowModal(false);
   };
+  const [selectedYear, setSelectedYear] = React.useState<string>('2024');
+  const [years, setYears] = useState<number[]>([]);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectedYear(event.target.value);
+  };
+
+  useEffect(() => {
+    const minMaxYears = plannerData.financialGoals.reduce(
+      (acc, e) => ({
+        minYear: Math.min(acc.minYear, e.getInvestmentStartYear()),
+        maxYear: Math.max(acc.maxYear, e.getTargetYear()),
+      }),
+      { minYear: Infinity, maxYear: 0 },
+    );
+    const years = [];
+    for (let i = minMaxYears.minYear; i <= minMaxYears.maxYear; i++) {
+      years.push(i);
+    }
+    setYears(years);
+  }, [plannerData]);
+
+  const { calculateInvestmentNeededForGoals } =
+    useInvestmentCalculator(plannerData);
+  const investmentBreakdown = calculateInvestmentNeededForGoals(
+    plannerData,
+    Number(selectedYear),
+  );
+
   return (
     <>
-      <Header
-        title="Your Investment Suggestions"
-        iconName="edit"
-        onAction={handleEdit}
-      />
+      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <Header
+          title="Your Investment Suggestions"
+          iconName="edit"
+          onAction={handleEdit}
+        />
+
+        <Box sx={{ maxWidth: 100 }}>
+          <FormControl fullWidth>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={selectedYear}
+              onChange={handleChange}
+            >
+              {years.map((year) => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
 
       <Box sx={{ px: 3 }}>
-        <InvestmentSuggestions plannerData={plannerData} />
+        <InvestmentSuggestionsGrid suggestions={investmentBreakdown} />
       </Box>
       <Modal
         open={showModal}

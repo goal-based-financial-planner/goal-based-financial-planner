@@ -1,12 +1,5 @@
-import React, { Dispatch } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Tooltip,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import React, { Dispatch, useState } from 'react';
+import { Box, Card, Tooltip, Typography } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
@@ -17,10 +10,10 @@ type FinancialGoalCardProps = {
 };
 
 const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
-  const theme = useTheme();
   const handleDelete = () => {
     deleteFinancialGoal(dispatch, goal.id);
   };
+  const [isExpanded, setIsExpanded] = useState(false);
   return (
     <Card
       sx={{
@@ -38,7 +31,6 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
         },
       }}
     >
-      {/* Card Content */}
       <Box
         className="card-content"
         sx={{
@@ -49,6 +41,7 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
           borderRadius: 2,
           justifyContent: 'space-between',
           transition: 'transform 0.3s ease',
+          height: isExpanded ? '170px' : '70px',
         }}
       >
         <Box>
@@ -60,10 +53,10 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
                 display: 'block',
               }}
             >
-              <Typography sx={{ fontSize: '24px' }}>
+              <Typography sx={{ fontSize: '18px' }}>
                 {goal.getGoalName()}
               </Typography>
-              <Typography sx={{ pt: 1, fontSize: '16px', fontWeight: 'light' }}>
+              <Typography sx={{ pt: 1, fontSize: '12px', fontWeight: 'light' }}>
                 {goal.getInvestmentStartYear()} - {goal.getTargetYear()}
               </Typography>
             </Box>
@@ -71,28 +64,14 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
         </Box>
 
         <Box sx={{ display: 'flex' }}>
-          <Typography sx={{ fontSize: '24px' }}>
+          <Typography sx={{ fontSize: '20px' }}>
             {goal
               .getInflationAdjustedTargetAmount()
               .toLocaleString(navigator.language)}
           </Typography>
-          {/* <Tooltip title="Inflation Adjusted Amount" placement="top">
-            <span
-              className="material-symbols-rounded"
-              style={{
-                fontSize: '12px',
-                padding: 2,
-                color: 'grey',
-                cursor: 'pointer',
-              }}
-            >
-              info
-            </span>
-          </Tooltip> */}
         </Box>
       </Box>
 
-      {/* Hover Buttons */}
       <Box
         className="hover-buttons"
         sx={{
@@ -108,20 +87,6 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
       >
         <Box
           sx={{
-            backgroundColor: 'blue',
-            color: 'white',
-            padding: 1,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '50%',
-          }}
-        >
-          <span className="material-symbols-rounded">info</span>
-        </Box>
-        <Box
-          sx={{
             backgroundColor: 'red',
             color: 'white',
             padding: 1,
@@ -134,6 +99,21 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
           onClick={handleDelete}
         >
           <span className="material-symbols-rounded">delete</span>
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: 'skyblue',
+            color: 'white',
+            padding: 1,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '50%',
+          }}
+          onClick={() => setIsExpanded((prev) => !prev)}
+        >
+          <span className="material-symbols-rounded">info</span>
         </Box>
       </Box>
     </Card>
