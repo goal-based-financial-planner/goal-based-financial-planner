@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { theme } from '../../theme';
 
 export type HeaderProps = {
   title: string;

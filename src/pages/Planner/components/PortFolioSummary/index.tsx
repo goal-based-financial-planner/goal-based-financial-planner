@@ -3,7 +3,6 @@ import { PlannerData } from '../../../../domain/PlannerData';
 import {
   Box,
   FormControl,
-  InputLabel,
   MenuItem,
   Modal,
   Select,
@@ -34,11 +33,13 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
   const handleSubmit = () => {
     setShowModal(false);
   };
-  const [selectedYear, setSelectedYear] = React.useState<string>('2024');
+  const [selectedYear, setSelectedYear] = React.useState<number>(
+    new Date().getFullYear(),
+  );
   const [years, setYears] = useState<number[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedYear(event.target.value);
+    setSelectedYear(Number(event.target.value));
   };
 
   useEffect(() => {
@@ -77,7 +78,7 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={selectedYear}
+              value={String(selectedYear)}
               onChange={handleChange}
             >
               {years.map((year) => (
