@@ -4,6 +4,7 @@ import {
   InvestmentAllocationsType,
   InvestmentChoiceType,
 } from '../../../domain/InvestmentOptions';
+import { TermType } from '../../../types/enums';
 
 export type InvestmentSuggestion = {
   investmentName: string;
@@ -33,27 +34,30 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
   const calculateInvestmentNeededForGoals = (
     plannerData: PlannerData,
     selectedYear: number,
+    termType: TermType,
   ): GoalWiseInvestmentSuggestions[] => {
-    return plannerData.financialGoals.map((goal) => {
-      // Check if selected year falls under the term of the goal
-      if (
-        selectedYear < goal.getInvestmentStartYear() ||
-        selectedYear > goal.getTargetYear()
-      ) {
+    return plannerData.financialGoals
+      .filter((a) => a.getTermType() === termType)
+      .map((goal) => {
+        // Check if selected year falls under the term of the goal
+        if (
+          selectedYear < goal.getInvestmentStartYear() ||
+          selectedYear > goal.getTargetYear()
+        ) {
+          return {
+            goalName: goal.getGoalName(),
+            investmentSuggestions: [],
+          };
+        }
+
         return {
           goalName: goal.getGoalName(),
-          investmentSuggestions: [],
+          investmentSuggestions: calculateInvestmentPerGoal(
+            goal,
+            plannerData.investmentAllocations,
+          ),
         };
-      }
-
-      return {
-        goalName: goal.getGoalName(),
-        investmentSuggestions: calculateInvestmentPerGoal(
-          goal,
-          plannerData.investmentAllocations,
-        ),
-      };
-    });
+      });
   };
 
   /**

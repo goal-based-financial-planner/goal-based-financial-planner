@@ -9,11 +9,12 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material';
-import Header from '../../../../components/Header';
 import InvestmentAllocations from '../InvestmentAllocations';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
 import InvestmentSuggestionsGrid from './InvestmentSuggestionsGrid';
+import DoughnutChart from '../../../../components/DoughtnutCHart';
+import { TermType } from '../../../../types/enums';
 
 type PortFolioSummaryProps = {
   plannerData: PlannerData;
@@ -59,41 +60,87 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
 
   const { calculateInvestmentNeededForGoals } =
     useInvestmentCalculator(plannerData);
-  const investmentBreakdown = calculateInvestmentNeededForGoals(
-    plannerData,
-    Number(selectedYear),
-  );
+
+  const investmentBreakdownBasedOnTermType = [
+    TermType.SHORT_TERM,
+    TermType.MEDIUM_TERM,
+    TermType.LONG_TERM,
+  ].map((termType) => {
+    const investmentBreakdown = calculateInvestmentNeededForGoals(
+      plannerData,
+      Number(selectedYear),
+      termType,
+    );
+    return { termType, investmentBreakdown };
+  });
 
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        <Header
-          title="Your Investment Suggestions"
-          iconName="edit"
-          onAction={handleEdit}
-        />
-
-        <Box sx={{ maxWidth: 100 }}>
-          <FormControl fullWidth>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={String(selectedYear)}
-              onChange={handleChange}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            padding: 3,
+            alignItems: 'center',
+          }}
+        >
+          <Typography sx={{ fontSize: 40 }} className="home-hero">
+            Your Investment Suggestions for
+          </Typography>
+          <Box sx={{ minWidth: 100, ml: 2 }}>
+            <FormControl fullWidth>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={String(selectedYear)}
+                onChange={handleChange}
+              >
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <Box
+            ml={3}
+            onClick={handleEdit}
+            sx={{
+              '&:hover': {
+                cursor: 'pointer',
+                transform: 'scale(1.05)',
+              },
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <span
+              className="material-symbols-rounded dashboard-widget"
+              style={{
+                fontSize: '40px',
+                transition: 'color 0.3s ease',
+                fontWeight: 'bold',
+              }}
             >
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              edit
+            </span>
+          </Box>
         </Box>
       </Box>
 
       <Box sx={{ px: 3 }}>
-        <InvestmentSuggestionsGrid suggestions={investmentBreakdown} />
+        {investmentBreakdownBasedOnTermType.map((term) => (
+          <DoughnutChart suggestions={term.investmentBreakdown} />
+        ))}
       </Box>
+
+      {investmentBreakdownBasedOnTermType.map((term) => (
+        <InvestmentSuggestionsGrid suggestions={term.investmentBreakdown} />
+      ))}
+
       <Modal
         open={showModal}
         onClose={handleClose}

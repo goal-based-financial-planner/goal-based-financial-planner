@@ -46,8 +46,9 @@ const FinancialGoalForm = ({
       <Box
         sx={{
           position: 'absolute',
-          left: '280px',
-          top: '20px',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
         }}
         onClick={(e) => e.stopPropagation()}
       >

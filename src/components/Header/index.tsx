@@ -16,7 +16,9 @@ const Header = ({ title, iconName, onAction }: HeaderProps) => {
         alignItems: 'center',
       }}
     >
-      <Typography sx={{ fontSize: 40 }}>{title}</Typography>
+      <Typography className="navbar-home" sx={{ fontSize: 40 }}>
+        {title}
+      </Typography>
       <Box
         ml={3}
         onClick={onAction}

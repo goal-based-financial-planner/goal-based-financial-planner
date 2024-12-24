@@ -23,12 +23,9 @@ const FinancialGoals: React.FC<FinancialGoalsProps> = ({
   return (
     <>
       <Header title="Your Goals" iconName="add_circle" onAction={handleAdd} />
-      <Box sx={{ px: 3 }}>
+      <Box sx={{ px: 3, height: 'calc(100vh - 108px)', overflow: 'auto' }}>
         {plannerData.financialGoals.length ? (
-          <FinancialGoalsGrid
-            financialGoals={plannerData.financialGoals}
-            dispatch={dispatch}
-          />
+          <FinancialGoalsGrid plannerData={plannerData} dispatch={dispatch} />
         ) : null}
       </Box>
 

@@ -62,7 +62,7 @@ const InvestmentSuggestionCard = ({
         <Box
           sx={{
             height: '60%',
-            backgroundColor: '#CDB3A1',
+            backgroundColor: '#C1DAAA',
           }}
         >
           <Box
@@ -96,11 +96,24 @@ const InvestmentSuggestionCard = ({
             alignItems: 'center',
           }}
         >
-          <Typography sx={{ fontSize: '20px' }}>
-            {totalValue.toLocaleString(navigator.language, {
-              maximumFractionDigits: 0,
-            })}
-          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '3px',
+            }}
+          >
+            <Typography sx={{ fontSize: '20px' }}>
+              {`${totalValue.toLocaleString(navigator.language, {
+                maximumFractionDigits: 0,
+              })}`}
+            </Typography>
+            <Typography sx={{ fontSize: '12px', color: 'grey' }}>
+              /month
+            </Typography>
+          </Box>
         </Box>
       </Card>
 

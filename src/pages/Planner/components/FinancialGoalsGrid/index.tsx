@@ -1,22 +1,32 @@
 import React, { Dispatch } from 'react';
-import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import FinancialGoalCard from '../FinancialGoalCard';
 import { Box } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
+import { PlannerData } from '../../../../domain/PlannerData';
 
 type FinancialGoalsGridProps = {
-  financialGoals: FinancialGoal[];
+  plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
 };
 
 const FinancialGoalsGrid: React.FC<FinancialGoalsGridProps> = ({
-  financialGoals,
+  plannerData,
   dispatch,
 }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-      {financialGoals.map((goal) => (
-        <FinancialGoalCard goal={goal} dispatch={dispatch} />
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+      }}
+    >
+      {plannerData.financialGoals.map((goal) => (
+        <FinancialGoalCard
+          goal={goal}
+          dispatch={dispatch}
+          plannerData={plannerData}
+        />
       ))}
     </Box>
   );

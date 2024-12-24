@@ -1,70 +1,91 @@
 import React, { Dispatch, useState } from 'react';
-import { Box, Card, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
+import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
+import { PlannerData } from '../../../../domain/PlannerData';
 
 type FinancialGoalCardProps = {
   goal: FinancialGoal;
   dispatch: Dispatch<PlannerDataAction>;
+  plannerData: PlannerData;
 };
 
-const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
+const FinancialGoalCard = ({
+  goal,
+  dispatch,
+  plannerData,
+}: FinancialGoalCardProps) => {
   const handleDelete = () => {
     deleteFinancialGoal(dispatch, goal.id);
   };
-  const [isExpanded, setIsExpanded] = useState(false);
+
+  const { calculateInvestmentNeededForGoals } =
+    useInvestmentCalculator(plannerData);
+  const investmentBreakdown = calculateInvestmentNeededForGoals(
+    plannerData,
+    Number(goal.startYear),
+    goal.getTermType(),
+  );
+
   return (
     <Card
       sx={{
         borderRadius: 2,
         overflow: 'hidden',
-        position: 'relative',
-        '&:hover .hover-buttons': {
-          right: 0,
-        },
-        '&:hover .card-content': {
-          transform: 'translateX(-40px)',
-          transition: 'transform 0.3s ease',
-          borderTopRightRadius: 0,
-          borderBottomRightRadius: 0,
-        },
+        backgroundColor: '#f7f9fc',
+        boxShadow: 3,
+        p: 2,
+        mb: 2,
       }}
     >
       <Box
-        className="card-content"
         sx={{
           display: 'flex',
-          backgroundColor: '#CBC5B5',
-          px: 2,
-          py: 1,
-          borderRadius: 2,
           justifyContent: 'space-between',
-          transition: 'transform 0.3s ease',
-          height: isExpanded ? '170px' : '70px',
+          alignItems: 'flex-start',
         }}
       >
         <Box>
-          <Tooltip title={goal.getGoalName()} placement="top">
-            <Box
-              sx={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: 'block',
-              }}
-            >
-              <Typography sx={{ fontSize: '18px' }}>
-                {goal.getGoalName()}
-              </Typography>
-              <Typography sx={{ pt: 1, fontSize: '12px', fontWeight: 'light' }}>
-                {goal.getInvestmentStartYear()} - {goal.getTargetYear()}
-              </Typography>
-            </Box>
-          </Tooltip>
+          <Typography variant="h6" noWrap>
+            {goal.getGoalName()}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {goal.getInvestmentStartYear()} - {goal.getTargetYear()}
+          </Typography>
         </Box>
+        <IconButton color="error" onClick={handleDelete}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
 
-        <Box sx={{ display: 'flex' }}>
-          <Typography sx={{ fontSize: '20px' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          mt: 2,
+          gap: 1,
+        }}
+      >
+        <Box>
+          <Typography variant="h5" color="primary">
             {goal
               .getInflationAdjustedTargetAmount()
               .toLocaleString(navigator.language)}
@@ -72,50 +93,35 @@ const FinancialGoalCard = ({ goal, dispatch }: FinancialGoalCardProps) => {
         </Box>
       </Box>
 
-      <Box
-        className="hover-buttons"
-        sx={{
-          position: 'absolute',
-          top: 0,
-          right: '-40px',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          transition: 'right 0.3s ease',
-        }}
-      >
-        <Box
-          sx={{
-            backgroundColor: 'red',
-            color: 'white',
-            padding: 1,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '50%',
-          }}
-          onClick={handleDelete}
+      <Accordion sx={{ mt: 2 }}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="investment-breakdown-content"
+          id="investment-breakdown-header"
         >
-          <span className="material-symbols-rounded">delete</span>
-        </Box>
-        <Box
-          sx={{
-            backgroundColor: 'skyblue',
-            color: 'white',
-            padding: 1,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '50%',
-          }}
-          onClick={() => setIsExpanded((prev) => !prev)}
-        >
-          <span className="material-symbols-rounded">info</span>
-        </Box>
-      </Box>
+          <Typography>Investment Breakdown</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <TableContainer>
+            <Table size="small">
+              <TableBody>
+                {investmentBreakdown
+                  .find((a) => a.goalName === goal.getGoalName())
+                  ?.investmentSuggestions.map((a, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>{a.investmentName}</TableCell>
+                      <TableCell align="right">
+                        {a.amount.toLocaleString(navigator.language, {
+                          maximumFractionDigits: 0,
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </AccordionDetails>
+      </Accordion>
     </Card>
   );
 };
