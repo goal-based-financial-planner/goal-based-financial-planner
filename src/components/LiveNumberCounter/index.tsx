@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { formatNumber } from '../../types/util';
 
 interface LiveCounterProps {
   value: number;
@@ -33,8 +34,8 @@ const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
   }, [value, duration]);
 
   return (
-    <Typography variant="h1" sx={{ color: 'green', fontWeight: 'bold' }}>
-      ${currentValue}
+    <Typography variant="h1" sx={{ color: 'green', fontWeight: 'bold', mt: 2 }}>
+      {formatNumber(currentValue, 1_000_000_000)}
     </Typography>
   );
 };

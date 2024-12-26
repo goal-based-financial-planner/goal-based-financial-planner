@@ -5,6 +5,7 @@ import {
   InvestmentChoiceType,
 } from '../../../domain/InvestmentOptions';
 import { TermType } from '../../../types/enums';
+import dayjs from 'dayjs';
 
 export type InvestmentSuggestion = {
   investmentName: string;
@@ -33,16 +34,17 @@ export type GoalWiseReturn = {
 const useInvestmentCalculator = (plannerData: PlannerData) => {
   const calculateInvestmentNeededForGoals = (
     plannerData: PlannerData,
-    selectedYear: number,
+    selectedDate: string,
     termType: TermType,
   ): GoalWiseInvestmentSuggestions[] => {
+    debugger;
     return plannerData.financialGoals
       .filter((a) => a.getTermType() === termType)
       .map((goal) => {
         // Check if selected year falls under the term of the goal
         if (
-          selectedYear < goal.getInvestmentStartYear() ||
-          selectedYear > goal.getTargetYear()
+          dayjs(selectedDate).isBefore(dayjs(goal.getInvestmentStartDate())) ||
+          dayjs(selectedDate).isAfter(dayjs(goal.getTargetDate()))
         ) {
           return {
             goalName: goal.getGoalName(),
@@ -76,7 +78,7 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
     const totalMonthlyInvestmentNeeded = calculateTotalMonthlyInvestmentNeeded(
       investmentAllocationsForType,
       goal.getInflationAdjustedTargetAmount(),
-      goal.getTerm(),
+      goal.getMonthTerm(),
     );
 
     return investmentAllocationsForType.map((e) => ({
@@ -89,12 +91,12 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
   const calculateTotalMonthlyInvestmentNeeded = (
     investmentAllocations: InvestmentChoiceType[],
     targetAmount: number,
-    term: number,
+    monthTerm: number,
   ) => {
     const x = investmentAllocations.map((a) => {
       return calculateX(
         a.expectedReturnPercentage / 100 / 12,
-        term * 12,
+        monthTerm,
         a.investmentPercentage,
       );
     });

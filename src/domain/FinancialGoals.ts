@@ -1,32 +1,33 @@
+import dayjs from 'dayjs';
 import { TermType } from '../types/enums';
 import { INFLATION_PERCENTAGE } from './constants';
 
 export class FinancialGoal {
   constructor(
     goalName: string,
-    startYear: number,
-    targetYear: number,
+    startDate: string,
+    targetDate: string,
     targetAmount: number,
   ) {
     this.id = Math.random().toString(36).substring(2, 9);
     this.goalName = goalName;
-    this.startYear = startYear;
-    this.targetYear = targetYear;
+    this.startDate = startDate;
+    this.targetDate = targetDate;
     this.targetAmount = targetAmount;
   }
 
   id: string;
   goalName: string;
-  startYear: number;
-  targetYear: number;
+  startDate: string;
+  targetDate: string;
   targetAmount: number;
 
-  getInvestmentStartYear(): number {
-    return this.startYear;
+  getInvestmentStartDate(): string {
+    return this.startDate;
   }
 
-  getTargetYear(): number {
-    return this.targetYear;
+  getTargetDate(): string {
+    return this.targetDate;
   }
 
   getTargetAmount(): number {
@@ -38,7 +39,11 @@ export class FinancialGoal {
   }
 
   getTerm(): number {
-    return this.targetYear - this.startYear;
+    return dayjs(this.targetDate).diff(dayjs(this.startDate), 'year');
+  }
+
+  getMonthTerm(): number {
+    return dayjs(this.targetDate).diff(dayjs(this.startDate), 'month');
   }
 
   getTermType(): TermType {

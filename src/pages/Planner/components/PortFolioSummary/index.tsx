@@ -13,8 +13,9 @@ import InvestmentAllocations from '../InvestmentAllocations';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
 import InvestmentSuggestionsGrid from './InvestmentSuggestionsGrid';
-import DoughnutChart from '../../../../components/DoughtnutCHart';
+import DoughnutChart from '../../../../components/DoughnutChart';
 import { TermType } from '../../../../types/enums';
+import dayjs from 'dayjs';
 
 type PortFolioSummaryProps = {
   plannerData: PlannerData;
@@ -34,20 +35,23 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
   const handleSubmit = () => {
     setShowModal(false);
   };
-  const [selectedYear, setSelectedYear] = React.useState<number>(
-    new Date().getFullYear(),
+  const [selectedYear, setSelectedYear] = React.useState<string>(
+    dayjs().toString(),
   );
   const [years, setYears] = useState<number[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedYear(Number(event.target.value));
+    setSelectedYear(event.target.value);
   };
 
   useEffect(() => {
     const minMaxYears = plannerData.financialGoals.reduce(
       (acc, e) => ({
-        minYear: Math.min(acc.minYear, e.getInvestmentStartYear()),
-        maxYear: Math.max(acc.maxYear, e.getTargetYear()),
+        minYear: Math.min(
+          acc.minYear,
+          dayjs(e.getInvestmentStartDate()).get('year'),
+        ),
+        maxYear: Math.max(acc.maxYear, dayjs(e.getTargetDate()).get('year')),
       }),
       { minYear: Infinity, maxYear: 0 },
     );
@@ -68,7 +72,7 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
   ].map((termType) => {
     const investmentBreakdown = calculateInvestmentNeededForGoals(
       plannerData,
-      Number(selectedYear),
+      selectedYear,
       termType,
     );
     return { termType, investmentBreakdown };

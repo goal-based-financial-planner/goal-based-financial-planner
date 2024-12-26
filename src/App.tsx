@@ -4,6 +4,8 @@ import { ThemeProvider } from '@emotion/react';
 import { theme } from './theme';
 import Planner from './pages/Planner';
 import Joyride from 'react-joyride';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const App = () => {
   const [steps] = useState([
@@ -22,39 +24,41 @@ const App = () => {
   ]);
 
   return (
-    <ThemeProvider theme={theme}>
-      {/* <Joyride
-        steps={steps}
-        run={true}
-        continuous
-        showSkipButton
-        showProgress
-        styles={{
-          options: {
-            arrowColor: '#f5f5f5', // Arrow color
-            backgroundColor: '#ffffff', // Background of tooltip
-            overlayColor: 'rgba(0, 0, 0, 0.5)', // Background overlay
-            primaryColor: '#4CAF50', // Main button color
-            textColor: '#333', // Tooltip text color
-            zIndex: 1000,
-          },
-          buttonClose: {
-            color: '#ff1744', // Color of the close button
-          },
-          buttonBack: {
-            color: '#9E9E9E', // Color of the 'Back' button
-          },
-          buttonNext: {
-            backgroundColor: '#1976D2', // Background color of the 'Next' button
-            color: '#ffffff', // Text color of the 'Next' button
-          },
-          buttonSkip: {
-            color: '#F44336', // Color of the 'Skip' button
-          },
-        }}
-      /> */}
-      <Planner />
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ThemeProvider theme={theme}>
+        {/* <Joyride
+      steps={steps}
+      run={true}
+      continuous
+      showSkipButton
+      showProgress
+      styles={{
+        options: {
+          arrowColor: '#f5f5f5', // Arrow color
+          backgroundColor: '#ffffff', // Background of tooltip
+          overlayColor: 'rgba(0, 0, 0, 0.5)', // Background overlay
+          primaryColor: '#4CAF50', // Main button color
+          textColor: '#333', // Tooltip text color
+          zIndex: 1000,
+        },
+        buttonClose: {
+          color: '#ff1744', // Color of the close button
+        },
+        buttonBack: {
+          color: '#9E9E9E', // Color of the 'Back' button
+        },
+        buttonNext: {
+          backgroundColor: '#1976D2', // Background color of the 'Next' button
+          color: '#ffffff', // Text color of the 'Next' button
+        },
+        buttonSkip: {
+          color: '#F44336', // Color of the 'Skip' button
+        },
+      }}
+    /> */}
+        <Planner />
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 };
 

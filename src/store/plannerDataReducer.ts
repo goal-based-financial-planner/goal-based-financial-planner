@@ -98,8 +98,8 @@ export function plannerDataReducer(
 
       if (goalToBeUpdated) {
         goalToBeUpdated.goalName = updatedPayload.goalName;
-        goalToBeUpdated.startYear = updatedPayload.startYear;
-        goalToBeUpdated.targetYear = updatedPayload.targetYear;
+        goalToBeUpdated.startDate = updatedPayload.startYear;
+        goalToBeUpdated.targetDate = updatedPayload.targetYear;
         goalToBeUpdated.targetAmount = updatedPayload.targetAmount;
       }
 
@@ -121,8 +121,8 @@ export function getInitialData() {
         (e: FinancialGoal) =>
           new FinancialGoal(
             e.goalName,
-            e.startYear,
-            e.targetYear,
+            e.startDate,
+            e.targetDate,
             e.targetAmount,
           ),
       );

@@ -6,6 +6,8 @@ import {
   NUMBER_PATTERN,
   YEAR_PATTERN,
 } from '../../../../types/constants';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface AddFinancialGoalsProps {
   onAddGoal: (financialGoal: FinancialGoal) => void;
@@ -16,19 +18,17 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
   const resetForm = () => {
     setValidationErrors({});
     setGoalName('');
-    setStartYear('');
-    setTargetYear('');
+    setStartDate('');
+    setTargetDate('');
     setTargetAmount('');
-    setIsTargetYearValid(false);
   };
 
   const [goalName, setGoalName] = useState<string>('');
-  const [startYear, setStartYear] = useState<string>(
-    String(new Date().getFullYear()),
+  const [startDate, setStartDate] = useState<string>(
+    String(dayjs().toString()),
   );
-  const [targetYear, setTargetYear] = useState<string>('');
+  const [targetDate, setTargetDate] = useState<string>('');
   const [targetAmount, setTargetAmount] = useState<string>('');
-  const [isTargetYearValid, setIsTargetYearValid] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
   >({});
@@ -38,23 +38,19 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
     setGoalName(e.target.value);
   };
 
-  const handleStartYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStartYearChange = (e: Dayjs | null) => {
     setValidationErrors({ ...validationErrors, startYear: false });
-    setStartYear(e.target.value);
+    setStartDate(e!.toString());
   };
 
-  const handleTargetYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTargetYearChange = (e: Dayjs | null) => {
     setValidationErrors({ ...validationErrors, targetYear: false });
-    setTargetYear(e.target.value);
+    setTargetDate(e!.toString());
   };
 
   const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationErrors({ ...validationErrors, targetAmount: false });
     setTargetAmount(e.target.value);
-  };
-
-  const handleTargetYearBlur = () => {
-    setIsTargetYearValid(true);
   };
 
   const handleAdd = () => {
@@ -68,30 +64,22 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
       errors.targetAmount = true;
     }
 
-    if (!startYear || !YEAR_PATTERN.test(startYear)) {
+    if (!startDate) {
       errors.startYear = true;
     }
 
-    if (
-      !targetYear ||
-      !YEAR_PATTERN.test(targetYear) ||
-      (isTargetYearValid && Number(targetYear) < Number(startYear))
-    ) {
+    if (!targetDate || dayjs(targetDate).isBefore(dayjs(startDate))) {
       errors.targetYear = true;
     }
 
     if (Object.keys(errors).length > 0) {
+      console.log(errors);
       setValidationErrors(errors);
       return;
     }
 
     onAddGoal(
-      new FinancialGoal(
-        goalName,
-        Number(startYear),
-        Number(targetYear),
-        Number(targetAmount),
-      ),
+      new FinancialGoal(goalName, startDate, targetDate, Number(targetAmount)),
     );
 
     resetForm();
@@ -126,7 +114,47 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
           gap={4}
           pt={2}
         >
-          <TextField
+          <DatePicker
+            label={'"month" and "year"'}
+            views={['month', 'year']}
+            sx={{ width: '160px' }}
+            onChange={handleStartYearChange}
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                label: '',
+                size: 'small',
+                error: validationErrors.startDate,
+              },
+              popper: {
+                disablePortal: true,
+                sx: {
+                  transformOrigin: 'top',
+                },
+              },
+            }}
+          />
+          <DatePicker
+            label={'"month" and "year"'}
+            views={['month', 'year']}
+            sx={{ width: '160px' }}
+            onChange={handleTargetYearChange}
+            slotProps={{
+              textField: {
+                variant: 'standard',
+                label: '',
+                error: validationErrors.targetDate,
+              },
+
+              popper: {
+                disablePortal: true,
+                sx: {
+                  transformOrigin: 'top',
+                },
+              },
+            }}
+          />
+          {/* <TextField
             placeholder="2024"
             variant="standard"
             required
@@ -146,7 +174,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
             value={targetYear}
             onChange={handleTargetYearChange}
             onBlur={handleTargetYearBlur}
-          />
+          /> */}
         </Box>
       </Box>
       <Box

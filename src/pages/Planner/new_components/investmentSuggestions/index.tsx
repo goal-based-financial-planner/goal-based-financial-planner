@@ -5,16 +5,16 @@ import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { TermType } from '../../../../types/enums';
 import useInvestmentCalculator from '../../hooks/useInvestmentCalculator';
 import React from 'react';
-import DoughnutChart from '../../../../components/DoughtnutCHart';
+import DoughnutChart from '../../../../components/DoughnutChart';
 
 const InvestmentSuggestions = ({
   plannerData,
   dispatch,
-  selectedYear,
+  selectedDate,
 }: {
   plannerData: PlannerData;
   dispatch: React.Dispatch<PlannerDataAction>;
-  selectedYear: number;
+  selectedDate: string;
 }) => {
   const { calculateInvestmentNeededForGoals } =
     useInvestmentCalculator(plannerData);
@@ -26,7 +26,7 @@ const InvestmentSuggestions = ({
   ].map((termType) => {
     const investmentBreakdown = calculateInvestmentNeededForGoals(
       plannerData,
-      Number(selectedYear),
+      selectedDate,
       termType,
     );
     return { termType, investmentBreakdown };
@@ -34,13 +34,13 @@ const InvestmentSuggestions = ({
 
   return (
     <>
-      <Box
+      {/* <Box
         sx={{
-          pl: 2,
-          pt: 2,
           display: 'flex',
           flexDirection: 'row',
           gap: 3,
+          ml: 2,
+          my: 2,
         }}
       >
         <Typography variant="h4">Investment Plan</Typography>
@@ -64,13 +64,15 @@ const InvestmentSuggestions = ({
             edit
           </span>
         </Box>
-      </Box>
+      </Box> */}
       <Grid container>
-        <Grid size={12} sx={{ padding: 2 }}>
+        <Grid size={12} sx={{ ml: 2 }}>
           {investmentBreakdownBasedOnTermType.map((term) => (
             <StyledBox mb={2}>
               <Box>
-                <Typography variant="h6">{term.termType}</Typography>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                  {term.termType} Investment Plan
+                </Typography>
               </Box>
               <DoughnutChart suggestions={term.investmentBreakdown} />
             </StyledBox>

@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { GoalWiseInvestmentSuggestions } from '../../pages/Planner/hooks/useInvestmentCalculator';
+import { formatNumber } from '../../types/util';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, ChartDataLabels);
 
@@ -99,13 +100,8 @@ const DoughnutChart = ({
           textAlign: 'center',
         }}
       >
-        <Typography variant="body1" fontWeight="bold">
-          Total
-        </Typography>
         <Typography variant="h6" fontWeight="bold">
-          {totalAmount.toLocaleString(navigator.language, {
-            maximumFractionDigits: 0,
-          })}
+          {formatNumber(totalAmount)}
         </Typography>
       </Box>
     </Box>

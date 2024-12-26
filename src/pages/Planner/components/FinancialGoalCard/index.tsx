@@ -41,7 +41,7 @@ const FinancialGoalCard = ({
     useInvestmentCalculator(plannerData);
   const investmentBreakdown = calculateInvestmentNeededForGoals(
     plannerData,
-    Number(goal.startYear),
+    goal.startDate,
     goal.getTermType(),
   );
 
@@ -68,7 +68,7 @@ const FinancialGoalCard = ({
             {goal.getGoalName()}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {goal.getInvestmentStartYear()} - {goal.getTargetYear()}
+            {goal.getInvestmentStartDate()} - {goal.getTargetDate()}
           </Typography>
         </Box>
         <IconButton color="error" onClick={handleDelete}>

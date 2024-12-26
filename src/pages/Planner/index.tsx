@@ -6,6 +6,7 @@ import {
 } from '../../store/plannerDataReducer';
 import {
   Box,
+  Button,
   Divider,
   FormControl,
   Grid2 as Grid,
@@ -20,6 +21,7 @@ import InvestmentSuggestions from './new_components/investmentSuggestions';
 import TermwiseProgress from './new_components/TermwiseProgress';
 import GoalCard from './new_components/goalCard';
 import LiveCounter from '../../components/LiveNumberCounter';
+import dayjs from 'dayjs';
 
 export const StyledBox = styled(Box)(({ theme }) => ({
   border: '1px solid #F0F0F0',
@@ -44,29 +46,32 @@ const Planner: React.FC = () => {
     persistPlannerData(plannerData);
   }, [plannerData]);
 
-  const [selectedYear, setSelectedYear] = React.useState<number>(
-    new Date().getFullYear(),
+  const [selectedYear, setSelectedYear] = React.useState<string>(
+    dayjs().toString(),
   );
   const [years, setYears] = useState<number[]>([]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedYear(Number(event.target.value));
+    setSelectedYear(event.target.value);
   };
 
-  useEffect(() => {
-    const minMaxYears = plannerData.financialGoals.reduce(
-      (acc, e) => ({
-        minYear: Math.min(acc.minYear, e.getInvestmentStartYear()),
-        maxYear: Math.max(acc.maxYear, e.getTargetYear()),
-      }),
-      { minYear: Infinity, maxYear: 0 },
-    );
-    const years = [];
-    for (let i = minMaxYears.minYear; i <= minMaxYears.maxYear; i++) {
-      years.push(i);
-    }
-    setYears(years);
-  }, [plannerData]);
+  // useEffect(() => {
+  //   const minMaxYears = plannerData.financialGoals.reduce(
+  //     (acc, e) => ({
+  //       minYear: Math.min(
+  //         acc.minYear,
+  //         dayjs(e.getInvestmentStartDate()).get('year'),
+  //       ),
+  //       maxYear: Math.max(acc.maxYear, e.getTargetDate()),
+  //     }),
+  //     { minYear: Infinity, maxYear: 0 },
+  //   );
+  //   const years = [];
+  //   for (let i = minMaxYears.minYear; i <= minMaxYears.maxYear; i++) {
+  //     years.push(i);
+  //   }
+  //   setYears(years);
+  // }, [plannerData]);
 
   const targetAmount = plannerData.financialGoals.reduce(
     (sum, goal) => sum + goal.getInflationAdjustedTargetAmount(),
@@ -74,7 +79,7 @@ const Planner: React.FC = () => {
   );
   return (
     <>
-      <Box
+      {/* <Box
         sx={{
           minWidth: 100,
           m: 2,
@@ -97,57 +102,93 @@ const Planner: React.FC = () => {
             ))}
           </Select>
         </FormControl>
-      </Box>
+      </Box> */}
       <Grid container>
-        <Grid size={9} sx={{ border: '1px light black' }}>
-          <TermwiseProgress plannerData={plannerData} />
+        <Grid size={4}>
+          <StyledBox
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              ml: 2,
+              my: 2,
+            }}
+            height={'250px'}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Your Target
+            </Typography>
+            <LiveCounter value={targetAmount} duration={500} />
+            <Button>Add Goals</Button>
+          </StyledBox>
+        </Grid>
+        <Grid size={8}>
+          <StyledBox height={'250px'} sx={{ mx: 2, my: 2 }}>
+            <TermwiseProgress plannerData={plannerData} />
+          </StyledBox>
+        </Grid>
+        <Grid size={9}>
           <InvestmentSuggestions
             plannerData={plannerData}
             dispatch={dispatch}
-            selectedYear={selectedYear}
+            selectedDate={selectedYear}
           />
         </Grid>
         <Grid size={3}>
-          <Box
-            sx={{
-              pl: 2,
-              pt: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}
-          >
-            <Typography variant="h4">Financial Goals</Typography>
-            <Box
-              onClick={handleAdd}
-              sx={{
-                '&:hover': {
-                  cursor: 'pointer',
-                },
-              }}
-            >
-              <span
-                className="material-symbols-rounded"
-                style={{
-                  fontSize: '40px',
-
-                  fontWeight: 'bold',
+          <Grid container>
+            <Grid size={12} sx={{ mx: 2 }}>
+              <StyledBox
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  '& .divider': {
+                    display: 'block',
+                  },
+                  '& .divider:last-child': {
+                    display: 'none',
+                  },
                 }}
               >
-                add_circle
-              </span>
-            </Box>
-          </Box>
-          <Grid container>
-            <Grid size={12} padding={2}>
-              <StyledBox
-                sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-              >
-                {plannerData.financialGoals.map((term) => {
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold">
+                    Financial Goals
+                  </Typography>
+                  <Box
+                    ml={3}
+                    onClick={handleAdd}
+                    sx={{
+                      '&:hover': {
+                        cursor: 'pointer',
+                      },
+                    }}
+                  >
+                    <span
+                      className="material-symbols-rounded"
+                      style={{
+                        fontSize: '40px',
+
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      add_circle
+                    </span>
+                  </Box>
+                </Box>
+
+                {plannerData.financialGoals.map((goal) => {
                   return (
                     <>
-                      <GoalCard name={term.goalName} />
-                      <Divider />
+                      <GoalCard
+                        goal={goal}
+                        amount={goal.getInflationAdjustedTargetAmount()}
+                        dispatch={dispatch}
+                      />
+                      <Divider className="divider" />
                     </>
                   );
                 })}
