@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
-import { FieldErrors, useForm } from 'react-hook-form';
-import {
-  Alert,
-  Box,
-  Button,
-  Snackbar,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { Alert, Box, Button, Snackbar, Typography } from '@mui/material';
 import InvestmentAllocationPerTerm from '../../../../pages/Planner/components/InvesmentAllocationPerTerm';
 import { TermType } from '../../../../types/enums';
 import { updateInvestmentAllocation } from '../../../../store/plannerDataActions';
@@ -20,10 +12,12 @@ const InvestmentAllocations = ({
   plannerData,
   dispatch,
   onSubmit,
+  termType,
 }: {
   plannerData: PlannerData;
   dispatch: React.Dispatch<PlannerDataAction>;
   onSubmit: () => void;
+  termType: TermType;
 }) => {
   const { control, handleSubmit } = useForm<InvestmentAllocationsType>({
     defaultValues: plannerData.investmentAllocations,
@@ -53,7 +47,6 @@ const InvestmentAllocations = ({
   };
 
   const onSubmitForm = (data: InvestmentAllocationsType) => {
-    console.log(data);
     if (areInvestmentAllocationsValid(data)) {
       updateInvestmentAllocation(dispatch, data);
       onSubmit();
@@ -61,63 +54,14 @@ const InvestmentAllocations = ({
       setShowSnackBar(true);
     }
   };
-  const [value, setValue] = React.useState(0);
-
-  const onError = (errors: FieldErrors<InvestmentAllocationsType>) => {
-    const presentTermTypes: string[] = Object.values(TermType).filter(
-      (termType) => areGoalsPresentOfType(termType),
-    );
-    const tabWithError = Object.keys(errors).find((a) =>
-      presentTermTypes.includes(a),
-    );
-
-    if (tabWithError) {
-      const tabIndex = presentTermTypes.indexOf(tabWithError as TermType);
-      setValue(tabIndex);
-    }
-  };
-
-  const areGoalsPresentOfType = (column: TermType) =>
-    plannerData
-      .getFinancialGoalSummary()
-      .some((item) => item.termType === column && item.numberOfGoals > 0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmitForm, onError)} noValidate>
+      <form onSubmit={handleSubmit(onSubmitForm)} noValidate>
         <Box>
-          <Tabs value={value} onChange={handleChange}>
-            {Object.values(TermType).map((termType) => {
-              if (areGoalsPresentOfType(termType)) {
-                return <Tab label={termType} key={termType} />;
-              }
-              return null;
-            })}
-          </Tabs>
-
-          {Object.values(TermType)
-            .filter((termType) => areGoalsPresentOfType(termType))
-            .map((termType, index) => (
-              <Box
-                key={termType}
-                role="tabpanel"
-                hidden={value !== index}
-                id={`simple-tabpanel-${index}`}
-                aria-labelledby={`simple-tab-${index}`}
-                sx={{ p: 3 }}
-              >
-                <Typography component="div">
-                  <InvestmentAllocationPerTerm
-                    control={control}
-                    name={termType}
-                  />
-                </Typography>
-              </Box>
-            ))}
+          <Typography component="div">
+            <InvestmentAllocationPerTerm control={control} name={termType} />
+          </Typography>
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

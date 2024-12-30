@@ -4,7 +4,6 @@ import {
   InvestmentAllocationsType,
   InvestmentChoiceType,
 } from '../../../domain/InvestmentOptions';
-import { TermType } from '../../../types/enums';
 import dayjs from 'dayjs';
 
 export type InvestmentSuggestion = {
@@ -16,6 +15,7 @@ export type InvestmentSuggestion = {
 export type GoalWiseInvestmentSuggestions = {
   goalName: string;
   investmentSuggestions: InvestmentSuggestion[];
+  currentValue: number;
 };
 
 type ReturnsByYear = { year: number; return: number };
@@ -35,31 +35,37 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
   const calculateInvestmentNeededForGoals = (
     plannerData: PlannerData,
     selectedDate: string,
-    termType: TermType,
   ): GoalWiseInvestmentSuggestions[] => {
-    debugger;
-    return plannerData.financialGoals
-      .filter((a) => a.getTermType() === termType)
-      .map((goal) => {
-        // Check if selected year falls under the term of the goal
-        if (
+    return plannerData.financialGoals.map((goal) => {
+      const investmentSuggestions = calculateInvestmentPerGoal(
+        goal,
+        plannerData.investmentAllocations,
+      );
+
+      const elapsedMonths = dayjs(selectedDate).diff(
+        dayjs(goal.getInvestmentStartDate()),
+        'month',
+      );
+      const currentValue = investmentSuggestions
+        .map((suggestion) => {
+          return calculateReturnOnInvestment(
+            suggestion.amount,
+            Math.min(elapsedMonths, goal.getMonthTerm()),
+            suggestion.expectedReturnPercentage,
+          );
+        })
+        .reduce((acc, cv) => acc + cv, 0);
+
+      return {
+        goalName: goal.getGoalName(),
+        investmentSuggestions:
           dayjs(selectedDate).isBefore(dayjs(goal.getInvestmentStartDate())) ||
           dayjs(selectedDate).isAfter(dayjs(goal.getTargetDate()))
-        ) {
-          return {
-            goalName: goal.getGoalName(),
-            investmentSuggestions: [],
-          };
-        }
-
-        return {
-          goalName: goal.getGoalName(),
-          investmentSuggestions: calculateInvestmentPerGoal(
-            goal,
-            plannerData.investmentAllocations,
-          ),
-        };
-      });
+            ? []
+            : investmentSuggestions,
+        currentValue,
+      };
+    });
   };
 
   /**
@@ -112,16 +118,16 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
     return (x * p) / 100;
   };
 
-  // const calculateReturnOnInvestment = (
-  //   monthlyInvestment: number,
-  //   termInMonths: number,
-  //   yearlyReturnPercentage: number,
-  // ) => {
-  //   const i = yearlyReturnPercentage / 100 / 12;
-  //   return (
-  //     monthlyInvestment * ((Math.pow(1 + i, termInMonths) - 1) / i) * (1 + i)
-  //   );
-  // };
+  const calculateReturnOnInvestment = (
+    monthlyInvestment: number,
+    termInMonths: number,
+    yearlyReturnPercentage: number,
+  ) => {
+    const i = yearlyReturnPercentage / 100 / 12;
+    return (
+      monthlyInvestment * ((Math.pow(1 + i, termInMonths) - 1) / i) * (1 + i)
+    );
+  };
 
   // function calculateYearWiseReturnsForSuggestion(
   //   startYear: number,
@@ -200,7 +206,6 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
 
   return {
     calculateInvestmentNeededForGoals,
-    calculateInvestmentPerGoal,
   };
 };
 

@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from 'react';
+import React, { Dispatch } from 'react';
 import {
   Box,
   Card,
@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteIcon from '@mui/icons-material/Delete';
-import InfoIcon from '@mui/icons-material/Info';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
@@ -42,7 +41,7 @@ const FinancialGoalCard = ({
   const investmentBreakdown = calculateInvestmentNeededForGoals(
     plannerData,
     goal.startDate,
-    goal.getTermType(),
+    // goal.getTermType(),
   );
 
   return (

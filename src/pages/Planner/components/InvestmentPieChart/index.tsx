@@ -1,42 +1,54 @@
 import { PieChart } from '@mui/x-charts';
-import { Grid2 as Grid } from '@mui/material';
+import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
 
-interface SeriesType {
-  value: number;
-  label: string;
-}
-const InvestmentPieChart = ({ allocations }: { allocations: SeriesType[] }) => {
+const InvestmentPieChart = ({
+  allocations,
+}: {
+  allocations: InvestmentChoiceType[];
+}) => {
+  const chartData = allocations
+    .map((allocation) => ({
+      label: allocation.investmentName,
+      value: Number(allocation.investmentPercentage),
+    }))
+    .reduce((acc: { label: string; value: number }[], curr) => {
+      const existing = acc.find((item) => item.label === curr.label);
+      if (existing) {
+        existing.value = Number(existing.value) + Number(curr.value);
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
   const palette = [
-    '#CDB3A1',
-    '#AFAEA0',
-    '#636667',
-    '#F3EDD8',
-    '#F6B7AA',
-    '#6D7B7B',
-    '#B4C1B0',
-    '#BDBEAB',
+    'rgba(255, 165, 0, 0.8)',
+    'rgba(54, 162, 235, 0.8)',
+    'rgba(75, 192, 192, 0.8)',
+    'rgba(50, 205, 50, 0.8)',
+    'rgba(255, 99, 132, 0.8)',
   ];
 
   const pieParams = {
-    height: 200,
+    height: 250,
     margin: { right: 5 },
     slotProps: { legend: { hidden: true } },
   };
 
   return (
-    <Grid container spacing={2} alignItems="center">
-      <Grid size={12}>
-        <PieChart
-          colors={palette}
-          series={[
-            {
-              data: allocations,
-            },
-          ]}
-          {...pieParams}
-        />
-      </Grid>
-    </Grid>
+    <PieChart
+      colors={palette}
+      series={[
+        {
+          arcLabel: (item) => `${item.value}%`,
+          arcLabelMinAngle: 35,
+          arcLabelRadius: '100%',
+          data: chartData,
+          outerRadius: 100,
+        },
+      ]}
+      {...pieParams}
+    />
   );
 };
 

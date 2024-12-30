@@ -73,7 +73,7 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
     const investmentBreakdown = calculateInvestmentNeededForGoals(
       plannerData,
       selectedYear,
-      termType,
+      // termType,
     );
     return { termType, investmentBreakdown };
   });
@@ -193,6 +193,7 @@ const PortfolioSummary: React.FC<PortFolioSummaryProps> = ({
             dispatch={dispatch}
             plannerData={plannerData}
             onSubmit={handleSubmit}
+            termType={TermType.SHORT_TERM}
           />
         </Box>
       </Modal>

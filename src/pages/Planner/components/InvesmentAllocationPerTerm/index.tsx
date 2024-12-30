@@ -30,21 +30,6 @@ const InvestmentAllocationPerTerm = ({
     name,
   });
 
-  const pieChartData = watchedFields
-    .map((field) => ({
-      label: field.investmentName,
-      value: field.investmentPercentage || 0,
-    }))
-    .reduce((acc: { label: string; value: number }[], curr) => {
-      const existing = acc.find((item) => item.label === curr.label);
-      if (existing) {
-        existing.value = Number(existing.value) + Number(curr.value);
-      } else {
-        acc.push(curr);
-      }
-      return acc;
-    }, []);
-
   return (
     <Grid container spacing={2}>
       <Grid size={8}>
@@ -180,7 +165,7 @@ const InvestmentAllocationPerTerm = ({
         </Button>
       </Grid>
       <Grid size={4}>
-        <InvestmentPieChart allocations={pieChartData} />
+        <InvestmentPieChart allocations={watchedFields} />
       </Grid>
     </Grid>
   );

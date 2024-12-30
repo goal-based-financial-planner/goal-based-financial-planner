@@ -1,20 +1,18 @@
-import { Box, Card, Tooltip, Typography } from '@mui/material';
-import { useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import SemiCircleProgressBar from 'react-progressbar-semicircle';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import dayjs from 'dayjs';
 
 const GoalCard = ({
   goal,
-  amount,
   dispatch,
+  currentValue,
 }: {
   goal: FinancialGoal;
-  amount: number;
   dispatch: any;
+  currentValue: number;
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
   const handleDelete = () => {
     deleteFinancialGoal(dispatch, goal.id);
   };
@@ -43,29 +41,39 @@ const GoalCard = ({
           borderRadius: 2,
           justifyContent: 'space-between',
           transition: 'transform 0.3s ease',
-          height: isExpanded ? '170px' : '70px',
           flexDirection: 'row',
         }}
       >
         <Box>
           <Typography variant="subtitle1">{goal.goalName}</Typography>
           <Typography variant="h5" sx={{ fontWeight: 'bold', mt: 1 }}>
-            {amount.toLocaleString(navigator.language, {
-              maximumFractionDigits: 0,
-            })}
+            {goal
+              .getInflationAdjustedTargetAmount()
+              .toLocaleString(navigator.language, {
+                maximumFractionDigits: 0,
+              })}
           </Typography>
         </Box>
 
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <Typography
             variant="body2"
             sx={{ color: 'grey', textAlign: 'center' }}
           >
-            2024-2028
+            {`${dayjs(goal.startDate).get('month') + 1}/${dayjs(goal.startDate).get('year')}-${dayjs(goal.targetDate).get('month') + 1}/${dayjs(goal.targetDate).get('year')}`}
           </Typography>
           <Box style={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
             <SemiCircleProgressBar
-              percentage={33}
+              percentage={Math.round(
+                (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
+              )}
               showPercentValue
               strokeWidth={5}
               diameter={90}

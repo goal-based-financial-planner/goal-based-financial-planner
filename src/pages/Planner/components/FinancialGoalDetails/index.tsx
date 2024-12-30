@@ -4,7 +4,6 @@ import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import {
   ALPHANUMERIC_PATTERN,
   NUMBER_PATTERN,
-  YEAR_PATTERN,
 } from '../../../../types/constants';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
@@ -24,9 +23,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
   };
 
   const [goalName, setGoalName] = useState<string>('');
-  const [startDate, setStartDate] = useState<string>(
-    String(dayjs().toString()),
-  );
+  const [startDate, setStartDate] = useState<string>('');
   const [targetDate, setTargetDate] = useState<string>('');
   const [targetAmount, setTargetAmount] = useState<string>('');
   const [validationErrors, setValidationErrors] = useState<
@@ -39,12 +36,12 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
   };
 
   const handleStartYearChange = (e: Dayjs | null) => {
-    setValidationErrors({ ...validationErrors, startYear: false });
+    setValidationErrors({ ...validationErrors, startDate: false });
     setStartDate(e!.toString());
   };
 
   const handleTargetYearChange = (e: Dayjs | null) => {
-    setValidationErrors({ ...validationErrors, targetYear: false });
+    setValidationErrors({ ...validationErrors, targetDate: false });
     setTargetDate(e!.toString());
   };
 
@@ -64,12 +61,13 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
       errors.targetAmount = true;
     }
 
+    console.log(startDate);
     if (!startDate) {
-      errors.startYear = true;
+      errors.startDate = true;
     }
 
     if (!targetDate || dayjs(targetDate).isBefore(dayjs(startDate))) {
-      errors.targetYear = true;
+      errors.targetDate = true;
     }
 
     if (Object.keys(errors).length > 0) {
@@ -95,34 +93,26 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
           borderRadius: 4,
         }}
       >
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           <TextField
             fullWidth
             variant="standard"
+            label="Goal name"
             placeholder="Child Education"
             required
+            sx={{ mt: -2 }}
             error={validationErrors.goalName}
             value={goalName}
             onChange={handleGoalNameChange}
           />
-        </Box>
-
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          gap={4}
-          pt={2}
-        >
           <DatePicker
             label={'"month" and "year"'}
             views={['month', 'year']}
-            sx={{ width: '160px' }}
             onChange={handleStartYearChange}
             slotProps={{
               textField: {
                 variant: 'standard',
-                label: '',
+                label: 'Start Date',
                 size: 'small',
                 error: validationErrors.startDate,
               },
@@ -137,12 +127,11 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
           <DatePicker
             label={'"month" and "year"'}
             views={['month', 'year']}
-            sx={{ width: '160px' }}
             onChange={handleTargetYearChange}
             slotProps={{
               textField: {
                 variant: 'standard',
-                label: '',
+                label: 'Target Date',
                 error: validationErrors.targetDate,
               },
 
@@ -154,27 +143,6 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
               },
             }}
           />
-          {/* <TextField
-            placeholder="2024"
-            variant="standard"
-            required
-            error={validationErrors.startYear}
-            value={startYear}
-            onChange={handleStartYearChange}
-          />
-
-          <TextField
-            placeholder="2040"
-            variant="standard"
-            required
-            error={
-              validationErrors.targetYear ||
-              (isTargetYearValid && Number(targetYear) < Number(startYear))
-            }
-            value={targetYear}
-            onChange={handleTargetYearChange}
-            onBlur={handleTargetYearBlur}
-          /> */}
         </Box>
       </Box>
       <Box
@@ -188,7 +156,9 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
         <TextField
           variant="standard"
           size="small"
+          label="Target Amount"
           required
+          sx={{ mt: -1 }}
           error={validationErrors.targetAmount}
           value={targetAmount}
           onChange={handleTargetAmountChange}
