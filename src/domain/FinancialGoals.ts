@@ -47,12 +47,12 @@ export class FinancialGoal {
   }
 
   getTermType(): TermType {
-    const term = this.getTerm();
-    if (term <= 3) {
+    const term = this.getMonthTerm();
+    if (term <= 36) {
       return TermType.SHORT_TERM;
-    } else if (term > 3 && term <= 5) {
+    } else if (term > 36 && term <= 60) {
       return TermType.MEDIUM_TERM;
-    } else if (term > 5) {
+    } else if (term > 60) {
       return TermType.LONG_TERM;
     }
     return TermType.LONG_TERM;

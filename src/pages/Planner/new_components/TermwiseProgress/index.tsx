@@ -7,6 +7,7 @@ import {
   linearProgressClasses,
   styled,
   Divider,
+  Tooltip,
 } from '@mui/material';
 import { TermType } from '../../../../types/enums';
 import { PlannerData } from '../../../../domain/PlannerData';
@@ -30,6 +31,10 @@ const TermwiseProgress = ({
     investmentBreakdown: GoalWiseInvestmentSuggestions[];
   }[];
 }) => {
+  const numberOfTermsPresent = investmentBreakdownBasedOnTermType.filter(
+    (a) => a.investmentBreakdown.length > 0,
+  ).length;
+
   const getSumByTermType = (termType: TermType) => {
     return plannerData.financialGoals
       .filter((goal) => goal.getTermType() === termType)
@@ -77,31 +82,57 @@ const TermwiseProgress = ({
       </Box>
       <Grid container pt={1}>
         {[TermType.SHORT_TERM, TermType.MEDIUM_TERM, TermType.LONG_TERM].map(
-          (termType, index, array) => {
+          (termType) => {
             return (
               <>
                 {doInvestmentsExistForTermType(termType) ? (
                   <>
-                    <Grid size={4} sx={{ padding: 2 }}>
-                      <Box mb={2}>
-                        <BorderLinearProgress
-                          value={Math.round(progressPercent(termType)!)}
-                          variant="determinate"
-                          sx={{
-                            [`& .${linearProgressClasses.barColorPrimary}`]: {
-                              backgroundColor:
-                                termType === TermType.SHORT_TERM
-                                  ? 'orange'
-                                  : termType === TermType.MEDIUM_TERM
-                                    ? 'blue'
-                                    : 'green',
+                    <Grid size={12 / numberOfTermsPresent} sx={{ padding: 2 }}>
+                      <Tooltip
+                        title={`${Math.round(progressPercent(termType))}%`}
+                        placement="top-end"
+                        PopperProps={{
+                          modifiers: [
+                            {
+                              name: 'offset',
+                              options: {
+                                offset: [0, -10],
+                              },
                             },
-                            [`& .${linearProgressClasses.colorSecondary}`]: {
-                              backgroundColor: 'grey',
+                          ],
+                        }}
+                        slotProps={{
+                          tooltip: {
+                            sx: {
+                              backgroundColor: 'transparent',
+                              boxShadow: 'none',
+                              color: 'black',
+                              fontSize: '1rem',
+                              padding: 0,
                             },
-                          }}
-                        />
-                      </Box>
+                          },
+                        }}
+                      >
+                        <Box>
+                          <BorderLinearProgress
+                            value={Math.round(progressPercent(termType)!)}
+                            variant="determinate"
+                            sx={{
+                              [`& .${linearProgressClasses.barColorPrimary}`]: {
+                                backgroundColor:
+                                  termType === TermType.SHORT_TERM
+                                    ? 'orange'
+                                    : termType === TermType.MEDIUM_TERM
+                                      ? 'blue'
+                                      : 'green',
+                              },
+                              [`& .${linearProgressClasses.colorSecondary}`]: {
+                                backgroundColor: 'grey',
+                              },
+                            }}
+                          />
+                        </Box>
+                      </Tooltip>
                       <Box sx={{ padding: '16px' }}>
                         <Box
                           sx={{

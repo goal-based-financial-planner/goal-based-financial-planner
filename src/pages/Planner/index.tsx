@@ -60,7 +60,7 @@ const Planner: React.FC = () => {
 
   const { calculateInvestmentNeededForGoals } =
     useInvestmentCalculator(plannerData);
-  const investmentBreakdowForAllGoals = calculateInvestmentNeededForGoals(
+  const investmentBreakdownForAllGoals = calculateInvestmentNeededForGoals(
     plannerData,
     selectedDate,
   );
@@ -72,7 +72,7 @@ const Planner: React.FC = () => {
   ].map((termType) => {
     return {
       termType,
-      investmentBreakdown: investmentBreakdowForAllGoals.filter((ib) => {
+      investmentBreakdown: investmentBreakdownForAllGoals.filter((ib) => {
         const goalTerm = plannerData.financialGoals
           .find((goal) => goal.getGoalName() === ib.goalName)
           ?.getTermType();
@@ -81,6 +81,19 @@ const Planner: React.FC = () => {
     };
   });
 
+  const sortedGoals = plannerData.financialGoals.sort((goal1, goal2) => {
+    const diffA = dayjs(goal1.getTargetDate()).diff(dayjs(), 'days');
+    const diffB = dayjs(goal2.getTargetDate()).diff(dayjs(), 'days');
+    return diffA - diffB;
+  });
+
+  const pendingGoals = sortedGoals.filter((goal) => {
+    return dayjs(selectedDate).isBefore(goal.getTargetDate());
+  });
+
+  const completedGoals = sortedGoals.filter((goal) => {
+    return dayjs(selectedDate).isAfter(goal.getTargetDate());
+  });
   return (
     <>
       <Grid container>
@@ -154,42 +167,82 @@ const Planner: React.FC = () => {
         </Grid>
         <Grid size={3}>
           <Grid container>
-            <Grid size={12} sx={{ mx: 2 }}>
-              <StyledBox
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2,
-                  '& .divider': {
-                    display: 'block',
-                  },
-                  '& .divider:last-child': {
-                    display: 'none',
-                  },
-                }}
-              >
-                <Typography variant="h6" fontWeight="bold">
-                  Financial Goals
-                </Typography>
+            {pendingGoals.length > 0 ? (
+              <Grid size={12} sx={{ mx: 2, mb: 2 }}>
+                <StyledBox
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    '& .divider': {
+                      display: 'block',
+                    },
+                    '& .divider:last-child': {
+                      display: 'none',
+                    },
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold">
+                    Financial Goals
+                  </Typography>
 
-                {plannerData.financialGoals.map((goal) => {
-                  return (
-                    <>
-                      <GoalCard
-                        goal={goal}
-                        dispatch={dispatch}
-                        currentValue={
-                          investmentBreakdowForAllGoals.find(
-                            (ib) => ib.goalName === goal.getGoalName(),
-                          )?.currentValue!
-                        }
-                      />
-                      <Divider className="divider" />
-                    </>
-                  );
-                })}
-              </StyledBox>
-            </Grid>
+                  {pendingGoals.map((goal) => {
+                    return (
+                      <>
+                        <GoalCard
+                          goal={goal}
+                          dispatch={dispatch}
+                          currentValue={
+                            investmentBreakdownForAllGoals.find(
+                              (ib) => ib.goalName === goal.getGoalName(),
+                            )?.currentValue!
+                          }
+                        />
+                        <Divider className="divider" />
+                      </>
+                    );
+                  })}
+                </StyledBox>
+              </Grid>
+            ) : null}
+
+            {completedGoals.length > 0 ? (
+              <Grid size={12} sx={{ mx: 2 }}>
+                <StyledBox
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    '& .divider': {
+                      display: 'block',
+                    },
+                    '& .divider:last-child': {
+                      display: 'none',
+                    },
+                  }}
+                >
+                  <Typography variant="h6" fontWeight="bold">
+                    Completed Goals
+                  </Typography>
+                  {completedGoals.map((goal) => {
+                    return (
+                      <>
+                        <GoalCard
+                          goal={goal}
+                          dispatch={dispatch}
+                          currentValue={
+                            investmentBreakdownForAllGoals.find(
+                              (ib) => ib.goalName === goal.getGoalName(),
+                            )?.currentValue!
+                          }
+                        />
+                        <Divider className="divider" />
+                      </>
+                    );
+                  })}
+                </StyledBox>
+              </Grid>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>
