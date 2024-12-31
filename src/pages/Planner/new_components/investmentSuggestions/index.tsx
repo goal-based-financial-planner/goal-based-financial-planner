@@ -124,47 +124,12 @@ const InvestmentSuggestions = ({
           backdropFilter: 'blur(1px)',
         }}
       >
-        <Box
-          sx={{
-            width: '800px',
-            height: '60vh',
-            overflowY: 'auto',
-            backgroundColor: '#E3E1CD',
-            padding: 2,
-            borderRadius: 2,
-            margin: 'auto',
-            position: 'absolute',
-            boxShadow: 24,
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: 30,
-              display: 'flex',
-              justifyContent: 'center',
-              fontWeight: 'bold',
-            }}
-          >
-            Investment Allocations
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: 16,
-              p: 2,
-              display: 'flex',
-            }}
-          >
-            Customize your investment options here.............
-          </Typography>
-
-          <InvestmentAllocations
-            dispatch={dispatch}
-            plannerData={plannerData}
-            onSubmit={handleSubmit}
-            termType={termTypeModal!}
-          />
-        </Box>
+        <InvestmentAllocations
+          dispatch={dispatch}
+          plannerData={plannerData}
+          onSubmit={handleSubmit}
+          termType={termTypeModal!}
+        />
       </Modal>
     </>
   );

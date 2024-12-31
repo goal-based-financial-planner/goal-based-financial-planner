@@ -1,17 +1,22 @@
-import React from 'react';
-import { useFieldArray, Controller, Control, useWatch } from 'react-hook-form';
+import { useFieldArray, Controller, Control } from 'react-hook-form';
 import {
   Autocomplete,
   Box,
   Button,
   Grid2 as Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from '@mui/material';
-import InvestmentPieChart from '../InvestmentPieChart';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 import { TermType } from '../../../../types/enums';
 import investmentNames from '../../../../domain/investmentAllocations';
+import { useState } from 'react';
 
 const InvestmentAllocationPerTerm = ({
   control,
@@ -25,147 +30,180 @@ const InvestmentAllocationPerTerm = ({
     name,
   });
 
-  const watchedFields = useWatch({
-    control,
-    name,
-  });
+  const [editableRow, setEditableRow] = useState<number | null>(null);
+
+  const saveRow = (index: number) => {
+    // Handle saving logic if required
+    setEditableRow(null); // Exit editing mode
+  };
+
+  // const watchedFields = useWatch({
+  //   control,
+  //   name,
+  // });
 
   return (
     <Grid container spacing={2}>
-      <Grid size={8}>
-        <Grid container spacing={2}>
-          <Grid size={6}>
-            <Typography fontWeight="bold">Investment Name</Typography>
-          </Grid>
-          <Grid size={2.5}>
-            <Typography fontWeight="bold" textAlign="center">
-              Expected Return (%)
-            </Typography>
-          </Grid>
-          <Grid size={2.5}>
-            <Typography fontWeight="bold" textAlign="center">
-              Investment (%){' '}
-            </Typography>
-          </Grid>
-          <Grid size={1}></Grid>
-        </Grid>
-        {fields.map((field, index) => (
-          <Grid container key={field.id} spacing={2}>
-            <Grid size={6}>
-              <Controller
-                name={`${name}.${index}.investmentName`}
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    options={investmentNames}
-                    freeSolo
-                    value={field.value || ''}
-                    onChange={(event, newValue) => {
-                      field.onChange(newValue);
+      <Grid size={12}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <Typography fontWeight="bold">Investment Name</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography fontWeight="bold">Expected Return (%)</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography fontWeight="bold">Investment (%)</Typography>
+                </TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {fields.map((field, index) => {
+                const isEditing = editableRow === index; // Track editable row
+                return (
+                  <TableRow
+                    key={field.id}
+                    sx={{
+                      'td,th': { border: 0 },
                     }}
-                    onInputChange={(event, newInputValue) => {
-                      if (event?.type === 'change') {
-                        field.onChange(newInputValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="standard"
-                        sx={{ width: '100%' }}
+                  >
+                    <TableCell>
+                      <Controller
+                        name={`${name}.${index}.investmentName`}
+                        control={control}
+                        render={({ field }) =>
+                          isEditing ? (
+                            <Autocomplete
+                              options={investmentNames}
+                              freeSolo
+                              sx={{ fontSize: '10px' }}
+                              value={field.value || ''}
+                              onChange={(event, newValue) =>
+                                field.onChange(newValue)
+                              }
+                              onInputChange={(event, newInputValue) => {
+                                if (event?.type === 'change') {
+                                  field.onChange(newInputValue);
+                                }
+                              }}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  variant="standard"
+                                  fullWidth
+                                />
+                              )}
+                            />
+                          ) : (
+                            <Typography>{field.value || '—'}</Typography>
+                          )
+                        }
                       />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid size={2.5}>
-              <Controller
-                name={`${name}.${index}.expectedReturnPercentage`}
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    type="number"
-                    sx={{ width: '100%' }}
-                    variant="standard"
-                    slotProps={{
-                      input: {
-                        inputProps: {
-                          min: 1,
-                          inputMode: 'numeric',
-                        },
-                      },
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid size={2.5}>
-              <Controller
-                name={`${name}.${index}.investmentPercentage`}
-                control={control}
-                rules={{
-                  validate: (value) => value <= 100,
-                }}
-                render={({ field, fieldState: { error } }) => {
-                  return (
-                    <TextField
-                      {...field}
-                      type="number"
-                      error={!!error}
-                      slotProps={{
-                        input: {
-                          inputProps: {
-                            min: 1,
-                            max: 100,
-                            inputMode: 'numeric',
-                          },
-                        },
-                      }}
-                      sx={{ width: '100%' }}
-                      variant="standard"
-                    />
-                  );
-                }}
-              />
-            </Grid>
-            <Grid size={1}>
-              <Box
-                sx={{
-                  '&:hover': {
-                    cursor: 'pointer',
-                  },
-                }}
-              >
-                <span
-                  className="material-symbols-rounded"
-                  onClick={() => remove(index)}
-                >
-                  delete
-                </span>
-              </Box>
-            </Grid>
-          </Grid>
-        ))}
-
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 4 }}
-          onClick={() =>
-            append({
-              investmentName: '',
-              expectedReturnPercentage: 0,
-              investmentPercentage: 0,
-            })
-          }
-        >
-          Add Investment
-        </Button>
-      </Grid>
-      <Grid size={4}>
-        <InvestmentPieChart allocations={watchedFields} />
+                    </TableCell>
+                    <TableCell align="center" width={'160px'}>
+                      <Controller
+                        name={`${name}.${index}.expectedReturnPercentage`}
+                        control={control}
+                        render={({ field }) =>
+                          isEditing ? (
+                            <TextField
+                              {...field}
+                              type="number"
+                              sx={{ width: '100%' }}
+                              variant="standard"
+                              inputProps={{
+                                min: 1,
+                                inputMode: 'numeric',
+                              }}
+                            />
+                          ) : (
+                            <Typography>{field.value}</Typography>
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell align="center" width={'130px'}>
+                      <Controller
+                        name={`${name}.${index}.investmentPercentage`}
+                        control={control}
+                        rules={{
+                          validate: (value) => value <= 100,
+                        }}
+                        render={({ field, fieldState: { error } }) =>
+                          isEditing ? (
+                            <TextField
+                              {...field}
+                              type="number"
+                              error={!!error}
+                              inputProps={{
+                                min: 1,
+                                max: 100,
+                                inputMode: 'numeric',
+                              }}
+                              sx={{ width: '100%' }}
+                              variant="standard"
+                            />
+                          ) : (
+                            <Typography>{field.value}</Typography>
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          textAlign: 'right',
+                          '& > span': { mx: 1, cursor: 'pointer' },
+                        }}
+                      >
+                        {isEditing ? (
+                          <span
+                            className="material-symbols-rounded"
+                            onClick={() => saveRow(index)}
+                          >
+                            save
+                          </span>
+                        ) : (
+                          <span
+                            className="material-symbols-rounded"
+                            onClick={() => setEditableRow(index)}
+                          >
+                            edit
+                          </span>
+                        )}
+                        <span
+                          className="material-symbols-rounded"
+                          onClick={() => remove(index)}
+                        >
+                          delete
+                        </span>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            onClick={() => {
+              append({
+                investmentName: '',
+                expectedReturnPercentage: 0,
+                investmentPercentage: 0,
+              });
+              setEditableRow(fields.length);
+            }}
+          >
+            Add Investment
+          </Button>
+        </TableContainer>
       </Grid>
     </Grid>
   );

@@ -57,23 +57,72 @@ const InvestmentAllocations = ({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmitForm)} noValidate>
-        <Box>
-          <Typography component="div">
-            <InvestmentAllocationPerTerm control={control} name={termType} />
-          </Typography>
-        </Box>
+      <Box
+        sx={{
+          width: '800px',
+          height: '60vh', // Box height relative to viewport height
+          overflowY: 'auto',
+          backgroundColor: '#ffffff',
+          p: 2,
+          borderRadius: 2,
+          boxShadow: 24,
+          display: 'flex',
+          flexDirection: 'column', // Ensures children stack vertically
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: 30,
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          Investment Allocations for {termType} Goals
+        </Typography>
 
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            variant="contained"
-            sx={{ backgroundColor: '#B401B0' }}
-            type="submit"
+        <Typography
+          sx={{
+            fontSize: 16,
+            p: 2,
+          }}
+        >
+          We have recommended a few investment options based on your goals'
+          term. You can modify the options and percentages below. Ensure your
+          total investment percentage adds up to 100%.
+        </Typography>
+
+        <form
+          onSubmit={handleSubmit(onSubmitForm)}
+          noValidate
+          style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+        >
+          <Box
+            sx={{
+              flexGrow: 1,
+              overflow: 'auto',
+            }}
           >
-            Submit
-          </Button>
-        </Box>
-      </form>
+            <InvestmentAllocationPerTerm control={control} name={termType} />
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              p: 2,
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: '#B401B0' }}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </Box>
+        </form>
+      </Box>
+
       <Snackbar
         autoHideDuration={5000}
         open={showSnackBar}
