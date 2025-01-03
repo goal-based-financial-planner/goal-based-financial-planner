@@ -33,14 +33,8 @@ const InvestmentAllocationPerTerm = ({
   const [editableRow, setEditableRow] = useState<number | null>(null);
 
   const saveRow = (index: number) => {
-    // Handle saving logic if required
-    setEditableRow(null); // Exit editing mode
+    setEditableRow(null);
   };
-
-  // const watchedFields = useWatch({
-  //   control,
-  //   name,
-  // });
 
   return (
     <Grid container spacing={2}>
@@ -188,21 +182,27 @@ const InvestmentAllocationPerTerm = ({
               })}
             </TableBody>
           </Table>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-            onClick={() => {
-              append({
-                investmentName: '',
-                expectedReturnPercentage: 0,
-                investmentPercentage: 0,
-              });
-              setEditableRow(fields.length);
+          <Box
+            sx={{
+              textAlign: 'center',
             }}
           >
-            Add Investment
-          </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{ mt: 2 }}
+              onClick={() => {
+                append({
+                  investmentName: '',
+                  expectedReturnPercentage: 0,
+                  investmentPercentage: 0,
+                });
+                setEditableRow(fields.length);
+              }}
+            >
+              Add Investment
+            </Button>
+          </Box>
         </TableContainer>
       </Grid>
     </Grid>

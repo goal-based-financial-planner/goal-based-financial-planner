@@ -1,4 +1,4 @@
-import { Box, Typography, Grid2 as Grid, Modal } from '@mui/material';
+import { Box, Typography, Grid2 as Grid, Modal, Button } from '@mui/material';
 import { StyledBox } from '../..';
 import { PlannerData } from '../../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
@@ -45,22 +45,22 @@ const InvestmentSuggestions = ({
             )
             .map((term) => (
               <StyledBox mb={2}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                     {term.termType} Investment Plan
                   </Typography>
-                  <Box onClick={() => handleEdit(term.termType)}>
-                    <span
-                      className="material-symbols-rounded dashboard-widget"
-                      style={{
-                        fontSize: '30px',
-                        transition: 'color 0.3s ease',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      edit
-                    </span>
-                  </Box>
+                  <Button
+                    onClick={() => handleEdit(term.termType)}
+                    variant="outlined"
+                  >
+                    Customize
+                  </Button>
                 </Box>
                 <Grid container justifyContent={'center'} alignItems={'center'}>
                   <Grid

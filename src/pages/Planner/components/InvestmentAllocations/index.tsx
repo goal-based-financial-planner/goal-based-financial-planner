@@ -25,6 +25,7 @@ const InvestmentAllocations = ({
     mode: 'onBlur',
   });
   const [showSnackBar, setShowSnackBar] = useState(false);
+  const [snackBarMessage, setShowSnackBarMessage] = useState('');
 
   const areInvestmentAllocationsValid = (
     data: InvestmentAllocationsType,
@@ -34,12 +35,25 @@ const InvestmentAllocations = ({
       if (allocation.length === 0) {
         return;
       }
+      const isEmptyAllocation = allocation.find(
+        (ab) => ab.investmentName === '' || ab.investmentPercentage === 0,
+      );
+
+      if (isEmptyAllocation) {
+        isFormValid = false;
+        setShowSnackBarMessage('Delete empty Allocation');
+        return;
+      }
       const totalPercentage = allocation.reduce(
         (acc, v) => Number(v.investmentPercentage) + acc,
         0,
       );
+
       if (totalPercentage !== 100) {
         isFormValid = false;
+        setShowSnackBarMessage(
+          'Invalid Allocation. Please make sure the allocation percentages addsupto 100',
+        );
       }
     });
 
@@ -130,8 +144,7 @@ const InvestmentAllocations = ({
         onClose={() => setShowSnackBar(false)}
       >
         <Alert severity="warning" sx={{ width: '100%' }}>
-          Invalid Allocation. Please make sure the allocation percentages adds
-          upto 100
+          {snackBarMessage}
         </Alert>
       </Snackbar>
     </>
