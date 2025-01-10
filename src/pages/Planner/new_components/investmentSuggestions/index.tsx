@@ -44,7 +44,7 @@ const InvestmentSuggestions = ({
               ),
             )
             .map((term) => (
-              <StyledBox mb={2}>
+              <StyledBox mb={2} className="investment-plan-box">
                 <Box
                   sx={{
                     display: 'flex',
@@ -57,9 +57,10 @@ const InvestmentSuggestions = ({
                   </Typography>
                   <Button
                     onClick={() => handleEdit(term.termType)}
-                    variant="outlined"
+                    sx={{ color: 'green' }}
+                    className="customize-button"
                   >
-                    Customize
+                    <span className="material-symbols-rounded">tune</span>
                   </Button>
                 </Box>
                 <Grid container justifyContent={'center'} alignItems={'center'}>

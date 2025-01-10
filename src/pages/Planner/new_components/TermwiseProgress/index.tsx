@@ -121,9 +121,9 @@ const TermwiseProgress = ({
                               [`& .${linearProgressClasses.barColorPrimary}`]: {
                                 backgroundColor:
                                   termType === TermType.SHORT_TERM
-                                    ? 'orange'
+                                    ? 'green'
                                     : termType === TermType.MEDIUM_TERM
-                                      ? 'blue'
+                                      ? 'green'
                                       : 'green',
                               },
                               [`& .${linearProgressClasses.colorSecondary}`]: {
@@ -157,8 +157,8 @@ const TermwiseProgress = ({
                             <Chip
                               key={name}
                               label={name}
-                              color="info"
                               size="small"
+                              color="success"
                               sx={{
                                 width: 'auto',
                                 height: '20px',

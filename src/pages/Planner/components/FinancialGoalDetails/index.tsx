@@ -88,7 +88,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
       <Box
         sx={{
           height: '150px',
-          backgroundColor: theme.palette.cardBackGround.main,
+          backgroundColor: '#c1e8c6',
           padding: 3,
           borderRadius: 4,
         }}
@@ -178,7 +178,7 @@ const FinancialGoalDetails = ({ onAddGoal }: AddFinancialGoalsProps) => {
             },
             height: '18px',
             width: '18px',
-            backgroundColor: theme.palette.cardBackGround.main,
+            backgroundColor: '#c1e8c6',
           }}
         >
           <span className="material-symbols-rounded">check</span>

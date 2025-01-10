@@ -190,7 +190,7 @@ const InvestmentAllocationPerTerm = ({
             <Button
               variant="outlined"
               color="primary"
-              sx={{ mt: 2 }}
+              sx={{ mt: 2, color: 'green', border: '1px solid green' }}
               onClick={() => {
                 append({
                   investmentName: '',

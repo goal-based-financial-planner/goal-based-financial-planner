@@ -21,6 +21,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
+import LandingPage from '../LandingPage';
+import Joyride, { CallBackProps, STATUS } from 'react-joyride';
 
 export const StyledBox = styled(Box)(({ theme }) => ({
   border: '1px solid #F0F0F0',
@@ -94,14 +96,123 @@ const Planner: React.FC = () => {
   const completedGoals = sortedGoals.filter((goal) => {
     return dayjs(selectedDate).isAfter(goal.getTargetDate());
   });
-  return (
+  const [isTourTaken, setIsTourTaken] = useState(
+    JSON.parse(localStorage.getItem('isTourTaken') || 'false'),
+  );
+  const [runTour, setRunTour] = useState<boolean>(!isTourTaken);
+
+  useEffect(() => {
+    if (isTourTaken) {
+      const timer = setTimeout(() => {
+        setRunTour(true);
+      }, 5000);
+
+      return () => clearTimeout(timer); // Cleanup timer on component unmount
+    }
+  }, [isTourTaken]);
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { status } = data;
+
+    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
+      localStorage.setItem('isTourTaken', JSON.stringify(true));
+      setIsTourTaken(true);
+      setRunTour(false);
+    }
+  };
+
+  const steps = [
+    {
+      target: '.target-box',
+      disableBeacon: true,
+      content:
+        'This is your total financial target. The amount is automatically adjusted for inflation to ensure accuracy.',
+    },
+    {
+      target: '.add-goals-button',
+      disableBeacon: true,
+
+      content:
+        'Click here to add new financial goals to your target and start planning.',
+    },
+    {
+      target: '.financial-goals-box',
+      disableBeacon: true,
+      content:
+        'Here, you can see all the financial goals you’ve already added, along with their progress.',
+    },
+    {
+      target: '.financial-progress-box',
+      disableBeacon: true,
+
+      content:
+        'This section provides a detailed breakdown of your financial goals by term.',
+    },
+    {
+      target: '.investment-plan-box',
+      disableBeacon: true,
+
+      content:
+        'These are tailored investment suggestions to help you achieve your financial goals efficiently.',
+    },
+    {
+      target: '.customize-button',
+      disableBeacon: true,
+      content:
+        'Click this button to personalize the investment suggestions according to your preferences.',
+    },
+    {
+      target: '.calendar-button',
+      disableBeacon: true,
+      content:
+        'This calendar is set to the current month by default. You can change the date to view your progress at any point in time.',
+    },
+  ];
+
+  return plannerData.financialGoals?.length > 0 ? (
     <>
+      <Joyride
+        steps={steps}
+        callback={handleJoyrideCallback}
+        run={runTour}
+        continuous
+        showSkipButton
+        showProgress
+        styles={{
+          options: {
+            arrowColor: '#f5f5f5',
+            backgroundColor: '#ffffff',
+            overlayColor: 'rgba(0, 0, 0, 0.5)',
+            primaryColor: '#4CAF50',
+            textColor: '#333',
+            zIndex: 1000,
+          },
+          buttonClose: {
+            color: '#ff1744',
+          },
+          buttonBack: {
+            color: '#9E9E9E',
+          },
+          buttonNext: {
+            backgroundColor: '#1976D2',
+            color: '#ffffff',
+          },
+          buttonSkip: {
+            color: '#F44336',
+          },
+        }}
+      />
       <Grid container>
         <Grid size={12} display="flex" justifyContent="space-between">
           <Box sx={{ mt: 2, ml: 2 }}>
-            <Typography variant="h3">Welcome</Typography>
+            <Typography className="navbar-home" variant="h3">
+              Welcome
+            </Typography>
           </Box>
-          <StyledBox sx={{ width: '160px', mt: 1, mr: 2 }}>
+          <StyledBox
+            sx={{ width: '160px', mt: 1, mr: 2 }}
+            className="calendar-button"
+          >
             <DatePicker
               label={'"month" and "year"'}
               views={['month', 'year']}
@@ -129,16 +240,20 @@ const Planner: React.FC = () => {
               my: 2,
             }}
             height={'250px'}
+            className="target-box"
           >
             <Typography variant="h6" fontWeight="bold">
               Your Target
             </Typography>
             <LiveCounter value={targetAmount} duration={500} />
             <Button
+              className="add-goals-button"
               variant="outlined"
               sx={{
                 width: '120px',
                 mt: 4,
+                color: 'green',
+                border: '1px solid green',
               }}
               onClick={handleAdd}
             >
@@ -147,7 +262,11 @@ const Planner: React.FC = () => {
           </StyledBox>
         </Grid>
         <Grid size={8}>
-          <StyledBox height={'250px'} sx={{ mx: 2, my: 2 }}>
+          <StyledBox
+            height={'250px'}
+            sx={{ mx: 2, my: 2 }}
+            className="financial-progress-box"
+          >
             <TermwiseProgress
               plannerData={plannerData}
               investmentBreakdownBasedOnTermType={
@@ -170,6 +289,7 @@ const Planner: React.FC = () => {
             {pendingGoals.length > 0 ? (
               <Grid size={12} sx={{ mx: 2, mb: 2 }}>
                 <StyledBox
+                  className="financial-goals-box"
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -254,6 +374,14 @@ const Planner: React.FC = () => {
         />
       ) : null}
     </>
+  ) : (
+    <LandingPage
+      isFormOpen={isFormOpen}
+      plannerData={plannerData}
+      dispatch={dispatch}
+      setIsFormOpen={setIsFormOpen}
+      handlAdd={handleAdd}
+    />
   );
 };
 

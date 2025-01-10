@@ -42,7 +42,12 @@ const DoughnutChart = ({
   };
 
   return (
-    <Box sx={{ width: 300, position: 'relative' }}>
+    <Box
+      sx={{
+        width: 300,
+        position: 'relative',
+      }}
+    >
       <PieChart
         colors={palette}
         series={[

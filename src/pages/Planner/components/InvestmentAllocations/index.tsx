@@ -128,7 +128,10 @@ const InvestmentAllocations = ({
           >
             <Button
               variant="contained"
-              sx={{ backgroundColor: '#B401B0' }}
+              sx={{
+                backgroundColor: 'green',
+                border: '1px solid green',
+              }}
               type="submit"
             >
               Submit
