@@ -10,18 +10,21 @@ import InvestmentAllocations from '../InvestmentAllocations';
 import InvestmentPieChart from '../InvestmentPieChart';
 import CustomLegend from '../CustomLegend';
 import { StyledBox } from '../../../../components/StyledBox';
+import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 
-const InvestmentSuggestions = ({
-  plannerData,
+export type InvestmentBreakdownBasedOnTermType = {
+  termType: TermType;
+  investmentBreakdown: GoalWiseInvestmentSuggestions[];
+};
+
+const InvestmentSuggestionsBox = ({
+  investmentAllocations,
   dispatch,
   investmentBreakdownBasedOnTermType,
 }: {
-  plannerData: PlannerData;
   dispatch: React.Dispatch<PlannerDataAction>;
-  investmentBreakdownBasedOnTermType: {
-    termType: TermType;
-    investmentBreakdown: GoalWiseInvestmentSuggestions[];
-  }[];
+  investmentAllocations: InvestmentAllocationsType;
+  investmentBreakdownBasedOnTermType: InvestmentBreakdownBasedOnTermType[];
 }) => {
   const [termTypeModal, setTermTypeModal] = useState<TermType | null>(null);
   const handleEdit = (termType: TermType) => {
@@ -72,9 +75,7 @@ const InvestmentSuggestions = ({
                     alignItems={'center'}
                   >
                     <InvestmentPieChart
-                      allocations={
-                        plannerData.investmentAllocations[term.termType]
-                      }
+                      allocations={investmentAllocations[term.termType]}
                     />
                   </Grid>
                   <Grid
@@ -126,7 +127,7 @@ const InvestmentSuggestions = ({
       >
         <InvestmentAllocations
           dispatch={dispatch}
-          plannerData={plannerData}
+          investmentAllocations={investmentAllocations}
           onSubmit={handleSubmit}
           termType={termTypeModal!}
         />
@@ -135,4 +136,4 @@ const InvestmentSuggestions = ({
   );
 };
 
-export default InvestmentSuggestions;
+export default InvestmentSuggestionsBox;

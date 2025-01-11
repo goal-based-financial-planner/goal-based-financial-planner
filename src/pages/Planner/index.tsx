@@ -1,17 +1,21 @@
 import { Grid2 as Grid, Box, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
-import InvestmentSuggestions from './components/InvestmentSuggestions';
+import InvestmentSuggestionsBox, {
+  InvestmentBreakdownBasedOnTermType,
+} from './components/InvestmentSuggestions';
 import { Dispatch, useState } from 'react';
 import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
 import TargetBox from './components/TargetBox';
-import TermwiseProgressBox from './components/TermwiseProgressBox';
+import TermWiseProgressBox, {
+  TermTypeWiseProgressData,
+} from './components/TermwiseProgressBox';
 import GoalBox from './components/GoalBox';
 import { StyledBox } from '../../components/StyledBox';
-import Pagetour from './components/Pagetour';
+import PageTour from './components/Pagetour';
 
 type PlannerProps = {
   plannerData: PlannerData;
@@ -37,25 +41,59 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
     selectedDate,
   );
 
-  const investmentBreakdownBasedOnTermType = [
-    TermType.SHORT_TERM,
-    TermType.MEDIUM_TERM,
-    TermType.LONG_TERM,
-  ].map((termType) => {
-    return {
-      termType,
-      investmentBreakdown: investmentBreakdownForAllGoals.filter((ib) => {
-        const goalTerm = plannerData.financialGoals
-          .find((goal) => goal.getGoalName() === ib.goalName)
-          ?.getTermType();
-        return termType === goalTerm;
-      }),
-    };
-  });
+  const investmentBreakdownBasedOnTermType: InvestmentBreakdownBasedOnTermType[] =
+    [];
+  const termTypeWiseProgressData: TermTypeWiseProgressData[] = [];
+
+  [TermType.SHORT_TERM, TermType.MEDIUM_TERM, TermType.LONG_TERM].forEach(
+    (termType) => {
+      const goalsForTerm = plannerData.financialGoals.filter(
+        (goal) => goal.getTermType() === termType,
+      );
+
+      if (goalsForTerm.length > 0) {
+        const goalNames = goalsForTerm.map((goal) => goal.goalName);
+
+        const investmentBreakDownPerTerm =
+          investmentBreakdownForAllGoals.filter((ib) =>
+            goalNames.includes(ib.goalName),
+          );
+
+        const termTypeSum = Math.round(
+          goalsForTerm.reduce(
+            (sum, goal) => sum + goal.getInflationAdjustedTargetAmount(),
+            0,
+          ),
+        );
+
+        const progressPercent = Math.round(
+          (investmentBreakDownPerTerm.reduce(
+            (acc, val) => acc + val.currentValue,
+            0,
+          )! /
+            termTypeSum) *
+            100,
+        );
+
+        investmentBreakdownBasedOnTermType.push({
+          termType,
+          investmentBreakdown: investmentBreakDownPerTerm,
+        });
+        termTypeWiseProgressData.push({
+          termType,
+          termTypeWiseData: {
+            goalNames,
+            termTypeSum,
+            progressPercent,
+          },
+        });
+      }
+    },
+  );
 
   return (
     <>
-      <Pagetour />
+      <PageTour />
       <Grid container>
         <Grid size={12} display="flex" justifyContent="space-between">
           <Box sx={{ mt: 2, ml: 2 }}>
@@ -89,17 +127,12 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
           <TargetBox targetAmount={targetAmount} dispatch={dispatch} />
         </Grid>
         <Grid size={8}>
-          <TermwiseProgressBox
-            plannerData={plannerData}
-            investmentBreakdownBasedOnTermType={
-              investmentBreakdownBasedOnTermType
-            }
-          />
+          <TermWiseProgressBox data={termTypeWiseProgressData} />
         </Grid>
         <Grid size={9}>
-          <InvestmentSuggestions
-            plannerData={plannerData}
+          <InvestmentSuggestionsBox
             dispatch={dispatch}
+            investmentAllocations={plannerData.investmentAllocations}
             investmentBreakdownBasedOnTermType={
               investmentBreakdownBasedOnTermType
             }

@@ -49,7 +49,7 @@ const steps = [
   },
 ];
 
-const Pagetour = () => {
+const PageTour = () => {
   const [isTourTaken, setIsTourTaken] = useState(
     JSON.parse(localStorage.getItem('isTourTaken') || 'false'),
   );
@@ -105,4 +105,4 @@ const Pagetour = () => {
   );
 };
 
-export default Pagetour;
+export default PageTour;

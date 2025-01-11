@@ -4,23 +4,22 @@ import { Alert, Box, Button, Snackbar, Typography } from '@mui/material';
 import InvestmentAllocationPerTerm from '../InvesmentAllocationPerTerm';
 import { TermType } from '../../../../types/enums';
 import { updateInvestmentAllocation } from '../../../../store/plannerDataActions';
-import { PlannerData } from '../../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 
 const InvestmentAllocations = ({
-  plannerData,
+  investmentAllocations,
   dispatch,
   onSubmit,
   termType,
 }: {
-  plannerData: PlannerData;
+  investmentAllocations: InvestmentAllocationsType;
   dispatch: React.Dispatch<PlannerDataAction>;
   onSubmit: () => void;
   termType: TermType;
 }) => {
   const { control, handleSubmit } = useForm<InvestmentAllocationsType>({
-    defaultValues: plannerData.investmentAllocations,
+    defaultValues: investmentAllocations,
     reValidateMode: 'onChange',
     mode: 'onBlur',
   });
