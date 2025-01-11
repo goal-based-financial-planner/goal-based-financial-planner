@@ -1,6 +1,4 @@
 import { Box, Typography, Grid2 as Grid, Modal, Button } from '@mui/material';
-
-import { PlannerData } from '../../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { TermType } from '../../../../types/enums';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
