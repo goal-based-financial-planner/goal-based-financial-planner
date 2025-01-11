@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install and deploy
         env:
-          MY_EMAIL: pavan496@gmail.com
-          MY_NAME: pavanandhukuri
+          MY_EMAIL: kothaaakanksha.99@gmail.com
+          MY_NAME: aakankshakotha
         run: |
           git config --global user.email $MY_EMAIL
           git config --global user.name $MY_NAME
