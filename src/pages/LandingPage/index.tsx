@@ -1,12 +1,12 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
-import { StyledBox } from '../Planner';
-import FinancialGoalForm from '../Planner/components/FinancialGoalForm';
+import FinancialGoalForm from '../Home/components/FinancialGoalForm';
 import { PlannerData } from '../../domain/PlannerData';
 import image1 from '../../assets/image1.png';
 import image2 from '../../assets/image2.png';
 import image3 from '../../assets/image3.png';
 import image4 from '../../assets/image4.png';
 import icon from '../../assets/icon.png';
+import { StyledBox } from '../../components/StyledBox';
 
 const getImageStyle = (position: string, size: number, rotation: number) => ({
   position: 'absolute',
@@ -25,18 +25,18 @@ const getImageStyle = (position: string, size: number, rotation: number) => ({
 });
 
 const LandingPage = ({
-  isFormOpen,
   plannerData,
   dispatch,
-  setIsFormOpen,
-  handlAdd,
 }: {
-  isFormOpen: any;
   plannerData: PlannerData;
   dispatch: any;
-  setIsFormOpen: any;
-  handlAdd: any;
 }) => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAdd = () => {
+    setIsFormOpen(true);
+  };
+
   return (
     <Box
       sx={{
@@ -100,7 +100,7 @@ const LandingPage = ({
         </Typography>
         <Button
           variant="contained"
-          onClick={handlAdd}
+          onClick={handleAdd}
           sx={{
             border: '1px solid green',
             backgroundColor: 'green',
@@ -113,7 +113,6 @@ const LandingPage = ({
       {/* Financial Goal Form */}
       {isFormOpen ? (
         <FinancialGoalForm
-          plannerData={plannerData}
           dispatch={dispatch}
           close={() => setIsFormOpen(false)}
         />
@@ -123,3 +122,6 @@ const LandingPage = ({
 };
 
 export default LandingPage;
+function useState(arg0: boolean): [any, any] {
+  throw new Error('Function not implemented.');
+}

@@ -1,14 +1,15 @@
 import { Box, Typography, Grid2 as Grid, Modal, Button } from '@mui/material';
-import { StyledBox } from '../..';
+
 import { PlannerData } from '../../../../domain/PlannerData';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { TermType } from '../../../../types/enums';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import React, { useState } from 'react';
-import DoughnutChart from '../../../../components/DoughnutChart';
-import InvestmentAllocations from '../../components/InvestmentAllocations';
-import InvestmentPieChart from '../../components/InvestmentPieChart';
-import CustomLegend from '../Customlegend';
+import InvestmentSuggestionsDoughnutChart from '../InvestmentSuggestionsDoughnutChart';
+import InvestmentAllocations from '../InvestmentAllocations';
+import InvestmentPieChart from '../InvestmentPieChart';
+import CustomLegend from '../CustomLegend';
+import { StyledBox } from '../../../../components/StyledBox';
 
 const InvestmentSuggestions = ({
   plannerData,
@@ -96,7 +97,9 @@ const InvestmentSuggestions = ({
                     justifyContent={'center'}
                     alignItems={'center'}
                   >
-                    <DoughnutChart suggestions={term.investmentBreakdown} />
+                    <InvestmentSuggestionsDoughnutChart
+                      suggestions={term.investmentBreakdown}
+                    />
                   </Grid>
                   <Grid
                     size={4}
@@ -104,11 +107,7 @@ const InvestmentSuggestions = ({
                     justifyContent={'center'}
                     alignItems={'center'}
                   >
-                    <CustomLegend
-                      plannerData={plannerData}
-                      termType={term.termType}
-                      suggestions={term.investmentBreakdown}
-                    />
+                    <CustomLegend suggestions={term.investmentBreakdown} />
                   </Grid>
                 </Grid>
               </StyledBox>

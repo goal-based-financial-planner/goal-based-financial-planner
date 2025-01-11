@@ -12,6 +12,7 @@ import {
 import { TermType } from '../../../../types/enums';
 import { PlannerData } from '../../../../domain/PlannerData';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
+import { StyledBox } from '../../../../components/StyledBox';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
@@ -21,7 +22,7 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
   },
 }));
 
-const TermwiseProgress = ({
+const TermwiseProgressBox = ({
   plannerData,
   investmentBreakdownBasedOnTermType,
 }: {
@@ -67,7 +68,11 @@ const TermwiseProgress = ({
   };
 
   return (
-    <>
+    <StyledBox
+      height={'250px'}
+      sx={{ mx: 2, my: 2 }}
+      className="financial-progress-box"
+    >
       <Box
         sx={{
           display: 'flex',
@@ -186,8 +191,8 @@ const TermwiseProgress = ({
           },
         )}
       </Grid>
-    </>
+    </StyledBox>
   );
 };
 
-export default TermwiseProgress;
+export default TermwiseProgressBox;

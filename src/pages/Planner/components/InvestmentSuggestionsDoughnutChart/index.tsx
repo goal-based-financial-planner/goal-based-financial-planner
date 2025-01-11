@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import { GoalWiseInvestmentSuggestions } from '../../pages/Planner/hooks/useInvestmentCalculator';
-import { formatNumber } from '../../types/util';
+import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
+import { formatNumber } from '../../../../types/util';
 import { PieChart } from '@mui/x-charts';
 
-const DoughnutChart = ({
+const InvestmentSuggestionsDoughnutChart = ({
   suggestions,
 }: {
   suggestions: GoalWiseInvestmentSuggestions[];
@@ -78,4 +78,4 @@ const DoughnutChart = ({
   );
 };
 
-export default DoughnutChart;
+export default InvestmentSuggestionsDoughnutChart;

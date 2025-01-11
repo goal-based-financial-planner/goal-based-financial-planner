@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert, Box, Button, Snackbar, Typography } from '@mui/material';
-import InvestmentAllocationPerTerm from '../../../../pages/Planner/components/InvesmentAllocationPerTerm';
+import InvestmentAllocationPerTerm from '../InvesmentAllocationPerTerm';
 import { TermType } from '../../../../types/enums';
 import { updateInvestmentAllocation } from '../../../../store/plannerDataActions';
 import { PlannerData } from '../../../../domain/PlannerData';

@@ -6,17 +6,12 @@ import {
   TableContainer,
   TableRow,
 } from '@mui/material';
-import { PlannerData } from '../../../../domain/PlannerData';
-import { TermType } from '../../../../types/enums';
+
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 
 const CustomLegend = ({
-  plannerData,
-  termType,
   suggestions,
 }: {
-  plannerData: PlannerData;
-  termType: TermType;
   suggestions: GoalWiseInvestmentSuggestions[];
 }) => {
   const investmentOptionWiseSum = suggestions.reduce(
