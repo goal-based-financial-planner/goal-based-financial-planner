@@ -1,4 +1,4 @@
-import { keyframes, styled, useTheme } from '@mui/material/styles';
+import { keyframes, styled } from '@mui/material/styles';
 import {
   Box,
   Card,
@@ -51,7 +51,6 @@ const FinancialGoalForm = ({
     close();
   };
 
-  const theme = useTheme();
   const resetForm = () => {
     setValidationErrors({});
     setGoalName('');
@@ -99,7 +98,6 @@ const FinancialGoalForm = ({
       errors.targetAmount = true;
     }
 
-    console.log(startDate);
     if (!startDate) {
       errors.startDate = true;
     }

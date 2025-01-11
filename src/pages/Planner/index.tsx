@@ -1,9 +1,8 @@
 import { Grid2 as Grid, Box, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
-import Joyride, { CallBackProps, STATUS } from 'react-joyride';
 import InvestmentSuggestions from './components/InvestmentSuggestions';
-import { Dispatch, useEffect, useState } from 'react';
+import { Dispatch, useState } from 'react';
 import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
@@ -12,54 +11,7 @@ import TargetBox from './components/TargetBox';
 import TermwiseProgressBox from './components/TermwiseProgressBox';
 import GoalBox from './components/GoalBox';
 import { StyledBox } from '../../components/StyledBox';
-
-const steps = [
-  {
-    target: '.target-box',
-    disableBeacon: true,
-    content:
-      'This is your total financial target. The amount is automatically adjusted for inflation to ensure accuracy.',
-  },
-  {
-    target: '.add-goals-button',
-    disableBeacon: true,
-
-    content:
-      'Click here to add new financial goals to your target and start planning.',
-  },
-  {
-    target: '.financial-goals-box',
-    disableBeacon: true,
-    content:
-      'Here, you can see all the financial goals you’ve already added, along with their progress.',
-  },
-  {
-    target: '.financial-progress-box',
-    disableBeacon: true,
-
-    content:
-      'This section provides a detailed breakdown of your financial goals by term.',
-  },
-  {
-    target: '.investment-plan-box',
-    disableBeacon: true,
-
-    content:
-      'These are tailored investment suggestions to help you achieve your financial goals efficiently.',
-  },
-  {
-    target: '.customize-button',
-    disableBeacon: true,
-    content:
-      'Click this button to personalize the investment suggestions according to your preferences.',
-  },
-  {
-    target: '.calendar-button',
-    disableBeacon: true,
-    content:
-      'This calendar is set to the current month by default. You can change the date to view your progress at any point in time.',
-  },
-];
+import Pagetour from './components/Pagetour';
 
 type PlannerProps = {
   plannerData: PlannerData;
@@ -67,22 +19,7 @@ type PlannerProps = {
 };
 
 const Planner = ({ plannerData, dispatch }: PlannerProps) => {
-  const [isTourTaken, setIsTourTaken] = useState(
-    JSON.parse(localStorage.getItem('isTourTaken') || 'false'),
-  );
-  const [runTour, setRunTour] = useState<boolean>(!isTourTaken);
-
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
-
-  useEffect(() => {
-    if (isTourTaken) {
-      const timer = setTimeout(() => {
-        setRunTour(true);
-      }, 5000);
-
-      return () => clearTimeout(timer); // Cleanup timer on component unmount
-    }
-  }, [isTourTaken]);
 
   const handleChange = (value: Dayjs | null) => {
     setSelectedDate(value!.toString());
@@ -116,49 +53,9 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
     };
   });
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
-
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      localStorage.setItem('isTourTaken', JSON.stringify(true));
-      setIsTourTaken(true);
-      setRunTour(false);
-    }
-  };
-
   return (
     <>
-      <Joyride
-        steps={steps}
-        callback={handleJoyrideCallback}
-        run={runTour}
-        continuous
-        showSkipButton
-        showProgress
-        styles={{
-          options: {
-            arrowColor: '#f5f5f5',
-            backgroundColor: '#ffffff',
-            overlayColor: 'rgba(0, 0, 0, 0.5)',
-            primaryColor: '#4CAF50',
-            textColor: '#333',
-            zIndex: 1000,
-          },
-          buttonClose: {
-            color: '#ff1744',
-          },
-          buttonBack: {
-            color: '#9E9E9E',
-          },
-          buttonNext: {
-            backgroundColor: '#1976D2',
-            color: '#ffffff',
-          },
-          buttonSkip: {
-            color: '#F44336',
-          },
-        }}
-      />
+      <Pagetour />
       <Grid container>
         <Grid size={12} display="flex" justifyContent="space-between">
           <Box sx={{ mt: 2, ml: 2 }}>

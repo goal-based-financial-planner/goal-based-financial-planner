@@ -42,9 +42,9 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
         plannerData.investmentAllocations,
       );
 
-      const elapsedMonths = dayjs(selectedDate).diff(
-        dayjs(goal.getInvestmentStartDate()),
-        'month',
+      const elapsedMonths = Math.max(
+        0,
+        dayjs(selectedDate).diff(dayjs(goal.getInvestmentStartDate()), 'month'),
       );
       const currentValue = investmentSuggestions
         .map((suggestion) => {
@@ -128,81 +128,6 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
       monthlyInvestment * ((Math.pow(1 + i, termInMonths) - 1) / i) * (1 + i)
     );
   };
-
-  // function calculateYearWiseReturnsForSuggestion(
-  //   startYear: number,
-  //   endYear: number,
-  //   investmentSuggestion: InvestmentSuggestion,
-  // ) {
-  //   const returnsByYear: ReturnsByYear[] = [];
-
-  //   for (let i = startYear + 1; i <= endYear; i++) {
-  //     const termInMonths = (i - startYear) * 12;
-  //     const expectedReturnPercentage = plannerData.investmentOptions.filter(
-  //       (e) => e.id === investmentSuggestion.investmentOptionId,
-  //     )[0].expectedReturnPercentage;
-  //     const returnOfTheYear = calculateReturnOnInvestment(
-  //       investmentSuggestion.amount,
-  //       termInMonths,
-  //       expectedReturnPercentage,
-  //     );
-  //     returnsByYear.push({ year: i, return: returnOfTheYear });
-  //   }
-
-  //   return returnsByYear;
-  // }
-
-  // function calculateYearWiseReturnForGoal(
-  //   goal: FinancialGoal,
-  //   goalWiseSuggestion: GoalWiseInvestmentSuggestions,
-  // ) {
-  //   const returnsByInvestment: ReturnsPerInvestment[] = [];
-  //   const startYear = goal.getInvestmentStartYear();
-  //   const endYear = goal.getTargetYear();
-
-  //   goalWiseSuggestion.investmentSuggestions.forEach((investmentSuggestion) => {
-  //     const returnsByYear = calculateYearWiseReturnsForSuggestion(
-  //       startYear,
-  //       endYear,
-  //       investmentSuggestion,
-  //     );
-  //     returnsByInvestment.push({
-  //       investmentOptionId: investmentSuggestion.investmentOptionId,
-  //       returnsByYear,
-  //     });
-  //   });
-  //   return returnsByInvestment;
-  // }
-
-  // const calculateYearlyReturnValueBySuggestions = (
-  //   financialGoals: FinancialGoal[],
-  // ): GoalWiseReturn[] => {
-  //   const goalWiseReturns: GoalWiseReturn[] = [];
-  //   const goalWiseInvestmentSuggestions = financialGoals.map((goal) => ({
-  //     goalName: goal.getGoalName(),
-  //     investmentSuggestions: calculateInvestmentPerGoal(
-  //       goal,
-  //       plannerData.investmentAllocations,
-  //     ),
-  //   }));
-  //   goalWiseInvestmentSuggestions.forEach((goalWiseSuggestion) => {
-  //     const goal = financialGoals.filter(
-  //       (e) => e.getGoalName() === goalWiseSuggestion.goalName,
-  //     )[0];
-  //     const returnsPerInvestment = calculateYearWiseReturnForGoal(
-  //       goal,
-  //       goalWiseSuggestion,
-  //     );
-
-  //     goalWiseReturns.push({
-  //       goalName: goal.getGoalName(),
-  //       investmentSuggestions: goalWiseSuggestion.investmentSuggestions,
-  //       returnsPerInvestment,
-  //     });
-  //   });
-
-  //   return goalWiseReturns;
-  // };
 
   return {
     calculateInvestmentNeededForGoals,

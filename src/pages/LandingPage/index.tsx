@@ -7,6 +7,7 @@ import image3 from '../../assets/image3.png';
 import image4 from '../../assets/image4.png';
 import icon from '../../assets/icon.png';
 import { StyledBox } from '../../components/StyledBox';
+import { useState } from 'react';
 
 const getImageStyle = (position: string, size: number, rotation: number) => ({
   position: 'absolute',
@@ -122,6 +123,3 @@ const LandingPage = ({
 };
 
 export default LandingPage;
-function useState(arg0: boolean): [any, any] {
-  throw new Error('Function not implemented.');
-}
