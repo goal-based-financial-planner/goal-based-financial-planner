@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { formatNumber } from '../../types/util';
 
@@ -9,6 +9,9 @@ interface LiveCounterProps {
 
 const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
   const [currentValue, setCurrentValue] = useState(0);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (currentValue === 0) {
@@ -34,7 +37,10 @@ const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
   }, [value, duration]);
 
   return (
-    <Typography variant="h1" sx={{ color: 'green', fontWeight: 'bold', mt: 2 }}>
+    <Typography
+      variant={isMobile ? 'h3' : 'h1'}
+      sx={{ color: 'green', fontWeight: 'bold', mt: 2 }}
+    >
       {formatNumber(currentValue, 1_000_000_000)}
     </Typography>
   );

@@ -1,4 +1,12 @@
-import { Box, Typography, Grid2 as Grid, Modal, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Grid2 as Grid,
+  Modal,
+  Button,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { TermType } from '../../../../types/enums';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
@@ -35,10 +43,13 @@ const InvestmentSuggestionsBox = ({
     setTermTypeModal(null);
   };
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <>
       <Grid container>
-        <Grid size={12} sx={{ ml: 2 }}>
+        <Grid size={12} sx={{ ml: 2, mr: isMobile ? 2 : 0 }}>
           {investmentBreakdownBasedOnTermType
             .filter(({ investmentBreakdown }) =>
               investmentBreakdown.find(
@@ -66,32 +77,36 @@ const InvestmentSuggestionsBox = ({
                   </Button>
                 </Box>
                 <Grid container justifyContent={'center'} alignItems={'center'}>
-                  <Grid
-                    size={3.5}
-                    display="flex"
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                  >
-                    <InvestmentPieChart
-                      allocations={investmentAllocations[term.termType]}
-                    />
-                  </Grid>
-                  <Grid
-                    size={1}
-                    display="flex"
-                    justifyContent={'center'}
-                    alignItems={'center'}
-                  >
-                    <span
-                      className="material-symbols-rounded"
-                      style={{ fontSize: '80px' }}
-                    >
-                      double_arrow
-                    </span>
-                  </Grid>
+                  {isMobile ? null : (
+                    <>
+                      <Grid
+                        size={3.5}
+                        display="flex"
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                      >
+                        <InvestmentPieChart
+                          allocations={investmentAllocations[term.termType]}
+                        />
+                      </Grid>
+                      <Grid
+                        size={1}
+                        display="flex"
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                      >
+                        <span
+                          className="material-symbols-rounded"
+                          style={{ fontSize: '80px' }}
+                        >
+                          double_arrow
+                        </span>
+                      </Grid>
+                    </>
+                  )}
 
                   <Grid
-                    size={3.5}
+                    size={isMobile ? 6 : 3.5}
                     display="flex"
                     justifyContent={'center'}
                     alignItems={'center'}
@@ -101,7 +116,7 @@ const InvestmentSuggestionsBox = ({
                     />
                   </Grid>
                   <Grid
-                    size={4}
+                    size={isMobile ? 6 : 4}
                     display="flex"
                     justifyContent={'center'}
                     alignItems={'center'}

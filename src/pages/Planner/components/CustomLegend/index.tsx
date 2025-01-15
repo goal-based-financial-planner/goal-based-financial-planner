@@ -5,6 +5,9 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
@@ -32,6 +35,8 @@ const CustomLegend = ({
     'rgba(50, 205, 50, 0.8)',
     'rgba(255, 99, 132, 0.8)',
   ];
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <TableContainer component={Box}>
       <Table size="small">
@@ -49,8 +54,8 @@ const CustomLegend = ({
                   <TableCell sx={{ padding: '4px 8px' }}>
                     <Box
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: isMobile ? 6 : 10,
+                        height: isMobile ? 6 : 10,
                         backgroundColor: color,
                       }}
                     />

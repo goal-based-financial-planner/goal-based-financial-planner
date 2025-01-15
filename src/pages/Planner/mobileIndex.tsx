@@ -9,22 +9,19 @@ import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
-import TargetMobileBox from './components/TargetBox';
-import TermWiseProgressBox, {
-  TermTypeWiseProgressData,
-} from './components/TermwiseProgressBox';
+import { TermTypeWiseProgressData } from './components/TermwiseProgressBox';
 import GoalBox from './components/GoalBox';
 import { StyledBox } from '../../components/StyledBox';
 import PageTour from './components/Pagetour';
 import TermWiseProgressMobileBox from './components/TermwiseProgressBox/mobileIndex';
-import TargetBox from './components/TargetBox';
+import TargetMobileBox from './components/TargetBox/mobileIndex';
 
 type PlannerProps = {
   plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
 };
 
-const Planner = ({ plannerData, dispatch }: PlannerProps) => {
+const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
 
   const handleChange = (value: Dayjs | null) => {
@@ -125,13 +122,37 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             />
           </StyledBox>
         </Grid>
-        <Grid size={4}>
-          <TargetBox targetAmount={targetAmount} dispatch={dispatch} />
+
+        <Grid
+          size={12}
+          sx={{
+            overflowX: 'auto',
+            display: 'flex',
+          }}
+        >
+          <Box
+            sx={{
+              minWidth: '300px',
+            }}
+          >
+            <TargetMobileBox
+              targetAmount={targetAmount}
+              dispatch={dispatch}
+              financialGoals={plannerData.financialGoals}
+              investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+              selectedDate={selectedDate}
+            />
+          </Box>
+          <Box
+            sx={{
+              minWidth: '300px',
+            }}
+          >
+            <TermWiseProgressMobileBox data={termTypeWiseProgressData} />
+          </Box>
         </Grid>
-        <Grid size={8}>
-          <TermWiseProgressBox data={termTypeWiseProgressData} />
-        </Grid>
-        <Grid size={9}>
+
+        <Grid size={12}>
           <InvestmentSuggestionsBox
             dispatch={dispatch}
             investmentAllocations={plannerData.investmentAllocations}
@@ -140,7 +161,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             }
           />
         </Grid>
-        <Grid size={3}>
+        <Grid size={12}>
           <GoalBox
             financialGoals={plannerData.financialGoals}
             investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
@@ -153,4 +174,4 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
   );
 };
 
-export default Planner;
+export default MobilePlanner;

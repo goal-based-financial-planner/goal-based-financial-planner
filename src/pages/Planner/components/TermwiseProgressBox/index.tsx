@@ -8,6 +8,8 @@ import {
   styled,
   Divider,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
@@ -38,9 +40,12 @@ type TermTypeWiseData = {
 const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <StyledBox
-      height={'250px'}
+      height={isMobile ? '150px' : '250px'}
       sx={{ mx: 2, my: 2 }}
       className="financial-progress-box"
     >

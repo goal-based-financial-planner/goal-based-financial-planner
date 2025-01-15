@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { formatNumber } from '../../../../types/util';
 import { PieChart } from '@mui/x-charts';
@@ -8,6 +8,9 @@ const InvestmentSuggestionsDoughnutChart = ({
 }: {
   suggestions: GoalWiseInvestmentSuggestions[];
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const investmentOptionWiseSum = suggestions.reduce(
     (acc, goal) => {
       goal.investmentSuggestions.forEach(({ investmentName, amount }) => {
@@ -46,6 +49,7 @@ const InvestmentSuggestionsDoughnutChart = ({
       sx={{
         width: 300,
         position: 'relative',
+        mr: 2,
       }}
     >
       <PieChart
@@ -54,9 +58,9 @@ const InvestmentSuggestionsDoughnutChart = ({
           {
             data: seriesData,
             paddingAngle: 3,
-            outerRadius: 100,
-            innerRadius: 80,
-            cornerRadius: 70,
+            outerRadius: isMobile ? 60 : 100,
+            innerRadius: isMobile ? 40 : 80,
+            cornerRadius: 4,
           },
         ]}
         {...pieParams}
