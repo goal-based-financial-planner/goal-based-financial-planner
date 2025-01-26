@@ -1,20 +1,21 @@
-import { Grid2 as Grid, Box, Typography } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Grid2 as Grid, Box, Typography, InputAdornment } from '@mui/material';
+import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
+import TargetMobileBox from './components/TargetBox/mobileIndex';
+import TermWiseProgressMobileBox, {
+  TermTypeWiseProgressData,
+} from './components/TermwiseProgressBox/mobileIndex';
+import { PlannerData } from '../../domain/PlannerData';
+import { Dispatch } from 'react';
+import { PlannerDataAction } from '../../store/plannerDataReducer';
+import useInvestmentCalculator from './hooks/useInvestmentCalculator';
+import GoalBox from './components/GoalBox';
 import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
 } from './components/InvestmentSuggestions';
-import { Dispatch, useState } from 'react';
 import { TermType } from '../../types/enums';
-import useInvestmentCalculator from './hooks/useInvestmentCalculator';
-import { PlannerData } from '../../domain/PlannerData';
-import { PlannerDataAction } from '../../store/plannerDataReducer';
-import { TermTypeWiseProgressData } from './components/TermwiseProgressBox';
-import GoalBox from './components/GoalBox';
 import { StyledBox } from '../../components/StyledBox';
-import PageTour from './components/Pagetour';
-import TermWiseProgressMobileBox from './components/TermwiseProgressBox/mobileIndex';
-import TargetMobileBox from './components/TargetBox/mobileIndex';
 
 type PlannerProps = {
   plannerData: PlannerData;
@@ -23,6 +24,8 @@ type PlannerProps = {
 
 const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
+  const [showSuggestions, setShowSuggestions] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (value: Dayjs | null) => {
     setSelectedDate(value!.toString());
@@ -69,7 +72,7 @@ const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
           (investmentBreakDownPerTerm.reduce(
             (acc, val) => acc + val.currentValue,
             0,
-          )! /
+          ) /
             termTypeSum) *
             100,
         );
@@ -90,9 +93,45 @@ const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
     },
   );
 
+  const previousScrollLeft = useRef(0);
+
+  const handleScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const scrollLeft = container.scrollLeft;
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      if (scrollLeft === maxScrollLeft) {
+        setShowSuggestions(false);
+      } else if (scrollLeft === 0) {
+        setShowSuggestions(true);
+      } else {
+        const isScrollingRight = scrollLeft > previousScrollLeft.current;
+        const scrollIncrement = 10;
+
+        if (isScrollingRight) {
+          container.scrollLeft += scrollIncrement;
+        } else {
+          container.scrollLeft -= scrollIncrement;
+        }
+      }
+      previousScrollLeft.current = scrollLeft;
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [handleScroll]);
+
   return (
     <>
-      <PageTour />
       <Grid container>
         <Grid size={12} display="flex" justifyContent="space-between">
           <Box sx={{ mt: 2, ml: 2 }}>
@@ -116,6 +155,11 @@ const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
                   label: '',
                   InputProps: {
                     disableUnderline: true,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <CalendarIcon />
+                      </InputAdornment>
+                    ),
                   },
                 },
               }}
@@ -128,11 +172,15 @@ const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
           sx={{
             overflowX: 'auto',
             display: 'flex',
+            width: '100%',
+            maxWidth: '100vw',
+            overscrollBehaviorX: 'contain', // Prevent scroll propagation
           }}
+          ref={scrollContainerRef}
         >
           <Box
             sx={{
-              minWidth: '300px',
+              minWidth: '90%',
             }}
           >
             <TargetMobileBox
@@ -145,30 +193,36 @@ const MobilePlanner = ({ plannerData, dispatch }: PlannerProps) => {
           </Box>
           <Box
             sx={{
-              minWidth: '300px',
+              minWidth: '100%',
+              transition: 'height 0.3s ease',
             }}
           >
-            <TermWiseProgressMobileBox data={termTypeWiseProgressData} />
+            <TermWiseProgressMobileBox
+              data={termTypeWiseProgressData}
+              showSuggestions={showSuggestions}
+            />
           </Box>
         </Grid>
 
-        <Grid size={12}>
-          <InvestmentSuggestionsBox
-            dispatch={dispatch}
-            investmentAllocations={plannerData.investmentAllocations}
-            investmentBreakdownBasedOnTermType={
-              investmentBreakdownBasedOnTermType
-            }
-          />
-        </Grid>
-        <Grid size={12}>
-          <GoalBox
-            financialGoals={plannerData.financialGoals}
-            investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-            selectedDate={selectedDate}
-            dispatch={dispatch}
-          />
-        </Grid>
+        <>
+          <Grid size={12}>
+            <InvestmentSuggestionsBox
+              dispatch={dispatch}
+              investmentAllocations={plannerData.investmentAllocations}
+              investmentBreakdownBasedOnTermType={
+                investmentBreakdownBasedOnTermType
+              }
+            />
+          </Grid>
+          <Grid size={12}>
+            <GoalBox
+              financialGoals={plannerData.financialGoals}
+              investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+              selectedDate={selectedDate}
+              dispatch={dispatch}
+            />
+          </Grid>
+        </>
       </Grid>
     </>
   );

@@ -120,6 +120,15 @@ let theme = createTheme({
       },
     },
   },
+  components: {
+    MuiModal: {
+      styleOverrides: {
+        root: {
+          zIndex: 2100,
+        },
+      },
+    },
+  },
 });
 
 export default theme;

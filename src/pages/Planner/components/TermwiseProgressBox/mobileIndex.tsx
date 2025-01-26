@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { StyledBox } from '../../../../components/StyledBox';
+import { AxisConfig, ChartsXAxisProps } from '@mui/x-charts';
 
 export type TermTypeWiseProgressData = {
   termType: string;
@@ -9,6 +10,7 @@ export type TermTypeWiseProgressData = {
 
 type TermWiseProgressBoxProps = {
   data: TermTypeWiseProgressData[];
+  showSuggestions: boolean;
 };
 
 type TermTypeWiseData = {
@@ -17,7 +19,10 @@ type TermTypeWiseData = {
   goalNames: string[];
 };
 
-const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
+const TermWiseProgressMobileBox = ({
+  data,
+  showSuggestions: height,
+}: TermWiseProgressBoxProps) => {
   const chartData = data.map(({ termType, termTypeWiseData }) => ({
     termType,
     progressPercent: termTypeWiseData.progressPercent,
@@ -28,7 +33,7 @@ const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
       sx={{
         mx: 2,
         my: 2,
-        height: '150px',
+        height: height ? '150px' : '350px',
       }}
     >
       <Typography variant="h6" fontWeight="bold" gutterBottom>
@@ -38,12 +43,17 @@ const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
         xAxis={[
           {
             scaleType: 'band',
-            data: chartData.map((item) => item.termType),
-          },
+            data: chartData.map((item) => {
+              if (item.termType === 'Short Term') return 'ST';
+              if (item.termType === 'Medium Term') return 'MT';
+              if (item.termType === 'Long Term') return 'LT';
+              return '';
+            }),
+            categoryGapRatio: 0.5,
+          } as AxisConfig<'band', any, ChartsXAxisProps>,
         ]}
         yAxis={[
           {
-            tickInterval: [0, 50, 100],
             max: 100,
           },
         ]}
@@ -64,18 +74,8 @@ const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
             ? `${item.value}%`
             : null
         }
-      />
-
-      <BarChart
-        series={[
-          { data: [3, 4, 1, 6, 5], stack: 'A', label: 'Series A1' },
-          { data: [4, 3, 1, 5, 8], stack: 'A', label: 'Series A2' },
-          { data: [4, 2, 5, 4, 1], stack: 'B', label: 'Series B1' },
-          { data: [2, 8, 1, 3, 1], stack: 'B', label: 'Series B2' },
-          { data: [10, 6, 5, 8, 9], label: 'Series C1' },
-        ]}
-        width={600}
-        height={350}
+        height={300}
+        width={350}
       />
     </StyledBox>
   );

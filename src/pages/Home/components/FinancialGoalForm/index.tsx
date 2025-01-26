@@ -184,6 +184,7 @@ const FinancialGoalForm = ({
                         disablePortal: true,
                         sx: {
                           transformOrigin: 'top',
+                          zIndex: 2000,
                         },
                       },
                     }}
