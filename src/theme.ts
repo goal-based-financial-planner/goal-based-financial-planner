@@ -4,9 +4,9 @@ let theme = createTheme({
   typography: {
     h1: {
       fontSize: '2rem',
-      '@media (min-width:600px)': {
-        fontSize: '2.5rem',
-      },
+      // '@media (min-width:600px)': {
+      //   fontSize: '2.5rem',
+      // },
       '@media (min-width:960px)': {
         fontSize: '3rem',
       },
@@ -48,13 +48,13 @@ let theme = createTheme({
       },
     },
     h6: {
-      fontSize: '0.875rem',
-      '@media (min-width:600px)': {
-        fontSize: '1rem',
-      },
-      '@media (min-width:960px)': {
-        fontSize: '1.25rem',
-      },
+      // fontSize: '0.875rem',
+      // '@media (min-width:600px)': {
+      //   fontSize: '1rem',
+      // },
+      // '@media (min-width:960px)': {
+      //   fontSize: '1.25rem',
+      // },
     },
     subtitle1: {
       fontSize: '1rem',

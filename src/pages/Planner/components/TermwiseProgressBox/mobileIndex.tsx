@@ -10,7 +10,6 @@ export type TermTypeWiseProgressData = {
 
 type TermWiseProgressBoxProps = {
   data: TermTypeWiseProgressData[];
-  showSuggestions: boolean;
 };
 
 type TermTypeWiseData = {
@@ -19,23 +18,14 @@ type TermTypeWiseData = {
   goalNames: string[];
 };
 
-const TermWiseProgressMobileBox = ({
-  data,
-  showSuggestions: height,
-}: TermWiseProgressBoxProps) => {
+const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
   const chartData = data.map(({ termType, termTypeWiseData }) => ({
     termType,
     progressPercent: termTypeWiseData.progressPercent,
   }));
 
   return (
-    <StyledBox
-      sx={{
-        mx: 2,
-        my: 2,
-        height: height ? '150px' : '350px',
-      }}
-    >
+    <>
       <Typography variant="h6" fontWeight="bold" gutterBottom>
         Financial Progress
       </Typography>
@@ -77,7 +67,7 @@ const TermWiseProgressMobileBox = ({
         height={300}
         width={350}
       />
-    </StyledBox>
+    </>
   );
 };
 

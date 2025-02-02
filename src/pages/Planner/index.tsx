@@ -1,4 +1,4 @@
-import { Grid2 as Grid, Box, Typography } from '@mui/material';
+import { Grid2 as Grid, Box, Typography, Drawer } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import InvestmentSuggestionsBox, {
@@ -9,14 +9,12 @@ import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
-import TargetMobileBox from './components/TargetBox';
 import TermWiseProgressBox, {
   TermTypeWiseProgressData,
 } from './components/TermwiseProgressBox';
 import GoalBox from './components/GoalBox';
 import { StyledBox } from '../../components/StyledBox';
 import PageTour from './components/Pagetour';
-import TermWiseProgressMobileBox from './components/TermwiseProgressBox/mobileIndex';
 import TargetBox from './components/TargetBox';
 
 type PlannerProps = {
@@ -26,6 +24,7 @@ type PlannerProps = {
 
 const Planner = ({ plannerData, dispatch }: PlannerProps) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
+  const [showDrawer, setShowDrawer] = useState(false);
 
   const handleChange = (value: Dayjs | null) => {
     setSelectedDate(value!.toString());
@@ -125,13 +124,18 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             />
           </StyledBox>
         </Grid>
-        <Grid size={4}>
-          <TargetBox targetAmount={targetAmount} dispatch={dispatch} />
+        <Grid size={{ xs: 12, md: 4 }}>
+          <TargetBox
+            targetAmount={targetAmount}
+            dispatch={dispatch}
+            setShowDrawer={setShowDrawer}
+            termTypeWiseProgressData={termTypeWiseProgressData}
+          />
         </Grid>
-        <Grid size={8}>
+        <Grid size={8} sx={{ display: { xs: 'none', md: 'block' } }}>
           <TermWiseProgressBox data={termTypeWiseProgressData} />
         </Grid>
-        <Grid size={9}>
+        <Grid size={{ xs: 12, md: 9 }}>
           <InvestmentSuggestionsBox
             dispatch={dispatch}
             investmentAllocations={plannerData.investmentAllocations}
@@ -140,15 +144,29 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             }
           />
         </Grid>
-        <Grid size={3}>
+        <Grid size={3} sx={{ display: { xs: 'none', md: 'block' } }}>
           <GoalBox
             financialGoals={plannerData.financialGoals}
             investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
             selectedDate={selectedDate}
             dispatch={dispatch}
+            useStyledBox={true}
           />
         </Grid>
       </Grid>
+      <Drawer
+        open={showDrawer}
+        onClose={() => setShowDrawer(false)}
+        anchor="right"
+      >
+        <GoalBox
+          financialGoals={plannerData.financialGoals}
+          investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+          selectedDate={selectedDate}
+          dispatch={dispatch}
+          useStyledBox={false}
+        />
+      </Drawer>
     </>
   );
 };
