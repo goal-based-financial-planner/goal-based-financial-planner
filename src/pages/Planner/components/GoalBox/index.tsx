@@ -1,6 +1,4 @@
-import { Grid2 as Grid, Typography, Divider } from '@mui/material';
-
-import GoalCard from '../GoalCard';
+import { Grid2 as Grid, Typography } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
 import { Dispatch } from 'react';

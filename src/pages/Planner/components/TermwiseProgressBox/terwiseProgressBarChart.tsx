@@ -1,7 +1,6 @@
-import { Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { StyledBox } from '../../../../components/StyledBox';
 import { AxisConfig, ChartsXAxisProps } from '@mui/x-charts';
+import { Typography } from '@mui/material';
 
 export type TermTypeWiseProgressData = {
   termType: string;
@@ -18,7 +17,7 @@ type TermTypeWiseData = {
   goalNames: string[];
 };
 
-const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
+const TermWiseProgressBarChart = ({ data }: TermWiseProgressBoxProps) => {
   const chartData = data.map(({ termType, termTypeWiseData }) => ({
     termType,
     progressPercent: termTypeWiseData.progressPercent,
@@ -26,7 +25,7 @@ const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
 
   return (
     <>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
+      <Typography variant="h6" fontWeight="bold" mt={3}>
         Financial Progress
       </Typography>
       <BarChart
@@ -64,11 +63,10 @@ const TermWiseProgressMobileBox = ({ data }: TermWiseProgressBoxProps) => {
             ? `${item.value}%`
             : null
         }
-        height={300}
-        width={350}
+        height={250}
       />
     </>
   );
 };
 
-export default TermWiseProgressMobileBox;
+export default TermWiseProgressBarChart;
