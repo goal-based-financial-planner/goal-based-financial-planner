@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Alert, Box, Button, Snackbar, Typography } from '@mui/material';
-import InvestmentAllocationPerTerm from '../InvesmentAllocationPerTerm';
 import { TermType } from '../../../../types/enums';
 import { updateInvestmentAllocation } from '../../../../store/plannerDataActions';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
+import InvestmentAllocationPerTermForMobile from '../InvesmentAllocationPerTerm/InvestmentAllocationsPerTermForMobile';
 
-const InvestmentAllocations = ({
+const InvestmentAllocationsForMobile = ({
   investmentAllocations,
   dispatch,
   onSubmit,
@@ -72,8 +72,8 @@ const InvestmentAllocations = ({
     <>
       <Box
         sx={{
-          width: '800px',
-          height: '60vh', // Box height relative to viewport height
+          width: 'auto',
+          height: '50vh', // Box height relative to viewport height
           overflowY: 'auto',
           backgroundColor: '#ffffff',
           p: 2,
@@ -94,7 +94,7 @@ const InvestmentAllocations = ({
 
         <Typography
           sx={{
-            fontSize: 16,
+            fontSize: 12,
             p: 2,
           }}
         >
@@ -114,7 +114,10 @@ const InvestmentAllocations = ({
               overflow: 'auto',
             }}
           >
-            <InvestmentAllocationPerTerm control={control} name={termType} />
+            <InvestmentAllocationPerTermForMobile
+              control={control}
+              name={termType}
+            />
           </Box>
 
           <Box
@@ -129,6 +132,7 @@ const InvestmentAllocations = ({
               sx={{
                 backgroundColor: 'green',
                 border: '1px solid green',
+                fontSize: '12px',
               }}
               type="submit"
             >
@@ -152,4 +156,4 @@ const InvestmentAllocations = ({
   );
 };
 
-export default InvestmentAllocations;
+export default InvestmentAllocationsForMobile;

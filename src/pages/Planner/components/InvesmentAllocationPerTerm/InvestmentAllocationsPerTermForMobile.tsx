@@ -18,7 +18,7 @@ import { TermType } from '../../../../types/enums';
 import investmentNames from '../../../../domain/investmentAllocations';
 import { useState } from 'react';
 
-const InvestmentAllocationPerTerm = ({
+const InvestmentAllocationPerTermForMobile = ({
   control,
   name,
 }: {
@@ -44,13 +44,19 @@ const InvestmentAllocationPerTerm = ({
             <TableHead>
               <TableRow>
                 <TableCell>
-                  <Typography fontWeight="bold">Investment Name</Typography>
+                  <Typography fontWeight="bold" fontSize="12px">
+                    Investment Name
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography fontWeight="bold">Expected Return (%)</Typography>
+                  <Typography fontWeight="bold" fontSize="12px">
+                    Expected Return (%)
+                  </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography fontWeight="bold">Investment (%)</Typography>
+                  <Typography fontWeight="bold" fontSize="12px">
+                    Investment (%)
+                  </Typography>
                 </TableCell>
                 <TableCell />
               </TableRow>
@@ -83,30 +89,37 @@ const InvestmentAllocationPerTerm = ({
                                   field.onChange(newInputValue);
                                 }
                               }}
-                              slotProps={{
-                                popper: {
-                                  disablePortal: true,
-                                  sx: {
-                                    transformOrigin: 'top',
-                                    zIndex: 2000,
-                                  },
-                                },
-                              }}
                               renderInput={(params) => (
                                 <TextField
                                   {...params}
                                   variant="standard"
                                   fullWidth
+                                  sx={{
+                                    '& .MuiInputBase-input': {
+                                      fontSize: '12px',
+                                    }, // Input text size
+                                  }}
                                 />
                               )}
+                              slotProps={{
+                                paper: {
+                                  sx: {
+                                    fontSize: '12px', // Font size for dropdown options
+                                    width: 'auto', // Allows dropdown to take more width dynamically
+                                    minWidth: '200px', // Set minimum width
+                                  },
+                                },
+                              }}
                             />
                           ) : (
-                            <Typography>{field.value || '—'}</Typography>
+                            <Typography fontSize="12px">
+                              {field.value || '—'}
+                            </Typography>
                           )
                         }
                       />
                     </TableCell>
-                    <TableCell align="center" width={'160px'}>
+                    <TableCell align="center" width={'120px'}>
                       <Controller
                         name={`${name}.${index}.expectedReturnPercentage`}
                         control={control}
@@ -115,7 +128,12 @@ const InvestmentAllocationPerTerm = ({
                             <TextField
                               {...field}
                               type="number"
-                              sx={{ width: '100%' }}
+                              sx={{
+                                width: '100%',
+                                '& .MuiInputBase-input': {
+                                  fontSize: '12px',
+                                },
+                              }}
                               variant="standard"
                               inputProps={{
                                 min: 1,
@@ -123,12 +141,14 @@ const InvestmentAllocationPerTerm = ({
                               }}
                             />
                           ) : (
-                            <Typography>{field.value}</Typography>
+                            <Typography fontSize="12px">
+                              {field.value}
+                            </Typography>
                           )
                         }
                       />
                     </TableCell>
-                    <TableCell align="center" width={'130px'}>
+                    <TableCell align="center" width={'100px'}>
                       <Controller
                         name={`${name}.${index}.investmentPercentage`}
                         control={control}
@@ -146,11 +166,18 @@ const InvestmentAllocationPerTerm = ({
                                 max: 100,
                                 inputMode: 'numeric',
                               }}
-                              sx={{ width: '100%' }}
+                              sx={{
+                                width: '100%',
+                                '& .MuiInputBase-input': {
+                                  fontSize: '12px',
+                                },
+                              }}
                               variant="standard"
                             />
                           ) : (
-                            <Typography>{field.value}</Typography>
+                            <Typography fontSize="12px">
+                              {field.value}
+                            </Typography>
                           )
                         }
                       />
@@ -166,6 +193,7 @@ const InvestmentAllocationPerTerm = ({
                           <span
                             className="material-symbols-rounded"
                             onClick={() => saveRow(index)}
+                            style={{ fontSize: 'medium' }}
                           >
                             save
                           </span>
@@ -173,6 +201,7 @@ const InvestmentAllocationPerTerm = ({
                           <span
                             className="material-symbols-rounded"
                             onClick={() => setEditableRow(index)}
+                            style={{ fontSize: 'medium' }}
                           >
                             edit
                           </span>
@@ -180,6 +209,7 @@ const InvestmentAllocationPerTerm = ({
                         <span
                           className="material-symbols-rounded"
                           onClick={() => remove(index)}
+                          style={{ fontSize: 'medium' }}
                         >
                           delete
                         </span>
@@ -198,7 +228,12 @@ const InvestmentAllocationPerTerm = ({
             <Button
               variant="outlined"
               color="primary"
-              sx={{ mt: 2, color: 'green', border: '1px solid green' }}
+              sx={{
+                mt: 2,
+                color: 'green',
+                border: '1px solid green',
+                fontSize: '12px',
+              }}
               onClick={() => {
                 append({
                   investmentName: '',
@@ -217,4 +252,4 @@ const InvestmentAllocationPerTerm = ({
   );
 };
 
-export default InvestmentAllocationPerTerm;
+export default InvestmentAllocationPerTermForMobile;
