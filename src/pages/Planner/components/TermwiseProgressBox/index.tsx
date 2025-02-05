@@ -6,10 +6,7 @@ import {
   LinearProgress,
   linearProgressClasses,
   styled,
-  Divider,
   Tooltip,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
@@ -40,15 +37,8 @@ type TermTypeWiseData = {
 const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   return (
-    <StyledBox
-      height={isMobile ? '150px' : '250px'}
-      sx={{ mx: 2, my: 2 }}
-      className="financial-progress-box"
-    >
+    <StyledBox sx={{ mx: 2, my: 2 }} className="financial-progress-box">
       <Box
         sx={{
           display: 'flex',
@@ -61,11 +51,18 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
           Financial Progress
         </Typography>
       </Box>
-      <Grid container pt={1}>
-        {data.map(({ termType, termTypeWiseData }) => {
+      <Grid container pt={1} sx={{}}>
+        {data.map(({ termType, termTypeWiseData }, idx) => {
+          const isLastGrid = idx === data.length - 1;
           return (
             <>
-              <Grid size={12 / numberOfTermsPresent} sx={{ padding: 2 }}>
+              <Grid
+                size={12 / numberOfTermsPresent}
+                sx={{
+                  padding: 2,
+                  borderRight: isLastGrid ? 'none' : '1px dashed grey',
+                }}
+              >
                 <Tooltip
                   title={`${termTypeWiseData.progressPercent}%`}
                   placement="top-end"
@@ -130,7 +127,7 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                         sx={{
                           width: 'auto',
                           height: '20px',
-                          mr: 1,
+
                           mb: 1,
                         }}
                       />
@@ -138,15 +135,6 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                   </Box>
                 </Box>
               </Grid>
-
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{
-                  borderStyle: 'dashed',
-                  marginX: -1,
-                }}
-              />
             </>
           );
         })}
