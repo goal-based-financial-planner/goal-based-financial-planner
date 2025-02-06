@@ -83,15 +83,15 @@ let theme = createTheme({
         fontSize: '1.25rem',
       },
     },
-    body2: {
-      fontSize: '0.875rem',
-      '@media (min-width:600px)': {
-        fontSize: '1rem',
-      },
-      '@media (min-width:960px)': {
-        fontSize: '1.125rem',
-      },
-    },
+    // body2: {
+    //   fontSize: '0.875rem',
+    //   '@media (min-width:600px)': {
+    //     fontSize: '1rem',
+    //   },
+    //   '@media (min-width:960px)': {
+    //     fontSize: '1.125rem',
+    //   },
+    // },
     button: {
       fontSize: '0.875rem',
       '@media (min-width:600px)': {

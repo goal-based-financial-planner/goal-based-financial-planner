@@ -36,7 +36,7 @@ const GoalCard = ({
         className="card-content"
         sx={{
           display: 'flex',
-          px: 2,
+          px: 1,
           py: 1,
           borderRadius: 2,
           justifyContent: 'space-between',
@@ -45,8 +45,8 @@ const GoalCard = ({
         }}
       >
         <Box>
-          <Typography variant="subtitle1">{goal.goalName}</Typography>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', mt: 1 }}>
+          <Typography variant="subtitle2">{goal.goalName}</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
             {goal
               .getInflationAdjustedTargetAmount()
               .toLocaleString(navigator.language, {

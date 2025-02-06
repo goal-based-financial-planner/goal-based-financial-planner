@@ -102,14 +102,10 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
               Welcome
             </Typography>
           </Box>
-          <StyledBox
-            sx={{ width: '160px', mt: 1, mr: 2 }}
-            className="calendar-button"
-          >
+          <StyledBox sx={{ mt: 1, mr: 2 }} className="calendar-button">
             <DatePicker
               label={'"month" and "year"'}
               views={['month', 'year']}
-              sx={{ width: '160px' }}
               defaultValue={dayjs()}
               onChange={handleChange}
               slotProps={{
@@ -124,7 +120,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             />
           </StyledBox>
         </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <TargetBox
             targetAmount={targetAmount}
             dispatch={dispatch}
@@ -132,7 +128,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             termTypeWiseProgressData={termTypeWiseProgressData}
           />
         </Grid>
-        <Grid size={8} sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Grid size={9} sx={{ display: { xs: 'none', md: 'block' } }}>
           <TermWiseProgressBox data={termTypeWiseProgressData} />
         </Grid>
         <Grid size={{ xs: 12, md: 9 }}>

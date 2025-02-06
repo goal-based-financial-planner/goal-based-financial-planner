@@ -38,7 +38,7 @@ const GoalBox = ({
   function getPendingGoals() {
     return (
       <>
-        <Typography variant="h6" fontWeight="bold" sx={{ my: 2 }}>
+        <Typography variant="h6" fontWeight="bold">
           Financial Goals
         </Typography>
         <GoalList
