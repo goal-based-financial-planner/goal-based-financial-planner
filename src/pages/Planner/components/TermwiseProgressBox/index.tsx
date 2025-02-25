@@ -38,7 +38,19 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
   return (
-    <StyledBox sx={{ mx: 2, my: 2 }} className="financial-progress-box">
+    <StyledBox
+      sx={{
+        mx: 2,
+        my: 2,
+        minHeight: {
+          xs: '200px',
+          sm: '200px',
+          md: '250px',
+          lg: '250px',
+        },
+      }}
+      className="financial-progress-box"
+    >
       <Box
         sx={{
           display: 'flex',

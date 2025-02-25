@@ -50,6 +50,9 @@ const TargetBox = ({
           position: 'relative',
           minHeight: {
             xs: '200px',
+            sm: '200px',
+            md: '250px',
+            lg: '250px',
           },
         }}
         className="target-box"

@@ -120,7 +120,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             />
           </StyledBox>
         </Grid>
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
           <TargetBox
             targetAmount={targetAmount}
             dispatch={dispatch}
@@ -128,10 +128,13 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             termTypeWiseProgressData={termTypeWiseProgressData}
           />
         </Grid>
-        <Grid size={9} sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Grid
+          size={{ xs: 0, sm: 0, md: 9, lg: 9 }}
+          sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}
+        >
           <TermWiseProgressBox data={termTypeWiseProgressData} />
         </Grid>
-        <Grid size={{ xs: 12, md: 9 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 8, lg: 9 }}>
           <InvestmentSuggestionsBox
             dispatch={dispatch}
             investmentAllocations={plannerData.investmentAllocations}
@@ -140,7 +143,10 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             }
           />
         </Grid>
-        <Grid size={3} sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Grid
+          size={{ xs: 12, sm: 12, md: 4, lg: 3 }}
+          sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}
+        >
           <GoalBox
             financialGoals={plannerData.financialGoals}
             investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}

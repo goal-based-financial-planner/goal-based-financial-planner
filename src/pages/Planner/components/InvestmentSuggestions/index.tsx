@@ -51,7 +51,18 @@ const InvestmentSuggestionsBox = ({
   return (
     <>
       <Grid container>
-        <Grid size={12} sx={{ ml: 2, mr: isMobile ? 2 : 0 }}>
+        <Grid
+          size={12}
+          sx={{
+            ml: 2,
+            mr: {
+              xs: 2,
+              sm: 2,
+              md: 0,
+              lg: 0,
+            },
+          }}
+        >
           {investmentBreakdownBasedOnTermType
             .filter(({ investmentBreakdown }) =>
               investmentBreakdown.find(
@@ -79,37 +90,50 @@ const InvestmentSuggestionsBox = ({
                   </Button>
                 </Box>
                 <Grid container justifyContent={'center'} alignItems={'center'}>
-                  {isMobile ? null : (
-                    <>
-                      <Grid
-                        size={3.5}
-                        display="flex"
-                        justifyContent={'center'}
-                        alignItems={'center'}
+                  <>
+                    <Grid
+                      size={{ xs: 0, sm: 0, md: 6, lg: 3.5 }}
+                      display={{
+                        xs: 'none',
+                        sm: 'none',
+                        md: 'flex',
+                        lg: 'flex',
+                      }}
+                      justifyContent={'center'}
+                      alignItems={'center'}
+                    >
+                      <InvestmentPieChart
+                        allocations={investmentAllocations[term.termType]}
+                      />
+                    </Grid>
+                    <Grid
+                      size={{ xs: 0, sm: 0, md: 0, lg: 1 }}
+                      display={{
+                        xs: 'none',
+                        sm: 'none',
+                        md: 'none',
+                        lg: 'flex',
+                      }}
+                      justifyContent={'center'}
+                      alignItems={'center'}
+                    >
+                      <span
+                        className="material-symbols-rounded"
+                        style={{ fontSize: '80px' }}
                       >
-                        <InvestmentPieChart
-                          allocations={investmentAllocations[term.termType]}
-                        />
-                      </Grid>
-                      <Grid
-                        size={1}
-                        display="flex"
-                        justifyContent={'center'}
-                        alignItems={'center'}
-                      >
-                        <span
-                          className="material-symbols-rounded"
-                          style={{ fontSize: '80px' }}
-                        >
-                          double_arrow
-                        </span>
-                      </Grid>
-                    </>
-                  )}
+                        double_arrow
+                      </span>
+                    </Grid>
+                  </>
 
                   <Grid
-                    size={isMobile ? 6 : 3.5}
-                    display="flex"
+                    size={{ xs: 0, sm: 0, md: 0, lg: 3.5 }}
+                    display={{
+                      xs: 'none',
+                      sm: 'none',
+                      md: 'none',
+                      lg: 'flex',
+                    }}
                     justifyContent={'center'}
                     alignItems={'center'}
                   >
@@ -118,8 +142,13 @@ const InvestmentSuggestionsBox = ({
                     />
                   </Grid>
                   <Grid
-                    size={isMobile ? 6 : 4}
-                    display="flex"
+                    size={{ xs: 12, sm: 12, md: 6, lg: 4 }}
+                    display={{
+                      xs: 'flex',
+                      sm: 'flex',
+                      md: 'flex',
+                      lg: 'flex',
+                    }}
                     justifyContent={'center'}
                     alignItems={'center'}
                   >
