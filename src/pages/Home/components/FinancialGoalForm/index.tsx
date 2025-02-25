@@ -107,7 +107,6 @@ const FinancialGoalForm = ({
     }
 
     if (Object.keys(errors).length > 0) {
-      console.log(errors);
       setValidationErrors(errors);
       return;
     }
