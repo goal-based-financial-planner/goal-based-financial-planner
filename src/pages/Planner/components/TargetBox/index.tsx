@@ -41,19 +41,8 @@ const TargetBox = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          ml: 2,
-          my: 2,
-          mr: {
-            xs: 2,
-            md: 0,
-          },
           position: 'relative',
-          minHeight: {
-            xs: '200px',
-            sm: '200px',
-            md: '250px',
-            lg: '250px',
-          },
+          height: '85%',
         }}
         className="target-box"
       >
@@ -64,12 +53,9 @@ const TargetBox = ({
         <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
           <Button
             className="add-goals-button"
-            variant="outlined"
+            variant="contained"
             sx={{
-              width: '120px',
-              mt: 4,
-              color: 'green',
-              border: '1px solid green',
+              mt: 2,
             }}
             onClick={handleAdd}
           >
@@ -79,8 +65,7 @@ const TargetBox = ({
             className="view-goals-button"
             variant="text"
             sx={{
-              width: '120px',
-              mt: 4,
+              mt: 2,
               color: 'green',
               display: { xs: 'block', md: 'none' },
             }}

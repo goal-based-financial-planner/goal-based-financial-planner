@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
+import { useNumberFormatter } from '../../../../types/util';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
@@ -34,36 +35,21 @@ type TermTypeWiseData = {
   goalNames: string[];
 };
 
+const FormattedNumber = ({ value }: { value: number }) => {
+  const formattedValue = useNumberFormatter(value);
+  return <>{formattedValue}</>;
+};
+
 const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
   return (
-    <StyledBox
-      sx={{
-        mx: 2,
-        my: 2,
-        minHeight: {
-          xs: '200px',
-          sm: '200px',
-          md: '250px',
-          lg: '250px',
-        },
-      }}
-      className="financial-progress-box"
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'start',
-        }}
-      >
-        <Typography variant="h6" fontWeight="bold">
-          Financial Progress
-        </Typography>
-      </Box>
-      <Grid container pt={1} sx={{}}>
+    <StyledBox className="financial-progress-box" height="85%">
+      <Typography variant="h6" fontWeight="bold">
+        Financial Progress
+      </Typography>
+
+      <Grid container pt={1}>
         {data.map(({ termType, termTypeWiseData }, idx) => {
           const isLastGrid = idx === data.length - 1;
           return (
@@ -125,7 +111,7 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                   >
                     <Typography variant="body1">{termType}</Typography>
                     <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                      {termTypeWiseData.termTypeSum.toLocaleString()}
+                      <FormattedNumber value={termTypeWiseData.termTypeSum} />
                     </Typography>
                   </Box>
 

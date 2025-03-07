@@ -95,14 +95,14 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
   return (
     <>
       <PageTour />
-      <Grid container>
+      <Grid container padding={2} spacing={2} height="100%">
         <Grid size={12} display="flex" justifyContent="space-between">
-          <Box sx={{ mt: 2, ml: 2 }}>
+          <Box>
             <Typography className="navbar-home" variant="h3">
               Welcome
             </Typography>
           </Box>
-          <StyledBox sx={{ mt: 1, mr: 2 }} className="calendar-button">
+          <StyledBox className="calendar-button">
             <DatePicker
               label={'"month" and "year"'}
               views={['month', 'year']}
@@ -120,40 +120,49 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             />
           </StyledBox>
         </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
-          <TargetBox
-            targetAmount={targetAmount}
-            dispatch={dispatch}
-            setShowDrawer={setShowDrawer}
-            termTypeWiseProgressData={termTypeWiseProgressData}
-          />
+        <Grid container size={12} spacing={2}>
+          <Grid size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
+            <TargetBox
+              targetAmount={targetAmount}
+              dispatch={dispatch}
+              setShowDrawer={setShowDrawer}
+              termTypeWiseProgressData={termTypeWiseProgressData}
+            />
+          </Grid>
+          <Grid
+            size={{ xs: 0, sm: 0, md: 9, lg: 9 }}
+            sx={{
+              display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' },
+            }}
+          >
+            <TermWiseProgressBox data={termTypeWiseProgressData} />
+          </Grid>
         </Grid>
-        <Grid
-          size={{ xs: 0, sm: 0, md: 9, lg: 9 }}
-          sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}
-        >
-          <TermWiseProgressBox data={termTypeWiseProgressData} />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 12, md: 8, lg: 9 }}>
-          <InvestmentSuggestionsBox
-            dispatch={dispatch}
-            investmentAllocations={plannerData.investmentAllocations}
-            investmentBreakdownBasedOnTermType={
-              investmentBreakdownBasedOnTermType
-            }
-          />
-        </Grid>
-        <Grid
-          size={{ xs: 12, sm: 12, md: 4, lg: 3 }}
-          sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}
-        >
-          <GoalBox
-            financialGoals={plannerData.financialGoals}
-            investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-            selectedDate={selectedDate}
-            dispatch={dispatch}
-            useStyledBox={true}
-          />
+
+        <Grid container size={12} spacing={2}>
+          <Grid size={{ xs: 12, sm: 12, md: 8, lg: 9 }}>
+            <InvestmentSuggestionsBox
+              dispatch={dispatch}
+              investmentAllocations={plannerData.investmentAllocations}
+              investmentBreakdownBasedOnTermType={
+                investmentBreakdownBasedOnTermType
+              }
+            />
+          </Grid>
+          <Grid
+            size={{ xs: 12, sm: 12, md: 4, lg: 3 }}
+            sx={{
+              display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' },
+            }}
+          >
+            <GoalBox
+              financialGoals={plannerData.financialGoals}
+              investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+              selectedDate={selectedDate}
+              dispatch={dispatch}
+              useStyledBox={true}
+            />
+          </Grid>
         </Grid>
       </Grid>
       <Drawer

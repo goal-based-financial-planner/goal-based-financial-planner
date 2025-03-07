@@ -58,7 +58,7 @@ const GoalBox = ({
         </Typography>
         <GoalList
           investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-          goals={pendingGoals}
+          goals={completedGoals}
           dispatch={dispatch}
         ></GoalList>
       </>
@@ -68,7 +68,7 @@ const GoalBox = ({
   return (
     <Grid container>
       {pendingGoals.length > 0 ? (
-        <Grid size={12} sx={{ mx: 2, mb: 2 }}>
+        <Grid size={12} sx={{ mb: 2 }}>
           {useStyledBox ? (
             <StyledBox className="financial-goals-box">
               {getPendingGoals()}
@@ -80,7 +80,7 @@ const GoalBox = ({
       ) : null}
 
       {completedGoals.length > 0 ? (
-        <Grid size={12} sx={{ mx: 2 }}>
+        <Grid size={12}>
           {useStyledBox ? (
             <StyledBox>{getCompletedGoals()}</StyledBox>
           ) : (

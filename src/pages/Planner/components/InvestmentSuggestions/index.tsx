@@ -51,18 +51,7 @@ const InvestmentSuggestionsBox = ({
   return (
     <>
       <Grid container>
-        <Grid
-          size={12}
-          sx={{
-            ml: 2,
-            mr: {
-              xs: 2,
-              sm: 2,
-              md: 0,
-              lg: 0,
-            },
-          }}
-        >
+        <Grid size={12}>
           {investmentBreakdownBasedOnTermType
             .filter(({ investmentBreakdown }) =>
               investmentBreakdown.find(

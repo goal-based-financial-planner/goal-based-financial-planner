@@ -1,6 +1,6 @@
-import { Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { formatNumber } from '../../types/util';
+import { useNumberFormatter } from '../../types/util';
 
 interface LiveCounterProps {
   value: number;
@@ -9,9 +9,6 @@ interface LiveCounterProps {
 
 const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
   const [currentValue, setCurrentValue] = useState(0);
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (currentValue === 0) {
@@ -36,12 +33,11 @@ const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration]);
 
+  const formattedNumber = useNumberFormatter(currentValue);
+
   return (
-    <Typography
-      variant={isMobile ? 'h3' : 'h1'}
-      sx={{ color: 'green', fontWeight: 'bold', mt: 2 }}
-    >
-      {formatNumber(currentValue, 1_000_000_000)}
+    <Typography variant="h2" sx={{ fontWeight: 'bold', mt: 2 }} color="primary">
+      {formattedNumber}
     </Typography>
   );
 };

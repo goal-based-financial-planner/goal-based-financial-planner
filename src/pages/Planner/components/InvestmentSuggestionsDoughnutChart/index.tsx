@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
-import { formatNumber } from '../../../../types/util';
 import { PieChart } from '@mui/x-charts';
+import { useNumberFormatter } from '../../../../types/util';
 
 const InvestmentSuggestionsDoughnutChart = ({
   suggestions,
@@ -44,6 +44,8 @@ const InvestmentSuggestionsDoughnutChart = ({
     slotProps: { legend: { hidden: true } },
   };
 
+  const formattedNumber = useNumberFormatter(totalAmount);
+
   return (
     <Box
       sx={{
@@ -75,7 +77,7 @@ const InvestmentSuggestionsDoughnutChart = ({
         }}
       >
         <Typography variant="h6" fontWeight="bold">
-          {formatNumber(totalAmount)}
+          {formattedNumber}
         </Typography>
       </Box>
     </Box>
