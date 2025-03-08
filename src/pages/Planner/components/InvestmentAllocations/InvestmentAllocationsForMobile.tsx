@@ -73,14 +73,14 @@ const InvestmentAllocationsForMobile = ({
       <Box
         sx={{
           width: 'auto',
-          height: '50vh', // Box height relative to viewport height
+          height: '50vh',
           overflowY: 'auto',
           backgroundColor: '#ffffff',
           p: 2,
           borderRadius: 2,
           boxShadow: 24,
           display: 'flex',
-          flexDirection: 'column', // Ensures children stack vertically
+          flexDirection: 'column',
         }}
       >
         <Typography

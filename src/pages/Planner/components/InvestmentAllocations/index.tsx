@@ -72,46 +72,45 @@ const InvestmentAllocations = ({
     <>
       <Box
         sx={{
-          width: '800px',
-          height: '60vh', // Box height relative to viewport height
-          overflowY: 'auto',
+          width: { xs: '95vw', sm: '80vw', md: '60vw', lg: '50vw' },
+          maxWidth: '800px',
+          height: '60vh',
+          maxHeight: '90vh',
           backgroundColor: '#ffffff',
           p: 2,
           borderRadius: 2,
           boxShadow: 24,
           display: 'flex',
-          flexDirection: 'column', // Ensures children stack vertically
+          flexDirection: 'column',
         }}
       >
-        <Typography
-          sx={{
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}
-        >
-          Investment Allocations for {termType} Goals
-        </Typography>
+        <Box>
+          <Typography sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+            Investment Allocations for {termType} Goals
+          </Typography>
 
-        <Typography
-          sx={{
-            fontSize: 16,
-            p: 2,
-          }}
-        >
-          We have recommended a few investment options based on your goals'
-          term. You can modify the options and percentages below. Ensure your
-          total investment percentage adds up to 100%.
-        </Typography>
+          <Typography sx={{ mt: 1, mb: 2 }}>
+            We have recommended a few investment options based on your goals'
+            term. You can modify the options and percentages below. Ensure your
+            total investment percentage adds up to 100%.
+          </Typography>
+        </Box>
 
         <form
           onSubmit={handleSubmit(onSubmitForm)}
           noValidate
-          style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+          }}
         >
           <Box
             sx={{
-              flexGrow: 1,
-              overflow: 'auto',
+              flex: 1,
+              overflowY: 'auto',
+              paddingBottom: '16px',
             }}
           >
             <InvestmentAllocationPerTerm control={control} name={termType} />
@@ -119,9 +118,9 @@ const InvestmentAllocations = ({
 
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              p: 2,
+              pt: 2,
+              backgroundColor: 'white',
+              textAlign: 'right',
             }}
           >
             <Button
