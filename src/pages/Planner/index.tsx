@@ -121,7 +121,10 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
           </StyledBox>
         </Grid>
         <Grid container size={12} spacing={2}>
-          <Grid size={{ xs: 12, sm: 12, md: 3, lg: 3 }}>
+          <Grid
+            size={{ xs: 12, sm: 12, md: 3, lg: 3 }}
+            sx={{ display: 'flex', flexGrow: 1 }}
+          >
             <TargetBox
               targetAmount={targetAmount}
               dispatch={dispatch}

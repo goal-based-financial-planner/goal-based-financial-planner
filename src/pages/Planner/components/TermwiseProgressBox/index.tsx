@@ -44,7 +44,7 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
   return (
-    <StyledBox className="financial-progress-box" height="85%">
+    <StyledBox className="financial-progress-box">
       <Typography variant="h6" fontWeight="bold">
         Financial Progress
       </Typography>
@@ -101,7 +101,7 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                     />
                   </Box>
                 </Tooltip>
-                <Box sx={{ padding: '16px' }}>
+                <Box sx={{ paddingTop: '16px' }}>
                   <Box
                     sx={{
                       display: 'flex',

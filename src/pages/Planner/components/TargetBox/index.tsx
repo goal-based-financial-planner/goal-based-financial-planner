@@ -42,7 +42,7 @@ const TargetBox = ({
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
-          height: '85%',
+          flexGrow: 1,
         }}
         className="target-box"
       >
@@ -63,7 +63,7 @@ const TargetBox = ({
           </Button>
           <Button
             className="view-goals-button"
-            variant="text"
+            variant="outlined"
             sx={{
               mt: 2,
               color: 'green',
@@ -103,7 +103,8 @@ const TargetBox = ({
         <Box
           sx={{
             transition: 'height 0.3s ease-in-out',
-            mt: 2,
+            mb: 5,
+            display: { xs: 'block', sm: 'block', md: 'none', lg: 'none' },
           }}
         >
           {isExpanded && (

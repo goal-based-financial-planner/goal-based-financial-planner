@@ -25,7 +25,7 @@ const TermWiseProgressBarChart = ({ data }: TermWiseProgressBoxProps) => {
 
   return (
     <>
-      <Typography variant="h6" fontWeight="bold" mt={3}>
+      <Typography variant="h6" fontWeight="bold" mt={5}>
         Financial Progress
       </Typography>
       <BarChart

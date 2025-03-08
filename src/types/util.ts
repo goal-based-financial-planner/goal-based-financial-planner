@@ -5,8 +5,9 @@ export const useNumberFormatter = (num: number) => {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('xl'));
   const isMediumScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  if (isLargeScreen) {
+  if (isLargeScreen || isSmallScreen) {
     return num.toLocaleString();
   }
 
