@@ -180,6 +180,7 @@ const InvestmentAllocationPerTerm = ({
                         <span
                           className="material-symbols-rounded"
                           onClick={() => remove(index)}
+                          style={{ color: 'red' }}
                         >
                           delete
                         </span>

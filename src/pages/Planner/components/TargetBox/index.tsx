@@ -5,7 +5,7 @@ import LiveCounter from '../../../../components/LiveNumberCounter';
 import FinancialGoalForm from '../../../Home/components/FinancialGoalForm';
 import { StyledBox } from '../../../../components/StyledBox';
 import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
-import TermWiseProgressBarChart from '../TermwiseProgressBox/terwiseProgressBarChart';
+import TermWiseProgressBarChart from '../TermwiseProgressBox/termWiseProgressBarChart';
 
 type TargetBoxProps = {
   targetAmount: number;

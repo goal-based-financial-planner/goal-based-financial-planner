@@ -173,13 +173,15 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
         onClose={() => setShowDrawer(false)}
         anchor="right"
       >
-        <GoalBox
-          financialGoals={plannerData.financialGoals}
-          investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-          selectedDate={selectedDate}
-          dispatch={dispatch}
-          useStyledBox={false}
-        />
+        <Box sx={{ p: 2 }}>
+          <GoalBox
+            financialGoals={plannerData.financialGoals}
+            investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+            selectedDate={selectedDate}
+            dispatch={dispatch}
+            useStyledBox={false}
+          />
+        </Box>
       </Drawer>
     </>
   );

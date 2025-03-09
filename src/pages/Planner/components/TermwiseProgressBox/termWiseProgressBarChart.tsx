@@ -32,12 +32,7 @@ const TermWiseProgressBarChart = ({ data }: TermWiseProgressBoxProps) => {
         xAxis={[
           {
             scaleType: 'band',
-            data: chartData.map((item) => {
-              if (item.termType === 'Short Term') return 'ST';
-              if (item.termType === 'Medium Term') return 'MT';
-              if (item.termType === 'Long Term') return 'LT';
-              return '';
-            }),
+            data: chartData.map((item) => item.termType),
             categoryGapRatio: 0.5,
           } as AxisConfig<'band', any, ChartsXAxisProps>,
         ]}

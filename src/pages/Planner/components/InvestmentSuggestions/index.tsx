@@ -18,7 +18,6 @@ import InvestmentPieChart from '../InvestmentPieChart';
 import CustomLegend from '../CustomLegend';
 import { StyledBox } from '../../../../components/StyledBox';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
-import InvestmentAllocationsForMobile from '../InvestmentAllocations/InvestmentAllocationsForMobile';
 
 export type InvestmentBreakdownBasedOnTermType = {
   termType: TermType;
@@ -67,12 +66,12 @@ const InvestmentSuggestionsBox = ({
                     justifyContent: 'space-between',
                   }}
                 >
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    {term.termType} Investment Plan
+                  <Typography variant="h6" fontWeight="bold">
+                    Investments for {term.termType}
                   </Typography>
                   <Button
                     onClick={() => handleEdit(term.termType)}
-                    sx={{ color: 'green' }}
+                    sx={{ color: 'green', px: 0 }}
                     className="customize-button"
                   >
                     <span className="material-symbols-rounded">tune</span>
@@ -173,7 +172,7 @@ const InvestmentSuggestionsBox = ({
           onClose={handleClose}
           anchor="bottom"
         >
-          <InvestmentAllocationsForMobile
+          <InvestmentAllocations
             dispatch={dispatch}
             investmentAllocations={investmentAllocations}
             onSubmit={handleSubmit}
