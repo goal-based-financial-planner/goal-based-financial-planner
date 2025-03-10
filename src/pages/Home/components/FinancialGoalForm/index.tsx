@@ -3,15 +3,17 @@ import {
   Box,
   Card,
   CardContent,
+  IconButton,
+  InputAdornment,
   SxProps,
   TextField,
   Theme,
 } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
-import { Dispatch, useState } from 'react';
+import { Dispatch, useRef, useState } from 'react';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
-import { DatePicker } from '@mui/x-date-pickers';
+import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   ALPHANUMERIC_PATTERN,
@@ -118,6 +120,9 @@ const FinancialGoalForm = ({
     resetForm();
   };
 
+  const startDatePickerRef = useRef<HTMLDivElement | null>(null);
+  const endDatePickerRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <StyledBackdrop sx={sx} onClick={close}>
       <Box
@@ -172,19 +177,31 @@ const FinancialGoalForm = ({
                     label={'"month" and "year"'}
                     views={['month', 'year']}
                     onChange={handleStartYearChange}
-                    desktopModeMediaQuery="(min-width: 0px)"
+                    ref={startDatePickerRef}
                     slotProps={{
                       textField: {
                         variant: 'standard',
                         label: 'Start Date',
                         size: 'small',
                         error: validationErrors.startDate,
+                        InputProps: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() =>
+                                  startDatePickerRef.current?.click()
+                                }
+                              >
+                                <CalendarIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
                       },
                       popper: {
                         disablePortal: true,
                         sx: {
                           transformOrigin: 'top',
-                          zIndex: 2000,
                         },
                       },
                     }}
@@ -193,12 +210,25 @@ const FinancialGoalForm = ({
                     label={'"month" and "year"'}
                     views={['month', 'year']}
                     onChange={handleTargetYearChange}
-                    desktopModeMediaQuery="(min-width: 0px)"
+                    ref={endDatePickerRef}
                     slotProps={{
                       textField: {
                         variant: 'standard',
                         label: 'Target Date',
                         error: validationErrors.targetDate,
+                        InputProps: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() =>
+                                  endDatePickerRef.current?.click()
+                                }
+                              >
+                                <CalendarIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
                       },
                       popper: {
                         disablePortal: true,

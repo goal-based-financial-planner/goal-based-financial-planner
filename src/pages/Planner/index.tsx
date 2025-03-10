@@ -1,10 +1,18 @@
-import { Grid2 as Grid, Box, Typography, Drawer } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
+import {
+  Grid2 as Grid,
+  Box,
+  Typography,
+  Drawer,
+  IconButton,
+  InputAdornment,
+  useMediaQuery,
+} from '@mui/material';
+import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
 } from './components/InvestmentSuggestions';
-import { Dispatch, useState } from 'react';
+import { Dispatch, useRef, useState } from 'react';
 import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
@@ -100,6 +108,8 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
     return dayjs(selectedDate).isAfter(goal.getTargetDate());
   });
 
+  const datePickerRef = useRef<HTMLDivElement | null>(null);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
   return (
     <>
       <PageTour />
@@ -135,13 +145,27 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                 views={['month', 'year']}
                 defaultValue={dayjs()}
                 onChange={handleChange}
-                desktopModeMediaQuery="(min-width: 0px)"
+                ref={datePickerRef}
+                format={isSmallScreen ? 'MM/YYYY' : 'MMMM YYYY'}
                 slotProps={{
                   textField: {
                     variant: 'standard',
+                    size: 'small',
                     label: '',
+                    sx: {
+                      width: 'auto',
+                    },
                     InputProps: {
                       disableUnderline: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => datePickerRef.current?.click()}
+                          >
+                            <CalendarIcon fontSize="small" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
                     },
                   },
                 }}
