@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardContent,
-  InputAdornment,
   SxProps,
   TextField,
   Theme,
@@ -12,7 +11,7 @@ import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { Dispatch, useState } from 'react';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
-import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   ALPHANUMERIC_PATTERN,

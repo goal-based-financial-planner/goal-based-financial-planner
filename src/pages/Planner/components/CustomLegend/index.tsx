@@ -5,7 +5,6 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
