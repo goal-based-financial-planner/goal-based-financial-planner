@@ -6,7 +6,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import FinancialGoalForm from '../Home/components/FinancialGoalForm';
 import image1 from '../../assets/image1.png';
 import image2 from '../../assets/image2.png';
 import image3 from '../../assets/image3.png';
@@ -15,6 +14,7 @@ import icon from '../../assets/icon.png';
 import { StyledBox } from '../../components/StyledBox';
 import { Dispatch, useState } from 'react';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
+import AddGoalPopup from '../Home/components/AddGoalPopup';
 
 const getImageStyle = (position: string, size: number, rotation: number) => ({
   position: 'absolute',
@@ -109,7 +109,7 @@ const LandingPage = ({
         </Typography>
         <Button
           variant="contained"
-          onClick={handleAdd}
+          onClick={() => setIsFormOpen(true)}
           sx={{
             border: '1px solid green',
             backgroundColor: 'green',
@@ -119,13 +119,11 @@ const LandingPage = ({
         </Button>
       </StyledBox>
 
-      {/* Financial Goal Form */}
-      {isFormOpen ? (
-        <FinancialGoalForm
-          dispatch={dispatch}
-          close={() => setIsFormOpen(false)}
-        />
-      ) : null}
+      <AddGoalPopup
+        isOpen={isFormOpen}
+        onClose={handleAdd}
+        dispatch={dispatch}
+      />
     </Box>
   );
 };

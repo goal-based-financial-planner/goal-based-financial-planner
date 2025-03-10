@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Typography, Button, Box, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LiveCounter from '../../../../components/LiveNumberCounter';
-import FinancialGoalForm from '../../../Home/components/FinancialGoalForm';
 import { StyledBox } from '../../../../components/StyledBox';
 import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
 import TermWiseProgressBarChart from '../TermwiseProgressBox/termWiseProgressBarChart';
+import AddGoalPopup from '../../../Home/components/AddGoalPopup';
 
 type TargetBoxProps = {
   targetAmount: number;
@@ -113,12 +113,11 @@ const TargetBox = ({
         </Box>
       </StyledBox>
 
-      {isFormOpen && (
-        <FinancialGoalForm
-          dispatch={dispatch}
-          close={() => setIsFormOpen(false)}
-        />
-      )}
+      <AddGoalPopup
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        dispatch={dispatch}
+      />
     </>
   );
 };
