@@ -173,19 +173,13 @@ const FinancialGoalForm = ({
                     label={'"month" and "year"'}
                     views={['month', 'year']}
                     onChange={handleStartYearChange}
+                    desktopModeMediaQuery="(min-width: 0px)"
                     slotProps={{
                       textField: {
                         variant: 'standard',
                         label: 'Start Date',
                         size: 'small',
                         error: validationErrors.startDate,
-                        InputProps: {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <CalendarIcon />
-                            </InputAdornment>
-                          ),
-                        },
                       },
                       popper: {
                         disablePortal: true,
@@ -200,18 +194,12 @@ const FinancialGoalForm = ({
                     label={'"month" and "year"'}
                     views={['month', 'year']}
                     onChange={handleTargetYearChange}
+                    desktopModeMediaQuery="(min-width: 0px)"
                     slotProps={{
                       textField: {
                         variant: 'standard',
                         label: 'Target Date',
                         error: validationErrors.targetDate,
-                        InputProps: {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <CalendarIcon />
-                            </InputAdornment>
-                          ),
-                        },
                       },
                       popper: {
                         disablePortal: true,

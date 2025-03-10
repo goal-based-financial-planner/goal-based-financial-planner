@@ -141,17 +141,13 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                 views={['month', 'year']}
                 defaultValue={dayjs()}
                 onChange={handleChange}
+                desktopModeMediaQuery="(min-width: 0px)"
                 slotProps={{
                   textField: {
                     variant: 'standard',
                     label: '',
                     InputProps: {
                       disableUnderline: true,
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <CalendarIcon />
-                        </InputAdornment>
-                      ),
                     },
                   },
                 }}
