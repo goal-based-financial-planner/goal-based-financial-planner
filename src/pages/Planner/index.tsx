@@ -1,5 +1,11 @@
-import { Grid2 as Grid, Box, Typography, Drawer } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
+import {
+  Grid2 as Grid,
+  Box,
+  Typography,
+  Drawer,
+  InputAdornment,
+} from '@mui/material';
+import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
@@ -141,6 +147,11 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                     label: '',
                     InputProps: {
                       disableUnderline: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <CalendarIcon />
+                        </InputAdornment>
+                      ),
                     },
                   },
                 }}

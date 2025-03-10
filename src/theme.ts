@@ -7,8 +7,6 @@ const customPalette: PaletteOptions = {
 };
 const theme: Theme = createTheme({
   palette: customPalette,
-  typography: {},
-
   components: {
     MuiModal: {
       styleOverrides: {

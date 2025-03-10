@@ -3,6 +3,7 @@ import {
   Box,
   Card,
   CardContent,
+  InputAdornment,
   SxProps,
   TextField,
   Theme,
@@ -11,7 +12,7 @@ import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { Dispatch, useState } from 'react';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
-import { DatePicker } from '@mui/x-date-pickers';
+import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   ALPHANUMERIC_PATTERN,
@@ -178,6 +179,13 @@ const FinancialGoalForm = ({
                         label: 'Start Date',
                         size: 'small',
                         error: validationErrors.startDate,
+                        InputProps: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <CalendarIcon />
+                            </InputAdornment>
+                          ),
+                        },
                       },
                       popper: {
                         disablePortal: true,
@@ -197,8 +205,14 @@ const FinancialGoalForm = ({
                         variant: 'standard',
                         label: 'Target Date',
                         error: validationErrors.targetDate,
+                        InputProps: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <CalendarIcon />
+                            </InputAdornment>
+                          ),
+                        },
                       },
-
                       popper: {
                         disablePortal: true,
                         sx: {
