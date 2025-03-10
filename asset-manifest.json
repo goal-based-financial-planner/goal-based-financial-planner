@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/goal-based-financial-planner/static/css/main.9cbe08e5.css",
-    "main.js": "/goal-based-financial-planner/static/js/main.852131fa.js",
+    "main.js": "/goal-based-financial-planner/static/js/main.31e30839.js",
     "static/media/image4.png": "/goal-based-financial-planner/static/media/image4.956495db422aa3d05e40.png",
     "static/media/image3.png": "/goal-based-financial-planner/static/media/image3.1fd9eda45d69db045eb4.png",
     "static/media/icon.png": "/goal-based-financial-planner/static/media/icon.bfffdd028590fd18996d.png",
@@ -9,10 +9,10 @@
     "static/media/image1.png": "/goal-based-financial-planner/static/media/image1.c195b48fe5cad944864a.png",
     "index.html": "/goal-based-financial-planner/index.html",
     "main.9cbe08e5.css.map": "/goal-based-financial-planner/static/css/main.9cbe08e5.css.map",
-    "main.852131fa.js.map": "/goal-based-financial-planner/static/js/main.852131fa.js.map"
+    "main.31e30839.js.map": "/goal-based-financial-planner/static/js/main.31e30839.js.map"
   },
   "entrypoints": [
     "static/css/main.9cbe08e5.css",
-    "static/js/main.852131fa.js"
+    "static/js/main.31e30839.js"
   ]
 }
