@@ -74,7 +74,7 @@ const InvestmentAllocations = ({
         sx={{
           width: { xs: '95vw', sm: '80vw', md: '60vw', lg: '50vw' },
           maxWidth: '800px',
-          height: '60vh',
+          height: '80vh',
           maxHeight: '90vh',
           backgroundColor: '#ffffff',
           p: 2,
@@ -82,6 +82,11 @@ const InvestmentAllocations = ({
           boxShadow: 24,
           display: 'flex',
           flexDirection: 'column',
+          '@media (max-width: 600px)': {
+            position: 'fixed',
+            top: '20%',
+            transform: 'scale(0.8)',
+          },
         }}
       >
         <Box>

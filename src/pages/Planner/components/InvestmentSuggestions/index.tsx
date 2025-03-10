@@ -1,13 +1,4 @@
-import {
-  Box,
-  Typography,
-  Grid2 as Grid,
-  Modal,
-  Button,
-  useMediaQuery,
-  useTheme,
-  Drawer,
-} from '@mui/material';
+import { Box, Typography, Grid2 as Grid, Modal, Button } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { TermType } from '../../../../types/enums';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
@@ -43,9 +34,6 @@ const InvestmentSuggestionsBox = ({
   const handleSubmit = () => {
     setTermTypeModal(null);
   };
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <>
@@ -148,38 +136,23 @@ const InvestmentSuggestionsBox = ({
         </Grid>
       </Grid>
 
-      {!isMobile ? (
-        <Modal
-          open={termTypeModal !== null}
-          onClose={handleClose}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backdropFilter: 'blur(0.5px)',
-          }}
-        >
-          <InvestmentAllocations
-            dispatch={dispatch}
-            investmentAllocations={investmentAllocations}
-            onSubmit={handleSubmit}
-            termType={termTypeModal!}
-          />
-        </Modal>
-      ) : (
-        <Drawer
-          open={termTypeModal !== null}
-          onClose={handleClose}
-          anchor="bottom"
-        >
-          <InvestmentAllocations
-            dispatch={dispatch}
-            investmentAllocations={investmentAllocations}
-            onSubmit={handleSubmit}
-            termType={termTypeModal!}
-          />
-        </Drawer>
-      )}
+      <Modal
+        open={termTypeModal !== null}
+        onClose={handleClose}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backdropFilter: 'blur(0.5px)',
+        }}
+      >
+        <InvestmentAllocations
+          dispatch={dispatch}
+          investmentAllocations={investmentAllocations}
+          onSubmit={handleSubmit}
+          termType={termTypeModal!}
+        />
+      </Modal>
     </>
   );
 };
