@@ -28,39 +28,41 @@ const InvestmentAllocations = ({
 
   const areInvestmentAllocationsValid = (
     data: InvestmentAllocationsType,
+    termType: TermType,
   ): boolean => {
     let isFormValid = true;
-    Object.values(data).forEach((allocation) => {
-      if (allocation.length === 0) {
-        return;
-      }
-      const isEmptyAllocation = allocation.find(
-        (ab) => ab.investmentName === '' || ab.investmentPercentage === 0,
-      );
+    const allocation = data[termType];
+    if (allocation.length === 0) {
+      setShowSnackBarMessage('Add atleast one allocation');
+      return false;
+    }
+    const isEmptyAllocation = allocation.find(
+      (ab) => ab.investmentName === '' || ab.investmentPercentage === 0,
+    );
 
-      if (isEmptyAllocation) {
-        isFormValid = false;
-        setShowSnackBarMessage('Delete empty Allocation');
-        return;
-      }
-      const totalPercentage = allocation.reduce(
-        (acc, v) => Number(v.investmentPercentage) + acc,
-        0,
-      );
+    if (isEmptyAllocation) {
+      isFormValid = false;
+      setShowSnackBarMessage('Delete empty Allocation');
+      return false;
+    }
+    const totalPercentage = allocation.reduce(
+      (acc, v) => Number(v.investmentPercentage) + acc,
+      0,
+    );
 
-      if (totalPercentage !== 100) {
-        isFormValid = false;
-        setShowSnackBarMessage(
-          'Invalid Allocation. Please make sure the allocation percentages addsupto 100',
-        );
-      }
-    });
+    if (totalPercentage !== 100) {
+      isFormValid = false;
+      setShowSnackBarMessage(
+        'Invalid Allocation. Please make sure the allocation percentages addsupto 100',
+      );
+    }
 
     return isFormValid;
   };
 
   const onSubmitForm = (data: InvestmentAllocationsType) => {
-    if (areInvestmentAllocationsValid(data)) {
+    debugger;
+    if (areInvestmentAllocationsValid(data, termType)) {
       updateInvestmentAllocation(dispatch, data);
       onSubmit();
     } else {
