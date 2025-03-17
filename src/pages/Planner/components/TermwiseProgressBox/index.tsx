@@ -40,6 +40,25 @@ const FormattedNumber = ({ value }: { value: number }) => {
   return <>{formattedValue}</>;
 };
 
+const getChips = (termTypeWiseData: TermTypeWiseData) => {
+  return (
+    <Box mt={3} gap={0.3} display="flex">
+      {termTypeWiseData.goalNames.map((name) => (
+        <Chip
+          key={name}
+          label={name}
+          size="small"
+          color="success"
+          sx={{
+            width: 'auto',
+            height: '20px',
+            mb: 1,
+          }}
+        />
+      ))}
+    </Box>
+  );
+};
 const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
@@ -61,77 +80,76 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                   borderRight: isLastGrid ? 'none' : '1px dashed grey',
                 }}
               >
-                <Tooltip
-                  title={`${termTypeWiseData.progressPercent}%`}
-                  placement="top-end"
-                  PopperProps={{
-                    modifiers: [
-                      {
-                        name: 'offset',
-                        options: {
-                          offset: [0, -10],
-                        },
-                      },
-                    ],
-                  }}
-                  slotProps={{
-                    tooltip: {
-                      sx: {
-                        backgroundColor: 'transparent',
-                        boxShadow: 'none',
-                        color: 'black',
-                        fontSize: '1rem',
-                        padding: 0,
-                      },
-                    },
-                  }}
-                >
-                  <Box>
-                    <BorderLinearProgress
-                      value={termTypeWiseData.progressPercent}
-                      variant="determinate"
-                      sx={{
-                        [`& .${linearProgressClasses.barColorPrimary}`]: {
-                          backgroundColor: 'green',
-                        },
-                        [`& .${linearProgressClasses.colorSecondary}`]: {
-                          backgroundColor: 'grey',
+                {termTypeWiseData.progressPercent === 100 ? (
+                  <>
+                    <Typography>{termType}</Typography>
+                    <Typography variant="h6" color="primary">
+                      🎉 Goals Acheived
+                    </Typography>
+                    {getChips(termTypeWiseData)}
+                  </>
+                ) : (
+                  <>
+                    <Tooltip
+                      title={`${termTypeWiseData.progressPercent}%`}
+                      placement="top-end"
+                      PopperProps={{
+                        modifiers: [
+                          {
+                            name: 'offset',
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      }}
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            backgroundColor: 'transparent',
+                            boxShadow: 'none',
+                            color: 'black',
+                            fontSize: '1rem',
+                            padding: 0,
+                          },
                         },
                       }}
-                    />
-                  </Box>
-                </Tooltip>
-                <Box sx={{ paddingTop: '16px' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Typography variant="body1">{termType}</Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                      <FormattedNumber value={termTypeWiseData.termTypeSum} />
-                    </Typography>
-                  </Box>
-
-                  <Box mt={3}>
-                    {termTypeWiseData.goalNames.map((name) => (
-                      <Chip
-                        key={name}
-                        label={name}
-                        size="small"
-                        color="success"
+                    >
+                      <Box>
+                        <BorderLinearProgress
+                          value={termTypeWiseData.progressPercent}
+                          variant="determinate"
+                          sx={{
+                            [`& .${linearProgressClasses.barColorPrimary}`]: {
+                              backgroundColor: 'green',
+                            },
+                            [`& .${linearProgressClasses.colorSecondary}`]: {
+                              backgroundColor: 'grey',
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Tooltip>
+                    <Box sx={{ paddingTop: '16px' }}>
+                      <Box
                         sx={{
-                          width: 'auto',
-                          height: '20px',
-
-                          mb: 1,
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
                         }}
-                      />
-                    ))}
-                  </Box>
-                </Box>
+                      >
+                        <Typography variant="body1">{termType}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                          <FormattedNumber
+                            value={termTypeWiseData.termTypeSum}
+                          />
+                        </Typography>
+                      </Box>
+
+                      {getChips(termTypeWiseData)}
+                    </Box>
+                  </>
+                )}
               </Grid>
             </>
           );

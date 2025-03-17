@@ -24,8 +24,7 @@ import GoalBox from './components/GoalBox';
 import { StyledBox } from '../../components/StyledBox';
 import PageTour from './components/Pagetour';
 import TargetBox from './components/TargetBox';
-import Confetti from 'react-confetti';
-import useWindowSize from 'react-use/lib/useWindowSize';
+import CongratulationsPage from '../CongratulationsPage';
 
 type PlannerProps = {
   plannerData: PlannerData;
@@ -35,8 +34,6 @@ type PlannerProps = {
 const Planner = ({ plannerData, dispatch }: PlannerProps) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
   const [showDrawer, setShowDrawer] = useState(false);
-
-  const { width, height } = useWindowSize();
 
   const handleChange = (value: Dayjs | null) => {
     setSelectedDate(value!.toString());
@@ -110,72 +107,94 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
 
   const datePickerRef = useRef<HTMLDivElement | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const areAllGoalsCompleted =
+    completedGoals.length === plannerData.financialGoals.length;
   return (
     <>
       <PageTour />
 
-      {completedGoals.length === plannerData.financialGoals.length ? (
-        <Box
-          sx={{
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+      <Grid container padding={2} spacing={2} height="100%">
+        <Grid
+          size={12}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <Confetti width={width} height={height} />
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <Typography variant="h5">
-              Congratulations! You've completed all your goals.
+          <Box>
+            <Typography
+              className="navbar-home"
+              variant="h4"
+              fontWeight="bold"
+              color="primary"
+            >
+              Welcome User
             </Typography>
           </Box>
-        </Box>
-      ) : (
-        <Grid container padding={2} spacing={2} height="100%">
-          <Grid size={12} display="flex" justifyContent="space-between">
-            <Box>
-              <Typography className="navbar-home" variant="h3">
-                Welcome
-              </Typography>
-            </Box>
-            <StyledBox className="calendar-button">
-              <MobileDatePicker
-                label={'"month" and "year"'}
-                views={['month', 'year']}
-                defaultValue={dayjs()}
-                onChange={handleChange}
-                ref={datePickerRef}
-                format={isSmallScreen ? 'MM/YYYY' : 'MMMM YYYY'}
-                slotProps={{
-                  textField: {
-                    variant: 'standard',
-                    size: 'small',
-                    label: '',
-                    sx: {
-                      width: 'auto',
-                    },
-                    InputProps: {
-                      disableUnderline: true,
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={() => datePickerRef.current?.click()}
-                          >
-                            <CalendarIcon fontSize="small" />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+          <StyledBox className="calendar-button">
+            <MobileDatePicker
+              label={'"month" and "year"'}
+              views={['month', 'year']}
+              defaultValue={dayjs()}
+              onChange={handleChange}
+              ref={datePickerRef}
+              format={isSmallScreen ? 'MM/YYYY' : 'MMMM YYYY'}
+              slotProps={{
+                textField: {
+                  variant: 'standard',
+                  size: 'small',
+                  label: '',
+                  sx: {
+                    width: {
+                      xs: '120px',
+                      sm: '120px',
+                      md: 'auto',
                     },
                   },
-                }}
-              />
-            </StyledBox>
-          </Grid>
+                  InputProps: {
+                    disableUnderline: true,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => datePickerRef.current?.click()}
+                        >
+                          <CalendarIcon fontSize="small" />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                },
+              }}
+            />
+          </StyledBox>
+        </Grid>
+        {areAllGoalsCompleted ? (
+          <Box
+            sx={{
+              width: '100vw',
+              height: '100vh',
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 5,
+            }}
+          >
+            <CongratulationsPage
+              targetAmount={targetAmount}
+              goals={plannerData.financialGoals.map((goal) => ({
+                name: goal.getGoalName(),
+                amount: goal.getInflationAdjustedTargetAmount(),
+              }))}
+            />
+          </Box>
+        ) : (
           <>
             <Grid container size={12} spacing={2}>
               <Grid
-                size={{ xs: 12, sm: 12, md: 3, lg: 3 }}
+                size={{
+                  xs: 12,
+                  sm: 12,
+                  md: 3,
+                  lg: 3,
+                }}
                 sx={{ display: 'flex', flexGrow: 1 }}
               >
                 <TargetBox
@@ -222,8 +241,8 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
               </Grid>
             </Grid>
           </>
-        </Grid>
-      )}
+        )}
+      </Grid>
 
       <Drawer
         open={showDrawer}

@@ -12,14 +12,14 @@ export const useNumberFormatter = (num: number) => {
   }
 
   if (num >= 1_000_000_000) {
-    return `${(num / 1_000_000_000).toFixed(1)}B`;
+    return `${(num / 1_000_000_000).toLocaleString(navigator.language, { maximumFractionDigits: 0 })}B`;
   } else if (num >= 1_000_000) {
     return isMediumScreen
-      ? `${(num / 1_000).toFixed(1)}K`
-      : `${(num / 1_000_000).toFixed(1)}M`;
+      ? `${(num / 1_000).toLocaleString(navigator.language, { maximumFractionDigits: 0 })}K`
+      : `${(num / 1_000_000).toLocaleString(navigator.language, { maximumFractionDigits: 0 })}M`;
   } else if (num >= 1_000) {
-    return `${(num / 1_000).toFixed(1)}K`;
+    return `${(num / 1_000).toLocaleString(navigator.language, { maximumFractionDigits: 0 })}K`;
   } else {
-    return num.toString();
+    return num.toLocaleString(navigator.language, { maximumFractionDigits: 0 });
   }
 };
