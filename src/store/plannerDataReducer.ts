@@ -3,8 +3,7 @@ import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerData } from '../domain/PlannerData';
 import { TermType } from '../types/enums';
 import { PlannerDataActionType } from './plannerDataActions';
-
-const LOCAL_STORAGE_KEY = 'plannerData';
+import { getPlannerData, setPlannerData } from '../util/storage';
 
 export type PlannerDataAction = {
   payload: any;
@@ -112,8 +111,7 @@ export function plannerDataReducer(
 }
 
 export function getInitialData() {
-  const localStorageData = localStorage.getItem(LOCAL_STORAGE_KEY) as string;
-
+  const localStorageData = getPlannerData();
   if (localStorageData) {
     try {
       const parsedState = JSON.parse(localStorageData) as PlannerData;
@@ -134,5 +132,5 @@ export function getInitialData() {
 }
 
 export function persistPlannerData(plannerData: PlannerData) {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(plannerData));
+  setPlannerData(plannerData);
 }

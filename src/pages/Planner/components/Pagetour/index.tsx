@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import Joyride, { CallBackProps, STATUS } from 'react-joyride';
+import {
+  setTourTaken,
+  isTourTaken as isTourAlreadyTaken,
+} from '../../../../util/storage';
 
 const steps = [
   {
@@ -50,9 +54,7 @@ const steps = [
 ];
 
 const PageTour = () => {
-  const [isTourTaken, setIsTourTaken] = useState(
-    JSON.parse(localStorage.getItem('isTourTaken') || 'false'),
-  );
+  const [isTourTaken, setIsTourTaken] = useState(isTourAlreadyTaken());
   const [runTour, setRunTour] = useState<boolean>(!isTourTaken);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const PageTour = () => {
     const { status } = data;
 
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      localStorage.setItem('isTourTaken', JSON.stringify(true));
+      setTourTaken();
       setIsTourTaken(true);
       setRunTour(false);
     }
