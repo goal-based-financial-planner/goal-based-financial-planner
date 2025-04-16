@@ -11,6 +11,7 @@ import {
   isDisclaimerAccepted,
   setDisclaimerAccepted,
 } from '../../util/storage';
+import DisclaimerDialog from './components/DisclaimerDialog';
 
 const Home: React.FC = () => {
   const [plannerData, dispatch] = useReducer(
@@ -21,6 +22,8 @@ const Home: React.FC = () => {
   const [showDisclaimer, setShowDisclaimer] = React.useState(
     !isDisclaimerAccepted(),
   );
+
+  const [showDisclaimerDialog, setShowDisclaimerDialog] = React.useState(false);
 
   useEffect(() => {
     persistPlannerData(plannerData);
@@ -37,9 +40,15 @@ const Home: React.FC = () => {
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         open={showDisclaimer}
+        sx={{ width: '100%' }}
       >
         <Alert
           severity="success"
+          sx={{
+            display: 'flex',
+
+            alignItems: 'center',
+          }}
           action={
             <Button
               variant="contained"
@@ -54,9 +63,16 @@ const Home: React.FC = () => {
         >
           This tool provides investment suggestions for informational purposes
           only and does not constitute financial advice. Please read our{' '}
-          <Link href="#">disclaimer</Link> for details.
+          <Link href="#" onClick={() => setShowDisclaimerDialog(true)}>
+            disclaimer
+          </Link>{' '}
+          for details.
         </Alert>
       </Snackbar>
+      <DisclaimerDialog
+        showDialog={showDisclaimerDialog}
+        handleClose={() => setShowDisclaimerDialog(false)}
+      ></DisclaimerDialog>
     </>
   );
 };
