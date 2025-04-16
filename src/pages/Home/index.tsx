@@ -40,7 +40,14 @@ const Home: React.FC = () => {
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         open={showDisclaimer}
-        sx={{ width: '100%' }}
+        sx={{
+          maxWidth: '100%',
+          width: { xs: '100%', sm: '80%' },
+          left: '50%',
+          transform: 'translateX(-50%)',
+          px: '24px',
+          boxSizing: 'border-box',
+        }}
       >
         <Alert
           severity="success"
