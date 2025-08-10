@@ -119,6 +119,7 @@ export function getInitialData() {
         (e: FinancialGoal) =>
           new FinancialGoal(
             e.goalName,
+            e.goalType,
             e.startDate,
             e.targetDate,
             e.targetAmount,

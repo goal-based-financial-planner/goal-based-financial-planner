@@ -9,3 +9,8 @@ export enum TermType {
   MEDIUM_TERM = 'Medium Term',
   LONG_TERM = 'Long Term',
 }
+
+export enum GoalType {
+  ONE_TIME = 'One Time',
+  RECURRING = 'Recurring',
+}

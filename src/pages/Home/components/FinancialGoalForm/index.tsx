@@ -3,11 +3,16 @@ import {
   Box,
   Card,
   CardContent,
+  FormControl,
+  FormControlLabel,
   IconButton,
   InputAdornment,
+  Radio,
+  RadioGroup,
   SxProps,
   TextField,
   Theme,
+  Typography,
 } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { Dispatch, useRef, useState } from 'react';
@@ -19,6 +24,7 @@ import {
   ALPHANUMERIC_PATTERN,
   NUMBER_PATTERN,
 } from '../../../../types/constants';
+import { GoalType } from '../../../../types/enums';
 
 const StyledBackdrop = styled('div')(({ theme }) => ({
   zIndex: theme.zIndex.modal + 1,
@@ -56,12 +62,14 @@ const FinancialGoalForm = ({
   const resetForm = () => {
     setValidationErrors({});
     setGoalName('');
+    setGoalType(GoalType.ONE_TIME);
     setStartDate('');
     setTargetDate('');
     setTargetAmount('');
   };
 
   const [goalName, setGoalName] = useState<string>('');
+  const [goalType, setGoalType] = useState<GoalType>(GoalType.ONE_TIME);
   const [startDate, setStartDate] = useState<string>('');
   const [targetDate, setTargetDate] = useState<string>('');
   const [targetAmount, setTargetAmount] = useState<string>('');
@@ -72,6 +80,16 @@ const FinancialGoalForm = ({
   const handleGoalNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationErrors({ ...validationErrors, goalName: false });
     setGoalName(e.target.value);
+  };
+
+  const handleGoalTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGoalType(e.target.value as GoalType);
+    // Clear date validation errors when switching goal types
+    setValidationErrors({
+      ...validationErrors,
+      startDate: false,
+      targetDate: false,
+    });
   };
 
   const handleStartYearChange = (e: Dayjs | null) => {
@@ -100,12 +118,15 @@ const FinancialGoalForm = ({
       errors.targetAmount = true;
     }
 
-    if (!startDate) {
-      errors.startDate = true;
-    }
+    // Only validate dates for one-time goals
+    if (goalType === GoalType.ONE_TIME) {
+      if (!startDate) {
+        errors.startDate = true;
+      }
 
-    if (!targetDate || dayjs(targetDate).isBefore(dayjs(startDate))) {
-      errors.targetDate = true;
+      if (!targetDate || dayjs(targetDate).isBefore(dayjs(startDate))) {
+        errors.targetDate = true;
+      }
     }
 
     if (Object.keys(errors).length > 0) {
@@ -114,7 +135,13 @@ const FinancialGoalForm = ({
     }
 
     handleAddGoal(
-      new FinancialGoal(goalName, startDate, targetDate, Number(targetAmount)),
+      new FinancialGoal(
+        goalName,
+        goalType,
+        startDate,
+        targetDate,
+        Number(targetAmount),
+      ),
     );
 
     resetForm();
@@ -140,7 +167,7 @@ const FinancialGoalForm = ({
             overflow: 'hidden',
             transition: 'all 0.3s ease',
             animation: `${fadeInAnimation} 0.5s ease-out`,
-            width: '300px',
+            width: '500px',
           }}
         >
           <CardContent
@@ -165,7 +192,7 @@ const FinancialGoalForm = ({
                   <TextField
                     fullWidth
                     variant="standard"
-                    label="Goal name"
+                    label="Goal Name"
                     placeholder="Child Education"
                     required
                     sx={{ mt: -2 }}
@@ -173,59 +200,84 @@ const FinancialGoalForm = ({
                     value={goalName}
                     onChange={handleGoalNameChange}
                   />
-                  <MobileDatePicker
-                    label={'"month" and "year"'}
-                    views={['month', 'year']}
-                    onChange={handleStartYearChange}
-                    ref={startDatePickerRef}
-                    slotProps={{
-                      textField: {
-                        variant: 'standard',
-                        label: 'Start Date',
-                        size: 'small',
-                        error: validationErrors.startDate,
-                        InputProps: {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                onClick={() =>
-                                  startDatePickerRef.current?.click()
-                                }
-                              >
-                                <CalendarIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        },
-                      },
-                    }}
-                  />
-                  <MobileDatePicker
-                    label={'"month" and "year"'}
-                    views={['month', 'year']}
-                    onChange={handleTargetYearChange}
-                    ref={endDatePickerRef}
-                    slotProps={{
-                      textField: {
-                        variant: 'standard',
-                        label: 'Target Date',
-                        error: validationErrors.targetDate,
-                        InputProps: {
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                onClick={() =>
-                                  endDatePickerRef.current?.click()
-                                }
-                              >
-                                <CalendarIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        },
-                      },
-                    }}
-                  />
+                  <FormControl component="fieldset" sx={{ mt: 1 }}>
+                    <Typography variant="body2">Goal Type</Typography>
+                    <RadioGroup
+                      value={goalType}
+                      onChange={handleGoalTypeChange}
+                      row
+                    >
+                      <FormControlLabel
+                        value={GoalType.ONE_TIME}
+                        control={<Radio />}
+                        label="One Time"
+                      />
+                      <FormControlLabel
+                        value={GoalType.RECURRING}
+                        control={<Radio />}
+                        label="Recurring"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  {goalType === GoalType.ONE_TIME && (
+                    <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+                      <MobileDatePicker
+                        label={'"month" and "year"'}
+                        views={['month', 'year']}
+                        onChange={handleStartYearChange}
+                        ref={startDatePickerRef}
+                        slotProps={{
+                          textField: {
+                            variant: 'standard',
+                            label: 'Start Date',
+                            size: 'small',
+                            error: validationErrors.startDate,
+                            sx: { flex: 1 },
+                            InputProps: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    onClick={() =>
+                                      startDatePickerRef.current?.click()
+                                    }
+                                  >
+                                    <CalendarIcon />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
+                          },
+                        }}
+                      />
+                      <MobileDatePicker
+                        label={'"month" and "year"'}
+                        views={['month', 'year']}
+                        onChange={handleTargetYearChange}
+                        ref={endDatePickerRef}
+                        slotProps={{
+                          textField: {
+                            variant: 'standard',
+                            label: 'Target Date',
+                            error: validationErrors.targetDate,
+                            sx: { flex: 1 },
+                            InputProps: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton
+                                    onClick={() =>
+                                      endDatePickerRef.current?.click()
+                                    }
+                                  >
+                                    <CalendarIcon />
+                                  </IconButton>
+                                </InputAdornment>
+                              ),
+                            },
+                          },
+                        }}
+                      />
+                    </Box>
+                  )}
                 </Box>
               </Box>
               <Box
@@ -238,10 +290,10 @@ const FinancialGoalForm = ({
               >
                 <TextField
                   variant="standard"
-                  size="small"
+                  size="medium"
                   label="Target Amount"
                   required
-                  sx={{ mt: -1 }}
+                  sx={{ mt: -1, flex: 1, minWidth: '200px' }}
                   error={validationErrors.targetAmount}
                   value={targetAmount}
                   onChange={handleTargetAmountChange}
