@@ -6,6 +6,7 @@ import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { StyledBox } from '../../../../components/StyledBox';
 import GoalList from './goalList';
+import { GoalType } from '../../../../types/enums';
 
 type GoalBoxProps = {
   financialGoals: FinancialGoal[];
@@ -28,11 +29,21 @@ const GoalBox = ({
   });
 
   const pendingGoals = sortedGoals.filter((goal) => {
-    return dayjs(selectedDate).isBefore(goal.getTargetDate());
+    return (
+      goal.goalType === GoalType.ONE_TIME &&
+      dayjs(selectedDate).isBefore(goal.getTargetDate())
+    );
   });
 
   const completedGoals = sortedGoals.filter((goal) => {
-    return dayjs(selectedDate).isAfter(goal.getTargetDate());
+    return (
+      goal.goalType === GoalType.ONE_TIME &&
+      dayjs(selectedDate).isAfter(goal.getTargetDate())
+    );
+  });
+
+  const recurringGoals = sortedGoals.filter((goal) => {
+    return goal.goalType === GoalType.RECURRING;
   });
 
   function getPendingGoals() {
@@ -65,6 +76,21 @@ const GoalBox = ({
     );
   }
 
+  function getRecurringGoals() {
+    return (
+      <>
+        <Typography variant="h6" fontWeight="bold">
+          Recurring Goals
+        </Typography>
+        <GoalList
+          investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+          goals={recurringGoals}
+          dispatch={dispatch}
+        ></GoalList>
+      </>
+    );
+  }
+
   return (
     <Grid container>
       {pendingGoals.length > 0 ? (
@@ -85,6 +111,16 @@ const GoalBox = ({
             <StyledBox>{getCompletedGoals()}</StyledBox>
           ) : (
             getCompletedGoals()
+          )}
+        </Grid>
+      ) : null}
+
+      {recurringGoals.length > 0 ? (
+        <Grid size={12} sx={{ mt: 2 }}>
+          {useStyledBox ? (
+            <StyledBox>{getRecurringGoals()}</StyledBox>
+          ) : (
+            getRecurringGoals()
           )}
         </Grid>
       ) : null}

@@ -42,10 +42,7 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
         plannerData.investmentAllocations,
       );
 
-      const elapsedMonths = Math.max(
-        0,
-        dayjs(selectedDate).diff(dayjs(goal.getInvestmentStartDate()), 'month'),
-      );
+      const elapsedMonths = goal.getElapsedMonths();
       const currentValue = investmentSuggestions
         .map((suggestion) => {
           return calculateReturnOnInvestment(

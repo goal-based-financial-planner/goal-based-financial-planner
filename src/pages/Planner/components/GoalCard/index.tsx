@@ -3,6 +3,7 @@ import SemiCircleProgressBar from 'react-progressbar-semicircle';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
+import { GoalType } from '../../../../types/enums';
 
 const GoalCard = ({
   goal,
@@ -73,29 +74,32 @@ const GoalCard = ({
         </Box>
 
         {/* Right section: Duration and progress */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <Typography
-            variant="body2"
-            sx={{ color: 'grey', textAlign: 'center' }}
+        {/* Show this only if goal is not recurring*/}
+        {goal.goalType !== GoalType.RECURRING && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              flexShrink: 0,
+            }}
           >
-            {goalDuration}
-          </Typography>
-          <Box sx={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
-            <SemiCircleProgressBar
-              percentage={progressPercentage}
-              showPercentValue
-              strokeWidth={5}
-              diameter={90}
-            />
+            <Typography
+              variant="body2"
+              sx={{ color: 'grey', textAlign: 'center' }}
+            >
+              {goalDuration}
+            </Typography>
+            <Box sx={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
+              <SemiCircleProgressBar
+                percentage={progressPercentage}
+                showPercentValue
+                strokeWidth={5}
+                diameter={90}
+              />
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
 
       {/* Delete Button */}
