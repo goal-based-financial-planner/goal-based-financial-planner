@@ -42,7 +42,7 @@ const FormattedNumber = ({ value }: { value: number }) => {
 
 const getChips = (termTypeWiseData: TermTypeWiseData) => {
   return (
-    <Box mt={3} gap={0.3} display="flex">
+    <Box mt={3} gap={0.3} display="flex" flexWrap="wrap">
       {termTypeWiseData.goalNames.map((name) => (
         <Chip
           key={name}

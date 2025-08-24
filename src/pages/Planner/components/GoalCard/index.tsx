@@ -22,6 +22,10 @@ const GoalCard = ({
     .getInflationAdjustedTargetAmount()
     .toLocaleString(navigator.language, { maximumFractionDigits: 0 });
 
+  const formattedCurrentValue = goal
+    .getTargetAmount()
+    .toLocaleString(navigator.language, { maximumFractionDigits: 0 });
+
   const progressPercentage = Math.round(
     (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
   );
@@ -71,6 +75,11 @@ const GoalCard = ({
           <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
             {formattedTargetAmount}
           </Typography>
+          {goal.goalType !== GoalType.RECURRING && (
+            <Typography variant="caption">
+              Original Target: {formattedCurrentValue}
+            </Typography>
+          )}
         </Box>
 
         {/* Right section: Duration and progress */}
