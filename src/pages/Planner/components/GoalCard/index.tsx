@@ -4,6 +4,7 @@ import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
 import { GoalType } from '../../../../types/enums';
+import { useMemo } from 'react';
 
 const GoalCard = ({
   goal,
@@ -33,6 +34,12 @@ const GoalCard = ({
   const goalDuration = `${dayjs(goal.startDate).format('MM/YYYY')} - ${dayjs(
     goal.targetDate,
   ).format('MM/YYYY')}`;
+
+  const fontSize = useMemo(() => {
+    const valueLength = currentValue.toFixed().length;
+    if (valueLength <= 8) return '1.25rem';
+    return '1rem';
+  }, [currentValue]);
 
   return (
     <Box
@@ -72,7 +79,7 @@ const GoalCard = ({
         {/* Left section: Shrinkable box */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="subtitle2">{goal.goalName}</Typography>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1 }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1, fontSize }}>
             {formattedTargetAmount}
           </Typography>
           {goal.goalType !== GoalType.RECURRING && (

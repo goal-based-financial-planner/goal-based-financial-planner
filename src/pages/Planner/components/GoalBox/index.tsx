@@ -56,7 +56,7 @@ const GoalBox = ({
           investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
           goals={pendingGoals}
           dispatch={dispatch}
-        ></GoalList>
+        />
       </>
     );
   }

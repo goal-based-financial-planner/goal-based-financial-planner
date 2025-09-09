@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { PieChart } from '@mui/x-charts';
-import { useNumberFormatter } from '../../../../types/util';
+import { useMemo } from 'react';
 
 const InvestmentSuggestionsDoughnutChart = ({
   suggestions,
@@ -31,6 +31,12 @@ const InvestmentSuggestionsDoughnutChart = ({
     0,
   );
 
+  const fontSize = useMemo(() => {
+    const valueLength = totalAmount.toFixed().length;
+    if (valueLength <= 8) return '1rem';
+    return '0.9rem';
+  }, [totalAmount]);
+
   const palette = [
     'rgba(255, 165, 0, 0.8)',
     'rgba(54, 162, 235, 0.8)',
@@ -43,8 +49,6 @@ const InvestmentSuggestionsDoughnutChart = ({
     margin: { right: 5 },
     slotProps: { legend: { hidden: true } },
   };
-
-  const formattedNumber = useNumberFormatter(totalAmount);
 
   return (
     <Box
@@ -76,8 +80,10 @@ const InvestmentSuggestionsDoughnutChart = ({
           textAlign: 'center',
         }}
       >
-        <Typography variant="h6" fontWeight="bold">
-          {formattedNumber}
+        <Typography variant="h6" sx={{ fontSize, fontWeight: 'bold' }}>
+          {totalAmount.toLocaleString(navigator.language, {
+            maximumFractionDigits: 0,
+          })}
         </Typography>
       </Box>
     </Box>

@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
-import { useNumberFormatter } from '../../../../types/util';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
@@ -33,11 +32,6 @@ type TermTypeWiseData = {
   progressPercent: number;
   termTypeSum: number;
   goalNames: string[];
-};
-
-const FormattedNumber = ({ value }: { value: number }) => {
-  const formattedValue = useNumberFormatter(value);
-  return <>{formattedValue}</>;
 };
 
 const getChips = (termTypeWiseData: TermTypeWiseData) => {
@@ -140,9 +134,17 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                       >
                         <Typography variant="body1">{termType}</Typography>
                         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                          <FormattedNumber
-                            value={termTypeWiseData.termTypeSum}
-                          />
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            {termTypeWiseData.termTypeSum.toLocaleString(
+                              navigator.language,
+                              { maximumFractionDigits: 0 },
+                            )}
+                          </Typography>
                         </Typography>
                       </Box>
 

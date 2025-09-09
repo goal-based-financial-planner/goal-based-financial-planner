@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useNumberFormatter } from '../../types/util';
+import React, { useEffect, useState, useMemo } from 'react';
 
 interface LiveCounterProps {
   value: number;
@@ -9,6 +8,14 @@ interface LiveCounterProps {
 
 const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
   const [currentValue, setCurrentValue] = useState(0);
+
+  const fontSize = useMemo(() => {
+    const valueLength = currentValue.toFixed().length;
+    if (valueLength <= 8) return '3.5rem';
+    if (valueLength <= 12) return '2.8rem';
+    if (valueLength <= 15) return '2.5rem';
+    return '1.8rem';
+  }, [currentValue]);
 
   useEffect(() => {
     if (currentValue === 0) {
@@ -33,11 +40,16 @@ const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration]);
 
-  const formattedNumber = useNumberFormatter(currentValue);
-
   return (
-    <Typography variant="h2" sx={{ fontWeight: 'bold', mt: 2 }} color="primary">
-      {formattedNumber}
+    <Typography
+      sx={{
+        fontWeight: 'bold',
+        mt: 2,
+        fontSize,
+      }}
+      color="primary"
+    >
+      {currentValue.toLocaleString()}
     </Typography>
   );
 };
