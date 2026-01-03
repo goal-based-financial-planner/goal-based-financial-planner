@@ -62,6 +62,7 @@ const GoalList = ({
                   goal={goal}
                   dispatch={dispatch}
                   currentValue={investmentBreakdown?.currentValue!}
+                  investmentSuggestions={investmentBreakdown?.investmentSuggestions}
                 />
                 <Divider className="divider" />
               </div>

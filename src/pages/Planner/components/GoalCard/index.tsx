@@ -1,21 +1,38 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Collapse,
+  Chip,
+  IconButton,
+} from '@mui/material';
 import SemiCircleProgressBar from 'react-progressbar-semicircle';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
 import { GoalType } from '../../../../types/enums';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { InvestmentSuggestion } from '../../hooks/useInvestmentCalculator';
+
+const INVESTMENT_COLORS = [
+  '#FF9800', // Orange
+  '#2196F3', // Blue
+  '#4CAF50', // Green
+  '#9C27B0', // Purple
+  '#F44336', // Red
+];
 
 const GoalCard = ({
   goal,
   dispatch,
   currentValue,
+  investmentSuggestions = [],
 }: {
   goal: FinancialGoal;
   dispatch: any;
   currentValue: number;
+  investmentSuggestions?: InvestmentSuggestion[];
 }) => {
-  const theme = useTheme();
+  const [expanded, setExpanded] = useState(false);
 
   const handleDelete = () => deleteFinancialGoal(dispatch, goal.id);
 
@@ -41,45 +58,38 @@ const GoalCard = ({
     return '1rem';
   }, [currentValue]);
 
+  const totalMonthlyInvestment = investmentSuggestions.reduce(
+    (sum, s) => sum + s.amount,
+    0,
+  );
+
+  const hasInvestmentData = investmentSuggestions.length > 0;
+
   return (
     <Box
       sx={{
-        overflow: 'hidden',
         position: 'relative',
-        // On larger screens, slide the card on hover
-        [theme.breakpoints.up('md')]: {
-          '&:hover .hover-buttons': { right: 0 },
-          '&:hover .card-content': {
-            transform: 'translateX(-40px)',
-            transition: 'transform 0.3s ease',
-            borderTopRightRadius: 0,
-            borderBottomRightRadius: 0,
-          },
-        },
-        // On smaller screens, always show the delete button
-        [theme.breakpoints.down('md')]: {
-          '& .hover-buttons': { right: 0 },
-        },
+        px: 1,
+        py: 1,
+        borderRadius: 2,
       }}
     >
-      {/* Card content with extra right padding on small screens */}
+      {/* Main card row */}
       <Box
-        className="card-content"
         sx={{
           display: 'flex',
-          px: 1,
-          py: 1,
-          pr: { xs: '40px', md: 0 },
-          borderRadius: 2,
           justifyContent: 'space-between',
-          transition: 'transform 0.3s ease',
           flexDirection: 'row',
+          pr: 4, // Space for delete button
         }}
       >
-        {/* Left section: Shrinkable box */}
+        {/* Left section */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="subtitle2">{goal.goalName}</Typography>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', mt: 1, fontSize }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 'bold', mt: 1, fontSize }}
+          >
             {formattedTargetAmount}
           </Typography>
           {goal.goalType !== GoalType.RECURRING && (
@@ -90,7 +100,6 @@ const GoalCard = ({
         </Box>
 
         {/* Right section: Duration and progress */}
-        {/* Show this only if goal is not recurring*/}
         {goal.goalType !== GoalType.RECURRING && (
           <Box
             sx={{
@@ -118,30 +127,154 @@ const GoalCard = ({
         )}
       </Box>
 
-      {/* Delete Button */}
-      <Box
-        className="hover-buttons"
+      {/* Investment Breakdown Toggle */}
+      {hasInvestmentData && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            mt: 1,
+            cursor: 'pointer',
+            userSelect: 'none',
+          }}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <Typography
+            variant="caption"
+            sx={{
+              color: 'primary.main',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
+            <span
+              className="material-symbols-rounded"
+              style={{
+                fontSize: '16px',
+                transition: 'transform 0.2s',
+                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}
+            >
+              expand_more
+            </span>
+            Monthly SIP: ₹
+            {totalMonthlyInvestment.toLocaleString(navigator.language, {
+              maximumFractionDigits: 0,
+            })}
+          </Typography>
+
+          {/* Mini color bar preview when collapsed */}
+          {!expanded && (
+            <Box
+              sx={{
+                display: 'flex',
+                ml: 2,
+                height: 6,
+                borderRadius: 1,
+                overflow: 'hidden',
+                flex: 1,
+                maxWidth: 120,
+              }}
+            >
+              {investmentSuggestions.map((suggestion, index) => (
+                <Box
+                  key={suggestion.investmentName}
+                  sx={{
+                    flex: suggestion.amount / totalMonthlyInvestment,
+                    backgroundColor:
+                      INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
+                  }}
+                />
+              ))}
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {/* Expandable Investment Breakdown */}
+      <Collapse in={expanded}>
+        <Box
+          sx={{
+            mt: 1.5,
+            pt: 1.5,
+            borderTop: '1px dashed',
+            borderColor: 'divider',
+          }}
+        >
+          <Typography
+            variant="caption"
+            sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+          >
+            Investment Breakdown (Monthly)
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {investmentSuggestions.map((suggestion, index) => (
+              <Chip
+                key={suggestion.investmentName}
+                size="small"
+                label={
+                  <Box
+                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                  >
+                    <Box
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        backgroundColor:
+                          INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
+                      }}
+                    />
+                    <span>{suggestion.investmentName}</span>
+                    <Typography
+                      component="span"
+                      sx={{ fontWeight: 'bold', ml: 0.5 }}
+                    >
+                      ₹
+                      {suggestion.amount.toLocaleString(navigator.language, {
+                        maximumFractionDigits: 0,
+                      })}
+                    </Typography>
+                  </Box>
+                }
+                sx={{
+                  backgroundColor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  '& .MuiChip-label': {
+                    px: 1,
+                  },
+                }}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Collapse>
+
+      {/* Delete Button - Always visible */}
+      <IconButton
+        size="small"
+        onClick={handleDelete}
         sx={{
           position: 'absolute',
-          top: 0,
-          right: '-40px',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          transition: 'right 0.3s ease',
-          [theme.breakpoints.down('md')]: {
-            right: 0,
+          top: 8,
+          right: 8,
+          color: 'error.main',
+          opacity: 0.6,
+          '&:hover': {
+            opacity: 1,
+            backgroundColor: 'error.light',
+            color: 'error.contrastText',
           },
         }}
       >
-        <Box
-          sx={{ color: 'red', padding: 1, cursor: 'pointer' }}
-          onClick={handleDelete}
-        >
-          <span className="material-symbols-rounded">delete</span>
-        </Box>
-      </Box>
+        <span className="material-symbols-rounded" style={{ fontSize: '20px' }}>
+          delete
+        </span>
+      </IconButton>
     </Box>
   );
 };
