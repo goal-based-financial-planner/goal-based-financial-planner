@@ -2,6 +2,7 @@ import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { PieChart } from '@mui/x-charts';
 import { useMemo } from 'react';
+import LiveCounter from '../../../../components/LiveNumberCounter';
 
 const InvestmentSuggestionsDoughnutChart = ({
   suggestions,
@@ -81,9 +82,7 @@ const InvestmentSuggestionsDoughnutChart = ({
         }}
       >
         <Typography variant="h6" sx={{ fontSize, fontWeight: 'bold' }}>
-          {totalAmount.toLocaleString(navigator.language, {
-            maximumFractionDigits: 0,
-          })}
+          <LiveCounter value={totalAmount} duration={500} />
         </Typography>
       </Box>
     </Box>

@@ -127,7 +127,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
               fontWeight="bold"
               color="primary"
             >
-              Welcome User
+              Goal Based Financial Planner
             </Typography>
           </Box>
           <StyledBox className="calendar-button">
