@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Financial Planner",
+  "name": "Goal Based Financial Planner",
+  "description": "A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them.",
   "icons": [
     {
       "src": "favicon.png",
@@ -8,18 +9,22 @@
       "type": "image/png"
     },
     {
-      "src": "logo192.png",
+      "src": "favicon.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "logo512.png",
+      "src": "favicon.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#4CAF50",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "utilities", "productivity"]
 }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#4CAF50" />
     <meta
       name="description"
       content="A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them."
@@ -12,6 +12,36 @@
       name="keywords"
       content="investment planning, financial goals, goal-based investment, savings plan, investment strategy, financial planning tool, investment calculator, investment portfolio builder, long term goal planning, Systematic investment planning, SIP, Mutual fund planning, Mutual Fund SIP calculator"
     />
+    <meta name="author" content="Goal Based Financial Planner" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://goal-based-financial-planner.vercel.app/" />
+
+    <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://goal-based-financial-planner.vercel.app/" />
+    <meta property="og:title" content="Goal Based Financial Planner - Plan Your Financial Future" />
+    <meta
+      property="og:description"
+      content="A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them."
+    />
+    <meta property="og:image" content="https://goal-based-financial-planner.vercel.app/favicon.png" />
+    <meta property="og:site_name" content="Goal Based Financial Planner" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://goal-based-financial-planner.vercel.app/" />
+    <meta name="twitter:title" content="Goal Based Financial Planner - Plan Your Financial Future" />
+    <meta
+      name="twitter:description"
+      content="A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them."
+    />
+    <meta name="twitter:image" content="https://goal-based-financial-planner.vercel.app/favicon.png" />
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
 
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -28,12 +58,44 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <link rel="icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.png" />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
     />
 
-    <title>Goal Based Financial Planner</title>
+    <title>Goal Based Financial Planner - Plan Your Financial Future</title>
+
+    <!-- Structured Data (JSON-LD) for Rich Snippets -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Goal Based Financial Planner",
+        "description": "A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them.",
+        "url": "https://goal-based-financial-planner.vercel.app/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "INR"
+        },
+        "featureList": [
+          "Set financial goals",
+          "Choose investment options",
+          "Calculate required investments",
+          "Track goal progress",
+          "SIP planning",
+          "Mutual fund allocation"
+        ],
+        "screenshot": "https://goal-based-financial-planner.vercel.app/favicon.png",
+        "author": {
+          "@type": "Organization",
+          "name": "Goal Based Financial Planner"
+        }
+      }
+    </script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script
