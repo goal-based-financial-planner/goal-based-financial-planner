@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
+import { formatNumber } from '../../../../types/util';
 
 const CustomLegend = ({
   suggestions,
@@ -61,7 +62,7 @@ const CustomLegend = ({
                   </TableCell>
                   <TableCell sx={{ padding: '4px 8px' }}>{key}</TableCell>
                   <TableCell sx={{ padding: '4px 8px', textAlign: 'right' }}>
-                    {Math.round(value).toLocaleString(navigator.language)}
+                    {formatNumber(Math.round(value))}
                   </TableCell>
                 </TableRow>
               );

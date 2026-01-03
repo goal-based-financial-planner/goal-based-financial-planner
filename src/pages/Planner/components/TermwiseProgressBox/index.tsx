@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
+import { formatNumber } from '../../../../types/util';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
@@ -140,10 +141,7 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
                               fontWeight: 'bold',
                             }}
                           >
-                            {termTypeWiseData.termTypeSum.toLocaleString(
-                              navigator.language,
-                              { maximumFractionDigits: 0 },
-                            )}
+                            {formatNumber(termTypeWiseData.termTypeSum)}
                           </Typography>
                         </Typography>
                       </Box>

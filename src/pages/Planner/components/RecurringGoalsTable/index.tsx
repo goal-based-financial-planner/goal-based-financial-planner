@@ -13,6 +13,7 @@ import {
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
+import { formatNumber } from '../../../../types/util';
 import { Dispatch } from 'react';
 
 type RecurringGoalsTableProps = {
@@ -68,12 +69,7 @@ const RecurringGoalsTable = ({
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="body1">
-                      ₹
-                      {goal
-                        .getTargetAmount()
-                        .toLocaleString(navigator.language, {
-                          maximumFractionDigits: 0,
-                        })}
+                      ₹{formatNumber(goal.getTargetAmount())}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">

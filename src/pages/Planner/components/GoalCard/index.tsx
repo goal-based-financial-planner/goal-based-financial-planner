@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { GoalType } from '../../../../types/enums';
 import { useMemo, useState } from 'react';
 import { InvestmentSuggestion } from '../../hooks/useInvestmentCalculator';
+import { formatNumber } from '../../../../types/util';
 
 const INVESTMENT_COLORS = [
   '#FF9800', // Orange
@@ -36,13 +37,11 @@ const GoalCard = ({
 
   const handleDelete = () => deleteFinancialGoal(dispatch, goal.id);
 
-  const formattedTargetAmount = goal
-    .getInflationAdjustedTargetAmount()
-    .toLocaleString(navigator.language, { maximumFractionDigits: 0 });
+  const formattedTargetAmount = formatNumber(
+    goal.getInflationAdjustedTargetAmount(),
+  );
 
-  const formattedCurrentValue = goal
-    .getTargetAmount()
-    .toLocaleString(navigator.language, { maximumFractionDigits: 0 });
+  const formattedCurrentValue = formatNumber(goal.getTargetAmount());
 
   const progressPercentage = Math.round(
     (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
@@ -159,10 +158,7 @@ const GoalCard = ({
             >
               expand_more
             </span>
-            Monthly SIP: ₹
-            {totalMonthlyInvestment.toLocaleString(navigator.language, {
-              maximumFractionDigits: 0,
-            })}
+            Monthly SIP: ₹{formatNumber(totalMonthlyInvestment)}
           </Typography>
 
           {/* Mini color bar preview when collapsed */}
@@ -233,10 +229,7 @@ const GoalCard = ({
                       component="span"
                       sx={{ fontWeight: 'bold', ml: 0.5 }}
                     >
-                      ₹
-                      {suggestion.amount.toLocaleString(navigator.language, {
-                        maximumFractionDigits: 0,
-                      })}
+                      ₹{formatNumber(suggestion.amount)}
                     </Typography>
                   </Box>
                 }
