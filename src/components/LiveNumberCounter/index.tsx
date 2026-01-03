@@ -4,18 +4,45 @@ import React, { useEffect, useState, useMemo } from 'react';
 interface LiveCounterProps {
   value: number;
   duration: number;
+  size?: 'small' | 'medium' | 'large';
 }
 
-const LiveCounter: React.FC<LiveCounterProps> = ({ value, duration }) => {
+const fontSizeMap = {
+  small: {
+    8: '1.2rem',
+    12: '1.1rem',
+    15: '1rem',
+    default: '0.9rem',
+  },
+  medium: {
+    8: '1.5rem',
+    12: '1.2rem',
+    15: '1rem',
+    default: '0.9rem',
+  },
+  large: {
+    8: '3.5rem',
+    12: '2.8rem',
+    15: '2.5rem',
+    default: '1.8rem',
+  },
+};
+
+const LiveCounter: React.FC<LiveCounterProps> = ({
+  value,
+  duration,
+  size = 'large',
+}) => {
   const [currentValue, setCurrentValue] = useState(0);
 
   const fontSize = useMemo(() => {
     const valueLength = currentValue.toFixed().length;
-    if (valueLength <= 8) return '3.5rem';
-    if (valueLength <= 12) return '2.8rem';
-    if (valueLength <= 15) return '2.5rem';
-    return '1.8rem';
-  }, [currentValue]);
+    const sizeConfig = fontSizeMap[size];
+    if (valueLength <= 8) return sizeConfig[8];
+    if (valueLength <= 12) return sizeConfig[12];
+    if (valueLength <= 15) return sizeConfig[15];
+    return sizeConfig.default;
+  }, [currentValue, size]);
 
   useEffect(() => {
     if (currentValue === 0) {

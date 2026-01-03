@@ -1,7 +1,6 @@
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { PieChart } from '@mui/x-charts';
-import { useMemo } from 'react';
 import LiveCounter from '../../../../components/LiveNumberCounter';
 
 const InvestmentSuggestionsDoughnutChart = ({
@@ -31,12 +30,6 @@ const InvestmentSuggestionsDoughnutChart = ({
     (sum, amount) => sum + amount,
     0,
   );
-
-  const fontSize = useMemo(() => {
-    const valueLength = totalAmount.toFixed().length;
-    if (valueLength <= 8) return '1rem';
-    return '0.9rem';
-  }, [totalAmount]);
 
   const palette = [
     'rgba(255, 165, 0, 0.8)',
@@ -81,9 +74,7 @@ const InvestmentSuggestionsDoughnutChart = ({
           textAlign: 'center',
         }}
       >
-        <Typography variant="h6" sx={{ fontSize, fontWeight: 'bold' }}>
-          <LiveCounter value={totalAmount} duration={500} />
-        </Typography>
+        <LiveCounter value={totalAmount} duration={500} size="small" />
       </Box>
     </Box>
   );
