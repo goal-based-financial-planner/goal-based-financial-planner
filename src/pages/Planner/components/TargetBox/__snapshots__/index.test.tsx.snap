@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TargetBox should match snapshot 1`] = `
+<div>
+  <div
+    class="target-box MuiBox-root css-108t373"
+  >
+    <h6
+      class="MuiTypography-root MuiTypography-h6 css-h9fkkg-MuiTypography-root"
+    >
+      Your Target
+    </h6>
+    <div
+      data-testid="live-counter"
+    >
+      1000000
+    </div>
+    <div
+      class="MuiBox-root css-1ndc4rr"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary add-goals-button css-5pf1h4-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Add Goal
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary view-goals-button css-brz7wz-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        View Goals
+      </button>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-19m2bo-MuiButtonBase-root-MuiIconButton-root"
+      tabindex="0"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
+        data-testid="ExpandMoreIcon"
+        focusable="false"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+        />
+      </svg>
+    </button>
+    <div
+      class="MuiBox-root css-171ftq7"
+    />
+  </div>
+</div>
+`;

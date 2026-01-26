@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InvestmentPieChart should match snapshot 1`] = `
+<div>
+  <div
+    data-testid="pie-chart"
+  >
+    <div
+      data-testid="chart-colors"
+    >
+      ["rgba(255, 165, 0, 0.8)","rgba(54, 162, 235, 0.8)","rgba(75, 192, 192, 0.8)","rgba(50, 205, 50, 0.8)","rgba(255, 99, 132, 0.8)"]
+    </div>
+    <div
+      data-testid="chart-data"
+    >
+      [{"label":"Large Cap Equity","value":40},{"label":"Mid Cap Equity","value":30},{"label":"Gold","value":30}]
+    </div>
+  </div>
+</div>
+`;

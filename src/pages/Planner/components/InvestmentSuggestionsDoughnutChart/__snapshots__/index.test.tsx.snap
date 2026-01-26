@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InvestmentSuggestionsDoughnutChart should match snapshot 1`] = `
+<div>
+  <div
+    class="MuiBox-root css-1q4jc52"
+  >
+    <div
+      data-testid="doughnut-chart"
+    >
+      <div
+        data-testid="chart-colors"
+      >
+        ["rgba(255, 165, 0, 0.8)","rgba(54, 162, 235, 0.8)","rgba(75, 192, 192, 0.8)","rgba(50, 205, 50, 0.8)","rgba(255, 99, 132, 0.8)"]
+      </div>
+      <div
+        data-testid="chart-data"
+      >
+        [{"label":"Large Cap Equity","value":3500000},{"label":"Gold","value":500000},{"label":"PPF","value":1000000}]
+      </div>
+    </div>
+    <div
+      class="MuiBox-root css-vm63cb"
+    >
+      <div
+        data-testid="live-counter"
+      >
+        5000000
+      </div>
+    </div>
+  </div>
+</div>
+`;

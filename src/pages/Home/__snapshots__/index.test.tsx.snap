@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home should match snapshot with no goals 1`] = `
+<div>
+  <div
+    data-testid="landing-page"
+  >
+    Landing Page
+  </div>
+</div>
+`;
