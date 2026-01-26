@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LiveCounter should match snapshot with default props 1`] = `
+<p
+  class="MuiTypography-root MuiTypography-body1 css-1oqlmwt-MuiTypography-root"
+>
+  100,000
+</p>
+`;
+
+exports[`LiveCounter should match snapshot with small size 1`] = `
+<p
+  class="MuiTypography-root MuiTypography-body1 css-12k4ved-MuiTypography-root"
+>
+  50,000
+</p>
+`;

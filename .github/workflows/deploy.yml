@@ -10,7 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install and deploy
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests with coverage
+        run: npm run test:cov
+      - name: Deploy
         env:
           MY_EMAIL: kothaaakanksha.99@gmail.com
           MY_NAME: aakankshakotha
@@ -18,5 +22,4 @@ jobs:
           git config --global user.email $MY_EMAIL
           git config --global user.name $MY_NAME
           git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_DEPLOY_TOKEN }}@github.com/goal-based-financial-planner/goal-based-financial-planner.git
-          npm install
           npm run deploy

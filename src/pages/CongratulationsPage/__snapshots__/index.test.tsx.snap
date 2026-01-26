@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CongratulationsPage should match snapshot of congratulations content 1`] = `
+<div
+  class="MuiBox-root css-0"
+>
+  <div
+    data-testid="confetti"
+  >
+    Confetti
+  </div>
+  <div
+    class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 css-6xp2us-MuiGrid2-root"
+  >
+    <div
+      class="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-sm-12 MuiGrid2-grid-md-12 css-j1a7oz-MuiGrid2-root"
+    >
+      <h4
+        class="MuiTypography-root MuiTypography-h4 css-i3raj5-MuiTypography-root"
+      >
+        🎉 Congratulations!
+      </h4>
+      <h6
+        class="MuiTypography-root MuiTypography-subtitle1 css-1ausf6z-MuiTypography-root"
+      >
+        You have successfully completed all your goals
+      </h6>
+    </div>
+    <div
+      class="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-grid-sm-12 MuiGrid2-grid-md-12 css-qebjct-MuiGrid2-root"
+    >
+      <div
+        class="MuiBox-root css-1uez25r"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-h9fkkg-MuiTypography-root"
+        >
+          Your Total Savings
+        </h6>
+        <h2
+          class="MuiTypography-root MuiTypography-h2 css-1jxdnlo-MuiTypography-root"
+        >
+          5,000,000
+        </h2>
+      </div>
+      <div
+        class="MuiBox-root css-1uez25r"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-h9fkkg-MuiTypography-root"
+        >
+          Your Goals
+        </h6>
+        <div
+          class="MuiBox-root css-1yuhvjn"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-e0r9tj-MuiTypography-root"
+          >
+            <span
+              style="font-weight: bold;"
+            >
+              Retirement
+            </span>
+             -
+             
+            5,000,000
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-e0r9tj-MuiTypography-root"
+          >
+            <span
+              style="font-weight: bold;"
+            >
+              House
+            </span>
+             -
+             
+            2,000,000
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 css-e0r9tj-MuiTypography-root"
+          >
+            <span
+              style="font-weight: bold;"
+            >
+              Education
+            </span>
+             -
+             
+            1,000,000
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

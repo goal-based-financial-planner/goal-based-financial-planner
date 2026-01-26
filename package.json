@@ -33,6 +33,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "react-scripts test --watchAll=false --passWithNoTests",
     "test:cov": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -62,5 +63,34 @@
     "@testing-library/user-event": "^14.5.2",
     "gh-pages": "^6.2.0",
     "prettier": "3.3.3"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/index.tsx",
+      "!src/react-app-env.d.ts",
+      "!src/setupTests.ts",
+      "!src/reportWebVitals.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "\\.d\\.ts$",
+      "setupTests\\.ts$"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 40,
+        "functions": 32,
+        "lines": 39,
+        "statements": 39
+      }
+    },
+    "coverageReporters": [
+      "text",
+      "text-summary",
+      "lcov",
+      "json-summary"
+    ]
   }
 }
