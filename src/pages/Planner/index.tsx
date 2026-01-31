@@ -7,8 +7,9 @@ import {
   InputAdornment,
   useMediaQuery,
 } from '@mui/material';
-import { CalendarIcon, MobileDatePicker } from '@mui/x-date-pickers';
+import { CalendarIcon } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
+import DatePicker from '../../components/DatePicker';
 import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
 } from './components/InvestmentSuggestions';
@@ -131,7 +132,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             </Typography>
           </Box>
           <StyledBox className="calendar-button">
-            <MobileDatePicker
+            <DatePicker
               label={'"month" and "year"'}
               views={['month', 'year']}
               defaultValue={dayjs()}
