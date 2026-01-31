@@ -9,8 +9,21 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install and deploy
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests with coverage
+        run: npm run test:cov
+      
+      - name: Deploy
         env:
           MY_EMAIL: kothaaakanksha.99@gmail.com
           MY_NAME: aakankshakotha
@@ -18,5 +31,4 @@ jobs:
           git config --global user.email $MY_EMAIL
           git config --global user.name $MY_NAME
           git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_DEPLOY_TOKEN }}@github.com/goal-based-financial-planner/goal-based-financial-planner.git
-          npm install
           npm run deploy

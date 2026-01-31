@@ -45,12 +45,29 @@ Alternatively, you can view the project hosted on GitHub Pages:
 
 Testing the Goal Based Financial Planner is straightforward:
 
-1. **Run the tests:**
+1. **Run tests in watch mode (development):**
     ```bash
     npm test
     ```
 
-2. **Verify functionality:**
+2. **Run tests with coverage (CI/validation):**
+    ```bash
+    npm run test:cov
+    ```
+   
+   This command:
+   - Runs all tests once (non-interactive)
+   - Generates a coverage report showing tested vs untested code
+   - **Fails if coverage falls below minimum thresholds** (70% lines, 60% branches, 70% functions)
+   - Outputs coverage summary to the terminal
+   - Generates detailed reports in `coverage/` directory
+
+3. **Interpreting coverage results:**
+   - **Green/passing**: Coverage meets or exceeds all thresholds ✓
+   - **Red/failing**: Coverage below threshold; add tests to uncovered areas
+   - Check `coverage/lcov-report/index.html` for a visual breakdown of coverage by file
+
+4. **Verify functionality:**
     - Ensure that you can add, edit, and delete financial goals.
     - Check that the allocation ratio input and investment calculations are working as expected.
     - Report any bugs or issues through the project's [GitHub Issues](https://github.com/yourusername/goal-based-financial-planner/issues) page.

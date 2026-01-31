@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CustomLegend should match snapshot 1`] = `
+<div>
+  <div
+    class="MuiTableContainer-root MuiBox-root css-jd4hnh-MuiTableContainer-root"
+  >
+    <table
+      class="MuiTable-root css-1xwxv7r-MuiTable-root"
+    >
+      <tbody
+        class="MuiTableBody-root css-gmh7jj-MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root css-6phqnb-MuiTableRow-root"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
+          >
+            <div
+              class="MuiBox-root css-ya7p3"
+            />
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
+          >
+            Large Cap Equity
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
+          >
+            4,000,000
+          </td>
+        </tr>
+        <tr
+          class="MuiTableRow-root css-6phqnb-MuiTableRow-root"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
+          >
+            <div
+              class="MuiBox-root css-ck996r"
+            />
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
+          >
+            Gold
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
+          >
+            1,000,000
+          </td>
+        </tr>
+        <tr
+          class="MuiTableRow-root css-6phqnb-MuiTableRow-root"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
+          >
+            <div
+              class="MuiBox-root css-d6x00p"
+            />
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
+          >
+            PPF
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
+          >
+            1,000,000
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
