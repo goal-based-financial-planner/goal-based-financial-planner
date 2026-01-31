@@ -199,46 +199,46 @@
 
 ### Planner Page Optimizations
 
-- [ ] T075 [US4] Add `useMemo` for `targetAmount` calculation in `src/pages/Planner/index.tsx`
-- [ ] T076 [US4] Add `useMemo` for `investmentBreakdownForAllGoals` in `src/pages/Planner/index.tsx`
-- [ ] T077 [US4] Add `useMemo` for `investmentBreakdownBasedOnTermType` in `src/pages/Planner/index.tsx`
-- [ ] T078 [US4] Add `useMemo` for `termTypeWiseProgressData` in `src/pages/Planner/index.tsx`
-- [ ] T079 [US4] Add `useMemo` for `completedGoals` in `src/pages/Planner/index.tsx`
-- [ ] T080 [US4] Add `useCallback` for `handleDateChange` in `src/pages/Planner/index.tsx`
-- [ ] T081 [US4] Add `useCallback` for `setShowDrawerCallback` in `src/pages/Planner/index.tsx`
+- [x] T075 [US4] Add `useMemo` for `targetAmount` calculation in `src/pages/Planner/index.tsx`
+- [x] T076 [US4] Add `useMemo` for `investmentBreakdownForAllGoals` in `src/pages/Planner/index.tsx`
+- [x] T077 [US4] Add `useMemo` for `investmentBreakdownBasedOnTermType` in `src/pages/Planner/index.tsx`
+- [x] T078 [US4] Add `useMemo` for `termTypeWiseProgressData` in `src/pages/Planner/index.tsx`
+- [x] T079 [US4] Add `useMemo` for `completedGoals` in `src/pages/Planner/index.tsx`
+- [x] T080 [US4] Add `useCallback` for `handleDateChange` in `src/pages/Planner/index.tsx`
+- [x] T081 [US4] Add `useCallback` for `setShowDrawerCallback` in `src/pages/Planner/index.tsx`
 
 ### GoalBox Component Optimizations
 
-- [ ] T082 [US4] Add `useMemo` for `sortedGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
-- [ ] T083 [US4] Add `useMemo` for `pendingGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
-- [ ] T084 [US4] Add `useMemo` for `completedGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
-- [ ] T085 [US4] Add `useMemo` for `recurringGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
+- [x] T082 [US4] Add `useMemo` for `sortedGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
+- [x] T083 [US4] Add `useMemo` for `pendingGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
+- [x] T084 [US4] Add `useMemo` for `completedGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
+- [x] T085 [US4] Add `useMemo` for `recurringGoals` in `src/pages/Planner/components/GoalBox/index.tsx`
 
 ### GoalCard Component Optimizations
 
-- [ ] T086 [US4] Wrap `GoalCard` component with `React.memo` in `src/pages/Planner/components/GoalCard/index.tsx`
-- [ ] T087 [US4] Add custom comparison function to `React.memo` for `GoalCard` (compare goal.id, currentValue, investmentSuggestions.length)
-- [ ] T088 [US4] Add `useCallback` for `handleDelete` in `src/pages/Planner/components/GoalCard/index.tsx`
-- [ ] T089 [US4] Add `useMemo` for `totalMonthlyInvestment` calculation in `src/pages/Planner/components/GoalCard/index.tsx`
+- [x] T086 [US4] Wrap `GoalCard` component with `React.memo` in `src/pages/Planner/components/GoalCard/index.tsx`
+- [x] T087 [US4] Add custom comparison function to `React.memo` for `GoalCard` (compare goal.id, currentValue, investmentSuggestions.length)
+- [x] T088 [US4] Add `useCallback` for `handleDelete` in `src/pages/Planner/components/GoalCard/index.tsx`
+- [x] T089 [US4] Add `useMemo` for `totalMonthlyInvestment` calculation in `src/pages/Planner/components/GoalCard/index.tsx`
 
 ### Chart Component Optimizations
 
-- [ ] T090 [P] [US4] Wrap `InvestmentPieChart` with `React.memo` in `src/pages/Planner/components/InvestmentPieChart/index.tsx`
-- [ ] T091 [US4] Add `useMemo` for `chartData` processing in `src/pages/Planner/components/InvestmentPieChart/index.tsx`
-- [ ] T092 [US4] Add `useMemo` for `pieParams` config in `src/pages/Planner/components/InvestmentPieChart/index.tsx`
-- [ ] T093 [P] [US4] Wrap `InvestmentSuggestionsDoughnutChart` with `React.memo` in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
-- [ ] T094 [US4] Add `useMemo` for `investmentOptionWiseSum` reduction in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
-- [ ] T095 [US4] Add `useMemo` for `seriesData` in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
-- [ ] T096 [US4] Add `useMemo` for `totalAmount` in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
-- [ ] T097 [P] [US4] Wrap `CustomLegend` with `React.memo` in `src/pages/Planner/components/CustomLegend/index.tsx`
-- [ ] T098 [US4] Add `useMemo` for `investmentOptionWiseSum` reduction in `src/pages/Planner/components/CustomLegend/index.tsx`
+- [x] T090 [P] [US4] Wrap `InvestmentPieChart` with `React.memo` in `src/pages/Planner/components/InvestmentPieChart/index.tsx`
+- [x] T091 [US4] Add `useMemo` for `chartData` processing in `src/pages/Planner/components/InvestmentPieChart/index.tsx`
+- [x] T092 [US4] Add `useMemo` for `pieParams` config in `src/pages/Planner/components/InvestmentPieChart/index.tsx`
+- [x] T093 [P] [US4] Wrap `InvestmentSuggestionsDoughnutChart` with `React.memo` in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
+- [x] T094 [US4] Add `useMemo` for `investmentOptionWiseSum` reduction in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
+- [x] T095 [US4] Add `useMemo` for `seriesData` in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
+- [x] T096 [US4] Add `useMemo` for `totalAmount` in `src/pages/Planner/components/InvestmentSuggestionsDoughnutChart/index.tsx`
+- [x] T097 [P] [US4] Wrap `CustomLegend` with `React.memo` in `src/pages/Planner/components/CustomLegend/index.tsx`
+- [x] T098 [US4] Add `useMemo` for `investmentOptionWiseSum` reduction in `src/pages/Planner/components/CustomLegend/index.tsx`
 
 ### Additional Component Optimizations (Medium Priority)
 
-- [ ] T099 [P] [US4] Wrap `RecurringGoalsTable` with `React.memo` in `src/pages/Planner/components/RecurringGoalsTable/index.tsx`
-- [ ] T100 [P] [US4] Wrap `TermWiseProgressBox` with `React.memo` in `src/pages/Planner/components/TermwiseProgressBox/index.tsx`
-- [ ] T101 [P] [US4] Wrap `TermWiseProgressBarChart` with `React.memo` in `src/pages/Planner/components/TermwiseProgressBox/termWiseProgressBarChart.tsx`
-- [ ] T102 [US4] Add `useMemo` for chart data transformation in `src/pages/Planner/components/TermwiseProgressBox/termWiseProgressBarChart.tsx`
+- [x] T099 [P] [US4] Wrap `RecurringGoalsTable` with `React.memo` in `src/pages/Planner/components/RecurringGoalsTable/index.tsx`
+- [x] T100 [P] [US4] Wrap `TermWiseProgressBox` with `React.memo` in `src/pages/Planner/components/TermwiseProgressBox/index.tsx`
+- [x] T101 [P] [US4] Wrap `TermWiseProgressBarChart` with `React.memo` in `src/pages/Planner/components/TermwiseProgressBox/termWiseProgressBarChart.tsx`
+- [x] T102 [US4] Add `useMemo` for chart data transformation in `src/pages/Planner/components/TermwiseProgressBox/termWiseProgressBarChart.tsx`
 
 ### Performance Profiling
 
@@ -250,8 +250,8 @@
 
 ### Verification
 
-- [ ] T108 Verify all tests still pass: `npm test -- --watchAll=false`
-- [ ] T109 Verify build succeeds: `npm run build`
+- [x] T108 Verify all tests still pass: `npm test -- --watchAll=false`
+- [x] T109 Verify build succeeds: `npm run build`
 - [ ] T110 Verify app functionality unchanged (manual testing)
 - [ ] T111 [US4] Verify performance improvement: ≥30% reduction in re-renders (Success Criterion SC-005)
 
@@ -267,25 +267,25 @@
 
 ### Remove Old Hook Utilities File
 
-- [ ] T112 [US3] Verify `investmentCalculator.utils.ts` functions fully replaced in `src/domain/investmentCalculations.ts`
-- [ ] T113 [US3] Verify all imports updated to use domain location (no remaining references to utils file)
-- [ ] T114 [US3] Delete `src/pages/Planner/hooks/investmentCalculator.utils.ts`
-- [ ] T115 [US3] Delete `src/pages/Planner/hooks/investmentCalculator.utils.test.ts`
+- [x] T112 [US3] Verify `investmentCalculator.utils.ts` functions fully replaced in `src/domain/investmentCalculations.ts`
+- [x] T113 [US3] Verify all imports updated to use domain location (no remaining references to utils file)
+- [x] T114 [US3] Delete `src/pages/Planner/hooks/investmentCalculator.utils.ts`
+- [x] T115 [US3] Delete `src/pages/Planner/hooks/investmentCalculator.utils.test.ts`
 
 ### Remove Unused Imports
 
-- [ ] T116 Audit and remove unused imports from `src/pages/Planner/hooks/useInvestmentCalculator.ts`
-- [ ] T117 Audit and remove unused imports from chart components after type consolidation
-- [ ] T118 Audit and remove unused imports from `src/pages/Planner/index.tsx` after DatePicker wrapper
-- [ ] T119 Audit and remove unused imports from `src/pages/Home/components/FinancialGoalForm/index.tsx` after DatePicker wrapper
+- [x] T116 Audit and remove unused imports from `src/pages/Planner/hooks/useInvestmentCalculator.ts`
+- [x] T117 Audit and remove unused imports from chart components after type consolidation
+- [x] T118 Audit and remove unused imports from `src/pages/Planner/index.tsx` after DatePicker wrapper
+- [x] T119 Audit and remove unused imports from `src/pages/Home/components/FinancialGoalForm/index.tsx` after DatePicker wrapper
 
 ### Final Verification
 
 - [ ] T120 Run linter to catch any issues: `npm run lint` (if configured)
-- [ ] T121 Verify TypeScript compilation: `npm run build`
-- [ ] T122 Verify all tests pass: `npm test -- --watchAll=false`
+- [x] T121 Verify TypeScript compilation: `npm run build`
+- [x] T122 Verify all tests pass: `npm test -- --watchAll=false`
 - [ ] T123 Verify test coverage maintained: `npm run test:cov`
-- [ ] T124 Search for references to deleted files: `grep -r "investmentCalculator.utils" src/`
+- [x] T124 Search for references to deleted files: `grep -r "investmentCalculator.utils" src/`
 
 **Checkpoint**: Old code removed, codebase clean, no dangling references
 
@@ -299,13 +299,13 @@
 
 ### Install ESLint Plugin
 
-- [ ] T125 [US5] Install `eslint-plugin-boundaries` dependency: `npm install --save-dev eslint-plugin-boundaries@^4.2.0`
+- [x] T125 [US5] Install `eslint-plugin-boundaries` dependency: `npm install --save-dev eslint-plugin-boundaries@^4.2.0`
 
 ### Configure ESLint Boundaries
 
-- [ ] T126 [US5] Add `boundaries` plugin to ESLint config in `package.json` or `.eslintrc`
-- [ ] T127 [US5] Configure `boundaries/elements` settings: domain, components, pages, util, store, types patterns
-- [ ] T128 [US5] Configure `boundaries/element-types` rule with import restrictions:
+- [x] T126 [US5] Add `boundaries` plugin to ESLint config in `package.json` or `.eslintrc`
+- [x] T127 [US5] Configure `boundaries/elements` settings: domain, components, pages, util, store, types patterns
+- [x] T128 [US5] Configure `boundaries/element-types` rule with import restrictions:
   - domain → domain, types, util
   - components → components, domain, types, util, store
   - pages → pages, components, domain, types, util, store
@@ -315,21 +315,21 @@
 
 ### Fix Any Violations
 
-- [ ] T129 [US5] Run ESLint on entire codebase: `npx eslint src/`
-- [ ] T130 [US5] Fix any cross-layer violations reported by ESLint
-- [ ] T131 [US5] Verify domain layer has no violations: `npx eslint src/domain/`
-- [ ] T132 [US5] Verify shared components have no violations: `npx eslint src/components/`
+- [x] T129 [US5] Run ESLint on entire codebase: `npx eslint src/`
+- [x] T130 [US5] Fix any cross-layer violations reported by ESLint
+- [x] T131 [US5] Verify domain layer has no violations: `npx eslint src/domain/`
+- [x] T132 [US5] Verify shared components have no violations: `npx eslint src/components/`
 
 ### Update CI Pipeline
 
-- [ ] T133 [US5] Add linting step to `.github/workflows/ci.yml` if not already present
-- [ ] T134 [US5] Ensure CI runs `npm run lint` (or equivalent) before tests
+- [x] T133 [US5] Add linting step to `.github/workflows/ci.yml` if not already present
+- [x] T134 [US5] Ensure CI runs `npm run lint` (or equivalent) before tests
 - [ ] T135 [US5] Test CI pipeline by pushing to feature branch
 
 ### Create ESLint npm Script
 
-- [ ] T136 [US5] Add `"lint": "eslint src/"` script to `package.json` if not present
-- [ ] T137 [US5] Add `"lint:fix": "eslint src/ --fix"` script to `package.json`
+- [x] T136 [US5] Add `"lint": "eslint src/"` script to `package.json` if not present
+- [x] T137 [US5] Add `"lint:fix": "eslint src/ --fix"` script to `package.json`
 
 ### Documentation
 
@@ -338,10 +338,10 @@
 
 ### Verification
 
-- [ ] T140 Run ESLint: `npm run lint` - must pass with zero violations
-- [ ] T141 Verify build succeeds: `npm run build`
-- [ ] T142 Verify tests pass: `npm test -- --watchAll=false`
-- [ ] T143 [US5] Verify Success Criterion SC-009: Zero cross-layer dependency violations detected
+- [x] T140 Run ESLint: `npm run lint` - must pass with zero violations
+- [x] T141 Verify build succeeds: `npm run build`
+- [x] T142 Verify tests pass: `npm test -- --watchAll=false`
+- [x] T143 [US5] Verify Success Criterion SC-009: Zero cross-layer dependency violations detected
 
 **Checkpoint**: Automated linting enforces architecture boundaries, violations prevented
 

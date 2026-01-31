@@ -13,7 +13,7 @@ import DatePicker from '../../components/DatePicker';
 import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
 } from './components/InvestmentSuggestions';
-import { Dispatch, useRef, useState } from 'react';
+import { Dispatch, useRef, useState, useMemo, useCallback } from 'react';
 import { TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
@@ -36,75 +36,115 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
   const [showDrawer, setShowDrawer] = useState(false);
 
-  const handleChange = (value: Dayjs | null) => {
+  const handleChange = useCallback((value: Dayjs | null) => {
     setSelectedDate(value!.toString());
-  };
+  }, []);
 
-  const targetAmount = plannerData.financialGoals.reduce(
-    (sum, goal) => sum + goal.getInflationAdjustedTargetAmount(),
-    0,
+  const targetAmount = useMemo(
+    () =>
+      plannerData.financialGoals.reduce(
+        (sum, goal) => sum + goal.getInflationAdjustedTargetAmount(),
+        0,
+      ),
+    [plannerData.financialGoals],
   );
 
   const { calculateInvestmentNeededForGoals } =
     useInvestmentCalculator(plannerData);
-  const investmentBreakdownForAllGoals = calculateInvestmentNeededForGoals(
-    plannerData,
-    selectedDate,
+  
+  const investmentBreakdownForAllGoals = useMemo(
+    () => calculateInvestmentNeededForGoals(plannerData, selectedDate),
+    [calculateInvestmentNeededForGoals, plannerData, selectedDate],
   );
 
   const investmentBreakdownBasedOnTermType: InvestmentBreakdownBasedOnTermType[] =
-    [];
-  const termTypeWiseProgressData: TermTypeWiseProgressData[] = [];
-
-  [TermType.SHORT_TERM, TermType.MEDIUM_TERM, TermType.LONG_TERM].forEach(
-    (termType) => {
-      const goalsForTerm = plannerData.financialGoals.filter(
-        (goal) => goal.getTermType() === termType,
-      );
-
-      if (goalsForTerm.length > 0) {
-        const goalNames = goalsForTerm.map((goal) => goal.goalName);
-
-        const investmentBreakDownPerTerm =
-          investmentBreakdownForAllGoals.filter((ib) =>
-            goalNames.includes(ib.goalName),
+    useMemo(() => {
+      const result: InvestmentBreakdownBasedOnTermType[] = [];
+      
+      [TermType.SHORT_TERM, TermType.MEDIUM_TERM, TermType.LONG_TERM].forEach(
+        (termType) => {
+          const goalsForTerm = plannerData.financialGoals.filter(
+            (goal) => goal.getTermType() === termType,
           );
 
-        const termTypeSum = Math.round(
-          goalsForTerm.reduce(
-            (sum, goal) => sum + goal.getInflationAdjustedTargetAmount(),
-            0,
-          ),
+          if (goalsForTerm.length > 0) {
+            const goalNames = goalsForTerm.map((goal) => goal.goalName);
+
+            const investmentBreakDownPerTerm =
+              investmentBreakdownForAllGoals.filter((ib) =>
+                goalNames.includes(ib.goalName),
+              );
+
+            result.push({
+              termType,
+              investmentBreakdown: investmentBreakDownPerTerm,
+            });
+          }
+        },
+      );
+      
+      return result;
+    }, [plannerData.financialGoals, investmentBreakdownForAllGoals]);
+
+  const termTypeWiseProgressData: TermTypeWiseProgressData[] = useMemo(() => {
+    const result: TermTypeWiseProgressData[] = [];
+
+    [TermType.SHORT_TERM, TermType.MEDIUM_TERM, TermType.LONG_TERM].forEach(
+      (termType) => {
+        const goalsForTerm = plannerData.financialGoals.filter(
+          (goal) => goal.getTermType() === termType,
         );
 
-        const progressPercent = Math.round(
-          (investmentBreakDownPerTerm.reduce(
-            (acc, val) => acc + val.currentValue,
-            0,
-          )! /
-            termTypeSum) *
-            100,
-        );
+        if (goalsForTerm.length > 0) {
+          const goalNames = goalsForTerm.map((goal) => goal.goalName);
 
-        investmentBreakdownBasedOnTermType.push({
-          termType,
-          investmentBreakdown: investmentBreakDownPerTerm,
-        });
-        termTypeWiseProgressData.push({
-          termType,
-          termTypeWiseData: {
-            goalNames,
-            termTypeSum,
-            progressPercent,
-          },
-        });
-      }
-    },
+          const investmentBreakDownPerTerm =
+            investmentBreakdownForAllGoals.filter((ib) =>
+              goalNames.includes(ib.goalName),
+            );
+
+          const termTypeSum = Math.round(
+            goalsForTerm.reduce(
+              (sum, goal) => sum + goal.getInflationAdjustedTargetAmount(),
+              0,
+            ),
+          );
+
+          const progressPercent = Math.round(
+            (investmentBreakDownPerTerm.reduce(
+              (acc, val) => acc + val.currentValue,
+              0,
+            )! /
+              termTypeSum) *
+              100,
+          );
+
+          result.push({
+            termType,
+            termTypeWiseData: {
+              goalNames,
+              termTypeSum,
+              progressPercent,
+            },
+          });
+        }
+      },
+    );
+
+    return result;
+  }, [plannerData.financialGoals, investmentBreakdownForAllGoals]);
+
+  const completedGoals = useMemo(
+    () =>
+      plannerData.financialGoals.filter((goal) => {
+        return dayjs(selectedDate).isAfter(goal.getTargetDate());
+      }),
+    [plannerData.financialGoals, selectedDate],
   );
 
-  const completedGoals = plannerData.financialGoals.filter((goal) => {
-    return dayjs(selectedDate).isAfter(goal.getTargetDate());
-  });
+  const setShowDrawerCallback = useCallback((value: boolean) => {
+    setShowDrawer(value);
+  }, []);
 
   const datePickerRef = useRef<HTMLDivElement | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
@@ -201,7 +241,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                 <TargetBox
                   targetAmount={targetAmount}
                   dispatch={dispatch}
-                  setShowDrawer={setShowDrawer}
+                  setShowDrawer={setShowDrawerCallback}
                   termTypeWiseProgressData={termTypeWiseProgressData}
                 />
               </Grid>
@@ -247,7 +287,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
 
       <Drawer
         open={showDrawer}
-        onClose={() => setShowDrawer(false)}
+        onClose={() => setShowDrawerCallback(false)}
         anchor="right"
       >
         <Box sx={{ p: 2 }}>

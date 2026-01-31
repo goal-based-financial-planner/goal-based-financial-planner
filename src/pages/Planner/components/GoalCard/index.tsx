@@ -10,7 +10,7 @@ import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
 import { GoalType } from '../../../../types/enums';
-import { useMemo, useState, Dispatch } from 'react';
+import { useMemo, useState, Dispatch, memo, useCallback } from 'react';
 import { InvestmentSuggestion } from '../../../../types/planner';
 import { formatNumber } from '../../../../types/util';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
@@ -23,20 +23,33 @@ const INVESTMENT_COLORS = [
   '#F44336', // Red
 ];
 
-const GoalCard = ({
-  goal,
-  dispatch,
-  currentValue,
-  investmentSuggestions = [],
-}: {
-  goal: FinancialGoal;
-  dispatch: Dispatch<PlannerDataAction>;
-  currentValue: number;
-  investmentSuggestions?: InvestmentSuggestion[];
-}) => {
-  const [expanded, setExpanded] = useState(false);
+const GoalCard = memo(
+  ({
+    goal,
+    dispatch,
+    currentValue,
+    investmentSuggestions = [],
+  }: {
+    goal: FinancialGoal;
+    dispatch: Dispatch<PlannerDataAction>;
+    currentValue: number;
+    investmentSuggestions?: InvestmentSuggestion[];
+  }) => {
+    const [expanded, setExpanded] = useState(false);
 
-  const handleDelete = () => deleteFinancialGoal(dispatch, goal.id);
+    const handleDelete = useCallback(
+      () => deleteFinancialGoal(dispatch, goal.id),
+      [dispatch, goal.id],
+    );
+
+    const totalMonthlyInvestment = useMemo(
+      () =>
+        investmentSuggestions.reduce(
+          (sum, suggestion) => sum + suggestion.amount,
+          0,
+        ),
+      [investmentSuggestions],
+    );
 
   const formattedTargetAmount = formatNumber(
     goal.getInflationAdjustedTargetAmount(),
@@ -57,11 +70,6 @@ const GoalCard = ({
     if (valueLength <= 8) return '1.25rem';
     return '1rem';
   }, [currentValue]);
-
-  const totalMonthlyInvestment = investmentSuggestions.reduce(
-    (sum, s) => sum + s.amount,
-    0,
-  );
 
   const hasInvestmentData = investmentSuggestions.length > 0;
 
@@ -271,6 +279,15 @@ const GoalCard = ({
       </IconButton>
     </Box>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison function for React.memo
+  return (
+    prevProps.goal.id === nextProps.goal.id &&
+    prevProps.currentValue === nextProps.currentValue &&
+    (prevProps.investmentSuggestions?.length || 0) === (nextProps.investmentSuggestions?.length || 0)
+  );
+});
+
+GoalCard.displayName = 'GoalCard';
 
 export default GoalCard;
