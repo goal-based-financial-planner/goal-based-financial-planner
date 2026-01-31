@@ -4,13 +4,14 @@ import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { useState, useEffect } from 'react';
 import { formatNumber } from '../../types/util';
+import { GoalSummary } from '../../types/goals';
 
 const CongratulationsPage = ({
   targetAmount,
   goals,
 }: {
   targetAmount: number;
-  goals: { name: string; amount: number }[];
+  goals: GoalSummary[];
 }) => {
   const { width, height } = useWindowSize();
   const [showConfetti, setShowConfetti] = useState(true);

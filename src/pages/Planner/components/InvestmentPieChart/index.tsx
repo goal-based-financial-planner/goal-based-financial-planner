@@ -1,5 +1,6 @@
 import { PieChart } from '@mui/x-charts';
 import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
+import { ChartDataPoint } from '../../../../types/charts';
 
 const InvestmentPieChart = ({
   allocations,
@@ -11,7 +12,7 @@ const InvestmentPieChart = ({
       label: allocation.investmentName,
       value: Number(allocation.investmentPercentage),
     }))
-    .reduce((acc: { label: string; value: number }[], curr) => {
+    .reduce((acc: ChartDataPoint[], curr) => {
       const existing = acc.find((item) => item.label === curr.label);
       if (existing) {
         existing.value = Number(existing.value) + Number(curr.value);

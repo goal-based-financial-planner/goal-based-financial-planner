@@ -1,6 +1,12 @@
 import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { GoalType, TermType } from '../types/enums';
 import { INFLATION_PERCENTAGE } from './constants';
+
+// Extend dayjs with comparison plugins
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 export class FinancialGoal {
   constructor(
@@ -92,3 +98,18 @@ export class FinancialGoal {
     );
   }
 }
+
+/**
+ * Determines if a goal is active on a specific date.
+ * A goal is active if the selected date is between the investment start date and target date.
+ *
+ * @param goal - The financial goal
+ * @param selectedDate - The date to check (YYYY-MM-DD format)
+ * @returns true if the goal is active on the selected date
+ */
+export const isGoalActive = (goal: FinancialGoal, selectedDate: string): boolean => {
+  return (
+    dayjs(selectedDate).isSameOrAfter(dayjs(goal.getInvestmentStartDate()), 'day') &&
+    dayjs(selectedDate).isSameOrBefore(dayjs(goal.getTargetDate()), 'day')
+  );
+};

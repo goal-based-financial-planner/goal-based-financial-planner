@@ -11,6 +11,7 @@ import {
 
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { formatNumber } from '../../../../types/util';
+import { InvestmentAmountMap } from '../../../../types/charts';
 
 const CustomLegend = ({
   suggestions,
@@ -25,7 +26,7 @@ const CustomLegend = ({
 
       return acc;
     },
-    {} as { [key: string]: number },
+    {} as InvestmentAmountMap,
   );
 
   const palette = [

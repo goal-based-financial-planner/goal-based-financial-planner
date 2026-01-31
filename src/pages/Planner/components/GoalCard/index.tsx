@@ -10,9 +10,10 @@ import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
 import { GoalType } from '../../../../types/enums';
-import { useMemo, useState } from 'react';
-import { InvestmentSuggestion } from '../../hooks/useInvestmentCalculator';
+import { useMemo, useState, Dispatch } from 'react';
+import { InvestmentSuggestion } from '../../../../types/planner';
 import { formatNumber } from '../../../../types/util';
+import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 const INVESTMENT_COLORS = [
   '#FF9800', // Orange
@@ -29,7 +30,7 @@ const GoalCard = ({
   investmentSuggestions = [],
 }: {
   goal: FinancialGoal;
-  dispatch: any;
+  dispatch: Dispatch<PlannerDataAction>;
   currentValue: number;
   investmentSuggestions?: InvestmentSuggestion[];
 }) => {

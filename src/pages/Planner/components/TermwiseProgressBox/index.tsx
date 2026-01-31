@@ -8,9 +8,9 @@ import {
   styled,
   Tooltip,
 } from '@mui/material';
-import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
 import { formatNumber } from '../../../../types/util';
+import { TermTypeWiseProgressData, TermTypeWiseData } from '../../../../types/planner';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
@@ -20,19 +20,8 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
   },
 }));
 
-export type TermTypeWiseProgressData = {
-  termType: TermType;
-  termTypeWiseData: TermTypeWiseData;
-};
-
 type TermWiseProgressBoxProps = {
   data: TermTypeWiseProgressData[];
-};
-
-type TermTypeWiseData = {
-  progressPercent: number;
-  termTypeSum: number;
-  goalNames: string[];
 };
 
 const getChips = (termTypeWiseData: TermTypeWiseData) => {
@@ -158,5 +147,8 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
     </StyledBox>
   );
 };
+
+// Re-export types for backward compatibility
+export type { TermTypeWiseProgressData };
 
 export default TermWiseProgressBox;

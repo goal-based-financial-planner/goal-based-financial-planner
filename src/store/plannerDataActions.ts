@@ -40,7 +40,7 @@ export function deleteFinancialGoal(
 
 export function updateFinancialGoal(
   dispatch: Dispatch<PlannerDataAction>,
-  financialGoal: any,
+  financialGoal: FinancialGoal | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number },
 ) {
   dispatch({
     payload: financialGoal,

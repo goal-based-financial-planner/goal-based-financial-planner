@@ -1,20 +1,10 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 import { AxisConfig, ChartsXAxisProps } from '@mui/x-charts';
 import { Typography } from '@mui/material';
-
-export type TermTypeWiseProgressData = {
-  termType: string;
-  termTypeWiseData: TermTypeWiseData;
-};
+import { TermTypeWiseProgressData } from '../../../../types/planner';
 
 type TermWiseProgressBoxProps = {
   data: TermTypeWiseProgressData[];
-};
-
-type TermTypeWiseData = {
-  progressPercent: number;
-  termTypeSum: number;
-  goalNames: string[];
 };
 
 const TermWiseProgressBarChart = ({ data }: TermWiseProgressBoxProps) => {
@@ -63,5 +53,8 @@ const TermWiseProgressBarChart = ({ data }: TermWiseProgressBoxProps) => {
     </>
   );
 };
+
+// Re-export types for backward compatibility
+export type { TermTypeWiseProgressData };
 
 export default TermWiseProgressBarChart;
