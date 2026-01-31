@@ -6,7 +6,11 @@ import {
   formatCurrency,
   formatIndianNumber,
   formatIndianCurrency,
+  AVAILABLE_LOCALES,
+  useNumberFormatter,
 } from './util';
+import { renderHook } from '@testing-library/react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 describe('Locale and Formatting Utilities', () => {
   beforeEach(() => {
@@ -217,6 +221,95 @@ describe('Locale and Formatting Utilities', () => {
       
       // toLocaleString throws RangeError for invalid locale
       expect(() => formatNumber(1000)).toThrow(RangeError);
+    });
+  });
+
+  describe('AVAILABLE_LOCALES', () => {
+    it('should contain all expected locales', () => {
+      expect(AVAILABLE_LOCALES).toHaveLength(7);
+    });
+
+    it('should have correct structure for each locale', () => {
+      AVAILABLE_LOCALES.forEach((locale) => {
+        expect(locale).toHaveProperty('code');
+        expect(locale).toHaveProperty('name');
+        expect(locale).toHaveProperty('example');
+        expect(typeof locale.code).toBe('string');
+        expect(typeof locale.name).toBe('string');
+        expect(typeof locale.example).toBe('string');
+      });
+    });
+
+    it('should include en-IN locale', () => {
+      const enIN = AVAILABLE_LOCALES.find((l) => l.code === 'en-IN');
+      expect(enIN).toBeDefined();
+      expect(enIN?.name).toContain('India');
+      expect(enIN?.example).toBe('10,00,000');
+    });
+
+    it('should include en-US locale', () => {
+      const enUS = AVAILABLE_LOCALES.find((l) => l.code === 'en-US');
+      expect(enUS).toBeDefined();
+      expect(enUS?.name).toContain('United States');
+      expect(enUS?.example).toBe('1,000,000');
+    });
+
+    it('should include all unique locale codes', () => {
+      const codes = AVAILABLE_LOCALES.map((l) => l.code);
+      const uniqueCodes = new Set(codes);
+      expect(codes.length).toBe(uniqueCodes.size);
+    });
+  });
+
+  describe('useNumberFormatter', () => {
+    const theme = createTheme();
+
+    const wrapper = ({ children }: any) => (
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    );
+
+    beforeEach(() => {
+      setUserLocale('en-US');
+    });
+
+    it('should format number correctly', () => {
+      const { result } = renderHook(() => useNumberFormatter(1000000), {
+        wrapper,
+      });
+
+      expect(result.current).toBe('1,000,000');
+    });
+
+    it('should handle zero', () => {
+      const { result } = renderHook(() => useNumberFormatter(0), { wrapper });
+
+      expect(result.current).toBe('0');
+    });
+
+    it('should handle negative numbers', () => {
+      const { result } = renderHook(() => useNumberFormatter(-5000), {
+        wrapper,
+      });
+
+      expect(result.current).toContain('-');
+      expect(result.current).toContain('5,000');
+    });
+
+    it('should respect locale setting', () => {
+      setUserLocale('en-IN');
+      const { result } = renderHook(() => useNumberFormatter(100000), {
+        wrapper,
+      });
+
+      expect(result.current).toContain('1,00,000');
+    });
+
+    it('should handle very large numbers', () => {
+      const { result } = renderHook(() => useNumberFormatter(1000000000), {
+        wrapper,
+      });
+
+      expect(result.current).toContain('1,000,000,000');
     });
   });
 });
