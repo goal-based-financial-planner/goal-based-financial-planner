@@ -8,9 +8,10 @@ import {
   styled,
   Tooltip,
 } from '@mui/material';
-import { TermType } from '../../../../types/enums';
 import { StyledBox } from '../../../../components/StyledBox';
 import { formatNumber } from '../../../../types/util';
+import { TermTypeWiseProgressData, TermTypeWiseData } from '../../../../types/planner';
+import { memo } from 'react';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
   height: 10,
@@ -20,41 +21,31 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
   },
 }));
 
-export type TermTypeWiseProgressData = {
-  termType: TermType;
-  termTypeWiseData: TermTypeWiseData;
-};
-
 type TermWiseProgressBoxProps = {
   data: TermTypeWiseProgressData[];
 };
 
-type TermTypeWiseData = {
-  progressPercent: number;
-  termTypeSum: number;
-  goalNames: string[];
-};
+const TermWiseProgressBox = memo(({ data }: TermWiseProgressBoxProps) => {
+  const getChips = (termTypeWiseData: TermTypeWiseData) => {
+    return (
+      <Box mt={3} gap={0.3} display="flex" flexWrap="wrap">
+        {termTypeWiseData.goalNames.map((name) => (
+          <Chip
+            key={name}
+            label={name}
+            size="small"
+            color="success"
+            sx={{
+              width: 'auto',
+              height: '20px',
+              mb: 1,
+            }}
+          />
+        ))}
+      </Box>
+    );
+  };
 
-const getChips = (termTypeWiseData: TermTypeWiseData) => {
-  return (
-    <Box mt={3} gap={0.3} display="flex" flexWrap="wrap">
-      {termTypeWiseData.goalNames.map((name) => (
-        <Chip
-          key={name}
-          label={name}
-          size="small"
-          color="success"
-          sx={{
-            width: 'auto',
-            height: '20px',
-            mb: 1,
-          }}
-        />
-      ))}
-    </Box>
-  );
-};
-const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
   const numberOfTermsPresent = Object.keys(data).length;
 
   return (
@@ -157,6 +148,11 @@ const TermWiseProgressBox = ({ data }: TermWiseProgressBoxProps) => {
       </Grid>
     </StyledBox>
   );
-};
+});
+
+TermWiseProgressBox.displayName = 'TermWiseProgressBox';
+
+// Re-export types for backward compatibility
+export type { TermTypeWiseProgressData };
 
 export default TermWiseProgressBox;

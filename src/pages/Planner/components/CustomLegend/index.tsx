@@ -11,22 +11,25 @@ import {
 
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { formatNumber } from '../../../../types/util';
+import { InvestmentAmountMap } from '../../../../types/charts';
+import { memo, useMemo } from 'react';
 
-const CustomLegend = ({
-  suggestions,
-}: {
-  suggestions: GoalWiseInvestmentSuggestions[];
-}) => {
-  const investmentOptionWiseSum = suggestions.reduce(
-    (acc, goal) => {
-      goal.investmentSuggestions.forEach(({ investmentName, amount }) => {
-        acc[investmentName] = (acc[investmentName] || 0) + amount;
-      });
+const CustomLegend = memo(
+  ({ suggestions }: { suggestions: GoalWiseInvestmentSuggestions[] }) => {
+    const investmentOptionWiseSum = useMemo(
+      () =>
+        suggestions.reduce(
+          (acc, goal) => {
+            goal.investmentSuggestions.forEach(({ investmentName, amount }) => {
+              acc[investmentName] = (acc[investmentName] || 0) + amount;
+            });
 
-      return acc;
-    },
-    {} as { [key: string]: number },
-  );
+            return acc;
+          },
+          {} as InvestmentAmountMap,
+        ),
+      [suggestions],
+    );
 
   const palette = [
     'rgba(255, 165, 0, 0.8)',
@@ -72,6 +75,8 @@ const CustomLegend = ({
       </Table>
     </TableContainer>
   );
-};
+});
+
+CustomLegend.displayName = 'CustomLegend';
 
 export default CustomLegend;

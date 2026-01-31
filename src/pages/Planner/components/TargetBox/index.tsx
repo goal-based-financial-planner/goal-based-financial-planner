@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Dispatch } from 'react';
 import { Typography, Button, Box, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LiveCounter from '../../../../components/LiveNumberCounter';
@@ -6,10 +6,11 @@ import { StyledBox } from '../../../../components/StyledBox';
 import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
 import TermWiseProgressBarChart from '../TermwiseProgressBox/termWiseProgressBarChart';
 import AddGoalPopup from '../../../Home/components/AddGoalPopup';
+import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 type TargetBoxProps = {
   targetAmount: number;
-  dispatch: any;
+  dispatch: Dispatch<PlannerDataAction>;
   termTypeWiseProgressData: TermTypeWiseProgressData[];
   setShowDrawer(showDrawer: boolean): void;
 };

@@ -14,17 +14,15 @@ import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { formatNumber } from '../../../../types/util';
-import { Dispatch } from 'react';
+import { Dispatch, memo } from 'react';
 
 type RecurringGoalsTableProps = {
   recurringGoals: FinancialGoal[];
   dispatch: Dispatch<PlannerDataAction>;
 };
 
-const RecurringGoalsTable = ({
-  recurringGoals,
-  dispatch,
-}: RecurringGoalsTableProps) => {
+const RecurringGoalsTable = memo(
+  ({ recurringGoals, dispatch }: RecurringGoalsTableProps) => {
   const handleDelete = (goalId: string) => {
     deleteFinancialGoal(dispatch, goalId);
   };
@@ -89,6 +87,8 @@ const RecurringGoalsTable = ({
       </TableContainer>
     </Box>
   );
-};
+});
+
+RecurringGoalsTable.displayName = 'RecurringGoalsTable';
 
 export default RecurringGoalsTable;

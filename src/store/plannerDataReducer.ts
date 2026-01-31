@@ -4,9 +4,25 @@ import { PlannerData } from '../domain/PlannerData';
 import { TermType } from '../types/enums';
 import { PlannerDataActionType } from './plannerDataActions';
 import { getPlannerData, setPlannerData } from '../util/storage';
+import {
+  InvestmentAllocationsType,
+  InvestmentChoiceType,
+  InvestmentOptionType,
+} from '../domain/InvestmentOptions';
+
+/**
+ * Union type for all possible action payloads
+ */
+export type PlannerDataActionPayload =
+  | FinancialGoal // ADD_FINANCIAL_GOAL, UPDATE_FINANCIAL_GOAL
+  | InvestmentAllocationsType // UPDATE_INVESTMENT_ALLOCATIONS
+  | InvestmentChoiceType // UPDATE_*_TERM_INVESTMENT
+  | InvestmentOptionType // ADD_INVESTMENT_OPTION
+  | string // DELETE_FINANCIAL_GOAL (goalId)
+  | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number }; // UPDATE_FINANCIAL_GOAL (alternative form)
 
 export type PlannerDataAction = {
-  payload: any;
+  payload: PlannerDataActionPayload;
   type: PlannerDataActionType;
 };
 
@@ -18,7 +34,8 @@ export function plannerDataReducer(
 ): PlannerData {
   switch (action.type) {
     case PlannerDataActionType.ADD_FINANCIAL_GOAL: {
-      const updatedFinancialGoals = [...state.financialGoals, action.payload];
+      const financialGoal = action.payload as FinancialGoal;
+      const updatedFinancialGoals = [...state.financialGoals, financialGoal];
       const updatedInvestmentAllocations = { ...state.investmentAllocations };
 
       // Get all goal term types from the updated financial goals. If invetment allocation is not present for that type add an empty array
@@ -60,13 +77,14 @@ export function plannerDataReducer(
     }
 
     case PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS:
-      return new PlannerData(state.financialGoals, action.payload);
+      return new PlannerData(state.financialGoals, action.payload as InvestmentAllocationsType);
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL: {
+      const goalId = action.payload as string;
       const financialGoals = [...state.financialGoals];
       const { investmentAllocations } = state;
 
-      const index = financialGoals.findIndex((g) => g.id === action.payload);
+      const index = financialGoals.findIndex((g) => g.id === goalId);
       financialGoals.splice(index, 1);
 
       const allSelectedTermTypes = new Set(
@@ -90,9 +108,9 @@ export function plannerDataReducer(
 
     case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
       const financialGoals = [...state.financialGoals];
-      const updatedPayload = action.payload;
+      const updatedPayload = action.payload as { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number };
       const goalToBeUpdated = financialGoals.find(
-        (g) => g.id === action.payload.id,
+        (g) => g.id === updatedPayload.id,
       );
 
       if (goalToBeUpdated) {

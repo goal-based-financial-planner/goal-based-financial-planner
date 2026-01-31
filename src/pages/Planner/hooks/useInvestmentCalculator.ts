@@ -1,17 +1,11 @@
 import { PlannerData } from '../../../domain/PlannerData';
-import { FinancialGoal } from '../../../domain/FinancialGoals';
+import { FinancialGoal, isGoalActive } from '../../../domain/FinancialGoals';
 import { InvestmentAllocationsType } from '../../../domain/InvestmentOptions';
-import dayjs from 'dayjs';
 import {
   calculateTotalMonthlySIP,
-  calculateFutureValue,
-} from './investmentCalculator.utils';
-
-export type InvestmentSuggestion = {
-  investmentName: string;
-  amount: number;
-  expectedReturnPercentage: number;
-};
+  calculateCurrentPortfolioValue,
+} from '../../../domain/investmentCalculations';
+import { InvestmentSuggestion } from '../../../types/planner';
 
 export type GoalWiseInvestmentSuggestions = {
   goalName: string;
@@ -43,24 +37,16 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
         plannerData.investmentAllocations,
       );
 
-      const elapsedMonths = goal.getElapsedMonths();
-      const currentValue = investmentSuggestions
-        .map((suggestion) => {
-          return calculateFutureValue(
-            suggestion.amount,
-            Math.min(elapsedMonths, goal.getMonthTerm()),
-            suggestion.expectedReturnPercentage,
-          );
-        })
-        .reduce((acc, cv) => acc + cv, 0);
+      const currentValue = calculateCurrentPortfolioValue(
+        investmentSuggestions,
+        goal,
+      );
 
       return {
         goalName: goal.getGoalName(),
-        investmentSuggestions:
-          dayjs(selectedDate).isBefore(dayjs(goal.getInvestmentStartDate())) ||
-          dayjs(selectedDate).isAfter(dayjs(goal.getTargetDate()))
-            ? []
-            : investmentSuggestions,
+        investmentSuggestions: isGoalActive(goal, selectedDate)
+          ? investmentSuggestions
+          : [],
         currentValue,
       };
     });
@@ -102,5 +88,8 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
     calculateInvestmentNeededForGoals,
   };
 };
+
+// Re-export types for backward compatibility
+export type { InvestmentSuggestion };
 
 export default useInvestmentCalculator;

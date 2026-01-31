@@ -2,34 +2,44 @@ import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { PieChart } from '@mui/x-charts';
 import LiveCounter from '../../../../components/LiveNumberCounter';
+import { memo, useMemo } from 'react';
 
-const InvestmentSuggestionsDoughnutChart = ({
-  suggestions,
-}: {
-  suggestions: GoalWiseInvestmentSuggestions[];
-}) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+const InvestmentSuggestionsDoughnutChart = memo(
+  ({ suggestions }: { suggestions: GoalWiseInvestmentSuggestions[] }) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const investmentOptionWiseSum = suggestions.reduce(
-    (acc, goal) => {
-      goal.investmentSuggestions.forEach(({ investmentName, amount }) => {
-        acc[investmentName] = (acc[investmentName] || 0) + amount;
-      });
+    const investmentOptionWiseSum = useMemo(
+      () =>
+        suggestions.reduce(
+          (acc, goal) => {
+            goal.investmentSuggestions.forEach(({ investmentName, amount }) => {
+              acc[investmentName] = (acc[investmentName] || 0) + amount;
+            });
 
-      return acc;
-    },
-    {} as { [key: string]: number },
-  );
+            return acc;
+          },
+          {} as { [key: string]: number },
+        ),
+      [suggestions],
+    );
 
-  const seriesData = Object.entries(investmentOptionWiseSum).map((entry) => {
-    return { label: entry[0], value: Math.round(entry[1]) };
-  });
+    const seriesData = useMemo(
+      () =>
+        Object.entries(investmentOptionWiseSum).map((entry) => {
+          return { label: entry[0], value: Math.round(entry[1]) };
+        }),
+      [investmentOptionWiseSum],
+    );
 
-  const totalAmount = Object.values(investmentOptionWiseSum).reduce(
-    (sum, amount) => sum + amount,
-    0,
-  );
+    const totalAmount = useMemo(
+      () =>
+        Object.values(investmentOptionWiseSum).reduce(
+          (sum, amount) => sum + amount,
+          0,
+        ),
+      [investmentOptionWiseSum],
+    );
 
   const palette = [
     'rgba(255, 165, 0, 0.8)',
@@ -78,6 +88,8 @@ const InvestmentSuggestionsDoughnutChart = ({
       </Box>
     </Box>
   );
-};
+});
+
+InvestmentSuggestionsDoughnutChart.displayName = 'InvestmentSuggestionsDoughnutChart';
 
 export default InvestmentSuggestionsDoughnutChart;

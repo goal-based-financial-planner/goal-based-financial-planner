@@ -1,7 +1,7 @@
 import { Grid2 as Grid, Typography } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
-import { Dispatch } from 'react';
+import { Dispatch, useMemo } from 'react';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { StyledBox } from '../../../../components/StyledBox';
@@ -22,29 +22,45 @@ const GoalBox = ({
   dispatch,
   useStyledBox,
 }: GoalBoxProps) => {
-  const sortedGoals = financialGoals.sort((goal1, goal2) => {
-    const diffA = dayjs(goal1.getTargetDate()).diff(dayjs(), 'days');
-    const diffB = dayjs(goal2.getTargetDate()).diff(dayjs(), 'days');
-    return diffA - diffB;
-  });
+  const sortedGoals = useMemo(
+    () =>
+      [...financialGoals].sort((goal1, goal2) => {
+        const diffA = dayjs(goal1.getTargetDate()).diff(dayjs(), 'days');
+        const diffB = dayjs(goal2.getTargetDate()).diff(dayjs(), 'days');
+        return diffA - diffB;
+      }),
+    [financialGoals],
+  );
 
-  const pendingGoals = sortedGoals.filter((goal) => {
-    return (
-      goal.goalType === GoalType.ONE_TIME &&
-      dayjs(selectedDate).isBefore(goal.getTargetDate())
-    );
-  });
+  const pendingGoals = useMemo(
+    () =>
+      sortedGoals.filter((goal) => {
+        return (
+          goal.goalType === GoalType.ONE_TIME &&
+          dayjs(selectedDate).isBefore(goal.getTargetDate())
+        );
+      }),
+    [sortedGoals, selectedDate],
+  );
 
-  const completedGoals = sortedGoals.filter((goal) => {
-    return (
-      goal.goalType === GoalType.ONE_TIME &&
-      dayjs(selectedDate).isAfter(goal.getTargetDate())
-    );
-  });
+  const completedGoals = useMemo(
+    () =>
+      sortedGoals.filter((goal) => {
+        return (
+          goal.goalType === GoalType.ONE_TIME &&
+          dayjs(selectedDate).isAfter(goal.getTargetDate())
+        );
+      }),
+    [sortedGoals, selectedDate],
+  );
 
-  const recurringGoals = sortedGoals.filter((goal) => {
-    return goal.goalType === GoalType.RECURRING;
-  });
+  const recurringGoals = useMemo(
+    () =>
+      sortedGoals.filter((goal) => {
+        return goal.goalType === GoalType.RECURRING;
+      }),
+    [sortedGoals],
+  );
 
   function getPendingGoals() {
     return (

@@ -18,7 +18,8 @@ import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { Dispatch, useRef, useState } from 'react';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { addFinancialGoal } from '../../../../store/plannerDataActions';
-import { CalendarIcon, MobileDatePicker } from '@mui/x-date-pickers';
+import { CalendarIcon } from '@mui/x-date-pickers';
+import DatePicker from '../../../../components/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   ALPHANUMERIC_PATTERN,
@@ -221,7 +222,7 @@ const FinancialGoalForm = ({
                   </FormControl>
                   {goalType === GoalType.ONE_TIME && (
                     <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                      <MobileDatePicker
+                      <DatePicker
                         label={'"month" and "year"'}
                         views={['month', 'year']}
                         onChange={handleStartYearChange}
@@ -249,7 +250,7 @@ const FinancialGoalForm = ({
                           },
                         }}
                       />
-                      <MobileDatePicker
+                      <DatePicker
                         label={'"month" and "year"'}
                         views={['month', 'year']}
                         onChange={handleTargetYearChange}

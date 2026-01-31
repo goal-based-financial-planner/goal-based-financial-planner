@@ -1,4 +1,13 @@
-import { InvestmentChoiceType } from '../../../domain/InvestmentOptions';
+/**
+ * Pure investment calculation functions
+ *
+ * This module contains business logic for financial calculations including
+ * SIP (Systematic Investment Plan) calculations using the Annuity Due formula.
+ * These functions are pure (no side effects) and React-independent.
+ */
+
+import { InvestmentChoiceType } from './InvestmentOptions';
+import { FinancialGoal } from './FinancialGoals';
 
 /**
  * Calculates the SIP factor for a given allocation.
@@ -112,3 +121,30 @@ export const verifySIPCalculation = (
   }, 0);
 };
 
+/**
+ * Calculates the current portfolio value for a goal based on investment suggestions.
+ * This represents the accumulated value if the suggested investments were followed from the start.
+ *
+ * @param investmentSuggestions - Array of investment suggestions with monthly amounts
+ * @param goal - The financial goal
+ * @returns Current portfolio value
+ */
+export const calculateCurrentPortfolioValue = (
+  investmentSuggestions: Array<{
+    amount: number;
+    expectedReturnPercentage: number;
+  }>,
+  goal: FinancialGoal,
+): number => {
+  const elapsedMonths = goal.getElapsedMonths();
+
+  return investmentSuggestions
+    .map((suggestion) => {
+      return calculateFutureValue(
+        suggestion.amount,
+        Math.min(elapsedMonths, goal.getMonthTerm()),
+        suggestion.expectedReturnPercentage,
+      );
+    })
+    .reduce((acc, cv) => acc + cv, 0);
+};
