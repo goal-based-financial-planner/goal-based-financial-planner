@@ -1,11 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StyledBox should match snapshot 1`] = `
-<div
-  class="MuiBox-root css-dgp3o5"
->
-  <span>
-    Snapshot Test
-  </span>
+<div>
+  <div
+    class="MuiBox-root css-dgp3o5"
+    data-testid="styled-box"
+  >
+    <span>
+      Snapshot Test
+    </span>
+  </div>
 </div>
 `;

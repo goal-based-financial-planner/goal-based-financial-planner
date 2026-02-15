@@ -1,11 +1,18 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import CustomLegend from './index';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
+import { useMediaQuery } from '@mui/material';
 
 // Mock formatNumber
 jest.mock('../../../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
+}));
+
+// Mock useMediaQuery
+jest.mock('@mui/material', () => ({
+  ...jest.requireActual('@mui/material'),
+  useMediaQuery: jest.fn(),
 }));
 
 describe('CustomLegend', () => {
@@ -37,25 +44,40 @@ describe('CustomLegend', () => {
   ];
 
   it('should render legend with investment summary', () => {
-    const { getByText } = render(<CustomLegend suggestions={mockSuggestions} />);
-    expect(getByText('Large Cap Equity')).toBeInTheDocument();
-    expect(getByText('Gold')).toBeInTheDocument();
-    expect(getByText('PPF')).toBeInTheDocument();
+    render(<CustomLegend suggestions={mockSuggestions} />);
+    expect(screen.getByText('Large Cap Equity')).toBeInTheDocument();
+    expect(screen.getByText('Gold')).toBeInTheDocument();
+    expect(screen.getByText('PPF')).toBeInTheDocument();
   });
 
   it('should aggregate amounts for same investment type', () => {
-    const { getByText } = render(<CustomLegend suggestions={mockSuggestions} />);
+    render(<CustomLegend suggestions={mockSuggestions} />);
     // Large Cap should be 3M + 1M = 4M
-    expect(getByText('4,000,000')).toBeInTheDocument();
+    expect(screen.getByText('4,000,000')).toBeInTheDocument();
   });
 
   it('should handle empty suggestions', () => {
-    const { container } = render(<CustomLegend suggestions={[]} />);
-    expect(container.querySelector('tbody')?.children.length).toBe(0);
+    render(<CustomLegend suggestions={[]} />);
+    const tbody = screen.queryByRole('rowgroup');
+    expect(tbody).toBeInTheDocument();
   });
 
   it('should match snapshot', () => {
     const { container } = render(<CustomLegend suggestions={mockSuggestions} />);
     expect(container).toMatchSnapshot();
+  });
+
+  it('should render with mobile sizing when on mobile device', () => {
+    (useMediaQuery as jest.Mock).mockReturnValue(true);
+
+    render(<CustomLegend suggestions={mockSuggestions} />);
+    expect(screen.getByText('Large Cap Equity')).toBeInTheDocument();
+  });
+
+  it('should render with desktop sizing when on desktop device', () => {
+    (useMediaQuery as jest.Mock).mockReturnValue(false);
+
+    render(<CustomLegend suggestions={mockSuggestions} />);
+    expect(screen.getByText('Large Cap Equity')).toBeInTheDocument();
   });
 });

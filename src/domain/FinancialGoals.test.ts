@@ -1,6 +1,5 @@
 import { FinancialGoal, isGoalActive } from './FinancialGoals';
 import { GoalType, TermType } from '../types/enums';
-import dayjs from 'dayjs';
 import { mockTodayDate } from '../testUtils/mockDayjs';
 
 describe('FinancialGoal', () => {

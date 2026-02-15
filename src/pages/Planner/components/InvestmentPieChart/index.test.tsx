@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import InvestmentPieChart from './index';
 import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
 
@@ -33,17 +33,17 @@ describe('InvestmentPieChart', () => {
   ];
 
   it('should render pie chart', () => {
-    const { getByTestId } = render(
+    render(
       <InvestmentPieChart allocations={mockAllocations} />,
     );
-    expect(getByTestId('pie-chart')).toBeInTheDocument();
+    expect(screen.getByTestId('pie-chart')).toBeInTheDocument();
   });
 
   it('should transform allocations into chart data', () => {
-    const { getByTestId } = render(
+    render(
       <InvestmentPieChart allocations={mockAllocations} />,
     );
-    const chartData = getByTestId('chart-data');
+    const chartData = screen.getByTestId('chart-data');
     expect(chartData.textContent).toContain('Large Cap Equity');
     expect(chartData.textContent).toContain('"value":40');
   });
@@ -61,17 +61,17 @@ describe('InvestmentPieChart', () => {
         expectedReturnPercentage: 8,
       },
     ];
-    const { getByTestId } = render(
+    render(
       <InvestmentPieChart allocations={duplicateAllocations} />,
     );
-    const chartData = getByTestId('chart-data');
+    const chartData = screen.getByTestId('chart-data');
     // Should aggregate to 30%
     expect(chartData.textContent).toContain('"value":30');
   });
 
   it('should handle empty allocations', () => {
-    const { getByTestId } = render(<InvestmentPieChart allocations={[]} />);
-    const chartData = getByTestId('chart-data');
+    render(<InvestmentPieChart allocations={[]} />);
+    const chartData = screen.getByTestId('chart-data');
     expect(chartData.textContent).toBe('[]');
   });
 

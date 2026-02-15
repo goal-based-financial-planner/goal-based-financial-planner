@@ -136,10 +136,10 @@ describe('TermWiseProgressBox', () => {
       },
     ];
 
-    const { container } = render(<TermWiseProgressBox data={data} />);
+    render(<TermWiseProgressBox data={data} />);
 
-    // Progress bar should be rendered
-    const progressBar = container.querySelector('.MuiLinearProgress-root');
+    // Progress bar should be rendered (check by looking for progressbar role)
+    const progressBar = screen.getByRole('progressbar');
     expect(progressBar).toBeInTheDocument();
   });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 
 // Mock child components to isolate App
@@ -11,13 +11,13 @@ jest.mock('./pages/Home', () => {
 
 describe('App', () => {
   it('should render without crashing', () => {
-    const { getByTestId } = render(<App />);
-    expect(getByTestId('home-page')).toBeInTheDocument();
+    render(<App />);
+    expect(screen.getByTestId('home-page')).toBeInTheDocument();
   });
 
   it('should wrap content in theme and localization providers', () => {
-    const { container } = render(<App />);
-    expect(container.firstChild).toBeInTheDocument();
+    render(<App />);
+    expect(screen.getByTestId('home-page')).toBeInTheDocument();
   });
 
   it('should match snapshot', () => {

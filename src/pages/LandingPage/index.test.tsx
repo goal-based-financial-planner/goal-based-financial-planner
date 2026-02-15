@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import LandingPage from './index';
 
 // Mock the AddGoalPopup component to avoid testing its internals
@@ -20,29 +20,28 @@ describe('LandingPage', () => {
   const mockDispatch = jest.fn();
 
   it('should render main heading', () => {
-    const { getByText } = render(<LandingPage dispatch={mockDispatch} />);
+    render(<LandingPage dispatch={mockDispatch} />);
 
-    expect(getByText(/Plan your Financial Goals/i)).toBeInTheDocument();
+    expect(screen.getByText(/Plan your Financial Goals/i)).toBeInTheDocument();
   });
 
   it('should render call-to-action button', () => {
-    const { getByRole } = render(<LandingPage dispatch={mockDispatch} />);
+    render(<LandingPage dispatch={mockDispatch} />);
 
-    const button = getByRole('button', { name: /ADD GOAL/i });
+    const button = screen.getByRole('button', { name: /ADD GOAL/i });
     expect(button).toBeInTheDocument();
   });
 
   it('should render subtitle', () => {
-    const { getByText } = render(<LandingPage dispatch={mockDispatch} />);
+    render(<LandingPage dispatch={mockDispatch} />);
 
-    expect(getByText(/Start by adding your first Goal/i)).toBeInTheDocument();
+    expect(screen.getByText(/Start by adding your first Goal/i)).toBeInTheDocument();
   });
 
   it('should match snapshot of main content structure', () => {
     const { container } = render(<LandingPage dispatch={mockDispatch} />);
 
-    // Snapshot only the main content box to keep it stable
-    const mainContent = container.querySelector('[role="main"]') || container.firstChild;
-    expect(mainContent).toMatchSnapshot();
+    // Snapshot the entire container
+    expect(container).toMatchSnapshot();
   });
 });

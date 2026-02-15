@@ -20,8 +20,7 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Frontend-only React app (this repo)**: `src/` at repository root with
-  `src/pages/`, `src/components/`, `src/domain/`, `src/store/`, `src/util/`
+- **Single project**: `src/`, `tests/` at repository root
 - **Web app**: `backend/src/`, `frontend/src/`
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
 - Paths shown below assume single project - adjust based on plan.md structure
@@ -63,12 +62,12 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Define shared domain types in `src/domain/` and `src/types/`
-- [ ] T005 [P] Add/verify storage adapter in `src/util/storage.ts` (if needed)
-- [ ] T006 [P] Establish shared UI wrappers in `src/components/` for vendor components (if needed)
-- [ ] T007 Create base calculation utilities with unit tests in `src/pages/**/hooks/` or `src/domain/`
-- [ ] T008 Configure error boundaries / user-safe error handling (if needed)
-- [ ] T009 Setup environment/config conventions (if needed)
+- [ ] T004 Setup database schema and migrations framework
+- [ ] T005 [P] Implement authentication/authorization framework
+- [ ] T006 [P] Setup API routing and middleware structure
+- [ ] T007 Create base models/entities that all stories depend on
+- [ ] T008 Configure error handling and logging infrastructure
+- [ ] T009 Setup environment configuration management
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -84,17 +83,17 @@ Examples of foundational tasks (adjust based on your project):
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T010 [P] [US1] Unit tests for calculation logic in `src/domain/[name].test.ts` (or colocated)
-- [ ] T011 [P] [US1] Component/page tests for the main flow in `src/pages/[Page]/[name].test.tsx`
+- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Define/update domain types in `src/domain/[name].ts`
-- [ ] T013 [P] [US1] Add calculation/util function in `src/domain/` or `src/pages/[Page]/hooks/`
-- [ ] T014 [US1] Create UI components in `src/pages/[Page]/components/` (depends on T012/T013)
-- [ ] T015 [US1] Wire page state in `src/pages/[Page]/index.tsx`
+- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
+- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
+- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
 - [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add/update unit tests near the calculation logic
+- [ ] T017 [US1] Add logging for user story 1 operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -108,14 +107,14 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T018 [P] [US2] Unit tests for any new utilities in `src/domain/[name].test.ts`
-- [ ] T019 [P] [US2] Component/page tests for the main flow in `src/pages/[Page]/[name].test.tsx`
+- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Define/update domain types in `src/domain/[name].ts`
-- [ ] T021 [US2] Add/adjust derivation logic in `src/domain/` or `src/pages/[Page]/hooks/`
-- [ ] T022 [US2] Implement UI changes in `src/pages/[Page]/` (components + wiring)
+- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
+- [ ] T021 [US2] Implement [Service] in src/services/[service].py
+- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
 - [ ] T023 [US2] Integrate with User Story 1 components (if needed)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
@@ -130,14 +129,14 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T024 [P] [US3] Unit tests for any new utilities in `src/domain/[name].test.ts`
-- [ ] T025 [P] [US3] Component/page tests for the main flow in `src/pages/[Page]/[name].test.tsx`
+- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Define/update domain types in `src/domain/[name].ts`
-- [ ] T027 [US3] Add/adjust derivation logic in `src/domain/` or `src/pages/[Page]/hooks/`
-- [ ] T028 [US3] Implement UI changes in `src/pages/[Page]/` (components + wiring)
+- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
+- [ ] T027 [US3] Implement [Service] in src/services/[service].py
+- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -200,12 +199,12 @@ Examples of foundational tasks (adjust based on your project):
 
 ```bash
 # Launch all tests for User Story 1 together (if tests requested):
-Task: "Unit tests for calculation logic in src/domain/[name].test.ts"
-Task: "Component/page tests for main flow in src/pages/[Page]/[name].test.tsx"
+Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
+Task: "Integration test for [user journey] in tests/integration/test_[name].py"
 
-# Launch all domain/type work for User Story 1 together:
-Task: "Define/update shared types in src/domain/[name].ts"
-Task: "Add calculation utility in src/pages/[Page]/hooks/[name].ts"
+# Launch all models for User Story 1 together:
+Task: "Create [Entity1] model in src/models/[entity1].py"
+Task: "Create [Entity2] model in src/models/[entity2].py"
 ```
 
 ---

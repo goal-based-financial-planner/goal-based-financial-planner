@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import PageTour from './index';
 import * as storage from '../../../../util/storage';
 
@@ -31,17 +31,17 @@ describe('PageTour', () => {
   it('should render tour when not taken', () => {
     (storage.isTourTaken as jest.Mock).mockReturnValue(false);
 
-    const { getByTestId } = render(<PageTour />);
+    render(<PageTour />);
 
-    expect(getByTestId('joyride-mock')).toBeInTheDocument();
+    expect(screen.getByTestId('joyride-mock')).toBeInTheDocument();
   });
 
   it('should not run tour when already taken', () => {
     (storage.isTourTaken as jest.Mock).mockReturnValue(true);
 
-    const { container } = render(<PageTour />);
+    render(<PageTour />);
 
-    expect(container.querySelector('[data-testid="joyride-mock"]')).toBeInTheDocument();
+    expect(screen.getByTestId('joyride-mock')).toBeInTheDocument();
   });
 
   it('should call setTourTaken when tour is finished', () => {
@@ -49,9 +49,9 @@ describe('PageTour', () => {
     const mockSetTourTaken = jest.fn();
     (storage.setTourTaken as jest.Mock).mockImplementation(mockSetTourTaken);
 
-    const { getByText } = render(<PageTour />);
+    render(<PageTour />);
 
-    const finishButton = getByText('Finish Tour');
+    const finishButton = screen.getByText('Finish Tour');
     finishButton.click();
 
     expect(mockSetTourTaken).toHaveBeenCalledTimes(1);
@@ -62,9 +62,9 @@ describe('PageTour', () => {
     const mockSetTourTaken = jest.fn();
     (storage.setTourTaken as jest.Mock).mockImplementation(mockSetTourTaken);
 
-    const { getByText } = render(<PageTour />);
+    render(<PageTour />);
 
-    const skipButton = getByText('Skip Tour');
+    const skipButton = screen.getByText('Skip Tour');
     skipButton.click();
 
     expect(mockSetTourTaken).toHaveBeenCalledTimes(1);
@@ -73,10 +73,10 @@ describe('PageTour', () => {
   it('should have correct number of tour steps', () => {
     (storage.isTourTaken as jest.Mock).mockReturnValue(false);
 
-    const { getByText } = render(<PageTour />);
+    render(<PageTour />);
 
     // The mock shows the number of steps
-    expect(getByText(/Tour Running with 7 steps/)).toBeInTheDocument();
+    expect(screen.getByText(/Tour Running with 7 steps/)).toBeInTheDocument();
   });
 
   it('should render without crashing when tour is already taken', () => {

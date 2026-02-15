@@ -46,7 +46,7 @@ const InvestmentSuggestionsBox = ({
               ),
             )
             .map((term) => (
-              <StyledBox mb={2} className="investment-plan-box">
+              <StyledBox key={term.termType} mb={2} className="investment-plan-box">
                 <Box
                   sx={{
                     display: 'flex',
