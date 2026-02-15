@@ -1,81 +1,123 @@
 # Goal Based Financial Planner
 
-[![GitHub license](https://img.shields.io/github/license/goal-based-financial-planner/goal-based-financial-planner)](LICENSE)
-[![GitHub pages](https://img.shields.io/badge/github-pages-blue)](https://goal-based-financial-planner.github.io/goal-based-financial-planner/)
+![CI](https://github.com/goal-based-financial-planner/goal-based-financial-planner/actions/workflows/ci.yml/badge.svg)
+[![Coverage](https://img.shields.io/badge/coverage-check%20CI%20report-blue)](coverage/)
+[![License](https://img.shields.io/github/license/goal-based-financial-planner/goal-based-financial-planner)](LICENSE)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-brightgreen)](https://goal-based-financial-planner.github.io/goal-based-financial-planner/)
 
 ## Description
 
-The Goal Based Financial Planner is a pure front-end application designed to help users set and track financial goals. Users can input their financial objectives, choose the allocation ratio of how they want to invest into various categories, and the planner will calculate and display how much they should be investing into each category to meet their goals. This project aims to provide a simple and intuitive interface for financial planning without requiring any backend services.
+The Goal Based Financial Planner is a pure frontend application designed to help users set and track financial goals. Users can input their financial objectives, choose allocation ratios for investment categories, and the planner calculates optimal investment distribution to meet their goals. This project provides a simple, intuitive interface for financial planning without requiring backend services.
 
-**Note:** This project is still a work in progress. We are actively developing new features and improving the user experience.
+**Key Features:**
 
-## How to Checkout and Start
+- 🎯 Goal-based financial planning
+- 📊 Visual investment tracking with charts
+- 💰 Automatic allocation calculations
+- 🔒 Privacy-focused (all data stays in browser)
+- 📱 Responsive design for mobile and desktop
 
-To get started with the Goal Based Financial Planner, follow these steps:
+## 🚀 Live Demo
 
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/yourusername/goal-based-financial-planner.git
-    ```
+Try the application now: **[Goal Based Financial Planner](https://goal-based-financial-planner.github.io/goal-based-financial-planner/)**
 
-2. **Navigate to the project directory:**
-    ```bash
-    cd goal-based-financial-planner
-    ```
+No installation required - start planning your financial goals immediately!
 
-3. **Install the dependencies:**
-    ```bash
-    npm install
-    ```
+## Getting Started
 
-4. **Start the development server:**
-    ```bash
-    npm start
-    ```
+### Prerequisites
 
-5. **Open your browser and navigate to:**
-    ```
-    http://localhost:3000
-    ```
+- [Node.js](https://nodejs.org/) v18 or higher
+- npm (comes with Node.js)
 
-Alternatively, you can view the project hosted on GitHub Pages:
-[Goal Based Financial Planner](https://yourusername.github.io/goal-based-financial-planner/)
+### Installation
 
-## How to Test
+1. Clone the repository:
 
-Testing the Goal Based Financial Planner is straightforward:
+   ```bash
+   git clone https://github.com/goal-based-financial-planner/goal-based-financial-planner.git
+   ```
 
-1. **Run tests in watch mode (development):**
-    ```bash
-    npm test
-    ```
+2. Navigate to the project directory:
 
-2. **Run tests with coverage (CI/validation):**
-    ```bash
-    npm run test:cov
-    ```
-   
-   This command:
-   - Runs all tests once (non-interactive)
-   - Generates a coverage report showing tested vs untested code
-   - **Fails if coverage falls below minimum thresholds** (70% lines, 60% branches, 70% functions)
-   - Outputs coverage summary to the terminal
-   - Generates detailed reports in `coverage/` directory
+   ```bash
+   cd goal-based-financial-planner
+   ```
 
-3. **Interpreting coverage results:**
-   - **Green/passing**: Coverage meets or exceeds all thresholds ✓
-   - **Red/failing**: Coverage below threshold; add tests to uncovered areas
-   - Check `coverage/lcov-report/index.html` for a visual breakdown of coverage by file
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-4. **Verify functionality:**
-    - Ensure that you can add, edit, and delete financial goals.
-    - Check that the allocation ratio input and investment calculations are working as expected.
-    - Report any bugs or issues through the project's [GitHub Issues](https://github.com/yourusername/goal-based-financial-planner/issues) page.
+### Running Locally
+
+Start the development server:
+
+```bash
+npm start
+```
+
+The application will open in your browser at [http://localhost:3000](http://localhost:3000).
+
+### Building for Production
+
+Create an optimized production build:
+
+```bash
+npm run build
+```
+
+The build output will be in the `build/` directory.
+
+## Running Tests
+
+### Run tests in watch mode (development):
+
+```bash
+npm test
+```
+
+### Run tests with coverage (CI/validation):
+
+```bash
+npm run test:cov
+```
+
+This command:
+
+- Runs all tests once (non-interactive)
+- Generates a coverage report
+- **Fails if coverage falls below thresholds** (70% lines, 60% branches, 70% functions)
+- Outputs summary to terminal and detailed report to `coverage/` directory
+
+### Interpreting Results
+
+- ✅ **Green/passing**: Coverage meets or exceeds all thresholds
+- ❌ **Red/failing**: Coverage below threshold - add tests to uncovered areas
+- 📊 View detailed report: `coverage/lcov-report/index.html`
+
+For more details on testing, see [Testing Guide](docs/TESTING.md).
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- 📝 Reporting bugs
+- 💡 Suggesting features
+- 🔧 Setting up development environment
+- ✅ Pull request process
+- 🧪 Testing requirements
+
+Please note that this project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to abide by its terms.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Project Link
+## Project Links
 
-For more details, visit the project's GitHub page: [Goal Based Financial Planner](https://github.com/yourusername/goal-based-financial-planner)
+- 🌐 [Live Demo](https://goal-based-financial-planner.github.io/goal-based-financial-planner/)
+- 📖 [Documentation](docs/)
+- 🐛 [Report Bug](https://github.com/goal-based-financial-planner/goal-based-financial-planner/issues)
+- 💡 [Request Feature](https://github.com/goal-based-financial-planner/goal-based-financial-planner/issues)
+- 🔒 [Security Policy](SECURITY.md)
