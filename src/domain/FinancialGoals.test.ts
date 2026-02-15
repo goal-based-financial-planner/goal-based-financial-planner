@@ -1,6 +1,5 @@
-import { FinancialGoal } from './FinancialGoals';
+import { FinancialGoal, isGoalActive } from './FinancialGoals';
 import { GoalType, TermType } from '../types/enums';
-import dayjs from 'dayjs';
 import { mockTodayDate } from '../testUtils/mockDayjs';
 
 describe('FinancialGoal', () => {
@@ -292,6 +291,125 @@ describe('FinancialGoal', () => {
       );
 
       expect(goal1.id).not.toBe(goal2.id);
+    });
+  });
+
+  describe('isGoalActive', () => {
+    it('should return true when selected date is within goal period', () => {
+      const goal = new FinancialGoal(
+        'Test Goal',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2026-12-31',
+        100000
+      );
+
+      const selectedDate = '2025-06-15';
+      expect(isGoalActive(goal, selectedDate)).toBe(true);
+    });
+
+    it('should return true when selected date equals start date', () => {
+      const goal = new FinancialGoal(
+        'Test Goal',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2026-12-31',
+        100000
+      );
+
+      const selectedDate = '2024-01-01';
+      expect(isGoalActive(goal, selectedDate)).toBe(true);
+    });
+
+    it('should return true when selected date equals target date', () => {
+      const goal = new FinancialGoal(
+        'Test Goal',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2026-12-31',
+        100000
+      );
+
+      const selectedDate = '2026-12-31';
+      expect(isGoalActive(goal, selectedDate)).toBe(true);
+    });
+
+    it('should return false when selected date is before start date', () => {
+      const goal = new FinancialGoal(
+        'Future Goal',
+        GoalType.ONE_TIME,
+        '2025-01-01',
+        '2027-12-31',
+        100000
+      );
+
+      const selectedDate = '2024-12-31';
+      expect(isGoalActive(goal, selectedDate)).toBe(false);
+    });
+
+    it('should return false when selected date is after target date', () => {
+      const goal = new FinancialGoal(
+        'Ended Goal',
+        GoalType.ONE_TIME,
+        '2020-01-01',
+        '2023-12-31',
+        100000
+      );
+
+      const selectedDate = '2024-01-01';
+      expect(isGoalActive(goal, selectedDate)).toBe(false);
+    });
+
+    it('should work correctly with recurring goals', () => {
+      const cleanup = mockTodayDate('2024-06-15');
+
+      const goal = new FinancialGoal(
+        'Annual Vacation',
+        GoalType.RECURRING,
+        '2024-01-01',
+        '2024-12-31',
+        100000
+      );
+
+      // Today's date (for recurring goals, investment starts today)
+      expect(isGoalActive(goal, '2024-06-15')).toBe(true);
+
+      // Before today (should be inactive)
+      expect(isGoalActive(goal, '2024-01-01')).toBe(false);
+
+      // After target date
+      expect(isGoalActive(goal, '2025-01-01')).toBe(false);
+
+      cleanup();
+    });
+
+    it('should handle edge case with same start and target date', () => {
+      const goal = new FinancialGoal(
+        'Immediate Goal',
+        GoalType.ONE_TIME,
+        '2024-06-15',
+        '2024-06-15',
+        50000
+      );
+
+      expect(isGoalActive(goal, '2024-06-15')).toBe(true);
+      expect(isGoalActive(goal, '2024-06-14')).toBe(false);
+      expect(isGoalActive(goal, '2024-06-16')).toBe(false);
+    });
+
+    it('should work with dates in different formats', () => {
+      const goal = new FinancialGoal(
+        'Test Goal',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2026-12-31',
+        100000
+      );
+
+      // dayjs should parse these correctly
+      expect(isGoalActive(goal, '2025-06-15')).toBe(true);
+      expect(isGoalActive(goal, '2024-01-01')).toBe(true);
+      expect(isGoalActive(goal, '2026-12-31')).toBe(true);
     });
   });
 });

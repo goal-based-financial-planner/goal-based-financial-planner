@@ -3,10 +3,14 @@ import {
   calculateTotalMonthlySIP,
   calculateFutureValue,
   verifySIPCalculation,
-} from './investmentCalculator.utils';
-import { InvestmentChoiceType } from '../../../domain/InvestmentOptions';
+  calculateCurrentPortfolioValue,
+} from './investmentCalculations';
+import { InvestmentChoiceType } from './InvestmentOptions';
+import { FinancialGoal } from './FinancialGoals';
+import { GoalType } from '../types/enums';
+import dayjs from 'dayjs';
 
-describe('Investment Calculator Utils', () => {
+describe('Investment Calculations Domain Logic', () => {
   describe('calculateSIPFactor', () => {
     it('should calculate correct SIP factor for 12% annual return over 12 months', () => {
       const monthlyRate = 0.12 / 12; // 1% monthly
@@ -263,6 +267,155 @@ describe('Investment Calculator Utils', () => {
     });
   });
 
+  describe('calculateCurrentPortfolioValue', () => {
+    it('should calculate current value for a goal with elapsed time', () => {
+      const startDate = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
+      const targetDate = dayjs().add(18, 'month').format('YYYY-MM-DD');
+
+      const goal = new FinancialGoal(
+        'Test Goal',
+        GoalType.ONE_TIME,
+        startDate,
+        targetDate,
+        100000,
+      );
+
+      const investmentSuggestions = [
+        {
+          amount: 5000,
+          expectedReturnPercentage: 12,
+        },
+      ];
+
+      const currentValue = calculateCurrentPortfolioValue(
+        investmentSuggestions,
+        goal,
+      );
+
+      // After 6 months of 5000/month at 12% annual return
+      const expectedValue = calculateFutureValue(5000, 6, 12);
+      expect(currentValue).toBeCloseTo(expectedValue, 0);
+    });
+
+    it('should return 0 for goals that have not started', () => {
+      const startDate = dayjs().add(1, 'month').format('YYYY-MM-DD');
+      const targetDate = dayjs().add(25, 'month').format('YYYY-MM-DD');
+
+      const goal = new FinancialGoal(
+        'Future Goal',
+        GoalType.ONE_TIME,
+        startDate,
+        targetDate,
+        100000,
+      );
+
+      const investmentSuggestions = [
+        {
+          amount: 5000,
+          expectedReturnPercentage: 12,
+        },
+      ];
+
+      const currentValue = calculateCurrentPortfolioValue(
+        investmentSuggestions,
+        goal,
+      );
+
+      expect(currentValue).toBe(0);
+    });
+
+    it('should calculate value for multiple investment suggestions', () => {
+      const startDate = dayjs().subtract(12, 'month').format('YYYY-MM-DD');
+      const targetDate = dayjs().add(12, 'month').format('YYYY-MM-DD');
+
+      const goal = new FinancialGoal(
+        'Mixed Goal',
+        GoalType.ONE_TIME,
+        startDate,
+        targetDate,
+        200000,
+      );
+
+      const investmentSuggestions = [
+        {
+          amount: 3000,
+          expectedReturnPercentage: 12,
+        },
+        {
+          amount: 2000,
+          expectedReturnPercentage: 8,
+        },
+      ];
+
+      const currentValue = calculateCurrentPortfolioValue(
+        investmentSuggestions,
+        goal,
+      );
+
+      const expectedValue1 = calculateFutureValue(3000, 12, 12);
+      const expectedValue2 = calculateFutureValue(2000, 12, 8);
+      const expectedTotal = expectedValue1 + expectedValue2;
+
+      expect(currentValue).toBeCloseTo(expectedTotal, 0);
+    });
+
+    it('should cap elapsed months at goal term', () => {
+      // Goal that has already ended
+      const startDate = dayjs().subtract(30, 'month').format('YYYY-MM-DD');
+      const targetDate = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
+
+      const goal = new FinancialGoal(
+        'Ended Goal',
+        GoalType.ONE_TIME,
+        startDate,
+        targetDate,
+        100000,
+      );
+
+      const investmentSuggestions = [
+        {
+          amount: 5000,
+          expectedReturnPercentage: 12,
+        },
+      ];
+
+      const currentValue = calculateCurrentPortfolioValue(
+        investmentSuggestions,
+        goal,
+      );
+
+      // Should cap at 24 months (goal term), not 30 months (actual elapsed)
+      const expectedValue = calculateFutureValue(5000, 24, 12);
+      expect(currentValue).toBeCloseTo(expectedValue, 0);
+    });
+
+    it('should return 0 for recurring goals (0 elapsed months)', () => {
+      const targetDate = dayjs().add(12, 'month').format('YYYY-MM-DD');
+
+      const goal = new FinancialGoal(
+        'Recurring Goal',
+        GoalType.RECURRING,
+        '', // Recurring goals don't use start date
+        targetDate,
+        50000,
+      );
+
+      const investmentSuggestions = [
+        {
+          amount: 5000,
+          expectedReturnPercentage: 12,
+        },
+      ];
+
+      const currentValue = calculateCurrentPortfolioValue(
+        investmentSuggestions,
+        goal,
+      );
+
+      expect(currentValue).toBe(0); // Recurring goals have 0 elapsed months
+    });
+  });
+
   describe('Real-world scenarios', () => {
     it('should calculate retirement corpus SIP correctly', () => {
       // Goal: ₹5 crore in 25 years with 70:30 equity:debt split
@@ -451,6 +604,22 @@ describe('Investment Calculator Utils', () => {
       );
       expect(achievedAmount).toBeCloseTo(targetAmount, 0);
     });
+
+    it('should handle empty investment suggestions for portfolio value', () => {
+      const startDate = dayjs().subtract(6, 'month').format('YYYY-MM-DD');
+      const targetDate = dayjs().add(18, 'month').format('YYYY-MM-DD');
+
+      const goal = new FinancialGoal(
+        'Test Goal',
+        GoalType.ONE_TIME,
+        startDate,
+        targetDate,
+        100000,
+      );
+
+      const currentValue = calculateCurrentPortfolioValue([], goal);
+
+      expect(currentValue).toBe(0);
+    });
   });
 });
-

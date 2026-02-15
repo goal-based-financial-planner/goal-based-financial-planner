@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import TermWiseProgressBarChart, {
   TermTypeWiseProgressData,
 } from './termWiseProgressBarChart';
+import { TermType } from '../../../../types/enums';
 
 // Mock MUI BarChart
 jest.mock('@mui/x-charts/BarChart', () => ({
@@ -26,7 +27,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should render financial progress title', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 50,
           termTypeSum: 100000,
@@ -43,7 +44,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should render bar chart component', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 50,
           termTypeSum: 100000,
@@ -60,7 +61,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should display correct chart height', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 50,
           termTypeSum: 100000,
@@ -77,7 +78,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should render all term types in chart', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 75,
           termTypeSum: 50000,
@@ -85,7 +86,7 @@ describe('TermWiseProgressBarChart', () => {
         },
       },
       {
-        termType: 'Medium Term',
+        termType: TermType.MEDIUM_TERM,
         termTypeWiseData: {
           progressPercent: 50,
           termTypeSum: 100000,
@@ -93,7 +94,7 @@ describe('TermWiseProgressBarChart', () => {
         },
       },
       {
-        termType: 'Long Term',
+        termType: TermType.LONG_TERM,
         termTypeWiseData: {
           progressPercent: 25,
           termTypeSum: 200000,
@@ -113,7 +114,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should render progress percentages correctly', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 75,
           termTypeSum: 50000,
@@ -121,7 +122,7 @@ describe('TermWiseProgressBarChart', () => {
         },
       },
       {
-        termType: 'Medium Term',
+        termType: TermType.MEDIUM_TERM,
         termTypeWiseData: {
           progressPercent: 50,
           termTypeSum: 100000,
@@ -140,7 +141,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should handle zero progress', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 0,
           termTypeSum: 100000,
@@ -158,7 +159,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should handle 100% progress', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Long Term',
+        termType: TermType.LONG_TERM,
         termTypeWiseData: {
           progressPercent: 100,
           termTypeSum: 500000,
@@ -176,7 +177,7 @@ describe('TermWiseProgressBarChart', () => {
   it('should handle single term type', () => {
     const data: TermTypeWiseProgressData[] = [
       {
-        termType: 'Short Term',
+        termType: TermType.SHORT_TERM,
         termTypeWiseData: {
           progressPercent: 60,
           termTypeSum: 75000,

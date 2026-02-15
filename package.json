@@ -37,13 +37,86 @@
     "test:cov": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "plugins": [
+      "boundaries"
+    ],
+    "settings": {
+      "boundaries/elements": [
+        {
+          "type": "domain",
+          "pattern": "domain/*"
+        },
+        {
+          "type": "components",
+          "pattern": "components/*"
+        },
+        {
+          "type": "pages",
+          "pattern": "pages/*"
+        },
+        {
+          "type": "util",
+          "pattern": "util/*"
+        },
+        {
+          "type": "store",
+          "pattern": "store/*"
+        },
+        {
+          "type": "types",
+          "pattern": "types/*"
+        }
+      ],
+      "boundaries/ignore": [
+        "**/*.test.ts",
+        "**/*.test.tsx",
+        "**/setupTests.ts",
+        "**/testUtils/*"
+      ]
+    },
+    "rules": {
+      "boundaries/element-types": [
+        "error",
+        {
+          "default": "disallow",
+          "rules": [
+            {
+              "from": "domain",
+              "allow": ["domain", "types"]
+            },
+            {
+              "from": "components",
+              "allow": ["components", "domain", "types", "util", "store"]
+            },
+            {
+              "from": "pages",
+              "allow": ["pages", "components", "domain", "types", "util", "store"]
+            },
+            {
+              "from": "util",
+              "allow": ["util", "types"]
+            },
+            {
+              "from": "store",
+              "allow": ["store", "domain", "types"]
+            },
+            {
+              "from": "types",
+              "allow": ["types"]
+            }
+          ]
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [
@@ -61,6 +134,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
+    "eslint-plugin-boundaries": "^5.3.1",
     "gh-pages": "^6.2.0",
     "prettier": "3.3.3"
   },

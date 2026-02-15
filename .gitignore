@@ -3,6 +3,7 @@ node_modules
 build
 coverage
 .cursor
+.claude
 
 # Environment files
 .env

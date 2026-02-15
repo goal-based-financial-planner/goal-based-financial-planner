@@ -41,7 +41,7 @@ describe('RecurringGoalsTable', () => {
     const { container } = render(
       <RecurringGoalsTable recurringGoals={[]} dispatch={mockDispatch} />,
     );
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('should render table with recurring goals', () => {

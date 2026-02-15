@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import AddGoalPopup from './index';
 
 // Mock the FinancialGoalForm component
@@ -18,18 +18,18 @@ describe('AddGoalPopup', () => {
   });
 
   it('should render when isOpen is true', () => {
-    const { getByTestId } = render(
+    render(
       <AddGoalPopup
         isOpen={true}
         onClose={mockOnClose}
         dispatch={mockDispatch}
       />,
     );
-    expect(getByTestId('financial-goal-form')).toBeInTheDocument();
+    expect(screen.getByTestId('financial-goal-form')).toBeInTheDocument();
   });
 
   it('should not render dialog content when isOpen is false', () => {
-    const { queryByTestId } = render(
+    render(
       <AddGoalPopup
         isOpen={false}
         onClose={mockOnClose}
@@ -37,7 +37,7 @@ describe('AddGoalPopup', () => {
       />,
     );
     // Dialog is in DOM but not visible
-    expect(queryByTestId('financial-goal-form')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('financial-goal-form')).not.toBeInTheDocument();
   });
 
   it('should pass dispatch prop to FinancialGoalForm', () => {

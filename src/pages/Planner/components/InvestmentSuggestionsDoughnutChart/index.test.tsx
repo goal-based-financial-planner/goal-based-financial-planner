@@ -1,7 +1,8 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import InvestmentSuggestionsDoughnutChart from './index';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
+import { useMediaQuery } from '@mui/material';
 
 // Mock MUI PieChart
 jest.mock('@mui/x-charts', () => ({
@@ -11,6 +12,12 @@ jest.mock('@mui/x-charts', () => ({
       <div data-testid="chart-data">{JSON.stringify(series[0].data)}</div>
     </div>
   ),
+}));
+
+// Mock useMediaQuery
+jest.mock('@mui/material', () => ({
+  ...jest.requireActual('@mui/material'),
+  useMediaQuery: jest.fn(),
 }));
 
 // Mock LiveCounter
@@ -49,35 +56,35 @@ describe('InvestmentSuggestionsDoughnutChart', () => {
   ];
 
   it('should render doughnut chart', () => {
-    const { getByTestId } = render(
+    render(
       <InvestmentSuggestionsDoughnutChart suggestions={mockSuggestions} />,
     );
-    expect(getByTestId('doughnut-chart')).toBeInTheDocument();
+    expect(screen.getByTestId('doughnut-chart')).toBeInTheDocument();
   });
 
   it('should display total amount in center', () => {
-    const { getByTestId } = render(
+    render(
       <InvestmentSuggestionsDoughnutChart suggestions={mockSuggestions} />,
     );
-    const liveCounter = getByTestId('live-counter');
+    const liveCounter = screen.getByTestId('live-counter');
     // Total: 2.5M + 0.5M + 1M + 1M = 5M
     expect(liveCounter.textContent).toBe('5000000');
   });
 
   it('should aggregate investment amounts', () => {
-    const { getByTestId } = render(
+    render(
       <InvestmentSuggestionsDoughnutChart suggestions={mockSuggestions} />,
     );
-    const chartData = getByTestId('chart-data');
+    const chartData = screen.getByTestId('chart-data');
     // Large Cap should be aggregated: 2.5M + 1M = 3.5M
     expect(chartData.textContent).toContain('"value":3500000');
   });
 
   it('should handle empty suggestions', () => {
-    const { getByTestId } = render(
+    render(
       <InvestmentSuggestionsDoughnutChart suggestions={[]} />,
     );
-    const liveCounter = getByTestId('live-counter');
+    const liveCounter = screen.getByTestId('live-counter');
     expect(liveCounter.textContent).toBe('0');
   });
 
@@ -86,5 +93,23 @@ describe('InvestmentSuggestionsDoughnutChart', () => {
       <InvestmentSuggestionsDoughnutChart suggestions={mockSuggestions} />,
     );
     expect(container).toMatchSnapshot();
+  });
+
+  it('should render with mobile sizing when on mobile device', () => {
+    (useMediaQuery as jest.Mock).mockReturnValue(true);
+
+    render(
+      <InvestmentSuggestionsDoughnutChart suggestions={mockSuggestions} />,
+    );
+    expect(screen.getByTestId('doughnut-chart')).toBeInTheDocument();
+  });
+
+  it('should render with desktop sizing when on desktop device', () => {
+    (useMediaQuery as jest.Mock).mockReturnValue(false);
+
+    render(
+      <InvestmentSuggestionsDoughnutChart suggestions={mockSuggestions} />,
+    );
+    expect(screen.getByTestId('doughnut-chart')).toBeInTheDocument();
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor, act } from '@testing-library/react';
+import { render, waitFor, act, screen } from '@testing-library/react';
 import LiveCounter from './index';
 
 // Mock the formatNumber function to avoid locale-dependent snapshots
@@ -18,15 +18,15 @@ describe('LiveCounter', () => {
   });
 
   it('should render initial value immediately', () => {
-    const { getByText } = render(
+    render(
       <LiveCounter value={10000} duration={1000} />
     );
 
-    expect(getByText('10,000')).toBeInTheDocument();
+    expect(screen.getByText('10,000')).toBeInTheDocument();
   });
 
   it('should animate to new value over duration', async () => {
-    const { getByText, rerender } = render(
+    const { rerender } = render(
       <LiveCounter value={10000} duration={1000} />
     );
 
@@ -39,26 +39,24 @@ describe('LiveCounter', () => {
     });
 
     await waitFor(() => {
-      expect(getByText('20,000')).toBeInTheDocument();
+      expect(screen.getByText('20,000')).toBeInTheDocument();
     });
   });
 
   it('should adjust font size based on value length (large size)', () => {
-    const { container } = render(
+    render(
       <LiveCounter value={12345678} duration={500} size="large" />
     );
 
-    const typography = container.querySelector('p');
-    expect(typography).toBeInTheDocument();
+    expect(screen.getByText('12,345,678')).toBeInTheDocument();
   });
 
   it('should adjust font size based on value length (small size)', () => {
-    const { container } = render(
+    render(
       <LiveCounter value={12345678} duration={500} size="small" />
     );
 
-    const typography = container.querySelector('p');
-    expect(typography).toBeInTheDocument();
+    expect(screen.getByText('12,345,678')).toBeInTheDocument();
   });
 
   it('should match snapshot with default props', () => {
@@ -66,7 +64,7 @@ describe('LiveCounter', () => {
       <LiveCounter value={100000} duration={1000} />
     );
 
-    expect(container.firstChild).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 
   it('should match snapshot with small size', () => {
@@ -74,22 +72,31 @@ describe('LiveCounter', () => {
       <LiveCounter value={50000} duration={500} size="small" />
     );
 
-    expect(container.firstChild).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
   });
 
   it('should handle very large numbers without breaking', () => {
-    const { getByText } = render(
+    render(
       <LiveCounter value={999999999999999} duration={1000} />
     );
 
-    expect(getByText(/999/)).toBeInTheDocument();
+    expect(screen.getByText(/999/)).toBeInTheDocument();
   });
 
   it('should handle zero value', () => {
-    const { getByText } = render(
+    render(
       <LiveCounter value={0} duration={500} />
     );
 
-    expect(getByText('0')).toBeInTheDocument();
+    expect(screen.getByText('0')).toBeInTheDocument();
+  });
+
+  it('should use default font size for extremely large numbers (>15 digits)', () => {
+    render(
+      <LiveCounter value={1234567890123456} duration={500} />
+    );
+
+    // Should render with the number (may have precision issues in JS, just check it renders)
+    expect(screen.getByText(/1,234,567,890,123,456/)).toBeInTheDocument();
   });
 });
