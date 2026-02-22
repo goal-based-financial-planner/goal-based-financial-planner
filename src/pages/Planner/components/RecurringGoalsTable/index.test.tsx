@@ -53,7 +53,7 @@ describe('RecurringGoalsTable', () => {
     );
 
     expect(screen.getByText('Goal Name')).toBeInTheDocument();
-    expect(screen.getByText('Monthly Target')).toBeInTheDocument();
+    expect(screen.getByText('Yearly Target')).toBeInTheDocument();
     expect(screen.getByText('Actions')).toBeInTheDocument();
     expect(screen.getByText('Monthly Savings')).toBeInTheDocument();
     expect(screen.getByText('Investment SIP')).toBeInTheDocument();

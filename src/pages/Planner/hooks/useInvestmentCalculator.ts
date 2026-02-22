@@ -6,6 +6,7 @@ import {
   calculateCurrentPortfolioValue,
 } from '../../../domain/investmentCalculations';
 import { InvestmentSuggestion } from '../../../types/planner';
+import { GoalType } from '../../../types/enums';
 
 export type GoalWiseInvestmentSuggestions = {
   goalName: string;
@@ -44,9 +45,10 @@ const useInvestmentCalculator = (plannerData: PlannerData) => {
 
       return {
         goalName: goal.getGoalName(),
-        investmentSuggestions: isGoalActive(goal, selectedDate)
-          ? investmentSuggestions
-          : [],
+        investmentSuggestions:
+          goal.goalType === GoalType.RECURRING || isGoalActive(goal, selectedDate)
+            ? investmentSuggestions
+            : [],
         currentValue,
       };
     });

@@ -39,7 +39,7 @@ const RecurringGoalsTable = memo(
             <TableRow>
               <TableCell sx={{ fontWeight: 'bold' }}>Goal Name</TableCell>
               <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                Monthly Target
+                Yearly Target
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                 Actions

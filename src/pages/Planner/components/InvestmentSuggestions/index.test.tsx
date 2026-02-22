@@ -38,18 +38,18 @@ jest.mock('../CustomLegend', () => {
 describe('InvestmentSuggestionsBox', () => {
   const mockDispatch = jest.fn();
   const mockInvestmentAllocations: InvestmentAllocationsType = {
-    [TermType.SHORT_TERM]: {
-      'High Yield Savings': 50,
-      'Liquid Funds': 50,
-    },
-    [TermType.MID_TERM]: {
-      'Short Duration Funds': 40,
-      'Corporate Bonds': 60,
-    },
-    [TermType.LONG_TERM]: {
-      'Index Funds': 60,
-      'Equity Mutual Funds': 40,
-    },
+    [TermType.SHORT_TERM]: [
+      { investmentName: 'High Yield Savings', investmentPercentage: 50, expectedReturnPercentage: 5 },
+      { investmentName: 'Liquid Funds', investmentPercentage: 50, expectedReturnPercentage: 6 },
+    ],
+    [TermType.MEDIUM_TERM]: [
+      { investmentName: 'Short Duration Funds', investmentPercentage: 40, expectedReturnPercentage: 7 },
+      { investmentName: 'Corporate Bonds', investmentPercentage: 60, expectedReturnPercentage: 8 },
+    ],
+    [TermType.LONG_TERM]: [
+      { investmentName: 'Index Funds', investmentPercentage: 60, expectedReturnPercentage: 12 },
+      { investmentName: 'Equity Mutual Funds', investmentPercentage: 40, expectedReturnPercentage: 14 },
+    ],
   };
 
   const mockInvestmentBreakdown = [
