@@ -28,7 +28,7 @@ exports[`RecurringGoalsTable should match snapshot 1`] = `
               class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignRight MuiTableCell-sizeMedium css-1sipjqd-MuiTableCell-root"
               scope="col"
             >
-              Monthly Target
+              Yearly Target
             </th>
             <th
               class="MuiTableCell-root MuiTableCell-head MuiTableCell-alignCenter MuiTableCell-sizeMedium css-774dy1-MuiTableCell-root"

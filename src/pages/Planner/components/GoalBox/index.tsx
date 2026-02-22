@@ -1,7 +1,7 @@
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
-import { Dispatch, useMemo } from 'react';
+import { Dispatch, useMemo, useState } from 'react';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { StyledBox } from '../../../../components/StyledBox';
@@ -15,6 +15,7 @@ type GoalBoxProps = {
   dispatch: Dispatch<PlannerDataAction>;
   useStyledBox: boolean;
 };
+
 const GoalBox = ({
   financialGoals,
   selectedDate,
@@ -22,6 +23,8 @@ const GoalBox = ({
   dispatch,
   useStyledBox,
 }: GoalBoxProps) => {
+  const [activeTab, setActiveTab] = useState<0 | 1>(0);
+
   const sortedGoals = useMemo(
     () =>
       [...financialGoals].sort((goal1, goal2) => {
@@ -62,85 +65,76 @@ const GoalBox = ({
     [sortedGoals],
   );
 
-  function getPendingGoals() {
-    return (
-      <>
-        <Typography variant="h6" fontWeight="bold">
-          Financial Goals
-        </Typography>
-        <GoalList
-          investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-          goals={pendingGoals}
-          dispatch={dispatch}
-        />
-      </>
-    );
-  }
+  const oneTimeCount = pendingGoals.length + completedGoals.length;
+  const recurringCount = recurringGoals.length;
 
-  function getCompletedGoals() {
-    return (
-      <>
-        <Typography variant="h6" fontWeight="bold">
-          Completed Goals
-        </Typography>
-        <GoalList
-          investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-          goals={completedGoals}
-          dispatch={dispatch}
-        ></GoalList>
-      </>
-    );
-  }
+  const content = (
+    <Box>
+      <Tabs
+        value={activeTab}
+        onChange={(_, v) => setActiveTab(v as 0 | 1)}
+        sx={{ mb: 2 }}
+      >
+        <Tab label={`One Time (${oneTimeCount})`} />
+        <Tab label={`Recurring (${recurringCount})`} />
+      </Tabs>
 
-  function getRecurringGoals() {
-    return (
-      <>
-        <Typography variant="h6" fontWeight="bold">
-          Recurring Goals
-        </Typography>
-        <GoalList
-          investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-          goals={recurringGoals}
-          dispatch={dispatch}
-        ></GoalList>
-      </>
-    );
-  }
+      <Box role="tabpanel" hidden={activeTab !== 0}>
+        {oneTimeCount === 0 ? (
+          <Typography variant="body2" sx={{ color: 'text.secondary', py: 2 }}>
+            No one-time goals added yet.
+          </Typography>
+        ) : (
+          <>
+            {pendingGoals.length > 0 && (
+              <>
+                <Typography variant="h6" fontWeight="bold">
+                  Financial Goals
+                </Typography>
+                <GoalList
+                  investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+                  goals={pendingGoals}
+                  dispatch={dispatch}
+                />
+              </>
+            )}
+            {completedGoals.length > 0 && (
+              <>
+                <Typography variant="h6" fontWeight="bold" sx={{ mt: 2 }}>
+                  Completed Goals
+                </Typography>
+                <GoalList
+                  investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+                  goals={completedGoals}
+                  dispatch={dispatch}
+                />
+              </>
+            )}
+          </>
+        )}
+      </Box>
 
-  return (
-    <Grid container>
-      {pendingGoals.length > 0 ? (
-        <Grid size={12} sx={{ mb: 2 }}>
-          {useStyledBox ? (
-            <StyledBox className="financial-goals-box">
-              {getPendingGoals()}
-            </StyledBox>
-          ) : (
-            getPendingGoals()
-          )}
-        </Grid>
-      ) : null}
+      <Box role="tabpanel" hidden={activeTab !== 1}>
+        {recurringCount === 0 ? (
+          <Typography variant="body2" sx={{ color: 'text.secondary', py: 2 }}>
+            No recurring goals added yet.
+          </Typography>
+        ) : (
+          <GoalList
+            investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+            goals={recurringGoals}
+            dispatch={dispatch}
+          />
+        )}
+      </Box>
+    </Box>
+  );
 
-      {completedGoals.length > 0 ? (
-        <Grid size={12}>
-          {useStyledBox ? (
-            <StyledBox>{getCompletedGoals()}</StyledBox>
-          ) : (
-            getCompletedGoals()
-          )}
-        </Grid>
-      ) : null}
-
-      {recurringGoals.length > 0 ? (
-        <Grid size={12} sx={{ mt: 2 }}>
-          {useStyledBox ? (
-            <StyledBox>{getRecurringGoals()}</StyledBox>
-          ) : (
-            getRecurringGoals()
-          )}
-        </Grid>
-      ) : null}
-    </Grid>
+  return useStyledBox ? (
+    <StyledBox className="financial-goals-box">{content}</StyledBox>
+  ) : (
+    content
   );
 };
+
 export default GoalBox;
