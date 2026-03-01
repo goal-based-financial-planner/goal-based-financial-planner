@@ -262,6 +262,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                   investmentBreakdownBasedOnTermType={
                     investmentBreakdownBasedOnTermType
                   }
+                  investmentLogs={plannerData.investmentLogs}
                 />
               </Grid>
               <Grid

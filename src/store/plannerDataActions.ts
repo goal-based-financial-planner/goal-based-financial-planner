@@ -6,6 +6,12 @@ import {
   InvestmentChoiceType,
   InvestmentOptionType,
 } from '../domain/InvestmentOptions';
+import {
+  AddSIPEntryPayload,
+  EditSIPEntryPayload,
+  DeleteSIPEntryPayload,
+  SIPEntry,
+} from '../types/investmentLog';
 
 export enum PlannerDataActionType {
   ADD_FINANCIAL_GOAL = 'ADD_FINANCIAL_GOAL',
@@ -16,6 +22,9 @@ export enum PlannerDataActionType {
   UPDATE_MEDIUM_TERM_INVESTMENT = 'UPDATE_MEDIUM_TERM_INVESTMENT',
   UPDATE_LONG_TERM_INVESTMENT = 'UPDATE_LONG_TERM_INVESTMENT',
   ADD_INVESTMENT_OPTION = 'ADD_INVESTMENT_OPTION',
+  ADD_INVESTMENT_LOG_ENTRY = 'ADD_INVESTMENT_LOG_ENTRY',
+  EDIT_INVESTMENT_LOG_ENTRY = 'EDIT_INVESTMENT_LOG_ENTRY',
+  DELETE_INVESTMENT_LOG_ENTRY = 'DELETE_INVESTMENT_LOG_ENTRY',
 }
 
 export function addFinancialGoal(
@@ -96,4 +105,31 @@ export function updateInvestmentAllocation(
     payload,
     type: PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS,
   });
+}
+
+export function addInvestmentLogEntry(
+  dispatch: Dispatch<PlannerDataAction>,
+  entry: SIPEntry,
+) {
+  const payload: AddSIPEntryPayload = { entry };
+  dispatch({ payload, type: PlannerDataActionType.ADD_INVESTMENT_LOG_ENTRY });
+}
+
+export function editInvestmentLogEntry(
+  dispatch: Dispatch<PlannerDataAction>,
+  entryId: string,
+  name: string,
+  type: string,
+  monthlyAmount: number,
+) {
+  const payload: EditSIPEntryPayload = { entryId, name, type, monthlyAmount };
+  dispatch({ payload, type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY });
+}
+
+export function deleteInvestmentLogEntry(
+  dispatch: Dispatch<PlannerDataAction>,
+  entryId: string,
+) {
+  const payload: DeleteSIPEntryPayload = { entryId };
+  dispatch({ payload, type: PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY });
 }
