@@ -1,4 +1,4 @@
-import { totalMonthlySIP, buildSIPComparison } from './investmentLog';
+import { totalMonthlySIP, buildSIPComparison, buildGrowthProjection } from './investmentLog';
 import { SIPEntry } from '../types/investmentLog';
 import { InvestmentSuggestion } from '../types/planner';
 
@@ -93,5 +93,39 @@ describe('buildSIPComparison', () => {
     const result = buildSIPComparison(sips, suggestions);
     expect(result.find((r) => r.type === 'Liquid Funds')!.sips[0].name).toBe('Fund A');
     expect(result.find((r) => r.type === 'Index Funds')!.sips[0].name).toBe('Fund B');
+  });
+});
+
+describe('buildGrowthProjection', () => {
+  const suggestions = [
+    makeSuggestion('Liquid Funds', 10000),
+  ];
+
+  it('returns year 0 with value 0', () => {
+    const result = buildGrowthProjection([], suggestions, 5);
+    expect(result[0]).toEqual({ year: 0, expectedValue: 0, actualValue: 0 });
+  });
+
+  it('returns correct number of data points (years + 1)', () => {
+    const result = buildGrowthProjection([], suggestions, 5);
+    expect(result).toHaveLength(6);
+  });
+
+  it('expected value grows over time with compounding', () => {
+    const result = buildGrowthProjection([], suggestions, 5);
+    expect(result[5].expectedValue).toBeGreaterThan(result[1].expectedValue);
+    expect(result[5].expectedValue).toBeGreaterThan(10000 * 60); // more than simple sum
+  });
+
+  it('actual value is 0 when no SIPs exist', () => {
+    const result = buildGrowthProjection([], suggestions, 5);
+    result.forEach((d) => expect(d.actualValue).toBe(0));
+  });
+
+  it('uses default return rate for custom SIP types not in suggestions', () => {
+    const customSip = makeSIP({ type: 'PPF', monthlyAmount: 10000 });
+    const result = buildGrowthProjection([customSip], [], 5);
+    // Should still compute a value (using 10% default), not 0
+    expect(result[5].actualValue).toBeGreaterThan(0);
   });
 });

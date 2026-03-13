@@ -14,7 +14,7 @@ import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
 } from './components/InvestmentSuggestions';
 import { Dispatch, useRef, useState, useMemo, useCallback } from 'react';
-import { TermType } from '../../types/enums';
+import { GoalType, TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
@@ -133,6 +133,17 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
 
     return result;
   }, [plannerData.financialGoals, investmentBreakdownForAllGoals]);
+
+  const projectionYears = useMemo(() => {
+    const oneTimeGoals = plannerData.financialGoals.filter(
+      (g) => g.goalType !== GoalType.RECURRING,
+    );
+    if (oneTimeGoals.length === 0) return 10;
+    const maxYears = Math.max(
+      ...oneTimeGoals.map((g) => Math.ceil(dayjs(g.getTargetDate()).diff(dayjs(), 'months') / 12)),
+    );
+    return Math.max(maxYears, 1);
+  }, [plannerData.financialGoals]);
 
   const completedGoals = useMemo(
     () =>
@@ -263,6 +274,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                     investmentBreakdownBasedOnTermType
                   }
                   investmentLogs={plannerData.investmentLogs}
+                  projectionYears={projectionYears}
                 />
               </Grid>
               <Grid

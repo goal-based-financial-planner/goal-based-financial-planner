@@ -4,6 +4,10 @@ import InvestmentTracker from './index';
 import { SIPEntry } from '../../../../../../types/investmentLog';
 import { InvestmentSuggestion } from '../../../../../../types/planner';
 
+jest.mock('@mui/x-charts/LineChart', () => ({
+  LineChart: () => <div data-testid="line-chart">Line Chart</div>,
+}));
+
 const mockDispatch = jest.fn();
 
 const suggestions: InvestmentSuggestion[] = [
@@ -21,63 +25,48 @@ const sip: SIPEntry = {
 describe('InvestmentTracker', () => {
   afterEach(() => jest.clearAllMocks());
 
+  it('renders the growth projection chart', () => {
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
+    );
+    expect(screen.getByTestId('line-chart')).toBeInTheDocument();
+    expect(screen.getByText('Portfolio Growth Projection (10 years)')).toBeInTheDocument();
+  });
+
   it('renders the Add SIP button', () => {
     render(
-      <InvestmentTracker
-        investmentSuggestions={suggestions}
-        sips={[]}
-        dispatch={mockDispatch}
-      />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByRole('button', { name: /add sip/i })).toBeInTheDocument();
   });
 
-  it('renders summary totals section', () => {
+  it('renders comparison cards for each suggestion type', () => {
     render(
-      <InvestmentTracker
-        investmentSuggestions={suggestions}
-        sips={[sip]}
-        dispatch={mockDispatch}
-      />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
     );
-    expect(screen.getByText('Your Monthly SIPs')).toBeInTheDocument();
-    expect(screen.getByText('Monthly Suggested')).toBeInTheDocument();
-    expect(screen.getByText('Difference')).toBeInTheDocument();
-  });
-
-  it('shows a comparison table row for each suggestion type', () => {
-    render(
-      <InvestmentTracker
-        investmentSuggestions={suggestions}
-        sips={[sip]}
-        dispatch={mockDispatch}
-      />,
-    );
-    expect(screen.getByText('Comparison by instrument type')).toBeInTheDocument();
     expect(screen.getAllByText('Liquid Funds').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getByText('Index Funds')).toBeInTheDocument();
+    expect(screen.getAllByText('Index Funds').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders SIP list when SIPs exist', () => {
+  it('renders SIP list section when SIPs exist', () => {
     render(
-      <InvestmentTracker
-        investmentSuggestions={suggestions}
-        sips={[sip]}
-        dispatch={mockDispatch}
-      />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
     );
-    expect(screen.getByText('Your SIPs')).toBeInTheDocument();
     expect(screen.getByText('Axis Bank Liquid Fund')).toBeInTheDocument();
   });
 
-  it('does not render SIP list when no SIPs exist', () => {
+  it('shows "Not in plan" chip for custom SIP types', () => {
+    const customSip: SIPEntry = { id: 'c1', name: 'PPF', type: 'PPF', monthlyAmount: 12500 };
     render(
-      <InvestmentTracker
-        investmentSuggestions={suggestions}
-        sips={[]}
-        dispatch={mockDispatch}
-      />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[customSip]} dispatch={mockDispatch} />,
     );
-    expect(screen.queryByText('Your SIPs')).not.toBeInTheDocument();
+    expect(screen.getByText('Not in plan')).toBeInTheDocument();
+  });
+
+  it('shows helper text when no SIPs added yet', () => {
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
+    );
+    expect(screen.getByText(/add sips to see/i)).toBeInTheDocument();
   });
 });

@@ -121,8 +121,9 @@ export function editInvestmentLogEntry(
   name: string,
   type: string,
   monthlyAmount: number,
+  expectedReturnPct?: number,
 ) {
-  const payload: EditSIPEntryPayload = { entryId, name, type, monthlyAmount };
+  const payload: EditSIPEntryPayload = { entryId, name, type, monthlyAmount, expectedReturnPct };
   dispatch({ payload, type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY });
 }
 

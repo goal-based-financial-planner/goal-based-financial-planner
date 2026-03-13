@@ -43,3 +43,51 @@ export function buildSIPComparison(
 
   return result;
 }
+
+export type GrowthDataPoint = {
+  year: number;
+  expectedValue: number;
+  actualValue: number;
+};
+
+const DEFAULT_RETURN_PCT = 10;
+
+function futureValue(monthlyAmount: number, annualReturnPct: number, months: number): number {
+  if (months === 0) return 0;
+  const r = annualReturnPct / 100 / 12;
+  if (r === 0) return monthlyAmount * months;
+  return monthlyAmount * (Math.pow(1 + r, months) - 1) / r;
+}
+
+export function buildGrowthProjection(
+  sips: SIPEntry[],
+  suggestions: InvestmentSuggestion[],
+  years = 10,
+): GrowthDataPoint[] {
+  const returnRateMap: Record<string, number> = {};
+  for (const s of suggestions) {
+    returnRateMap[s.investmentName] = s.expectedReturnPercentage;
+  }
+
+  const result: GrowthDataPoint[] = [];
+  for (let year = 0; year <= years; year++) {
+    const months = year * 12;
+
+    const expectedValue = suggestions.reduce(
+      (sum, s) => sum + futureValue(s.amount, s.expectedReturnPercentage, months),
+      0,
+    );
+
+    const actualValue = sips.reduce((sum, sip) => {
+      const returnPct = sip.expectedReturnPct ?? returnRateMap[sip.type] ?? DEFAULT_RETURN_PCT;
+      return sum + futureValue(sip.monthlyAmount, returnPct, months);
+    }, 0);
+
+    result.push({
+      year,
+      expectedValue: Math.round(expectedValue),
+      actualValue: Math.round(actualValue),
+    });
+  }
+  return result;
+}

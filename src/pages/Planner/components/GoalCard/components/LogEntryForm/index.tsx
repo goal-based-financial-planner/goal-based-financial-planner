@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@mui/material';
 import { Dispatch, useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { PlannerDataAction } from '../../../../../../store/plannerDataReducer';
 import {
   addInvestmentLogEntry,
@@ -21,6 +21,7 @@ type FormValues = {
   name: string;
   type: string;
   monthlyAmount: string;
+  expectedReturnPct: string;
 };
 
 type Props = {
@@ -51,6 +52,7 @@ const SIPForm = ({
       name: existingEntry?.name ?? '',
       type: existingEntry?.type ?? investmentTypes[0] ?? '',
       monthlyAmount: existingEntry ? String(existingEntry.monthlyAmount) : '',
+      expectedReturnPct: existingEntry?.expectedReturnPct != null ? String(existingEntry.expectedReturnPct) : '',
     },
   });
 
@@ -60,9 +62,13 @@ const SIPForm = ({
         name: existingEntry?.name ?? '',
         type: existingEntry?.type ?? investmentTypes[0] ?? '',
         monthlyAmount: existingEntry ? String(existingEntry.monthlyAmount) : '',
+        expectedReturnPct: existingEntry?.expectedReturnPct != null ? String(existingEntry.expectedReturnPct) : '',
       });
     }
   }, [open, existingEntry, investmentTypes, reset]);
+
+  const watchedType = useWatch({ control, name: 'type' });
+  const isCustomType = watchedType ? !investmentTypes.includes(watchedType) : false;
 
   const handleClose = () => {
     reset();
@@ -71,15 +77,19 @@ const SIPForm = ({
 
   const onSubmit = (values: FormValues) => {
     const monthlyAmount = parseFloat(values.monthlyAmount);
+    const expectedReturnPct = isCustomType && values.expectedReturnPct
+      ? parseFloat(values.expectedReturnPct)
+      : undefined;
 
     if (isEditMode && existingEntry) {
-      editInvestmentLogEntry(dispatch, existingEntry.id, values.name, values.type, monthlyAmount);
+      editInvestmentLogEntry(dispatch, existingEntry.id, values.name, values.type, monthlyAmount, expectedReturnPct);
     } else {
       const entry: SIPEntry = {
         id: crypto.randomUUID(),
         name: values.name,
         type: values.type,
         monthlyAmount,
+        ...(expectedReturnPct != null && { expectedReturnPct }),
       };
       addInvestmentLogEntry(dispatch, entry);
     }
@@ -124,6 +134,27 @@ const SIPForm = ({
               />
             )}
           />
+
+          {isCustomType && (
+            <TextField
+              label="Expected Annual Return (%)"
+              type="number"
+              inputProps={{ min: 0, max: 100, step: 0.1 }}
+              placeholder="e.g. 7.1"
+              error={Boolean(errors.expectedReturnPct)}
+              helperText={
+                errors.expectedReturnPct?.message ??
+                'Used to project portfolio growth for this investment type'
+              }
+              {...register('expectedReturnPct', {
+                required: 'Return % is required for custom types',
+                validate: (v) => {
+                  const n = parseFloat(v);
+                  return (!isNaN(n) && n >= 0 && n <= 100) || 'Enter a value between 0 and 100';
+                },
+              })}
+            />
+          )}
 
           <TextField
             label="Monthly SIP Amount (₹)"

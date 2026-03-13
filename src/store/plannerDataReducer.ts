@@ -130,9 +130,9 @@ export function plannerDataReducer(
     }
 
     case PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY: {
-      const { entryId, name, type, monthlyAmount } = action.payload as EditSIPEntryPayload;
+      const { entryId, name, type, monthlyAmount, expectedReturnPct } = action.payload as EditSIPEntryPayload;
       const entries = state.investmentLogs.map(
-        (e: SIPEntry) => e.id === entryId ? { ...e, name, type, monthlyAmount } : e,
+        (e: SIPEntry) => e.id === entryId ? { ...e, name, type, monthlyAmount, expectedReturnPct } : e,
       );
       return new PlannerData(
         state.financialGoals,

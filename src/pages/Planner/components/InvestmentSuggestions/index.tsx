@@ -31,11 +31,13 @@ const InvestmentSuggestionsBox = ({
   dispatch,
   investmentBreakdownBasedOnTermType,
   investmentLogs = [],
+  projectionYears = 10,
 }: {
   dispatch: React.Dispatch<PlannerDataAction>;
   investmentAllocations: InvestmentAllocationsType;
   investmentBreakdownBasedOnTermType: InvestmentBreakdownBasedOnTermType[];
   investmentLogs: SIPEntry[];
+  projectionYears?: number;
 }) => {
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const [termTypeModal, setTermTypeModal] = useState<TermType | null>(null);
@@ -77,8 +79,8 @@ const InvestmentSuggestionsBox = ({
           onChange={(_, v) => setActiveTab(v as 0 | 1)}
           sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
         >
-          <Tab label="Suggestions" />
-          <Tab label="My Portfolio" />
+          <Tab label="Allocation Plan" />
+          <Tab label="Investment Tracker" />
         </Tabs>
 
         {/* Tab 0: Suggestions */}
@@ -161,7 +163,7 @@ const InvestmentSuggestionsBox = ({
           </Grid>
         </Box>
 
-        {/* Tab 1: My Portfolio */}
+        {/* Tab 1: Investment Tracker */}
         <Box role="tabpanel" hidden={activeTab !== 1}>
           {aggregatedSuggestions.length === 0 ? (
             <Typography variant="body2" color="text.secondary" sx={{ py: 2 }}>
@@ -172,6 +174,7 @@ const InvestmentSuggestionsBox = ({
               investmentSuggestions={aggregatedSuggestions}
               sips={investmentLogs}
               dispatch={dispatch}
+              projectionYears={projectionYears}
             />
           )}
         </Box>

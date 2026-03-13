@@ -93,7 +93,7 @@ describe('InvestmentSuggestionsBox', () => {
     jest.clearAllMocks();
   });
 
-  it('should render Suggestions and My Portfolio tabs', () => {
+  it('should render Suggestions and Investment Tracker tabs', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
@@ -102,8 +102,8 @@ describe('InvestmentSuggestionsBox', () => {
         investmentLogs={[]}
       />
     );
-    expect(screen.getByRole('tab', { name: /suggestions/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /my portfolio/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /allocation plan/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /investment tracker/i })).toBeInTheDocument();
   });
 
   it('should show suggestions tab content by default', () => {
@@ -119,7 +119,7 @@ describe('InvestmentSuggestionsBox', () => {
     expect(screen.getByText(/Investments for Long Term/i)).toBeInTheDocument();
   });
 
-  it('should show My Portfolio tab when clicked', () => {
+  it('should show Investment Tracker tab when clicked', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
@@ -128,7 +128,7 @@ describe('InvestmentSuggestionsBox', () => {
         investmentLogs={[]}
       />
     );
-    fireEvent.click(screen.getByRole('tab', { name: /my portfolio/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /investment tracker/i }));
     expect(screen.getByTestId('investment-tracker')).toBeInTheDocument();
   });
 
