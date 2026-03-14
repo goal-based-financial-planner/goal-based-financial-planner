@@ -117,11 +117,19 @@ const InvestmentTracker = ({
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {comparison.map((row) => {
-                const max = Math.max(row.suggestedAmount, row.actualAmount, 1);
-                const suggestedPct = (row.suggestedAmount / max) * 100;
-                const actualPct = (row.actualAmount / max) * 100;
-                const isOver = row.difference >= 0;
                 const isCustom = row.suggestedAmount === 0;
+                const fillPct = isCustom
+                  ? 100
+                  : Math.min((row.actualAmount / row.suggestedAmount) * 100, 100);
+                const isExceeding = !isCustom && row.actualAmount > row.suggestedAmount;
+                const isMet = !isCustom && row.actualAmount >= row.suggestedAmount * 0.9;
+                const barColor = isCustom
+                  ? '#FF9800'
+                  : isExceeding
+                  ? '#2196F3'
+                  : isMet
+                  ? '#4CAF50'
+                  : '#F44336';
 
                 return (
                   <Box
@@ -134,79 +142,55 @@ const InvestmentTracker = ({
                       backgroundColor: 'background.paper',
                     }}
                   >
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.75 }}>
-                      <Typography variant="caption" fontWeight={600} noWrap sx={{ maxWidth: '65%' }}>
+                    {/* Type name + status chip */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                      <Typography variant="caption" fontWeight={600} noWrap sx={{ maxWidth: '60%' }}>
                         {row.type}
                       </Typography>
                       {isCustom ? (
                         <Chip
                           label="Not in plan"
                           size="small"
-                          sx={{
-                            height: 18,
-                            fontSize: '0.6rem',
-                            backgroundColor: 'warning.light',
-                            color: 'warning.contrastText',
-                          }}
+                          sx={{ height: 18, fontSize: '0.6rem', backgroundColor: 'warning.light', color: 'warning.contrastText' }}
                         />
                       ) : (
-                        <Chip
-                          label={`${isOver ? '+' : ''}₹${formatNumber(Math.abs(row.difference))}`}
-                          size="small"
-                          sx={{
-                            height: 18,
-                            fontSize: '0.6rem',
-                            backgroundColor: isOver ? 'success.light' : 'error.light',
-                            color: isOver ? 'success.contrastText' : 'error.contrastText',
-                          }}
-                        />
+                        <Typography variant="caption" sx={{ fontSize: '0.65rem', color: barColor, fontWeight: 600 }}>
+                          {isExceeding ? 'Exceeding' : isMet ? 'On track' : `${Math.round(fillPct)}% met`}
+                        </Typography>
                       )}
                     </Box>
 
-                    {/* Suggested bar */}
-                    {!isCustom && (
-                      <Box sx={{ mb: 0.5 }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.25 }}>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
-                            Suggested
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
-                            ₹{formatNumber(row.suggestedAmount)}/mo
-                          </Typography>
-                        </Box>
-                        <Box sx={{ height: 4, borderRadius: 2, backgroundColor: 'action.hover', overflow: 'hidden' }}>
-                          <Box
-                            sx={{
-                              width: `${suggestedPct}%`,
-                              height: '100%',
-                              borderRadius: 2,
-                              backgroundColor: '#2196F3',
-                            }}
-                          />
-                        </Box>
-                      </Box>
-                    )}
+                    {/* Amount labels */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
+                        ₹{formatNumber(row.actualAmount)}/mo
+                        {!isCustom && (
+                          <Box component="span" sx={{ color: 'text.disabled' }}>
+                            {' '}/ ₹{formatNumber(row.suggestedAmount)}
+                          </Box>
+                        )}
+                      </Typography>
+                      {!isCustom && row.difference !== 0 && (
+                        <Typography
+                          variant="caption"
+                          sx={{ fontSize: '0.65rem', color: isExceeding ? 'success.main' : 'error.main' }}
+                        >
+                          {isExceeding ? '+' : ''}₹{formatNumber(row.difference)}/mo
+                        </Typography>
+                      )}
+                    </Box>
 
-                    {/* Actual bar */}
-                    <Box>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.25 }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
-                          Your SIPs
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.6rem' }}>
-                          ₹{formatNumber(row.actualAmount)}/mo
-                        </Typography>
-                      </Box>
-                      <Box sx={{ height: 4, borderRadius: 2, backgroundColor: 'action.hover', overflow: 'hidden' }}>
-                        <Box
-                          sx={{
-                            width: `${actualPct}%`,
-                            height: '100%',
-                            borderRadius: 2,
-                            backgroundColor: isCustom ? '#FF9800' : isOver ? '#4CAF50' : '#F44336',
-                          }}
-                        />
-                      </Box>
+                    {/* Single progress bar */}
+                    <Box sx={{ height: 5, borderRadius: 2, backgroundColor: 'action.hover', overflow: 'hidden' }}>
+                      <Box
+                        sx={{
+                          width: `${fillPct}%`,
+                          height: '100%',
+                          borderRadius: 2,
+                          backgroundColor: barColor,
+                          transition: 'width 0.4s ease',
+                        }}
+                      />
                     </Box>
                   </Box>
                 );

@@ -69,4 +69,18 @@ describe('InvestmentTracker', () => {
     );
     expect(screen.getByText(/add sips to see/i)).toBeInTheDocument();
   });
+
+  it('uses projectionYears in the chart title when provided', () => {
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} projectionYears={20} />,
+    );
+    expect(screen.getByText('Portfolio Growth Projection (20 years)')).toBeInTheDocument();
+  });
+
+  it('uses singular "year" when projectionYears is 1', () => {
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} projectionYears={1} />,
+    );
+    expect(screen.getByText('Portfolio Growth Projection (1 year)')).toBeInTheDocument();
+  });
 });

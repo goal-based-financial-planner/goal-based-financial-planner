@@ -21,11 +21,6 @@ jest.mock('../../../Home/components/AddGoalPopup', () => {
   };
 });
 
-jest.mock('../TermwiseProgressBox/termWiseProgressBarChart', () => {
-  return function MockTermWiseProgressBarChart() {
-    return <div data-testid="bar-chart">Bar Chart</div>;
-  };
-});
 
 describe('TargetBox', () => {
   const mockDispatch = jest.fn();
@@ -53,7 +48,7 @@ describe('TargetBox', () => {
     jest.clearAllMocks();
   });
 
-  it('should render target amount', () => {
+  it('should render target amount and goal count', () => {
     render(
       <TargetBox
         targetAmount={5000000}
@@ -62,8 +57,10 @@ describe('TargetBox', () => {
         setShowDrawer={mockSetShowDrawer}
       />,
     );
-    expect(screen.getByText('Your Target')).toBeInTheDocument();
+    expect(screen.getByText(/total goal target/i)).toBeInTheDocument();
     expect(screen.getByTestId('live-counter')).toHaveTextContent('5000000');
+    // 2 goals across the mock data
+    expect(screen.getByText(/across 2 goals/i)).toBeInTheDocument();
   });
 
   it('should open add goal popup when Add Goal button clicked', () => {
@@ -82,7 +79,7 @@ describe('TargetBox', () => {
     expect(screen.getByTestId('add-goal-popup')).toBeInTheDocument();
   });
 
-  it('should call setShowDrawer when View Goals clicked', () => {
+  it('should call setShowDrawer when Goals button clicked', () => {
     render(
       <TargetBox
         targetAmount={1000000}
@@ -92,31 +89,23 @@ describe('TargetBox', () => {
       />,
     );
 
-    const viewButton = screen.getByText('View Goals');
+    const viewButton = screen.getByRole('button', { name: /goals/i, hidden: true });
     fireEvent.click(viewButton);
 
     expect(mockSetShowDrawer).toHaveBeenCalledWith(true);
   });
 
-  it('should toggle expand state when expand icon clicked', () => {
+  it('should show "No goals added yet" when there are no goals', () => {
     render(
       <TargetBox
-        targetAmount={1000000}
+        targetAmount={0}
         dispatch={mockDispatch}
-        termTypeWiseProgressData={mockProgressData}
+        termTypeWiseProgressData={[]}
         setShowDrawer={mockSetShowDrawer}
       />,
     );
 
-    // Initially chart should not be visible
-    expect(screen.queryByTestId('bar-chart')).not.toBeInTheDocument();
-
-    // Click expand
-    const expandButton = screen.getByRole('button', { name: '' }); // IconButton has no name
-    fireEvent.click(expandButton);
-
-    // Chart should be visible
-    expect(screen.getByTestId('bar-chart')).toBeInTheDocument();
+    expect(screen.getByText(/no goals added yet/i)).toBeInTheDocument();
   });
 
   it('should match snapshot', () => {

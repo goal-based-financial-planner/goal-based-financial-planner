@@ -1,10 +1,10 @@
 import { useState, Dispatch } from 'react';
-import { Typography, Button, Box, IconButton } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Typography, Button, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import ListIcon from '@mui/icons-material/FormatListBulleted';
 import LiveCounter from '../../../../components/LiveNumberCounter';
 import { StyledBox } from '../../../../components/StyledBox';
-import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
-import TermWiseProgressBarChart from '../TermwiseProgressBox/termWiseProgressBarChart';
+import { TermTypeWiseProgressData } from '../../../../types/planner';
 import AddGoalPopup from '../../../Home/components/AddGoalPopup';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
@@ -22,19 +22,11 @@ const TargetBox = ({
   setShowDrawer,
 }: TargetBoxProps) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleAdd = () => {
-    setIsFormOpen(true);
-  };
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setShowDrawer(newOpen);
-  };
-
-  const handleExpandClick = () => {
-    setIsExpanded((prev) => !prev);
-  };
+  const totalGoals = termTypeWiseProgressData.reduce(
+    (sum, d) => sum + d.termTypeWiseData.goalNames.length,
+    0,
+  );
 
   return (
     <>
@@ -42,75 +34,47 @@ const TargetBox = ({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          position: 'relative',
           flexGrow: 1,
+          height: '100%',
         }}
         className="target-box"
       >
-        <Typography variant="h6" fontWeight="bold">
-          Your Target
+        <Typography
+          variant="overline"
+          color="text.secondary"
+          sx={{ letterSpacing: 1.5, fontSize: '0.65rem', lineHeight: 1.4 }}
+        >
+          Total Goal Target
         </Typography>
+
         <LiveCounter value={targetAmount} duration={500} />
-        <Box display="flex" flexDirection="row" alignItems="center" gap={4}>
+
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
+          {totalGoals > 0
+            ? `across ${totalGoals} goal${totalGoals !== 1 ? 's' : ''}`
+            : 'No goals added yet'}
+        </Typography>
+
+        <Box sx={{ mt: 'auto', pt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           <Button
             className="add-goals-button"
             variant="contained"
-            sx={{
-              mt: 2,
-            }}
-            onClick={handleAdd}
+            size="small"
+            startIcon={<AddIcon fontSize="small" />}
+            onClick={() => setIsFormOpen(true)}
           >
             Add Goal
           </Button>
           <Button
             className="view-goals-button"
             variant="outlined"
-            sx={{
-              mt: 2,
-              color: 'green',
-              display: { xs: 'block', md: 'none' },
-            }}
-            onClick={toggleDrawer(true)}
+            size="small"
+            startIcon={<ListIcon fontSize="small" />}
+            sx={{ display: { xs: 'flex', md: 'none' } }}
+            onClick={() => setShowDrawer(true)}
           >
-            View Goals
+            Goals
           </Button>
-        </Box>
-
-        <IconButton
-          onClick={handleExpandClick}
-          sx={{
-            display: { xs: 'block', md: 'none' },
-            position: 'absolute',
-            bottom: '-14px',
-            width: '40px',
-            height: '40px',
-            left: '50%',
-            transform: isExpanded
-              ? 'translateX(-50%) rotate(180deg)'
-              : 'translateX(-50%) rotate(0deg)',
-            transition:
-              'transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s ease, border 0.3s ease', // Added cubic-bezier easing
-            borderRadius: '50%',
-            backgroundColor: '#f5f5f5',
-            border: '1px solid #e0e0e0',
-            '&:hover': {
-              backgroundColor: '#f5f5f5',
-            },
-          }}
-        >
-          <ExpandMoreIcon fontSize="medium" />
-        </IconButton>
-
-        <Box
-          sx={{
-            transition: 'height 0.3s ease-in-out',
-            mb: 5,
-            display: { xs: 'block', sm: 'block', md: 'none', lg: 'none' },
-          }}
-        >
-          {isExpanded && (
-            <TermWiseProgressBarChart data={termTypeWiseProgressData} />
-          )}
         </Box>
       </StyledBox>
 

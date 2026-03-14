@@ -239,15 +239,10 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
           </Box>
         ) : (
           <>
-            <Grid container size={12} spacing={2}>
+            <Grid container size={12} spacing={2} sx={{ alignItems: 'stretch', mb: 4 }}>
               <Grid
-                size={{
-                  xs: 12,
-                  sm: 12,
-                  md: 3,
-                  lg: 3,
-                }}
-                sx={{ display: 'flex', flexGrow: 1 }}
+                size={{ xs: 12, sm: 6, md: 3 }}
+                sx={{ display: 'flex' }}
               >
                 <TargetBox
                   targetAmount={targetAmount}
@@ -256,12 +251,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                   termTypeWiseProgressData={termTypeWiseProgressData}
                 />
               </Grid>
-              <Grid
-                size={{ xs: 0, sm: 0, md: 9, lg: 9 }}
-                sx={{
-                  display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' },
-                }}
-              >
+              <Grid size={{ xs: 12, sm: 6, md: 9 }} sx={{ display: 'flex', flexGrow: 1 }}>
                 <TermWiseProgressBox data={termTypeWiseProgressData} />
               </Grid>
             </Grid>
