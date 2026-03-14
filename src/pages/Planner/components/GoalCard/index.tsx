@@ -279,13 +279,6 @@ const GoalCard = memo(
       </IconButton>
     </Box>
   );
-}, (prevProps, nextProps) => {
-  // Custom comparison function for React.memo
-  return (
-    prevProps.goal.id === nextProps.goal.id &&
-    prevProps.currentValue === nextProps.currentValue &&
-    (prevProps.investmentSuggestions?.length || 0) === (nextProps.investmentSuggestions?.length || 0)
-  );
 });
 
 GoalCard.displayName = 'GoalCard';

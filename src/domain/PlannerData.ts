@@ -4,6 +4,7 @@ import {
   InvestmentOptionType,
 } from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
+import { SIPEntry } from '../types/investmentLog';
 
 export type FinancialGoalSummary = Array<{
   termType: TermType;
@@ -13,6 +14,7 @@ export type FinancialGoalSummary = Array<{
 export class PlannerData {
   financialGoals: FinancialGoal[];
   investmentAllocations: InvestmentAllocationsType;
+  investmentLogs: SIPEntry[];
 
   constructor(
     financialGoals: FinancialGoal[] = [],
@@ -21,10 +23,12 @@ export class PlannerData {
       [TermType.MEDIUM_TERM]: [],
       [TermType.SHORT_TERM]: [],
     },
+    investmentLogs: SIPEntry[] = [],
     investmentOptions?: InvestmentOptionType[],
   ) {
     this.financialGoals = financialGoals;
     this.investmentAllocations = investmentAllocations;
+    this.investmentLogs = investmentLogs;
   }
 
   getFinancialGoalSummary(): FinancialGoalSummary {

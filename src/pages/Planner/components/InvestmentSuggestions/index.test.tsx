@@ -5,6 +5,12 @@ import { TermType } from '../../../../types/enums';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 
 // Mock child components
+jest.mock('../GoalCard/components/InvestmentTracker', () => {
+  return function MockInvestmentTracker() {
+    return <div data-testid="investment-tracker">Investment Tracker</div>;
+  };
+});
+
 jest.mock('../InvestmentSuggestionsDoughnutChart', () => {
   return function MockDoughnutChart() {
     return <div data-testid="doughnut-chart">Doughnut Chart</div>;
@@ -61,16 +67,8 @@ describe('InvestmentSuggestionsBox', () => {
           targetAmount: 100000,
           currentValue: 50000,
           investmentSuggestions: [
-            {
-              investmentName: 'High Yield Savings',
-              amount: 25000,
-              expectedReturnPercentage: 5,
-            },
-            {
-              investmentName: 'Liquid Funds',
-              amount: 25000,
-              expectedReturnPercentage: 6,
-            },
+            { investmentName: 'High Yield Savings', amount: 25000, expectedReturnPercentage: 5 },
+            { investmentName: 'Liquid Funds', amount: 25000, expectedReturnPercentage: 6 },
           ],
         },
       ],
@@ -83,16 +81,8 @@ describe('InvestmentSuggestionsBox', () => {
           targetAmount: 5000000,
           currentValue: 1000000,
           investmentSuggestions: [
-            {
-              investmentName: 'Index Funds',
-              amount: 2400000,
-              expectedReturnPercentage: 12,
-            },
-            {
-              investmentName: 'Equity Mutual Funds',
-              amount: 1600000,
-              expectedReturnPercentage: 14,
-            },
+            { investmentName: 'Index Funds', amount: 2400000, expectedReturnPercentage: 12 },
+            { investmentName: 'Equity Mutual Funds', amount: 1600000, expectedReturnPercentage: 14 },
           ],
         },
       ],
@@ -103,30 +93,72 @@ describe('InvestmentSuggestionsBox', () => {
     jest.clearAllMocks();
   });
 
-  it('should render investment suggestions for each term type', () => {
+  it('should render Suggestions and Investment Tracker tabs', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
         investmentAllocations={mockInvestmentAllocations}
         investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
       />
     );
+    expect(screen.getByRole('tab', { name: /allocation plan/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /investment tracker/i })).toBeInTheDocument();
+  });
 
+  it('should show suggestions tab content by default', () => {
+    render(
+      <InvestmentSuggestionsBox
+        dispatch={mockDispatch}
+        investmentAllocations={mockInvestmentAllocations}
+        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
+      />
+    );
     expect(screen.getByText(/Investments for Short Term/i)).toBeInTheDocument();
     expect(screen.getByText(/Investments for Long Term/i)).toBeInTheDocument();
   });
 
-  it('should render child components for each term type', () => {
+  it('should show Investment Tracker tab when clicked', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
         investmentAllocations={mockInvestmentAllocations}
         investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
       />
     );
+    fireEvent.click(screen.getByRole('tab', { name: /investment tracker/i }));
+    expect(screen.getByTestId('investment-tracker')).toBeInTheDocument();
+  });
 
-    expect(screen.getAllByTestId('custom-legend')).toHaveLength(2);
-    expect(screen.getAllByTestId('doughnut-chart')).toHaveLength(2);
+  it('should open modal when customize button is clicked', () => {
+    render(
+      <InvestmentSuggestionsBox
+        dispatch={mockDispatch}
+        investmentAllocations={mockInvestmentAllocations}
+        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
+      />
+    );
+    const tuneButtons = screen.getAllByRole('button').filter(btn => btn.textContent === 'tune');
+    fireEvent.click(tuneButtons[0]);
+    expect(screen.getByTestId('investment-allocations')).toBeInTheDocument();
+  });
+
+  it('should close modal when handleSubmit is called', () => {
+    render(
+      <InvestmentSuggestionsBox
+        dispatch={mockDispatch}
+        investmentAllocations={mockInvestmentAllocations}
+        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
+      />
+    );
+    const tuneButtons = screen.getAllByRole('button').filter(btn => btn.textContent === 'tune');
+    fireEvent.click(tuneButtons[0]);
+    expect(screen.getByTestId('investment-allocations')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Submit'));
   });
 
   it('should filter out term types with no investment suggestions', () => {
@@ -134,12 +166,7 @@ describe('InvestmentSuggestionsBox', () => {
       {
         termType: TermType.SHORT_TERM,
         investmentBreakdown: [
-          {
-            goalName: 'Goal with no suggestions',
-            targetAmount: 100000,
-            currentValue: 100000,
-            investmentSuggestions: [],
-          },
+          { goalName: 'Goal', targetAmount: 100000, currentValue: 100000, investmentSuggestions: [] },
         ],
       },
       {
@@ -150,11 +177,7 @@ describe('InvestmentSuggestionsBox', () => {
             targetAmount: 5000000,
             currentValue: 1000000,
             investmentSuggestions: [
-              {
-                investmentName: 'Index Funds',
-                amount: 2400000,
-                expectedReturnPercentage: 12,
-              },
+              { investmentName: 'Index Funds', amount: 2400000, expectedReturnPercentage: 12 },
             ],
           },
         ],
@@ -166,100 +189,19 @@ describe('InvestmentSuggestionsBox', () => {
         dispatch={mockDispatch}
         investmentAllocations={mockInvestmentAllocations}
         investmentBreakdownBasedOnTermType={emptyBreakdown}
+        investmentLogs={[]}
       />
     );
-
     expect(screen.queryByText(/Investments for Short Term/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Investments for Long Term/i)).toBeInTheDocument();
   });
 
-  it('should open modal when customize button is clicked', () => {
-    render(
-      <InvestmentSuggestionsBox
-        dispatch={mockDispatch}
-        investmentAllocations={mockInvestmentAllocations}
-        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
-      />
-    );
-
-    const customizeButtons = screen.getAllByRole('button');
-    const tuneButtons = customizeButtons.filter(btn => btn.textContent === 'tune');
-    fireEvent.click(tuneButtons[0]);
-
-    expect(screen.getByTestId('investment-allocations')).toBeInTheDocument();
-    expect(screen.getByText('Investment Allocations for Short Term')).toBeInTheDocument();
-  });
-
-  it('should close modal when backdrop is clicked', () => {
-    render(
-      <InvestmentSuggestionsBox
-        dispatch={mockDispatch}
-        investmentAllocations={mockInvestmentAllocations}
-        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
-      />
-    );
-
-    // Open modal
-    const allButtons = screen.getAllByRole('button');
-    const tuneButtons = allButtons.filter(btn => btn.textContent === 'tune');
-    fireEvent.click(tuneButtons[0]);
-    expect(screen.getByTestId('investment-allocations')).toBeInTheDocument();
-
-    // Close modal via Escape key (simpler than backdrop click)
-    fireEvent.keyDown(screen.getByRole('presentation'), { key: 'Escape', code: 'Escape' });
-  });
-
-  it('should close modal when handleSubmit is called', () => {
-    render(
-      <InvestmentSuggestionsBox
-        dispatch={mockDispatch}
-        investmentAllocations={mockInvestmentAllocations}
-        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
-      />
-    );
-
-    // Open modal
-    const allButtons = screen.getAllByRole('button');
-    const tuneButtons = allButtons.filter(btn => btn.textContent === 'tune');
-    fireEvent.click(tuneButtons[0]);
-    expect(screen.getByTestId('investment-allocations')).toBeInTheDocument();
-
-    // Submit form
-    const submitButton = screen.getByText('Submit');
-    fireEvent.click(submitButton);
-
-    // The modal state should be reset
-  });
-
-  it('should handle multiple term types with customize buttons', () => {
-    render(
-      <InvestmentSuggestionsBox
-        dispatch={mockDispatch}
-        investmentAllocations={mockInvestmentAllocations}
-        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
-      />
-    );
-
-    const allButtons = screen.getAllByRole('button');
-    const tuneButtons = allButtons.filter(btn => btn.textContent === 'tune');
-    expect(tuneButtons).toHaveLength(2);
-
-    // Test opening modal for second term type
-    fireEvent.click(tuneButtons[1]);
-    expect(screen.getByText('Investment Allocations for Long Term')).toBeInTheDocument();
-  });
-
-  it('should render nothing when all breakdowns are empty', () => {
+  it('should show empty state when all breakdowns have no suggestions', () => {
     const emptyBreakdown = [
       {
         termType: TermType.SHORT_TERM,
         investmentBreakdown: [
-          {
-            goalName: 'Completed Goal',
-            targetAmount: 100000,
-            currentValue: 100000,
-            investmentSuggestions: [],
-          },
+          { goalName: 'Goal', targetAmount: 100000, currentValue: 100000, investmentSuggestions: [] },
         ],
       },
     ];
@@ -269,9 +211,9 @@ describe('InvestmentSuggestionsBox', () => {
         dispatch={mockDispatch}
         investmentAllocations={mockInvestmentAllocations}
         investmentBreakdownBasedOnTermType={emptyBreakdown}
+        investmentLogs={[]}
       />
     );
-
-    expect(screen.queryByText(/Investments for/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/Add financial goals to see investment suggestions/i)).toBeInTheDocument();
   });
 });

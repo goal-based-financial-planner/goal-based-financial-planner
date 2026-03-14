@@ -8,6 +8,7 @@ import { PlannerData } from '../domain/PlannerData';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { GoalType, TermType } from '../types/enums';
 import { PlannerDataActionType } from './plannerDataActions';
+import { SIPEntry } from '../types/investmentLog';
 
 describe('plannerDataReducer', () => {
   const initialState = new PlannerData([], {
@@ -455,6 +456,101 @@ describe('plannerDataReducer', () => {
 
       expect(newState.financialGoals).toHaveLength(1);
       expect(newState.financialGoals[0].goalName).toBe('Goal');
+    });
+  });
+
+  describe('ADD_INVESTMENT_LOG_ENTRY', () => {
+    it('should append a SIP entry to investmentLogs', () => {
+      const entry: SIPEntry = { id: 'sip-1', name: 'Axis Liquid', type: 'Liquid Funds', monthlyAmount: 20000 };
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.ADD_INVESTMENT_LOG_ENTRY,
+        payload: { entry },
+      };
+
+      const newState = plannerDataReducer(initialState, action);
+
+      expect(newState.investmentLogs).toHaveLength(1);
+      expect(newState.investmentLogs[0]).toEqual(entry);
+    });
+
+    it('should preserve existing SIP entries when adding a new one', () => {
+      const existing: SIPEntry = { id: 'sip-1', name: 'Existing', type: 'Index Funds', monthlyAmount: 10000 };
+      const stateWithSIP = new PlannerData([], { [TermType.SHORT_TERM]: [], [TermType.MEDIUM_TERM]: [], [TermType.LONG_TERM]: [] }, [existing]);
+      const newEntry: SIPEntry = { id: 'sip-2', name: 'New Fund', type: 'Liquid Funds', monthlyAmount: 5000 };
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.ADD_INVESTMENT_LOG_ENTRY,
+        payload: { entry: newEntry },
+      };
+
+      const newState = plannerDataReducer(stateWithSIP, action);
+
+      expect(newState.investmentLogs).toHaveLength(2);
+    });
+  });
+
+  describe('EDIT_INVESTMENT_LOG_ENTRY', () => {
+    it('should update name, type, and monthlyAmount of matching entry', () => {
+      const entry: SIPEntry = { id: 'sip-1', name: 'Old Name', type: 'Liquid Funds', monthlyAmount: 10000 };
+      const stateWithSIP = new PlannerData([], { [TermType.SHORT_TERM]: [], [TermType.MEDIUM_TERM]: [], [TermType.LONG_TERM]: [] }, [entry]);
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-1', name: 'New Name', type: 'Index Funds', monthlyAmount: 25000 },
+      };
+
+      const newState = plannerDataReducer(stateWithSIP, action);
+
+      expect(newState.investmentLogs[0].name).toBe('New Name');
+      expect(newState.investmentLogs[0].type).toBe('Index Funds');
+      expect(newState.investmentLogs[0].monthlyAmount).toBe(25000);
+    });
+
+    it('should store expectedReturnPct for custom type edits', () => {
+      const entry: SIPEntry = { id: 'sip-1', name: 'PPF', type: 'PPF', monthlyAmount: 12500 };
+      const stateWithSIP = new PlannerData([], { [TermType.SHORT_TERM]: [], [TermType.MEDIUM_TERM]: [], [TermType.LONG_TERM]: [] }, [entry]);
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-1', name: 'PPF', type: 'PPF', monthlyAmount: 12500, expectedReturnPct: 7.1 },
+      };
+
+      const newState = plannerDataReducer(stateWithSIP, action);
+
+      expect(newState.investmentLogs[0].expectedReturnPct).toBe(7.1);
+    });
+
+    it('should not modify other entries', () => {
+      const e1: SIPEntry = { id: 'sip-1', name: 'Fund A', type: 'Liquid Funds', monthlyAmount: 10000 };
+      const e2: SIPEntry = { id: 'sip-2', name: 'Fund B', type: 'Index Funds', monthlyAmount: 20000 };
+      const stateWithSIPs = new PlannerData([], { [TermType.SHORT_TERM]: [], [TermType.MEDIUM_TERM]: [], [TermType.LONG_TERM]: [] }, [e1, e2]);
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-1', name: 'Updated', type: 'Liquid Funds', monthlyAmount: 15000 },
+      };
+
+      const newState = plannerDataReducer(stateWithSIPs, action);
+
+      expect(newState.investmentLogs[1]).toEqual(e2);
+    });
+  });
+
+  describe('DELETE_INVESTMENT_LOG_ENTRY', () => {
+    it('should remove the SIP entry with the matching ID', () => {
+      const e1: SIPEntry = { id: 'sip-1', name: 'Fund A', type: 'Liquid Funds', monthlyAmount: 10000 };
+      const e2: SIPEntry = { id: 'sip-2', name: 'Fund B', type: 'Index Funds', monthlyAmount: 20000 };
+      const stateWithSIPs = new PlannerData([], { [TermType.SHORT_TERM]: [], [TermType.MEDIUM_TERM]: [], [TermType.LONG_TERM]: [] }, [e1, e2]);
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-1' },
+      };
+
+      const newState = plannerDataReducer(stateWithSIPs, action);
+
+      expect(newState.investmentLogs).toHaveLength(1);
+      expect(newState.investmentLogs[0].id).toBe('sip-2');
     });
   });
 

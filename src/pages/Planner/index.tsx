@@ -14,7 +14,7 @@ import InvestmentSuggestionsBox, {
   InvestmentBreakdownBasedOnTermType,
 } from './components/InvestmentSuggestions';
 import { Dispatch, useRef, useState, useMemo, useCallback } from 'react';
-import { TermType } from '../../types/enums';
+import { GoalType, TermType } from '../../types/enums';
 import useInvestmentCalculator from './hooks/useInvestmentCalculator';
 import { PlannerData } from '../../domain/PlannerData';
 import { PlannerDataAction } from '../../store/plannerDataReducer';
@@ -134,6 +134,17 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
     return result;
   }, [plannerData.financialGoals, investmentBreakdownForAllGoals]);
 
+  const projectionYears = useMemo(() => {
+    const oneTimeGoals = plannerData.financialGoals.filter(
+      (g) => g.goalType !== GoalType.RECURRING,
+    );
+    if (oneTimeGoals.length === 0) return 10;
+    const maxYears = Math.max(
+      ...oneTimeGoals.map((g) => Math.ceil(dayjs(g.getTargetDate()).diff(dayjs(), 'months') / 12)),
+    );
+    return Math.max(maxYears, 1);
+  }, [plannerData.financialGoals]);
+
   const completedGoals = useMemo(
     () =>
       plannerData.financialGoals.filter((goal) => {
@@ -228,15 +239,10 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
           </Box>
         ) : (
           <>
-            <Grid container size={12} spacing={2}>
+            <Grid container size={12} spacing={2} sx={{ alignItems: 'stretch', mb: 4 }}>
               <Grid
-                size={{
-                  xs: 12,
-                  sm: 12,
-                  md: 3,
-                  lg: 3,
-                }}
-                sx={{ display: 'flex', flexGrow: 1 }}
+                size={{ xs: 12, sm: 6, md: 3 }}
+                sx={{ display: 'flex' }}
               >
                 <TargetBox
                   targetAmount={targetAmount}
@@ -245,12 +251,7 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                   termTypeWiseProgressData={termTypeWiseProgressData}
                 />
               </Grid>
-              <Grid
-                size={{ xs: 0, sm: 0, md: 9, lg: 9 }}
-                sx={{
-                  display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' },
-                }}
-              >
+              <Grid size={{ xs: 12, sm: 6, md: 9 }} sx={{ display: 'flex', flexGrow: 1 }}>
                 <TermWiseProgressBox data={termTypeWiseProgressData} />
               </Grid>
             </Grid>
@@ -262,6 +263,8 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
                   investmentBreakdownBasedOnTermType={
                     investmentBreakdownBasedOnTermType
                   }
+                  investmentLogs={plannerData.investmentLogs}
+                  projectionYears={projectionYears}
                 />
               </Grid>
               <Grid

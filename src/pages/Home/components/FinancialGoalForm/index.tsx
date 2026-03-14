@@ -94,13 +94,15 @@ const FinancialGoalForm = ({
   };
 
   const handleStartYearChange = (e: Dayjs | null) => {
+    if (!e) return;
     setValidationErrors({ ...validationErrors, startDate: false });
-    setStartDate(e!.toString());
+    setStartDate(e.toString());
   };
 
   const handleTargetYearChange = (e: Dayjs | null) => {
+    if (!e) return;
     setValidationErrors({ ...validationErrors, targetDate: false });
-    setTargetDate(e!.toString());
+    setTargetDate(e.toString());
   };
 
   const handleTargetAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {

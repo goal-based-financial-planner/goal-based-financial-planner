@@ -9,6 +9,12 @@ import {
   InvestmentChoiceType,
   InvestmentOptionType,
 } from '../domain/InvestmentOptions';
+import {
+  AddSIPEntryPayload,
+  EditSIPEntryPayload,
+  DeleteSIPEntryPayload,
+  SIPEntry,
+} from '../types/investmentLog';
 
 /**
  * Union type for all possible action payloads
@@ -19,7 +25,10 @@ export type PlannerDataActionPayload =
   | InvestmentChoiceType // UPDATE_*_TERM_INVESTMENT
   | InvestmentOptionType // ADD_INVESTMENT_OPTION
   | string // DELETE_FINANCIAL_GOAL (goalId)
-  | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number }; // UPDATE_FINANCIAL_GOAL (alternative form)
+  | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number } // UPDATE_FINANCIAL_GOAL (alternative form)
+  | AddSIPEntryPayload
+  | EditSIPEntryPayload
+  | DeleteSIPEntryPayload;
 
 export type PlannerDataAction = {
   payload: PlannerDataActionPayload;
@@ -73,11 +82,16 @@ export function plannerDataReducer(
       return new PlannerData(
         updatedFinancialGoals,
         updatedInvestmentAllocations,
+        state.investmentLogs,
       );
     }
 
     case PlannerDataActionType.UPDATE_INVESTMENT_ALLOCATIONS:
-      return new PlannerData(state.financialGoals, action.payload as InvestmentAllocationsType);
+      return new PlannerData(
+        state.financialGoals,
+        action.payload as InvestmentAllocationsType,
+        state.investmentLogs,
+      );
 
     case PlannerDataActionType.DELETE_FINANCIAL_GOAL: {
       const goalId = action.payload as string;
@@ -103,7 +117,40 @@ export function plannerDataReducer(
         investmentAllocations['Long Term'] = [];
       }
 
-      return new PlannerData(financialGoals, investmentAllocations);
+      return new PlannerData(financialGoals, investmentAllocations, state.investmentLogs);
+    }
+
+    case PlannerDataActionType.ADD_INVESTMENT_LOG_ENTRY: {
+      const { entry } = action.payload as AddSIPEntryPayload;
+      return new PlannerData(
+        state.financialGoals,
+        state.investmentAllocations,
+        [...state.investmentLogs, entry],
+      );
+    }
+
+    case PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY: {
+      const { entryId, name, type, monthlyAmount, expectedReturnPct } = action.payload as EditSIPEntryPayload;
+      const entries = state.investmentLogs.map(
+        (e: SIPEntry) => e.id === entryId ? { ...e, name, type, monthlyAmount, expectedReturnPct } : e,
+      );
+      return new PlannerData(
+        state.financialGoals,
+        state.investmentAllocations,
+        entries,
+      );
+    }
+
+    case PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY: {
+      const { entryId } = action.payload as DeleteSIPEntryPayload;
+      const entries = state.investmentLogs.filter(
+        (e: SIPEntry) => e.id !== entryId,
+      );
+      return new PlannerData(
+        state.financialGoals,
+        state.investmentAllocations,
+        entries,
+      );
     }
 
     case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
@@ -120,7 +167,7 @@ export function plannerDataReducer(
         goalToBeUpdated.targetAmount = updatedPayload.targetAmount;
       }
 
-      return new PlannerData(financialGoals, state.investmentAllocations);
+      return new PlannerData(financialGoals, state.investmentAllocations, state.investmentLogs);
     }
 
     default:
@@ -144,7 +191,9 @@ export function getInitialData() {
           ),
       );
 
-      return new PlannerData(financialGoals, parsedState.investmentAllocations);
+      const logs = parsedState.investmentLogs;
+      const investmentLogs = Array.isArray(logs) ? logs : [];
+      return new PlannerData(financialGoals, parsedState.investmentAllocations, investmentLogs);
     } catch {}
   }
   return new PlannerData();

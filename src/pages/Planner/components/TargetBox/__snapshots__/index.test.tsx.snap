@@ -3,56 +3,71 @@
 exports[`TargetBox should match snapshot 1`] = `
 <div>
   <div
-    class="target-box MuiBox-root css-108t373"
+    class="target-box MuiBox-root css-1utze5o"
   >
-    <h6
-      class="MuiTypography-root MuiTypography-h6 css-h9fkkg-MuiTypography-root"
+    <span
+      class="MuiTypography-root MuiTypography-overline css-1g83iv3-MuiTypography-root"
     >
-      Your Target
-    </h6>
+      Total Goal Target
+    </span>
     <div
       data-testid="live-counter"
     >
       1000000
     </div>
+    <span
+      class="MuiTypography-root MuiTypography-caption css-12pkckq-MuiTypography-root"
+    >
+      across 2 goals
+    </span>
     <div
-      class="MuiBox-root css-1ndc4rr"
+      class="MuiBox-root css-1vzzbq1"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary add-goals-button css-5pf1h4-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-colorPrimary add-goals-button css-6wsdc3-MuiButtonBase-root-MuiButton-root"
         tabindex="0"
         type="button"
       >
+        <span
+          class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-1tjwu2m-MuiButton-startIcon"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-120dh41-MuiSvgIcon-root"
+            data-testid="AddIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+            />
+          </svg>
+        </span>
         Add Goal
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary view-goals-button css-brz7wz-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary view-goals-button css-1mned2q-MuiButtonBase-root-MuiButton-root"
         tabindex="0"
         type="button"
       >
-        View Goals
+        <span
+          class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-1tjwu2m-MuiButton-startIcon"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall css-120dh41-MuiSvgIcon-root"
+            data-testid="FormatListBulletedIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5m0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5m0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5M7 19h14v-2H7zm0-6h14v-2H7zm0-8v2h14V5z"
+            />
+          </svg>
+        </span>
+        Goals
       </button>
     </div>
-    <button
-      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-19m2bo-MuiButtonBase-root-MuiIconButton-root"
-      tabindex="0"
-      type="button"
-    >
-      <svg
-        aria-hidden="true"
-        class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1umw9bq-MuiSvgIcon-root"
-        data-testid="ExpandMoreIcon"
-        focusable="false"
-        viewBox="0 0 24 24"
-      >
-        <path
-          d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-        />
-      </svg>
-    </button>
-    <div
-      class="MuiBox-root css-171ftq7"
-    />
   </div>
 </div>
 `;

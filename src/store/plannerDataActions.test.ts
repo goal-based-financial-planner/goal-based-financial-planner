@@ -9,7 +9,11 @@ import {
   setLongTermInvestmentPercentage,
   updateInvestmentAllocation,
   addInvestmentOption,
+  addInvestmentLogEntry,
+  editInvestmentLogEntry,
+  deleteInvestmentLogEntry,
 } from './plannerDataActions';
+import { SIPEntry } from '../types/investmentLog';
 import { PlannerDataAction } from './plannerDataReducer';
 import { FinancialGoal } from '../domain/FinancialGoals';
 import { GoalType, TermType } from '../types/enums';
@@ -166,6 +170,50 @@ describe('Planner Data Action Creators', () => {
       expect(dispatchMock).toHaveBeenCalledWith({
         type: PlannerDataActionType.ADD_INVESTMENT_OPTION,
         payload: option,
+      });
+    });
+  });
+
+  describe('addInvestmentLogEntry', () => {
+    it('should dispatch ADD_INVESTMENT_LOG_ENTRY with the SIP entry', () => {
+      const entry: SIPEntry = { id: 'sip-1', name: 'Axis Liquid', type: 'Liquid Funds', monthlyAmount: 20000 };
+
+      addInvestmentLogEntry(dispatchMock, entry);
+
+      expect(dispatchMock).toHaveBeenCalledWith({
+        type: PlannerDataActionType.ADD_INVESTMENT_LOG_ENTRY,
+        payload: { entry },
+      });
+    });
+  });
+
+  describe('editInvestmentLogEntry', () => {
+    it('should dispatch EDIT_INVESTMENT_LOG_ENTRY with updated fields', () => {
+      editInvestmentLogEntry(dispatchMock, 'sip-1', 'New Name', 'Index Funds', 30000);
+
+      expect(dispatchMock).toHaveBeenCalledWith({
+        type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-1', name: 'New Name', type: 'Index Funds', monthlyAmount: 30000, expectedReturnPct: undefined },
+      });
+    });
+
+    it('should include expectedReturnPct for custom types', () => {
+      editInvestmentLogEntry(dispatchMock, 'sip-2', 'PPF', 'PPF', 12500, 7.1);
+
+      expect(dispatchMock).toHaveBeenCalledWith({
+        type: PlannerDataActionType.EDIT_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-2', name: 'PPF', type: 'PPF', monthlyAmount: 12500, expectedReturnPct: 7.1 },
+      });
+    });
+  });
+
+  describe('deleteInvestmentLogEntry', () => {
+    it('should dispatch DELETE_INVESTMENT_LOG_ENTRY with the entry ID', () => {
+      deleteInvestmentLogEntry(dispatchMock, 'sip-1');
+
+      expect(dispatchMock).toHaveBeenCalledWith({
+        type: PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY,
+        payload: { entryId: 'sip-1' },
       });
     });
   });

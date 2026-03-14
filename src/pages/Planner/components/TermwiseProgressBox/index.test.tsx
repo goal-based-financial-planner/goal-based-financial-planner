@@ -3,7 +3,7 @@ import TermWiseProgressBox, { TermTypeWiseProgressData } from './index';
 import { TermType } from '../../../../types/enums';
 
 describe('TermWiseProgressBox', () => {
-  it('should render financial progress title', () => {
+  it('should render goals by timeline title', () => {
     const data: TermTypeWiseProgressData[] = [
       {
         termType: TermType.SHORT_TERM,
@@ -17,7 +17,7 @@ describe('TermWiseProgressBox', () => {
 
     render(<TermWiseProgressBox data={data} />);
 
-    expect(screen.getByText('Financial Progress')).toBeInTheDocument();
+    expect(screen.getByText('Goals by Timeline')).toBeInTheDocument();
   });
 
   it('should display term type', () => {
@@ -55,7 +55,7 @@ describe('TermWiseProgressBox', () => {
     expect(screen.getByText('Goal 2')).toBeInTheDocument();
   });
 
-  it('should show achievement message for 100% progress', () => {
+  it('should show goal chips for 100% progress term', () => {
     const data: TermTypeWiseProgressData[] = [
       {
         termType: TermType.LONG_TERM,
@@ -69,7 +69,7 @@ describe('TermWiseProgressBox', () => {
 
     render(<TermWiseProgressBox data={data} />);
 
-    expect(screen.getByText('🎉 Goals Acheived')).toBeInTheDocument();
+    expect(screen.getByText('Retirement')).toBeInTheDocument();
   });
 
   it('should render multiple term types', () => {
@@ -124,7 +124,7 @@ describe('TermWiseProgressBox', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('should render progress bar for incomplete progress', () => {
+  it('should show goal chip for a term section', () => {
     const data: TermTypeWiseProgressData[] = [
       {
         termType: TermType.SHORT_TERM,
@@ -138,9 +138,7 @@ describe('TermWiseProgressBox', () => {
 
     render(<TermWiseProgressBox data={data} />);
 
-    // Progress bar should be rendered (check by looking for progressbar role)
-    const progressBar = screen.getByRole('progressbar');
-    expect(progressBar).toBeInTheDocument();
+    expect(screen.getByText('Goal 1')).toBeInTheDocument();
   });
 
   it('should handle zero progress', () => {
@@ -174,8 +172,8 @@ describe('TermWiseProgressBox', () => {
 
     render(<TermWiseProgressBox data={data} />);
 
-    // The formatNumber function should format this as "1,000,000"
-    expect(screen.getByText('1,000,000')).toBeInTheDocument();
+    // The formatNumber function should format this as "₹1,000,000"
+    expect(screen.getByText('₹1,000,000')).toBeInTheDocument();
   });
 
   it('should render with single term type data', () => {
