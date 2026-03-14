@@ -7,6 +7,7 @@ import {
   InputAdornment,
   useMediaQuery,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { CalendarIcon } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import DatePicker from '../../components/DatePicker';
@@ -292,8 +293,15 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
         open={showDrawer}
         onClose={() => setShowDrawerCallback(false)}
         anchor="right"
+        PaperProps={{ sx: { width: { xs: '85vw', sm: 360 }, maxWidth: 400 } }}
       >
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, pt: 2, pb: 1 }}>
+          <Typography variant="subtitle1" fontWeight="bold">Goals</Typography>
+          <IconButton size="small" onClick={() => setShowDrawerCallback(false)}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Box>
+        <Box sx={{ px: 2, pb: 2, overflowY: 'auto' }}>
           <GoalBox
             financialGoals={plannerData.financialGoals}
             investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}

@@ -170,7 +170,7 @@ const FinancialGoalForm = ({
             overflow: 'hidden',
             transition: 'all 0.3s ease',
             animation: `${fadeInAnimation} 0.5s ease-out`,
-            width: '500px',
+            width: { xs: 'calc(100vw - 32px)', sm: '500px' },
           }}
         >
           <CardContent

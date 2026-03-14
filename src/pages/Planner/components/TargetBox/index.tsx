@@ -55,7 +55,7 @@ const TargetBox = ({
             : 'No goals added yet'}
         </Typography>
 
-        <Box sx={{ mt: 'auto', pt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+        <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
           <Button
             className="add-goals-button"
             variant="contained"
