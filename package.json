@@ -53,7 +53,8 @@
     ]
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "*"
+    "@rollup/rollup-linux-x64-gnu": "*",
+    "@rolldown/binding-linux-x64-gnu": "*"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
