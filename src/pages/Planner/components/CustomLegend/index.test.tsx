@@ -5,15 +5,18 @@ import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculat
 import { useMediaQuery } from '@mui/material';
 
 // Mock formatNumber
-jest.mock('../../../../types/util', () => ({
+vi.mock('../../../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
 }));
 
 // Mock useMediaQuery
-jest.mock('@mui/material', () => ({
-  ...jest.requireActual('@mui/material'),
-  useMediaQuery: jest.fn(),
-}));
+vi.mock('@mui/material', async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    useMediaQuery: vi.fn(),
+  };
+});
 
 describe('CustomLegend', () => {
   const mockSuggestions: GoalWiseInvestmentSuggestions[] = [

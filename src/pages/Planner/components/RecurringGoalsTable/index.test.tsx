@@ -6,10 +6,10 @@ import { GoalType } from '../../../../types/enums';
 import * as actions from '../../../../store/plannerDataActions';
 
 // Mock actions
-jest.mock('../../../../store/plannerDataActions');
+vi.mock('../../../../store/plannerDataActions');
 
 // Mock formatNumber
-jest.mock('../../../../types/util', () => ({
+vi.mock('../../../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
 }));
 

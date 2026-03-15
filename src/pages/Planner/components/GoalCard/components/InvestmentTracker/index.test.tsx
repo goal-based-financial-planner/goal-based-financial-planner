@@ -4,7 +4,7 @@ import InvestmentTracker from './index';
 import { SIPEntry } from '../../../../../../types/investmentLog';
 import { InvestmentSuggestion } from '../../../../../../types/planner';
 
-jest.mock('@mui/x-charts/LineChart', () => ({
+vi.mock('@mui/x-charts/LineChart', () => ({
   LineChart: () => <div data-testid="line-chart">Line Chart</div>,
 }));
 

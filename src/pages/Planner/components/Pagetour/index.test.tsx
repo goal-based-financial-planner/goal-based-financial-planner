@@ -3,7 +3,7 @@ import PageTour from './index';
 import * as storage from '../../../../util/storage';
 
 // Mock Joyride component
-jest.mock('react-joyride', () => ({
+vi.mock('react-joyride', () => ({
   __esModule: true,
   default: ({ steps, callback, run }: any) => (
     <div data-testid="joyride-mock">
@@ -21,7 +21,7 @@ jest.mock('react-joyride', () => ({
 }));
 
 // Mock storage utilities
-jest.mock('../../../../util/storage');
+vi.mock('../../../../util/storage');
 
 describe('PageTour', () => {
   beforeEach(() => {

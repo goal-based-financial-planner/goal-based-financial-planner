@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`RecurringGoalsTable should match snapshot 1`] = `
+exports[`RecurringGoalsTable > should match snapshot 1`] = `
 <div>
   <div
     class="MuiBox-root css-i3pbo"
@@ -68,7 +68,7 @@ exports[`RecurringGoalsTable should match snapshot 1`] = `
               class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium css-14y13q2-MuiTableCell-root"
             >
               <button
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall css-1cmn7xy-MuiButtonBase-root-MuiIconButton-root"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall css-195ve3w-MuiButtonBase-root-MuiIconButton-root"
                 tabindex="0"
                 type="button"
               >
@@ -107,7 +107,7 @@ exports[`RecurringGoalsTable should match snapshot 1`] = `
               class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium css-14y13q2-MuiTableCell-root"
             >
               <button
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall css-1cmn7xy-MuiButtonBase-root-MuiIconButton-root"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall css-195ve3w-MuiButtonBase-root-MuiIconButton-root"
                 tabindex="0"
                 type="button"
               >

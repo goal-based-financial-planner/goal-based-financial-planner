@@ -5,35 +5,38 @@ import * as storage from '../../util/storage';
 import * as reducer from '../../store/plannerDataReducer';
 
 // Mock child components
-jest.mock('../LandingPage', () => {
-  return function MockLandingPage() {
+vi.mock('../LandingPage', () => ({
+  default: function MockLandingPage() {
     return <div data-testid="landing-page">Landing Page</div>;
-  };
-});
+  },
+}));
 
-jest.mock('../Planner', () => {
-  return function MockPlanner() {
+vi.mock('../Planner', () => ({
+  default: function MockPlanner() {
     return <div data-testid="planner-page">Planner Page</div>;
-  };
-});
+  },
+}));
 
-jest.mock('./components/DisclaimerDialog', () => {
-  return function MockDisclaimerDialog({ showDialog, handleClose }: any) {
+vi.mock('./components/DisclaimerDialog', () => ({
+  default: function MockDisclaimerDialog({ showDialog, handleClose }: any) {
     return showDialog ? (
       <div data-testid="disclaimer-dialog">
         <button onClick={handleClose}>Close Disclaimer</button>
       </div>
     ) : null;
-  };
-});
+  },
+}));
 
 // Mock storage utilities
-jest.mock('../../util/storage');
-jest.mock('../../store/plannerDataReducer', () => ({
-  ...jest.requireActual('../../store/plannerDataReducer'),
-  getInitialData: jest.fn(),
-  persistPlannerData: jest.fn(),
-}));
+vi.mock('../../util/storage');
+vi.mock('../../store/plannerDataReducer', async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    getInitialData: vi.fn(),
+    persistPlannerData: vi.fn(),
+  };
+});
 
 describe('Home', () => {
   beforeEach(() => {

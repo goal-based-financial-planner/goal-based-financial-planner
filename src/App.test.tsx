@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 // Mock child components to isolate App
-jest.mock('./pages/Home', () => {
-  return function MockHome() {
+vi.mock('./pages/Home', () => ({
+  default: function MockHome() {
     return <div data-testid="home-page">Home Page</div>;
-  };
-});
+  },
+}));
 
 describe('App', () => {
   it('should render without crashing', () => {

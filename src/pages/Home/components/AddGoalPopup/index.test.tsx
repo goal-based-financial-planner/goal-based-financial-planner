@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import AddGoalPopup from './index';
 
 // Mock the FinancialGoalForm component
-jest.mock('../FinancialGoalForm', () => {
-  return function MockFinancialGoalForm() {
+vi.mock('../FinancialGoalForm', () => ({
+  default: function MockFinancialGoalForm() {
     return <div data-testid="financial-goal-form">Financial Goal Form</div>;
-  };
-});
+  },
+}));
 
 describe('AddGoalPopup', () => {
   const mockDispatch = jest.fn();

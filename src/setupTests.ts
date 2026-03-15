@@ -2,7 +2,12 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
+import { vi } from 'vitest';
+
+// Alias jest to vi for backward compatibility with existing tests
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(globalThis as any).jest = vi;
 
 // Reset/initialize deterministic globals for tests
 

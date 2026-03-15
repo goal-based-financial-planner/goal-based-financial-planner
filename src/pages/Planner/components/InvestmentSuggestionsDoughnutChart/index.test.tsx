@@ -5,7 +5,7 @@ import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculat
 import { useMediaQuery } from '@mui/material';
 
 // Mock MUI PieChart
-jest.mock('@mui/x-charts', () => ({
+vi.mock('@mui/x-charts', () => ({
   PieChart: ({ series, colors }: any) => (
     <div data-testid="doughnut-chart">
       <div data-testid="chart-colors">{JSON.stringify(colors)}</div>
@@ -15,17 +15,20 @@ jest.mock('@mui/x-charts', () => ({
 }));
 
 // Mock useMediaQuery
-jest.mock('@mui/material', () => ({
-  ...jest.requireActual('@mui/material'),
-  useMediaQuery: jest.fn(),
-}));
-
-// Mock LiveCounter
-jest.mock('../../../../components/LiveNumberCounter', () => {
-  return function MockLiveCounter({ value }: any) {
-    return <div data-testid="live-counter">{value}</div>;
+vi.mock('@mui/material', async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    useMediaQuery: vi.fn(),
   };
 });
+
+// Mock LiveCounter
+vi.mock('../../../../components/LiveNumberCounter', () => ({
+  default: function MockLiveCounter({ value }: any) {
+    return <div data-testid="live-counter">{value}</div>;
+  },
+}));
 
 describe('InvestmentSuggestionsDoughnutChart', () => {
   const mockSuggestions: GoalWiseInvestmentSuggestions[] = [

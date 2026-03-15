@@ -3,7 +3,7 @@ import { render, waitFor, act, screen } from '@testing-library/react';
 import LiveCounter from './index';
 
 // Mock the formatNumber function to avoid locale-dependent snapshots
-jest.mock('../../types/util', () => ({
+vi.mock('../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
 }));
 

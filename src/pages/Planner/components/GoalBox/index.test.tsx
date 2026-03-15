@@ -5,8 +5,8 @@ import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { GoalType } from '../../../../types/enums';
 
 // Mock child components to keep tests focused on GoalBox tab behavior
-jest.mock('./goalList', () => {
-  return function MockGoalList({ goals }: { goals: FinancialGoal[] }) {
+vi.mock('./goalList', () => ({
+  default: function MockGoalList({ goals }: { goals: FinancialGoal[] }) {
     return (
       <div data-testid="goal-list">
         {goals.map((g) => (
@@ -16,8 +16,8 @@ jest.mock('./goalList', () => {
         ))}
       </div>
     );
-  };
-});
+  },
+}));
 
 describe('GoalBox', () => {
   const mockDispatch = jest.fn();

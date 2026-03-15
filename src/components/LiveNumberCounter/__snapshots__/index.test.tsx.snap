@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LiveCounter should match snapshot with default props 1`] = `
+exports[`LiveCounter > should match snapshot with default props 1`] = `
 <div>
   <p
     class="MuiTypography-root MuiTypography-body1 css-1oqlmwt-MuiTypography-root"
@@ -10,7 +10,7 @@ exports[`LiveCounter should match snapshot with default props 1`] = `
 </div>
 `;
 
-exports[`LiveCounter should match snapshot with small size 1`] = `
+exports[`LiveCounter > should match snapshot with small size 1`] = `
 <div>
   <p
     class="MuiTypography-root MuiTypography-body1 css-12k4ved-MuiTypography-root"

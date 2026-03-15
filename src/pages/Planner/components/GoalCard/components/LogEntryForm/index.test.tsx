@@ -5,11 +5,14 @@ import SIPForm from './index';
 import { SIPEntry } from '../../../../../../types/investmentLog';
 import { addInvestmentLogEntry, editInvestmentLogEntry } from '../../../../../../store/plannerDataActions';
 
-jest.mock('../../../../../../store/plannerDataActions', () => ({
-  ...jest.requireActual('../../../../../../store/plannerDataActions'),
-  addInvestmentLogEntry: jest.fn(),
-  editInvestmentLogEntry: jest.fn(),
-}));
+vi.mock('../../../../../../store/plannerDataActions', async (importActual) => {
+  const actual = await importActual();
+  return {
+    ...actual,
+    addInvestmentLogEntry: vi.fn(),
+    editInvestmentLogEntry: vi.fn(),
+  };
+});
 
 const mockDispatch = jest.fn();
 const investmentTypes = ['Liquid Funds', 'Index Funds', 'Gold'];

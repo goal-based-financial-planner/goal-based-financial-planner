@@ -5,21 +5,21 @@ import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
 import { TermType } from '../../../../types/enums';
 
 // Mock child components
-jest.mock('../../../../components/LiveNumberCounter', () => {
-  return function MockLiveCounter({ value }: any) {
+vi.mock('../../../../components/LiveNumberCounter', () => ({
+  default: function MockLiveCounter({ value }: any) {
     return <div data-testid="live-counter">{value}</div>;
-  };
-});
+  },
+}));
 
-jest.mock('../../../Home/components/AddGoalPopup', () => {
-  return function MockAddGoalPopup({ isOpen, onClose }: any) {
+vi.mock('../../../Home/components/AddGoalPopup', () => ({
+  default: function MockAddGoalPopup({ isOpen, onClose }: any) {
     return isOpen ? (
       <div data-testid="add-goal-popup">
         <button onClick={onClose}>Close</button>
       </div>
     ) : null;
-  };
-});
+  },
+}));
 
 
 describe('TargetBox', () => {
