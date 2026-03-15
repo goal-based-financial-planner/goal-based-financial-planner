@@ -98,7 +98,7 @@
 **Purpose**: Final validation, deployment verification, and documentation completeness
 
 - [ ] T030 [P] Verify `npm run deploy` works end-to-end locally (produces `dist/`, pushes to gh-pages); update `deploy` script output dir reference in any documentation that mentions `build/`
-- [ ] T031 [P] Confirm `.eslintrc` / ESLint config still resolves correctly under Vite — run `npm run lint` and fix any path resolution issues caused by the `moduleResolution: bundler` change
+- [X] T031 [P] Confirm `.eslintrc` / ESLint config still resolves correctly under Vite — run `npm run lint` and fix any path resolution issues caused by the `moduleResolution: bundler` change (0 errors, 23 pre-existing warnings; fixed debugger, unescaped apostrophe, empty catch block)
 - [X] T032 Run full `npm run test:cov` and confirm all coverage thresholds are met (branches ≥ 55%, functions/lines/statements ≥ 63%); address any coverage regressions (statements 68.74%, branches 92.68%, functions 83.46%, lines 68.74% — all pass)
 - [ ] T033 [P] Update `specs/006-upgrade-dependencies/checklists/requirements.md` — mark all success criteria (SC-001 through SC-006) as verified with evidence
 
