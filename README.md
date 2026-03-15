@@ -67,7 +67,7 @@ Create an optimized production build:
 npm run build
 ```
 
-The build output will be in the `build/` directory.
+The build output will be in the `dist/` directory.
 
 ## Running Tests
 
@@ -87,7 +87,7 @@ This command:
 
 - Runs all tests once (non-interactive)
 - Generates a coverage report
-- **Fails if coverage falls below thresholds** (70% lines, 60% branches, 70% functions)
+- **Fails if coverage falls below thresholds** (63% lines, 55% branches, 63% functions)
 - Outputs summary to terminal and detailed report to `coverage/` directory
 
 ### Interpreting Results
