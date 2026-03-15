@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`investmentAllocations should match expected investment options 1`] = `
-Array [
+exports[`investmentAllocations > should match expected investment options 1`] = `
+[
   "Large Cap Equity Mutual Funds",
   "Mid Cap Equity Mutual Funds",
   "Small Cap Equity Mutual Funds",

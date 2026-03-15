@@ -61,7 +61,6 @@ const InvestmentAllocations = ({
   };
 
   const onSubmitForm = (data: InvestmentAllocationsType) => {
-    debugger;
     if (areInvestmentAllocationsValid(data, termType)) {
       updateInvestmentAllocation(dispatch, data);
       onSubmit();
@@ -97,7 +96,7 @@ const InvestmentAllocations = ({
           </Typography>
 
           <Typography sx={{ mt: 1, mb: 2 }}>
-            We have recommended a few investment options based on your goals'
+            We have recommended a few investment options based on your goals&apos;
             term. You can modify the options and percentages below. Ensure your
             total investment percentage adds up to 100%.
           </Typography>

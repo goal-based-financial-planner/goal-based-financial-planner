@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Joyride, { CallBackProps, STATUS } from 'react-joyride';
+import Joyride, { CallBackProps, STATUS } from '@adi-prasetyo/react-joyride';
 import {
   setTourTaken,
   isTourTaken as isTourAlreadyTaken,

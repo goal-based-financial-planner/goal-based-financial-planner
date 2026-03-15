@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LandingPage should match snapshot of main content structure 1`] = `
+exports[`LandingPage > should match snapshot of main content structure 1`] = `
 <div>
   <div
     class="MuiBox-root css-xornqq"
@@ -48,7 +48,7 @@ exports[`LandingPage should match snapshot of main content structure 1`] = `
         Start by adding your first Goal
       </h4>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-c2k7w4-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1x9s8lg-MuiButtonBase-root-MuiButton-root"
         tabindex="0"
         type="button"
       >

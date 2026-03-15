@@ -3,18 +3,18 @@ import { render, screen } from '@testing-library/react';
 import LandingPage from './index';
 
 // Mock the AddGoalPopup component to avoid testing its internals
-jest.mock('../Home/components/AddGoalPopup', () => {
-  return function MockAddGoalPopup() {
+vi.mock('../Home/components/AddGoalPopup', () => ({
+  default: function MockAddGoalPopup() {
     return <div data-testid="add-goal-popup">Add Goal Popup</div>;
-  };
-});
+  },
+}));
 
 // Mock image imports to avoid path issues in tests
-jest.mock('../../assets/image1.png', () => 'image1.png');
-jest.mock('../../assets/image2.png', () => 'image2.png');
-jest.mock('../../assets/image3.png', () => 'image3.png');
-jest.mock('../../assets/image4.png', () => 'image4.png');
-jest.mock('../../assets/icon.png', () => 'icon.png');
+vi.mock('../../assets/image1.png', () => ({ default: 'image1.png' }));
+vi.mock('../../assets/image2.png', () => ({ default: 'image2.png' }));
+vi.mock('../../assets/image3.png', () => ({ default: 'image3.png' }));
+vi.mock('../../assets/image4.png', () => ({ default: 'image4.png' }));
+vi.mock('../../assets/icon.png', () => ({ default: 'icon.png' }));
 
 describe('LandingPage', () => {
   const mockDispatch = jest.fn();

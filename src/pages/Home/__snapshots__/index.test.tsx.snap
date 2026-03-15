@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`Home should match snapshot with no goals 1`] = `
+exports[`Home > should match snapshot with no goals 1`] = `
 <div>
   <div
     data-testid="landing-page"

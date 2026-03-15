@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`CongratulationsPage should match snapshot of congratulations content 1`] = `
+exports[`CongratulationsPage > should match snapshot of congratulations content 1`] = `
 <div>
   <div
     class="MuiBox-root css-0"

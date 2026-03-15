@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`StyledBox should match snapshot 1`] = `
+exports[`StyledBox > should match snapshot 1`] = `
 <div>
   <div
     class="MuiBox-root css-dgp3o5"

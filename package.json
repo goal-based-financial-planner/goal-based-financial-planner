@@ -4,119 +4,41 @@
   "private": false,
   "homepage": "https://goal-based-financial-planner.github.io/goal-based-financial-planner",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^6.1.7",
     "@mui/material": "^6.1.7",
     "@mui/x-charts": "^7.23.6",
     "@mui/x-date-pickers": "^7.23.3",
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.9.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@adi-prasetyo/react-joyride": "^2.9.3-adp.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "dayjs": "^1.11.13",
-    "react": "^18.3.1",
+    "react": "^19.2.4",
     "react-confetti": "6.4.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.2.4",
     "react-hook-form": "^7.53.2",
-    "react-joyride": "^2.9.3",
     "react-progressbar-semicircle": "^1.2.1",
-    "react-scripts": "5.0.1",
     "react-use": "17.6.0",
     "web-vitals": "^4.2.4"
   },
   "overrides": {
     "react-progressbar-semicircle": {
-      "react": "^18.0.0",
-      "react-dom": "^18.3.1"
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
     }
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:ci": "react-scripts test --watchAll=false --passWithNoTests",
-    "test:cov": "react-scripts test --coverage --watchAll=false",
-    "eject": "react-scripts eject",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest",
+    "test:ci": "vitest run --passWithNoTests",
+    "test:cov": "vitest run --coverage",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "plugins": [
-      "boundaries"
-    ],
-    "settings": {
-      "boundaries/elements": [
-        {
-          "type": "domain",
-          "pattern": "domain/*"
-        },
-        {
-          "type": "components",
-          "pattern": "components/*"
-        },
-        {
-          "type": "pages",
-          "pattern": "pages/*"
-        },
-        {
-          "type": "util",
-          "pattern": "util/*"
-        },
-        {
-          "type": "store",
-          "pattern": "store/*"
-        },
-        {
-          "type": "types",
-          "pattern": "types/*"
-        }
-      ],
-      "boundaries/ignore": [
-        "**/*.test.ts",
-        "**/*.test.tsx",
-        "**/setupTests.ts",
-        "**/testUtils/*"
-      ]
-    },
-    "rules": {
-      "boundaries/element-types": [
-        "error",
-        {
-          "default": "disallow",
-          "rules": [
-            {
-              "from": "domain",
-              "allow": ["domain", "types"]
-            },
-            {
-              "from": "components",
-              "allow": ["components", "domain", "types", "util", "store"]
-            },
-            {
-              "from": "pages",
-              "allow": ["pages", "components", "domain", "types", "util", "store"]
-            },
-            {
-              "from": "util",
-              "allow": ["util", "types"]
-            },
-            {
-              "from": "store",
-              "allow": ["store", "domain", "types"]
-            },
-            {
-              "from": "types",
-              "allow": ["types"]
-            }
-          ]
-        }
-      ]
-    }
   },
   "browserslist": {
     "production": [
@@ -131,40 +53,22 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "eslint": "^8.57.0",
     "eslint-plugin-boundaries": "^5.3.1",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "gh-pages": "^6.2.0",
-    "prettier": "3.3.3"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/index.tsx",
-      "!src/react-app-env.d.ts",
-      "!src/setupTests.ts",
-      "!src/reportWebVitals.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "\\.d\\.ts$",
-      "setupTests\\.ts$"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 55,
-        "functions": 63,
-        "lines": 63,
-        "statements": 63
-      }
-    },
-    "coverageReporters": [
-      "text",
-      "text-summary",
-      "lcov",
-      "json-summary"
-    ]
+    "jsdom": "^26.0.0",
+    "prettier": "3.3.3",
+    "vite": "^8.0.0",
+    "vitest": "^3.0.0"
   }
 }

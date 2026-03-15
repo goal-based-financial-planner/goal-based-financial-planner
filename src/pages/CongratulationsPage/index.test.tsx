@@ -3,17 +3,17 @@ import { render, screen } from '@testing-library/react';
 import CongratulationsPage from './index';
 
 // Mock react-confetti to avoid animation in tests
-jest.mock('react-confetti', () => {
-  return function MockConfetti() {
+vi.mock('react-confetti', () => ({
+  default: function MockConfetti() {
     return <div data-testid="confetti">Confetti</div>;
-  };
-});
+  },
+}));
 
 // Mock react-use/lib/useWindowSize hook
-jest.mock('react-use/lib/useWindowSize', () => () => ({ width: 1920, height: 1080 }));
+vi.mock('react-use/lib/useWindowSize', () => ({ default: () => ({ width: 1920, height: 1080 }) }));
 
 // Mock formatNumber for deterministic snapshots
-jest.mock('../../types/util', () => ({
+vi.mock('../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
 }));
 

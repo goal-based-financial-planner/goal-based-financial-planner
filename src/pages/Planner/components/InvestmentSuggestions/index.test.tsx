@@ -5,41 +5,43 @@ import { TermType } from '../../../../types/enums';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 
 // Mock child components
-jest.mock('../GoalCard/components/InvestmentTracker', () => {
-  return function MockInvestmentTracker() {
+vi.mock('../GoalCard/components/InvestmentTracker', () => ({
+  default: function MockInvestmentTracker() {
     return <div data-testid="investment-tracker">Investment Tracker</div>;
-  };
-});
+  },
+}));
 
-jest.mock('../InvestmentSuggestionsDoughnutChart', () => {
-  return function MockDoughnutChart() {
+vi.mock('../InvestmentSuggestionsDoughnutChart', () => ({
+  default: function MockDoughnutChart() {
     return <div data-testid="doughnut-chart">Doughnut Chart</div>;
+  },
+}));
+
+vi.mock('../InvestmentAllocations', async () => {
+  const React = await import('react');
+  return {
+    default: React.forwardRef(function MockInvestmentAllocations({ onSubmit, termType }: any, ref: any) {
+      return (
+        <div ref={ref} tabIndex={-1} data-testid="investment-allocations">
+          Investment Allocations for {termType}
+          <button onClick={onSubmit}>Submit</button>
+        </div>
+      );
+    }),
   };
 });
 
-jest.mock('../InvestmentAllocations', () => {
-  const React = require('react');
-  return React.forwardRef(function MockInvestmentAllocations({ onSubmit, termType }: any, ref: any) {
-    return (
-      <div ref={ref} tabIndex={-1} data-testid="investment-allocations">
-        Investment Allocations for {termType}
-        <button onClick={onSubmit}>Submit</button>
-      </div>
-    );
-  });
-});
-
-jest.mock('../InvestmentPieChart', () => {
-  return function MockPieChart() {
+vi.mock('../InvestmentPieChart', () => ({
+  default: function MockPieChart() {
     return <div data-testid="pie-chart">Pie Chart</div>;
-  };
-});
+  },
+}));
 
-jest.mock('../CustomLegend', () => {
-  return function MockCustomLegend() {
+vi.mock('../CustomLegend', () => ({
+  default: function MockCustomLegend() {
     return <div data-testid="custom-legend">Custom Legend</div>;
-  };
-});
+  },
+}));
 
 describe('InvestmentSuggestionsBox', () => {
   const mockDispatch = jest.fn();

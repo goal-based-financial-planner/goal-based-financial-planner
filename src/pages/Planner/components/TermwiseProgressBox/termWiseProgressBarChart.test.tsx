@@ -5,7 +5,7 @@ import TermWiseProgressBarChart, {
 import { TermType } from '../../../../types/enums';
 
 // Mock MUI BarChart
-jest.mock('@mui/x-charts/BarChart', () => ({
+vi.mock('@mui/x-charts/BarChart', () => ({
   BarChart: ({ xAxis, yAxis, series, height, barLabel }: any) => (
     <div data-testid="bar-chart">
       <div data-testid="chart-height">{height}</div>
