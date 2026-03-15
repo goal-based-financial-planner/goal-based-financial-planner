@@ -194,7 +194,7 @@ export function getInitialData() {
       const logs = parsedState.investmentLogs;
       const investmentLogs = Array.isArray(logs) ? logs : [];
       return new PlannerData(financialGoals, parsedState.investmentAllocations, investmentLogs);
-    } catch {}
+    } catch { /* ignore parse errors and return default PlannerData */ }
   }
   return new PlannerData();
 }

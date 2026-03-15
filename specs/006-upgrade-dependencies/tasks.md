@@ -76,18 +76,18 @@
 
 ### Implementation for PR 2
 
-- [ ] T018 [US2] Update `package.json` — upgrade `react` to `^19.2.4`; upgrade `react-dom` to `^19.2.4`; upgrade `@types/react` to `^19.0.0`; upgrade `@types/react-dom` to `^19.0.0`; remove `react-joyride`; add `@adi-prasetyo/react-joyride` (API-identical React 19 fork)
-- [ ] T019 [US2] Remove the `overrides` block from `package.json` (the `react-progressbar-semicircle` override pinned React 18 — verify this package supports React 19 natively; if not, document the issue and either replace or add a new React 19-compatible override)
-- [ ] T020 [US2] Run `npm install` to install the React 19 dependency tree; resolve any peer dependency warnings
-- [ ] T021 [US2] Run the React 19 codemod `npx codemod@latest react/19/migration-recipe` in the project root to automatically fix routine React 18 → 19 breaking changes in `src/`
-- [ ] T022 [P] [US2] Audit all `useRef()` calls in `src/` that lack an initial argument — add `null` (for DOM refs) or `undefined` (for mutable refs) as the required argument per React 19's stricter `useRef` signature
-- [ ] T023 [P] [US2] Update all imports of `react-joyride` across `src/` to import from `@adi-prasetyo/react-joyride` — API is identical, no prop or usage changes needed
-- [ ] T024 [US2] Verify `src/index.tsx` uses `ReactDOM.createRoot()` (expected from React 18 setup); if `ReactDOM.render()` is found, replace with `createRoot` pattern
-- [ ] T025 [US2] Run `npx tsc --noEmit` to surface all TypeScript errors introduced by React 19's stricter types (e.g., `ReactElement` props defaulting to `unknown`); fix all errors without introducing `any` — use explicit typing or type assertions with comments per constitution Principle IV
-- [ ] T026 [US2] Run `npm run test:ci` with React 19 and fix any test failures caused by React 19 API changes (e.g., event handling changes, act() wrapper changes in testing-library); preserve existing test intent and coverage level
-- [ ] T027 [US2] Run `npm run build` with React 19 and confirm production build completes without TypeScript or bundler errors
+- [X] T018 [US2] Update `package.json` — upgrade `react` to `^19.2.4`; upgrade `react-dom` to `^19.2.4`; upgrade `@types/react` to `^19.0.0`; upgrade `@types/react-dom` to `^19.0.0`; remove `react-joyride`; add `@adi-prasetyo/react-joyride` (API-identical React 19 fork)
+- [X] T019 [US2] Remove the `overrides` block from `package.json` (the `react-progressbar-semicircle` override pinned React 18 — verify this package supports React 19 natively; if not, document the issue and either replace or add a new React 19-compatible override)
+- [X] T020 [US2] Run `npm install` to install the React 19 dependency tree; resolve any peer dependency warnings
+- [X] T021 [US2] Run the React 19 codemod `npx codemod@latest react/19/migration-recipe` in the project root to automatically fix routine React 18 → 19 breaking changes in `src/` (no patterns found — source already compatible)
+- [X] T022 [P] [US2] Audit all `useRef()` calls in `src/` that lack an initial argument — add `null` (for DOM refs) or `undefined` (for mutable refs) as the required argument per React 19's stricter `useRef` signature (none found)
+- [X] T023 [P] [US2] Update all imports of `react-joyride` across `src/` to import from `@adi-prasetyo/react-joyride` — API is identical, no prop or usage changes needed
+- [X] T024 [US2] Verify `src/index.tsx` uses `ReactDOM.createRoot()` (expected from React 18 setup); if `ReactDOM.render()` is found, replace with `createRoot` pattern (already using createRoot)
+- [X] T025 [US2] Run `npx tsc --noEmit` to surface all TypeScript errors introduced by React 19's stricter types (e.g., `ReactElement` props defaulting to `unknown`); fix all errors without introducing `any` — use explicit typing or type assertions with comments per constitution Principle IV (zero errors)
+- [X] T026 [US2] Run `npm run test:ci` with React 19 and fix any test failures caused by React 19 API changes (e.g., event handling changes, act() wrapper changes in testing-library); preserve existing test intent and coverage level (37/37 files, 399/399 tests)
+- [X] T027 [US2] Run `npm run build` with React 19 and confirm production build completes without TypeScript or bundler errors
 - [ ] T028 [US2] Manual smoke test — open the app in a browser via `npm run dev`, navigate through: (1) Goals/Planner tab, (2) Investment tracking tab, (3) Dashboard, (4) Onboarding tour (react-joyride replacement), (5) Any confetti animations (react-confetti) — confirm no visual or functional regressions
-- [ ] T029 [US2] Run `npm audit` to confirm still zero high/critical vulnerabilities after React 19 dependency additions
+- [X] T029 [US2] Run `npm audit` to confirm still zero high/critical vulnerabilities after React 19 dependency additions
 
 **Checkpoint**: PR 2 complete — US2 (React 19 upgrade) delivered. All three user stories are now satisfied. Ready for final polish.
 
@@ -99,7 +99,7 @@
 
 - [ ] T030 [P] Verify `npm run deploy` works end-to-end locally (produces `dist/`, pushes to gh-pages); update `deploy` script output dir reference in any documentation that mentions `build/`
 - [ ] T031 [P] Confirm `.eslintrc` / ESLint config still resolves correctly under Vite — run `npm run lint` and fix any path resolution issues caused by the `moduleResolution: bundler` change
-- [ ] T032 Run full `npm run test:cov` and confirm all coverage thresholds are met (branches ≥ 55%, functions/lines/statements ≥ 63%); address any coverage regressions
+- [X] T032 Run full `npm run test:cov` and confirm all coverage thresholds are met (branches ≥ 55%, functions/lines/statements ≥ 63%); address any coverage regressions (statements 68.74%, branches 92.68%, functions 83.46%, lines 68.74% — all pass)
 - [ ] T033 [P] Update `specs/006-upgrade-dependencies/checklists/requirements.md` — mark all success criteria (SC-001 through SC-006) as verified with evidence
 
 ---

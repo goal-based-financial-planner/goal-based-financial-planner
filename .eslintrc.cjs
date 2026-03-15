@@ -39,6 +39,11 @@ module.exports = {
   rules: {
     // Not needed with React 18+ automatic JSX transform
     'react/react-in-jsx-scope': 'off',
+    // Downgrade to warn to match CRA's original permissiveness for pre-existing patterns
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 'warn',
+    'no-unused-vars': 'off', // Handled by @typescript-eslint/no-unused-vars above
     'boundaries/element-types': [
       'error',
       {

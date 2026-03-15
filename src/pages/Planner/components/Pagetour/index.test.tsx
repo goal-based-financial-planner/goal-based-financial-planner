@@ -3,7 +3,7 @@ import PageTour from './index';
 import * as storage from '../../../../util/storage';
 
 // Mock Joyride component
-vi.mock('react-joyride', () => ({
+vi.mock('@adi-prasetyo/react-joyride', () => ({
   __esModule: true,
   default: ({ steps, callback, run }: any) => (
     <div data-testid="joyride-mock">
