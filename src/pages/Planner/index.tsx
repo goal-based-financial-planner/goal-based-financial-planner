@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Grid2 as Grid,
   Box,
@@ -31,9 +32,10 @@ import CongratulationsPage from '../CongratulationsPage';
 type PlannerProps = {
   plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
+  headerRight?: React.ReactNode;
 };
 
-const Planner = ({ plannerData, dispatch }: PlannerProps) => {
+const Planner = ({ plannerData, dispatch, headerRight }: PlannerProps) => {
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
   const [showDrawer, setShowDrawer] = useState(false);
 
@@ -173,7 +175,8 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Box>
+          {/* Left: title + date picker inline */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
             <Typography
               className="navbar-home"
               variant="h4"
@@ -182,43 +185,50 @@ const Planner = ({ plannerData, dispatch }: PlannerProps) => {
             >
               Goal Based Financial Planner
             </Typography>
-          </Box>
-          <StyledBox className="calendar-button">
-            <DatePicker
-              label={'"month" and "year"'}
-              views={['month', 'year']}
-              defaultValue={dayjs()}
-              onChange={handleChange}
-              ref={datePickerRef}
-              format={isSmallScreen ? 'MM/YYYY' : 'MMMM YYYY'}
-              slotProps={{
-                textField: {
-                  variant: 'standard',
-                  size: 'small',
-                  label: '',
-                  sx: {
-                    width: {
-                      xs: '120px',
-                      sm: '120px',
-                      md: 'auto',
+            <StyledBox className="calendar-button">
+              <DatePicker
+                label={'"month" and "year"'}
+                views={['month', 'year']}
+                defaultValue={dayjs()}
+                onChange={handleChange}
+                ref={datePickerRef}
+                format={isSmallScreen ? 'MM/YYYY' : 'MMMM YYYY'}
+                slotProps={{
+                  textField: {
+                    variant: 'standard',
+                    size: 'small',
+                    label: '',
+                    sx: {
+                      width: {
+                        xs: '120px',
+                        sm: '120px',
+                        md: 'auto',
+                      },
+                    },
+                    InputProps: {
+                      disableUnderline: true,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => datePickerRef.current?.click()}
+                          >
+                            <CalendarIcon fontSize="small" />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
                     },
                   },
-                  InputProps: {
-                    disableUnderline: true,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => datePickerRef.current?.click()}
-                        >
-                          <CalendarIcon fontSize="small" />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  },
-                },
-              }}
-            />
-          </StyledBox>
+                }}
+              />
+            </StyledBox>
+          </Box>
+
+          {/* Right: save controls / action buttons */}
+          {headerRight && (
+            <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+              {headerRight}
+            </Box>
+          )}
         </Grid>
         {areAllGoalsCompleted ? (
           <Box

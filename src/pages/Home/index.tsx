@@ -1,40 +1,115 @@
 import React, { useEffect, useReducer } from 'react';
 import {
   getInitialData,
-  persistPlannerData,
   plannerDataReducer,
 } from '../../store/plannerDataReducer';
+import { PlannerDataActionType } from '../../store/plannerDataActions';
+import { PlannerData } from '../../domain/PlannerData';
 import LandingPage from '../LandingPage';
 import Planner from '../Planner';
-import { Alert, Button, Link, Snackbar } from '@mui/material';
+import { Alert, Box, Button, Divider, Link, Snackbar } from '@mui/material';
 import {
   isDisclaimerAccepted,
   setDisclaimerAccepted,
-} from '../../util/storage';
+} from '../../util/legacyStorage';
 import DisclaimerDialog from './components/DisclaimerDialog';
+import { useStorageProvider } from '../../context/StorageProviderContext';
+import { useAutosave } from '../../hooks/useAutosave';
+import SaveStatusIndicator from '../../components/SaveStatusIndicator';
 
 const Home: React.FC = () => {
+  const {
+    provider,
+    initialData,
+    clearProvider,
+    driveFiles,
+    selectDriveFile,
+    deleteDriveFile,
+    initProvider,
+  } = useStorageProvider();
+
   const [plannerData, dispatch] = useReducer(
     plannerDataReducer,
     getInitialData(),
   );
 
+  // Sync loaded file data into the reducer; reset to empty when provider is cleared
+  useEffect(() => {
+    if (initialData) {
+      dispatch({ type: PlannerDataActionType.INITIALIZE, payload: initialData });
+    } else if (!provider) {
+      dispatch({ type: PlannerDataActionType.INITIALIZE, payload: new PlannerData() });
+    }
+  }, [initialData, provider]);
+
+  const { saveStatus, lastSavedAt, lastError, triggerManualSave } = useAutosave(
+    plannerData,
+    provider,
+  );
+
   const [showDisclaimer, setShowDisclaimer] = React.useState(
     !isDisclaimerAccepted(),
   );
-
   const [showDisclaimerDialog, setShowDisclaimerDialog] = React.useState(false);
 
+  // Ctrl/Cmd + S manual save
   useEffect(() => {
-    persistPlannerData(plannerData);
-  }, [plannerData]);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        triggerManualSave();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [triggerManualSave]);
+
+  const saveControls = (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <SaveStatusIndicator
+        saveStatus={saveStatus}
+        lastSavedAt={lastSavedAt}
+        providerId={provider?.id ?? 'local-file'}
+        onRetry={triggerManualSave}
+      />
+      <Button
+        size="small"
+        variant="text"
+        onClick={triggerManualSave}
+        disabled={saveStatus === 'saving'}
+        sx={{ minWidth: 0, fontWeight: 600 }}
+      >
+        Save
+      </Button>
+      <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+      <Button
+        size="small"
+        variant="text"
+        onClick={() => void clearProvider()}
+        sx={{ minWidth: 0, color: 'text.secondary' }}
+      >
+        Close Plan
+      </Button>
+    </Box>
+  );
 
   return (
     <>
       {plannerData.financialGoals?.length > 0 ? (
-        <Planner plannerData={plannerData} dispatch={dispatch} />
+        <Planner
+          plannerData={plannerData}
+          dispatch={dispatch}
+          headerRight={saveControls}
+        />
       ) : (
-        <LandingPage dispatch={dispatch} />
+        <LandingPage
+          dispatch={dispatch}
+          clearProvider={clearProvider}
+          initProvider={initProvider}
+          driveFiles={driveFiles}
+          selectDriveFile={selectDriveFile}
+          deleteDriveFile={deleteDriveFile}
+        />
       )}
 
       <Snackbar
@@ -51,11 +126,7 @@ const Home: React.FC = () => {
       >
         <Alert
           severity="success"
-          sx={{
-            display: 'flex',
-
-            alignItems: 'center',
-          }}
+          sx={{ display: 'flex', alignItems: 'center' }}
           action={
             <Button
               variant="contained"
@@ -79,7 +150,26 @@ const Home: React.FC = () => {
       <DisclaimerDialog
         showDialog={showDisclaimerDialog}
         handleClose={() => setShowDisclaimerDialog(false)}
-      ></DisclaimerDialog>
+      />
+
+      {/* Save error snackbar */}
+      {saveStatus === 'error' && lastError && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert
+            severity="error"
+            action={
+              <Button color="inherit" size="small" onClick={triggerManualSave}>
+                Retry
+              </Button>
+            }
+          >
+            {lastError.message}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

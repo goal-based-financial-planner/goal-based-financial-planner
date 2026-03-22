@@ -3,6 +3,34 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Content Security Policy
+         script-src includes 'unsafe-inline' only because Google Analytics
+         requires an inline initialisation snippet. All other script origins
+         are explicitly allowlisted.
+         style-src 'unsafe-inline' is required by MUI's CSS-in-JS (emotion).
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self'
+          https://www.googletagmanager.com
+          https://accounts.google.com;
+        style-src 'self' 'unsafe-inline'
+          https://fonts.googleapis.com;
+        font-src 'self'
+          https://fonts.gstatic.com;
+        img-src 'self' data:;
+        connect-src 'self'
+          https://www.googleapis.com
+          https://accounts.google.com
+          https://www.googletagmanager.com
+          https://www.google-analytics.com;
+        frame-src 'none';
+        object-src 'none';
+        base-uri 'self';
+      "
+    />
     <meta name="theme-color" content="#4CAF50" />
     <meta
       name="description"
@@ -89,19 +117,12 @@
     async
     src="https://www.googletagmanager.com/gtag/js?id=G-397TTRG9EZ"
   ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'G-397TTRG9EZ');
-  </script>
+  <script src="/gtag-init.js"></script>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
+    <script src="https://accounts.google.com/gsi/client" async></script>
   </body>
 </html>

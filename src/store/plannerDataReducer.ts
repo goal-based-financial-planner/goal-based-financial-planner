@@ -3,7 +3,7 @@ import { FinancialGoal } from '../domain/FinancialGoals';
 import { PlannerData } from '../domain/PlannerData';
 import { TermType } from '../types/enums';
 import { PlannerDataActionType } from './plannerDataActions';
-import { getPlannerData, setPlannerData } from '../util/storage';
+// getPlannerData / setPlannerData removed — storage is now handled by StorageProviderContext
 import {
   InvestmentAllocationsType,
   InvestmentChoiceType,
@@ -28,17 +28,16 @@ export type PlannerDataActionPayload =
   | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number } // UPDATE_FINANCIAL_GOAL (alternative form)
   | AddSIPEntryPayload
   | EditSIPEntryPayload
-  | DeleteSIPEntryPayload;
+  | DeleteSIPEntryPayload
+  | PlannerData; // INITIALIZE
 
 export type PlannerDataAction = {
   payload: PlannerDataActionPayload;
   type: PlannerDataActionType;
 };
 
-export const initialPlannerData: PlannerData = getInitialData();
-
 export function plannerDataReducer(
-  state = initialPlannerData,
+  state = new PlannerData(),
   action: PlannerDataAction,
 ): PlannerData {
   switch (action.type) {
@@ -170,35 +169,14 @@ export function plannerDataReducer(
       return new PlannerData(financialGoals, state.investmentAllocations, state.investmentLogs);
     }
 
+    case PlannerDataActionType.INITIALIZE:
+      return action.payload as PlannerData;
+
     default:
       return state;
   }
 }
 
-export function getInitialData() {
-  const localStorageData = getPlannerData();
-  if (localStorageData) {
-    try {
-      const parsedState = JSON.parse(localStorageData) as PlannerData;
-      const financialGoals = parsedState.financialGoals.map(
-        (e: FinancialGoal) =>
-          new FinancialGoal(
-            e.goalName,
-            e.goalType,
-            e.startDate,
-            e.targetDate,
-            e.targetAmount,
-          ),
-      );
-
-      const logs = parsedState.investmentLogs;
-      const investmentLogs = Array.isArray(logs) ? logs : [];
-      return new PlannerData(financialGoals, parsedState.investmentAllocations, investmentLogs);
-    } catch { /* ignore parse errors and return default PlannerData */ }
-  }
+export function getInitialData(): PlannerData {
   return new PlannerData();
-}
-
-export function persistPlannerData(plannerData: PlannerData) {
-  setPlannerData(plannerData);
 }

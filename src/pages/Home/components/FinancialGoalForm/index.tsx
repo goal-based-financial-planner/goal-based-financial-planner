@@ -50,10 +50,12 @@ const FinancialGoalForm = ({
   sx,
   dispatch,
   close,
+  title,
 }: {
   sx?: SxProps<Theme>;
   dispatch: Dispatch<PlannerDataAction>;
   close: () => void;
+  title?: string;
 }) => {
   const handleAddGoal = (financialGoal: FinancialGoal) => {
     addFinancialGoal(dispatch, financialGoal);
@@ -181,6 +183,16 @@ const FinancialGoalForm = ({
                 animation: `${fadeInAnimation} 0.5s ease-out`,
               }}
             >
+              {title && (
+                <Box sx={{ px: 2, pt: 1.5, pb: 1 }}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {title}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Enter your first financial goal to get started.
+                  </Typography>
+                </Box>
+              )}
               <Box
                 sx={{
                   height: '150px',

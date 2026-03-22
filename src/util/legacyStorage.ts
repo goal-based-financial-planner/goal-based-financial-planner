@@ -1,16 +1,5 @@
-import { PlannerData } from '../domain/PlannerData';
-
-const PLANNER_DATA_KEY = 'plannerData';
 const TOUR_TAKEN_KEY = 'isTourTaken';
 const DISCLAIMER_ACCEPTED_KEY = 'disclaimerAccepted';
-
-export function getPlannerData() {
-  return localStorage.getItem(PLANNER_DATA_KEY) as string;
-}
-
-export function setPlannerData(plannerData: PlannerData) {
-  localStorage.setItem(PLANNER_DATA_KEY, JSON.stringify(plannerData));
-}
 
 export function setTourTaken() {
   localStorage.setItem(TOUR_TAKEN_KEY, JSON.stringify(true));

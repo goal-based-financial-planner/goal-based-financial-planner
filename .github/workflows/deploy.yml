@@ -27,6 +27,7 @@ jobs:
         env:
           MY_EMAIL: kothaaakanksha.99@gmail.com
           MY_NAME: aakankshakotha
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
         run: |
           git config --global user.email $MY_EMAIL
           git config --global user.name $MY_NAME

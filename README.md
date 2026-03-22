@@ -14,7 +14,8 @@ The Goal Based Financial Planner is a pure frontend application designed to help
 - 🎯 Goal-based financial planning
 - 📊 Visual investment tracking with charts
 - 💰 Automatic allocation calculations
-- 🔒 Privacy-focused (all data stays in browser)
+- 💾 Flexible storage — save to a local file or sync with Google Drive
+- 🔄 Autosave with manual save and retry on failure
 - 📱 Responsive design for mobile and desktop
 
 ## 🚀 Live Demo
@@ -27,7 +28,7 @@ No installation required - start planning your financial goals immediately!
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) v18 or higher
+- [Node.js](https://nodejs.org/) v22 or higher
 - npm (comes with Node.js)
 
 ### Installation
@@ -54,10 +55,21 @@ No installation required - start planning your financial goals immediately!
 Start the development server:
 
 ```bash
-npm start
+npm run dev
 ```
 
-The application will open in your browser at [http://localhost:3000](http://localhost:3000).
+The application will open in your browser at [http://localhost:5173](http://localhost:5173).
+
+#### Google Drive (optional)
+
+To enable Google Drive storage locally, copy `.env.example` to `.env.local` and fill in your OAuth Client ID:
+
+```bash
+cp .env.example .env.local
+# then edit .env.local and set VITE_GOOGLE_CLIENT_ID
+```
+
+See [Google Drive Setup](#google-drive-setup) for full instructions.
 
 ### Building for Production
 
@@ -97,6 +109,20 @@ This command:
 - 📊 View detailed report: `coverage/lcov-report/index.html`
 
 For more details on testing, see [Testing Guide](docs/TESTING.md).
+
+## Google Drive Setup
+
+To enable Google Drive storage (optional):
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com) and enable the **Google Drive API** for your project.
+2. Configure the **OAuth consent screen** — add the `https://www.googleapis.com/auth/drive.appdata` scope.
+3. Under **Credentials**, open your OAuth 2.0 Client ID and add your domain(s) to **Authorized JavaScript origins**:
+   - `http://localhost:5173` (local dev)
+   - `https://goal-based-financial-planner.github.io` (production)
+4. Copy `.env.example` to `.env.local` and set `VITE_GOOGLE_CLIENT_ID` to your Client ID.
+5. For production deployments, add `VITE_GOOGLE_CLIENT_ID` as a repository secret in **GitHub → Settings → Secrets and variables → Actions**.
+
+> The Client Secret is **not** needed — this app uses Google's browser-only token flow.
 
 ## Contributing
 

@@ -2,11 +2,29 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-// Mock child components to isolate App
 vi.mock('./pages/Home', () => ({
   default: function MockHome() {
     return <div data-testid="home-page">Home Page</div>;
   },
+}));
+
+vi.mock('./context/StorageProviderContext', () => ({
+  useStorageProvider: vi.fn(() => ({
+    provider: null,
+    saveStatus: 'idle' as const,
+    lastSavedAt: null,
+    lastError: null,
+    initialData: null,
+    driveFiles: [],
+    selectDriveFile: vi.fn(),
+    initProvider: vi.fn(),
+    clearProvider: vi.fn(),
+    setSaveStatus: vi.fn(),
+    setLastSavedAt: vi.fn(),
+    setLastError: vi.fn(),
+  })),
+  StorageProviderContextProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
 }));
 
 describe('App', () => {
