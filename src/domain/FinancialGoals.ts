@@ -16,7 +16,7 @@ export class FinancialGoal {
     targetDate: string,
     targetAmount: number,
   ) {
-    this.id = Math.random().toString(36).substring(2, 9);
+    this.id = crypto.randomUUID();
     this.goalName = goalName;
     this.goalType = goalType || GoalType.ONE_TIME;
     this.startDate = startDate;

@@ -1,7 +1,6 @@
 import {
   plannerDataReducer,
   getInitialData,
-  persistPlannerData,
   PlannerDataAction,
 } from './plannerDataReducer';
 import { PlannerData } from '../domain/PlannerData';
@@ -18,93 +17,14 @@ describe('plannerDataReducer', () => {
   });
 
   describe('Initialization', () => {
-    beforeEach(() => {
-      localStorage.clear();
-    });
-
-    it('should return empty PlannerData when localStorage is empty', () => {
+    it('should return empty PlannerData', () => {
       const data = getInitialData();
-
       expect(data.financialGoals).toEqual([]);
       expect(data.investmentAllocations).toEqual({
         [TermType.SHORT_TERM]: [],
         [TermType.MEDIUM_TERM]: [],
         [TermType.LONG_TERM]: [],
       });
-    });
-
-    it('should parse valid persisted state', () => {
-      const validState = {
-        financialGoals: [
-          {
-            id: 'test123',
-            goalName: 'Test Goal',
-            goalType: GoalType.ONE_TIME,
-            startDate: '2024-01-01',
-            targetDate: '2030-01-01',
-            targetAmount: 500000,
-          },
-        ],
-        investmentAllocations: {
-          [TermType.SHORT_TERM]: [],
-          [TermType.MEDIUM_TERM]: [],
-          [TermType.LONG_TERM]: [
-            {
-              investmentName: 'Equity',
-              investmentPercentage: 100,
-              expectedReturnPercentage: 12,
-            },
-          ],
-        },
-      };
-
-      localStorage.setItem('plannerData', JSON.stringify(validState));
-      const data = getInitialData();
-
-      expect(data.financialGoals).toHaveLength(1);
-      expect(data.financialGoals[0]).toBeInstanceOf(FinancialGoal);
-      expect(data.financialGoals[0].goalName).toBe('Test Goal');
-      expect(data.investmentAllocations[TermType.LONG_TERM]).toHaveLength(1);
-    });
-
-    it('should handle malformed JSON gracefully', () => {
-      localStorage.setItem('plannerData', 'invalid-json{');
-      
-      const data = getInitialData();
-
-      expect(data.financialGoals).toEqual([]);
-      expect(data.investmentAllocations).toEqual({
-        [TermType.SHORT_TERM]: [],
-        [TermType.MEDIUM_TERM]: [],
-        [TermType.LONG_TERM]: [],
-      });
-    });
-
-    it('should reconstruct FinancialGoal instances correctly', () => {
-      const validState = {
-        financialGoals: [
-          {
-            id: 'test123',
-            goalName: 'Retirement',
-            goalType: GoalType.ONE_TIME,
-            startDate: '2024-01-01',
-            targetDate: '2044-01-01',
-            targetAmount: 5000000,
-          },
-        ],
-        investmentAllocations: {
-          [TermType.SHORT_TERM]: [],
-          [TermType.MEDIUM_TERM]: [],
-          [TermType.LONG_TERM]: [],
-        },
-      };
-
-      localStorage.setItem('plannerData', JSON.stringify(validState));
-      const data = getInitialData();
-
-      // Verify methods work (proving it's a real FinancialGoal instance)
-      expect(data.financialGoals[0].getTerm()).toBe(20);
-      expect(data.financialGoals[0].getTermType()).toBe(TermType.LONG_TERM);
     });
   });
 
@@ -567,51 +487,5 @@ describe('plannerDataReducer', () => {
     });
   });
 
-  describe('persistPlannerData', () => {
-    beforeEach(() => {
-      localStorage.clear();
-    });
-
-    it('should store planner data in localStorage', () => {
-      const plannerData = new PlannerData([], {
-        [TermType.SHORT_TERM]: [],
-        [TermType.MEDIUM_TERM]: [],
-        [TermType.LONG_TERM]: [],
-      });
-
-      persistPlannerData(plannerData);
-
-      const stored = localStorage.getItem('plannerData');
-      expect(stored).not.toBeNull();
-      
-      const parsed = JSON.parse(stored!);
-      expect(parsed.financialGoals).toEqual([]);
-    });
-
-    it('should update existing data', () => {
-      const data1 = new PlannerData([], {
-        [TermType.SHORT_TERM]: [],
-        [TermType.MEDIUM_TERM]: [],
-        [TermType.LONG_TERM]: [],
-      });
-      const goal = new FinancialGoal(
-        'New Goal',
-        GoalType.ONE_TIME,
-        '2024-01-01',
-        '2030-01-01',
-        500000
-      );
-      const data2 = new PlannerData([goal], {
-        [TermType.SHORT_TERM]: [],
-        [TermType.MEDIUM_TERM]: [],
-        [TermType.LONG_TERM]: [],
-      });
-
-      persistPlannerData(data1);
-      persistPlannerData(data2);
-
-      const stored = JSON.parse(localStorage.getItem('plannerData')!);
-      expect(stored.financialGoals).toHaveLength(1);
-    });
-  });
 });
+

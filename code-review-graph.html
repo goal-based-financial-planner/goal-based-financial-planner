@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Review Graph — Goal-Based Financial Planner</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(15,17,23,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #1e2535;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    #header h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    #header span {
+      font-size: 13px;
+      color: #475569;
+    }
+
+    #legend {
+      display: flex;
+      gap: 12px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    #controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ctrl-btn {
+      width: 32px;
+      height: 32px;
+      background: #1e2535;
+      border: 1px solid #2d3748;
+      border-radius: 6px;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .ctrl-btn:hover { background: #2d3748; color: #e2e8f0; }
+
+    #tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 200;
+      background: #1e2535;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      line-height: 1.6;
+      max-width: 320px;
+      display: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    #tooltip .tip-name { font-weight: 600; color: #e2e8f0; margin-bottom: 4px; font-size: 13px; }
+    #tooltip .tip-layer { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    #tooltip .tip-section { color: #64748b; font-size: 11px; margin-top: 4px; }
+    #tooltip .tip-list { color: #94a3b8; padding-left: 10px; }
+    #tooltip .tip-list li { list-style: disc; }
+
+    #info-panel {
+      position: fixed;
+      top: 55px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(30,37,53,0.95);
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 11px;
+      color: #64748b;
+      max-width: 200px;
+      line-height: 1.8;
+    }
+    #info-panel strong { color: #94a3b8; display: block; margin-bottom: 4px; }
+
+    svg { display: block; }
+
+    .node circle {
+      cursor: pointer;
+      transition: r 0.15s;
+    }
+
+    .node text {
+      font-size: 9px;
+      fill: #94a3b8;
+      pointer-events: none;
+      dominant-baseline: middle;
+    }
+
+    .node.highlighted circle { stroke-width: 2.5px; }
+    .node.dimmed circle { opacity: 0.15; }
+    .node.dimmed text { opacity: 0.1; }
+
+    .link {
+      fill: none;
+      stroke-opacity: 0.35;
+    }
+    .link.highlighted { stroke-opacity: 0.9; }
+    .link.dimmed { stroke-opacity: 0.03; }
+
+    .layer-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      fill: #2d3748;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <h1>Code Review Graph</h1>
+  <span>goal-based-financial-planner</span>
+  <div id="legend"></div>
+</div>
+
+<div id="info-panel">
+  <strong>Interactions</strong>
+  Click node — highlight deps<br>
+  Drag — reposition node<br>
+  Scroll — zoom<br>
+  Click canvas — reset
+</div>
+
+<div id="tooltip"></div>
+
+<div id="controls">
+  <button class="ctrl-btn" id="zoom-in" title="Zoom in">+</button>
+  <button class="ctrl-btn" id="zoom-out" title="Zoom out">−</button>
+  <button class="ctrl-btn" id="zoom-reset" title="Reset view">⌂</button>
+</div>
+
+<svg id="graph"></svg>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const LAYERS = {
+  types:      { color: "#6366f1", label: "types/",      order: 0 },
+  domain:     { color: "#10b981", label: "domain/",     order: 1 },
+  util:       { color: "#f59e0b", label: "util/",       order: 2 },
+  store:      { color: "#ef4444", label: "store/",      order: 3 },
+  components: { color: "#3b82f6", label: "components/", order: 4 },
+  pages:      { color: "#a855f7", label: "pages/",      order: 5 },
+  root:       { color: "#64748b", label: "root",        order: 6 },
+};
+
+const nodes = [
+  // root
+  { id: "index.tsx",         layer: "root",       short: "index" },
+  { id: "App.tsx",           layer: "root",       short: "App" },
+  { id: "theme.ts",          layer: "root",       short: "theme" },
+
+  // types
+  { id: "types/enums",       layer: "types",      short: "enums" },
+  { id: "types/planner",     layer: "types",      short: "planner" },
+  { id: "types/goals",       layer: "types",      short: "goals" },
+  { id: "types/investmentLog", layer: "types",    short: "investLog" },
+  { id: "types/charts",      layer: "types",      short: "charts" },
+  { id: "types/constants",   layer: "types",      short: "constants" },
+  { id: "types/util",        layer: "types",      short: "util" },
+
+  // domain
+  { id: "domain/constants",           layer: "domain", short: "constants" },
+  { id: "domain/InvestmentOptions",   layer: "domain", short: "InvOptions" },
+  { id: "domain/FinancialGoals",      layer: "domain", short: "FinGoals" },
+  { id: "domain/investmentCalculations", layer: "domain", short: "InvCalc" },
+  { id: "domain/investmentLog",       layer: "domain", short: "InvLog" },
+  { id: "domain/investmentAllocations", layer: "domain", short: "InvAlloc" },
+  { id: "domain/PlannerData",         layer: "domain", short: "PlannerData" },
+
+  // util
+  { id: "util/storage",      layer: "util",       short: "storage" },
+
+  // store
+  { id: "store/plannerDataActions",  layer: "store", short: "Actions" },
+  { id: "store/plannerDataReducer",  layer: "store", short: "Reducer" },
+
+  // components
+  { id: "components/StyledBox",         layer: "components", short: "StyledBox" },
+  { id: "components/DatePicker",        layer: "components", short: "DatePicker" },
+  { id: "components/LiveNumberCounter", layer: "components", short: "LiveCounter" },
+
+  // pages
+  { id: "pages/Home",                   layer: "pages", short: "Home" },
+  { id: "pages/LandingPage",            layer: "pages", short: "LandingPage" },
+  { id: "pages/Planner",                layer: "pages", short: "Planner" },
+  { id: "pages/CongratulationsPage",    layer: "pages", short: "CongratPage" },
+
+  // Home sub-components
+  { id: "pages/Home/AddGoalPopup",      layer: "pages", short: "AddGoalPopup" },
+  { id: "pages/Home/FinancialGoalForm", layer: "pages", short: "GoalForm" },
+  { id: "pages/Home/DisclaimerDialog",  layer: "pages", short: "Disclaimer" },
+
+  // Planner sub
+  { id: "pages/Planner/useInvestmentCalculator", layer: "pages", short: "useInvCalc" },
+  { id: "pages/Planner/TargetBox",              layer: "pages", short: "TargetBox" },
+  { id: "pages/Planner/TermwiseProgressBox",    layer: "pages", short: "TermProgress" },
+  { id: "pages/Planner/termWiseProgressBarChart", layer: "pages", short: "TermChart" },
+  { id: "pages/Planner/GoalBox",                layer: "pages", short: "GoalBox" },
+  { id: "pages/Planner/goalList",               layer: "pages", short: "goalList" },
+  { id: "pages/Planner/GoalCard",               layer: "pages", short: "GoalCard" },
+  { id: "pages/Planner/InvestmentTracker",      layer: "pages", short: "InvTracker" },
+  { id: "pages/Planner/LogEntryForm",           layer: "pages", short: "LogForm" },
+  { id: "pages/Planner/InvestmentLogHistory",   layer: "pages", short: "LogHistory" },
+  { id: "pages/Planner/InvestmentSuggestions",  layer: "pages", short: "InvSuggest" },
+  { id: "pages/Planner/InvestmentAllocations",  layer: "pages", short: "InvAllocs" },
+  { id: "pages/Planner/InvesmentAllocationPerTerm", layer: "pages", short: "AllocPerTerm" },
+  { id: "pages/Planner/InvestmentPieChart",     layer: "pages", short: "PieChart" },
+  { id: "pages/Planner/InvestmentSuggestionsDoughnutChart", layer: "pages", short: "Doughnut" },
+  { id: "pages/Planner/CustomLegend",           layer: "pages", short: "Legend" },
+  { id: "pages/Planner/Pagetour",               layer: "pages", short: "Pagetour" },
+  { id: "pages/Planner/RecurringGoalsTable",    layer: "pages", short: "RecurTable" },
+];
+
+const rawLinks = [
+  // root
+  ["index.tsx", "App.tsx"],
+  ["App.tsx", "pages/Home"],
+  ["App.tsx", "theme.ts"],
+
+  // types
+  ["types/planner", "types/enums"],
+
+  // domain
+  ["domain/constants", "types/enums"],
+  ["domain/constants", "domain/InvestmentOptions"],
+  ["domain/InvestmentOptions", "types/enums"],
+  ["domain/FinancialGoals", "types/enums"],
+  ["domain/FinancialGoals", "domain/constants"],
+  ["domain/investmentCalculations", "domain/InvestmentOptions"],
+  ["domain/investmentCalculations", "domain/FinancialGoals"],
+  ["domain/investmentLog", "types/investmentLog"],
+  ["domain/investmentLog", "types/planner"],
+  ["domain/PlannerData", "types/enums"],
+  ["domain/PlannerData", "domain/FinancialGoals"],
+  ["domain/PlannerData", "types/investmentLog"],
+
+  // util
+  ["util/storage", "domain/PlannerData"],
+
+  // store
+  ["store/plannerDataActions", "domain/FinancialGoals"],
+  ["store/plannerDataActions", "store/plannerDataReducer"],
+  ["store/plannerDataActions", "domain/InvestmentOptions"],
+  ["store/plannerDataActions", "types/investmentLog"],
+  ["store/plannerDataReducer", "domain/constants"],
+  ["store/plannerDataReducer", "domain/FinancialGoals"],
+  ["store/plannerDataReducer", "domain/PlannerData"],
+  ["store/plannerDataReducer", "types/enums"],
+  ["store/plannerDataReducer", "store/plannerDataActions"],
+  ["store/plannerDataReducer", "util/storage"],
+  ["store/plannerDataReducer", "domain/InvestmentOptions"],
+  ["store/plannerDataReducer", "types/investmentLog"],
+
+  // components
+  ["components/LiveNumberCounter", "types/util"],
+
+  // pages/Home
+  ["pages/Home", "store/plannerDataReducer"],
+  ["pages/Home", "pages/LandingPage"],
+  ["pages/Home", "pages/Planner"],
+  ["pages/Home", "util/storage"],
+  ["pages/Home", "pages/Home/DisclaimerDialog"],
+
+  ["pages/LandingPage", "components/StyledBox"],
+  ["pages/LandingPage", "store/plannerDataReducer"],
+  ["pages/LandingPage", "pages/Home/AddGoalPopup"],
+
+  ["pages/Home/AddGoalPopup", "pages/Home/FinancialGoalForm"],
+  ["pages/Home/AddGoalPopup", "store/plannerDataReducer"],
+
+  ["pages/Home/FinancialGoalForm", "store/plannerDataReducer"],
+  ["pages/Home/FinancialGoalForm", "domain/FinancialGoals"],
+  ["pages/Home/FinancialGoalForm", "store/plannerDataActions"],
+  ["pages/Home/FinancialGoalForm", "components/DatePicker"],
+  ["pages/Home/FinancialGoalForm", "types/constants"],
+  ["pages/Home/FinancialGoalForm", "types/enums"],
+
+  // pages/Planner
+  ["pages/Planner", "components/DatePicker"],
+  ["pages/Planner", "types/enums"],
+  ["pages/Planner", "pages/Planner/useInvestmentCalculator"],
+  ["pages/Planner", "domain/PlannerData"],
+  ["pages/Planner", "store/plannerDataReducer"],
+  ["pages/Planner", "pages/Planner/InvestmentSuggestions"],
+  ["pages/Planner", "pages/Planner/TermwiseProgressBox"],
+  ["pages/Planner", "pages/Planner/GoalBox"],
+  ["pages/Planner", "components/StyledBox"],
+  ["pages/Planner", "pages/Planner/Pagetour"],
+  ["pages/Planner", "pages/Planner/TargetBox"],
+  ["pages/Planner", "pages/CongratulationsPage"],
+
+  ["pages/CongratulationsPage", "components/StyledBox"],
+  ["pages/CongratulationsPage", "types/util"],
+  ["pages/CongratulationsPage", "types/goals"],
+
+  ["pages/Planner/useInvestmentCalculator", "domain/PlannerData"],
+  ["pages/Planner/useInvestmentCalculator", "domain/FinancialGoals"],
+  ["pages/Planner/useInvestmentCalculator", "domain/InvestmentOptions"],
+  ["pages/Planner/useInvestmentCalculator", "types/planner"],
+  ["pages/Planner/useInvestmentCalculator", "types/enums"],
+
+  ["pages/Planner/TargetBox", "components/LiveNumberCounter"],
+  ["pages/Planner/TargetBox", "components/StyledBox"],
+  ["pages/Planner/TargetBox", "types/planner"],
+  ["pages/Planner/TargetBox", "pages/Home/AddGoalPopup"],
+  ["pages/Planner/TargetBox", "store/plannerDataReducer"],
+
+  ["pages/Planner/TermwiseProgressBox", "components/StyledBox"],
+  ["pages/Planner/TermwiseProgressBox", "types/util"],
+  ["pages/Planner/TermwiseProgressBox", "types/planner"],
+  ["pages/Planner/termWiseProgressBarChart", "types/planner"],
+
+  ["pages/Planner/GoalBox", "domain/FinancialGoals"],
+  ["pages/Planner/GoalBox", "store/plannerDataReducer"],
+  ["pages/Planner/GoalBox", "pages/Planner/useInvestmentCalculator"],
+  ["pages/Planner/GoalBox", "components/StyledBox"],
+  ["pages/Planner/GoalBox", "pages/Planner/goalList"],
+  ["pages/Planner/GoalBox", "types/enums"],
+
+  ["pages/Planner/goalList", "pages/Planner/GoalCard"],
+  ["pages/Planner/goalList", "pages/Planner/useInvestmentCalculator"],
+  ["pages/Planner/goalList", "domain/FinancialGoals"],
+  ["pages/Planner/goalList", "store/plannerDataReducer"],
+
+  ["pages/Planner/GoalCard", "store/plannerDataActions"],
+  ["pages/Planner/GoalCard", "domain/FinancialGoals"],
+  ["pages/Planner/GoalCard", "types/enums"],
+  ["pages/Planner/GoalCard", "types/planner"],
+  ["pages/Planner/GoalCard", "types/util"],
+  ["pages/Planner/GoalCard", "store/plannerDataReducer"],
+
+  ["pages/Planner/InvestmentTracker", "store/plannerDataReducer"],
+  ["pages/Planner/InvestmentTracker", "store/plannerDataActions"],
+  ["pages/Planner/InvestmentTracker", "types/planner"],
+  ["pages/Planner/InvestmentTracker", "types/investmentLog"],
+  ["pages/Planner/InvestmentTracker", "types/util"],
+  ["pages/Planner/InvestmentTracker", "pages/Planner/LogEntryForm"],
+  ["pages/Planner/InvestmentTracker", "pages/Planner/InvestmentLogHistory"],
+
+  ["pages/Planner/LogEntryForm", "store/plannerDataReducer"],
+  ["pages/Planner/LogEntryForm", "types/investmentLog"],
+
+  ["pages/Planner/InvestmentLogHistory", "types/investmentLog"],
+  ["pages/Planner/InvestmentLogHistory", "types/util"],
+
+  ["pages/Planner/InvestmentSuggestions", "store/plannerDataReducer"],
+  ["pages/Planner/InvestmentSuggestions", "types/enums"],
+  ["pages/Planner/InvestmentSuggestions", "pages/Planner/useInvestmentCalculator"],
+  ["pages/Planner/InvestmentSuggestions", "pages/Planner/InvestmentSuggestionsDoughnutChart"],
+  ["pages/Planner/InvestmentSuggestions", "pages/Planner/InvestmentAllocations"],
+  ["pages/Planner/InvestmentSuggestions", "pages/Planner/InvestmentPieChart"],
+  ["pages/Planner/InvestmentSuggestions", "pages/Planner/CustomLegend"],
+  ["pages/Planner/InvestmentSuggestions", "components/StyledBox"],
+  ["pages/Planner/InvestmentSuggestions", "domain/InvestmentOptions"],
+  ["pages/Planner/InvestmentSuggestions", "types/investmentLog"],
+  ["pages/Planner/InvestmentSuggestions", "types/planner"],
+  ["pages/Planner/InvestmentSuggestions", "pages/Planner/InvestmentTracker"],
+
+  ["pages/Planner/InvestmentAllocations", "pages/Planner/InvesmentAllocationPerTerm"],
+  ["pages/Planner/InvestmentAllocations", "types/enums"],
+  ["pages/Planner/InvestmentAllocations", "store/plannerDataActions"],
+  ["pages/Planner/InvestmentAllocations", "store/plannerDataReducer"],
+  ["pages/Planner/InvestmentAllocations", "domain/InvestmentOptions"],
+
+  ["pages/Planner/InvesmentAllocationPerTerm", "domain/InvestmentOptions"],
+  ["pages/Planner/InvesmentAllocationPerTerm", "types/enums"],
+  ["pages/Planner/InvesmentAllocationPerTerm", "domain/investmentAllocations"],
+
+  ["pages/Planner/InvestmentPieChart", "domain/InvestmentOptions"],
+  ["pages/Planner/InvestmentPieChart", "types/charts"],
+
+  ["pages/Planner/InvestmentSuggestionsDoughnutChart", "pages/Planner/useInvestmentCalculator"],
+  ["pages/Planner/InvestmentSuggestionsDoughnutChart", "components/LiveNumberCounter"],
+
+  ["pages/Planner/CustomLegend", "pages/Planner/useInvestmentCalculator"],
+  ["pages/Planner/CustomLegend", "types/util"],
+  ["pages/Planner/CustomLegend", "types/charts"],
+
+  ["pages/Planner/RecurringGoalsTable", "domain/FinancialGoals"],
+  ["pages/Planner/RecurringGoalsTable", "store/plannerDataReducer"],
+  ["pages/Planner/RecurringGoalsTable", "store/plannerDataActions"],
+  ["pages/Planner/RecurringGoalsTable", "types/util"],
+];
+
+// ─── SETUP ───────────────────────────────────────────────────────────────────
+
+const W = window.innerWidth, H = window.innerHeight;
+const svg = d3.select("#graph").attr("width", W).attr("height", H);
+
+const g = svg.append("g");
+
+const zoom = d3.zoom()
+  .scaleExtent([0.15, 3])
+  .on("zoom", e => g.attr("transform", e.transform));
+
+svg.call(zoom);
+
+// ─── LEGEND ──────────────────────────────────────────────────────────────────
+
+const legendEl = document.getElementById("legend");
+Object.entries(LAYERS).forEach(([key, val]) => {
+  if (key === "root") return;
+  const div = document.createElement("div");
+  div.className = "legend-item";
+  div.innerHTML = `<div class="legend-dot" style="background:${val.color}"></div><span>${val.label}</span>`;
+  legendEl.appendChild(div);
+});
+
+// ─── GRAPH BUILD ─────────────────────────────────────────────────────────────
+
+const nodeMap = new Map(nodes.map(n => [n.id, n]));
+
+const links = rawLinks
+  .filter(([s, t]) => nodeMap.has(s) && nodeMap.has(t))
+  .map(([source, target]) => ({ source, target }));
+
+// Build adjacency for tooltip
+const outEdges = new Map(); // node -> [targets]
+const inEdges  = new Map(); // node -> [sources]
+nodes.forEach(n => { outEdges.set(n.id, []); inEdges.set(n.id, []); });
+links.forEach(l => {
+  outEdges.get(l.source).push(l.target);
+  inEdges.get(l.target).push(l.source);
+});
+
+// ─── FORCE SIMULATION ────────────────────────────────────────────────────────
+
+const simulation = d3.forceSimulation(nodes)
+  .force("link", d3.forceLink(links).id(d => d.id).distance(80).strength(0.6))
+  .force("charge", d3.forceManyBody().strength(-220))
+  .force("center", d3.forceCenter(W / 2, H / 2))
+  .force("collide", d3.forceCollide(28))
+  .force("layerY", d3.forceY(d => {
+    const order = LAYERS[d.layer].order;
+    return (H * 0.12) + order * (H * 0.13);
+  }).strength(0.35))
+  .alphaDecay(0.025);
+
+// ─── RENDER LINKS ─────────────────────────────────────────────────────────────
+
+const link = g.append("g").attr("class", "links")
+  .selectAll("line")
+  .data(links)
+  .join("line")
+  .attr("class", "link")
+  .attr("stroke", d => LAYERS[nodeMap.get(d.target.id || d.target)?.layer]?.color || "#94a3b8")
+  .attr("stroke-width", 1.2)
+  .attr("marker-end", null);
+
+// ─── RENDER NODES ─────────────────────────────────────────────────────────────
+
+const node = g.append("g").attr("class", "nodes")
+  .selectAll("g")
+  .data(nodes)
+  .join("g")
+  .attr("class", "node")
+  .call(d3.drag()
+    .on("start", (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+    .on("drag",  (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on("end",   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+  )
+  .on("click", onNodeClick)
+  .on("mouseover", onNodeHover)
+  .on("mouseout", onNodeOut);
+
+node.append("circle")
+  .attr("r", 12)
+  .attr("fill", d => LAYERS[d.layer].color + "33")
+  .attr("stroke", d => LAYERS[d.layer].color)
+  .attr("stroke-width", 1.5);
+
+node.append("text")
+  .text(d => d.short)
+  .attr("x", 15)
+  .attr("y", 0);
+
+// ─── TICK ─────────────────────────────────────────────────────────────────────
+
+simulation.on("tick", () => {
+  link
+    .attr("x1", d => d.source.x)
+    .attr("y1", d => d.source.y)
+    .attr("x2", d => d.target.x)
+    .attr("y2", d => d.target.y);
+
+  node.attr("transform", d => `translate(${d.x},${d.y})`);
+});
+
+// ─── INTERACTION ─────────────────────────────────────────────────────────────
+
+let selected = null;
+
+function onNodeClick(e, d) {
+  e.stopPropagation();
+  if (selected === d.id) {
+    clearHighlight();
+    selected = null;
+    return;
+  }
+  selected = d.id;
+  highlight(d.id);
+}
+
+function highlight(id) {
+  const connected = new Set([id]);
+  const connLinks = new Set();
+  links.forEach((l, i) => {
+    const s = l.source.id || l.source;
+    const t = l.target.id || l.target;
+    if (s === id || t === id) { connected.add(s); connected.add(t); connLinks.add(i); }
+  });
+
+  node.classed("highlighted", d => connected.has(d.id))
+      .classed("dimmed", d => !connected.has(d.id));
+
+  link.classed("highlighted", (_, i) => connLinks.has(i))
+      .classed("dimmed", (_, i) => !connLinks.has(i));
+}
+
+function clearHighlight() {
+  node.classed("highlighted", false).classed("dimmed", false);
+  link.classed("highlighted", false).classed("dimmed", false);
+}
+
+svg.on("click", () => { clearHighlight(); selected = null; hideTooltip(); });
+
+// ─── TOOLTIP ─────────────────────────────────────────────────────────────────
+
+const tooltip = document.getElementById("tooltip");
+
+function onNodeHover(e, d) {
+  const deps = outEdges.get(d.id) || [];
+  const usedBy = inEdges.get(d.id) || [];
+  const color = LAYERS[d.layer].color;
+
+  tooltip.innerHTML = `
+    <div class="tip-name">${d.id}</div>
+    <div class="tip-layer" style="color:${color}">${LAYERS[d.layer].label}</div>
+    ${deps.length ? `<div class="tip-section">Imports (${deps.length})</div><ul class="tip-list">${deps.map(x=>`<li>${x}</li>`).join("")}</ul>` : ""}
+    ${usedBy.length ? `<div class="tip-section">Imported by (${usedBy.length})</div><ul class="tip-list">${usedBy.map(x=>`<li>${x}</li>`).join("")}</ul>` : ""}
+  `;
+  tooltip.style.display = "block";
+  moveTooltip(e);
+}
+
+function onNodeOut() {
+  tooltip.style.display = "none";
+}
+
+function hideTooltip() {
+  tooltip.style.display = "none";
+}
+
+document.addEventListener("mousemove", e => {
+  if (tooltip.style.display === "block") moveTooltip(e);
+});
+
+function moveTooltip(e) {
+  let x = e.clientX + 16, y = e.clientY + 16;
+  const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+  if (x + tw > W - 10) x = e.clientX - tw - 16;
+  if (y + th > H - 10) y = e.clientY - th - 16;
+  tooltip.style.left = x + "px";
+  tooltip.style.top  = y + "px";
+}
+
+// ─── ZOOM CONTROLS ────────────────────────────────────────────────────────────
+
+document.getElementById("zoom-in").addEventListener("click", () =>
+  svg.transition().call(zoom.scaleBy, 1.4));
+document.getElementById("zoom-out").addEventListener("click", () =>
+  svg.transition().call(zoom.scaleBy, 0.7));
+document.getElementById("zoom-reset").addEventListener("click", () =>
+  svg.transition().call(zoom.transform, d3.zoomIdentity));
+
+window.addEventListener("resize", () => {
+  const nW = window.innerWidth, nH = window.innerHeight;
+  svg.attr("width", nW).attr("height", nH);
+  simulation.force("center", d3.forceCenter(nW / 2, nH / 2)).alpha(0.1).restart();
+});
+</script>
+</body>
+</html>

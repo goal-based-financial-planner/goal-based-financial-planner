@@ -7,12 +7,13 @@ type AddGoalPopupProps = {
   isOpen: boolean;
   onClose: () => void;
   dispatch: Dispatch<PlannerDataAction>;
+  title?: string;
 };
 
-const AddGoalPopup = ({ isOpen, onClose, dispatch }: AddGoalPopupProps) => {
+const AddGoalPopup = ({ isOpen, onClose, dispatch, title }: AddGoalPopupProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <FinancialGoalForm close={onClose} dispatch={dispatch} />
+      <FinancialGoalForm close={onClose} dispatch={dispatch} title={title} />
     </Dialog>
   );
 };

@@ -42,18 +42,24 @@ exports[`LandingPage > should match snapshot of main content structure 1`] = `
       >
         Plan your Financial Goals
       </h2>
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-bp8g09-MuiTypography-root"
+      <div
+        class="MuiBox-root css-r8qj5f"
       >
-        Start by adding your first Goal
-      </h4>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1x9s8lg-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
-      >
-        ADD GOAL
-      </button>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary css-1x9s8lg-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="button"
+        >
+          NEW PLAN
+        </button>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorInherit MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorInherit css-1mnkbfd-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="button"
+        >
+          Open existing plan
+        </button>
+      </div>
     </div>
     <div
       data-testid="add-goal-popup"

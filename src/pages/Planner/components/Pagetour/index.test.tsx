@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import PageTour from './index';
-import * as storage from '../../../../util/storage';
+import * as storage from '../../../../util/legacyStorage';
 
 // Mock Joyride component
 vi.mock('@adi-prasetyo/react-joyride', () => ({
@@ -21,7 +21,7 @@ vi.mock('@adi-prasetyo/react-joyride', () => ({
 }));
 
 // Mock storage utilities
-vi.mock('../../../../util/storage');
+vi.mock('../../../../util/legacyStorage');
 
 describe('PageTour', () => {
   beforeEach(() => {
