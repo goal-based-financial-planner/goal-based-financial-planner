@@ -174,14 +174,16 @@ const Planner = ({ plannerData, dispatch, headerRight }: PlannerProps) => {
           display="flex"
           justifyContent="space-between"
           alignItems="center"
+          sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: 1 }}
         >
           {/* Left: title + date picker inline */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', minWidth: 0 }}>
             <Typography
               className="navbar-home"
               variant="h4"
               fontWeight="bold"
               color="primary"
+              sx={{ fontSize: { xs: '1.25rem', sm: '2.125rem' } }}
             >
               Goal Based Financial Planner
             </Typography>
@@ -225,7 +227,7 @@ const Planner = ({ plannerData, dispatch, headerRight }: PlannerProps) => {
 
           {/* Right: save controls / action buttons */}
           {headerRight && (
-            <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0, ml: 'auto' }}>
               {headerRight}
             </Box>
           )}

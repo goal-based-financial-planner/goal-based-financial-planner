@@ -10,6 +10,8 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import ComputerIcon from '@mui/icons-material/Computer';
 import GoogleDriveIcon from '../GoogleDriveIcon';
@@ -28,6 +30,8 @@ const StorageProviderPicker: React.FC<StorageProviderPickerProps> = ({
   onSelect,
   onCancel,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as
     | string
     | undefined;
@@ -38,7 +42,7 @@ const StorageProviderPicker: React.FC<StorageProviderPickerProps> = ({
     <Dialog open={open} onClose={onCancel} maxWidth="sm" fullWidth>
       <DialogTitle>{actionLabel} — Choose Storage Location</DialogTitle>
       <DialogContent>
-        {!fsaSupported && (
+        {!isMobile && !fsaSupported && (
           <Alert severity="info" sx={{ mb: 2 }}>
             Your browser doesn&apos;t support automatic file saving. Local
             Computer will use manual download/upload. For autosave, choose
@@ -47,25 +51,24 @@ const StorageProviderPicker: React.FC<StorageProviderPickerProps> = ({
         )}
 
         <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-          {/* Local Computer */}
-          <Card
-            variant="outlined"
-            sx={{ flex: 1, cursor: 'pointer' }}
-          >
-            <CardActionArea onClick={() => onSelect('local-file')} sx={{ height: '100%' }}>
-              <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                <ComputerIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
-                <Typography variant="h6" gutterBottom>
-                  Local Computer
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {fsaSupported
-                    ? 'Save directly to a file on your computer with autosave.'
-                    : 'Download / upload JSON files manually.'}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+          {/* Local Computer — hidden on mobile (FSA not supported on mobile browsers) */}
+          {!isMobile && (
+            <Card variant="outlined" sx={{ flex: 1, cursor: 'pointer' }}>
+              <CardActionArea onClick={() => onSelect('local-file')} sx={{ height: '100%' }}>
+                <CardContent sx={{ textAlign: 'center', py: 3 }}>
+                  <ComputerIcon sx={{ fontSize: 48, color: 'primary.main', mb: 1 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Local Computer
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {fsaSupported
+                      ? 'Save directly to a file on your computer with autosave.'
+                      : 'Download / upload JSON files manually.'}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          )}
 
           {/* Google Drive */}
           <Card

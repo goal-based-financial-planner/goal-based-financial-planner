@@ -11,6 +11,7 @@ interface SaveStatusIndicatorProps {
   lastSavedAt: Date | null;
   providerId: StorageProviderId;
   onRetry?: () => void;
+  compact?: boolean;
 }
 
 const providerLabel: Record<StorageProviderId, string> = {
@@ -30,6 +31,7 @@ const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
   lastSavedAt,
   providerId,
   onRetry,
+  compact = false,
 }) => {
   if (saveStatus === 'idle') {
     if (!lastSavedAt) {
@@ -48,7 +50,7 @@ const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
           sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontSize: 12, color: 'text.disabled', cursor: 'default' }}
         >
           <ProviderIcon providerId={providerId} color="text.disabled" />
-          All changes saved
+          {!compact && 'All changes saved'}
         </Box>
       </Tooltip>
     );
@@ -56,23 +58,31 @@ const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
 
   if (saveStatus === 'saving') {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-        <CircularProgress size={14} />
-        <Box component="span" sx={{ fontSize: 12, color: 'text.secondary' }}>
-          Saving to {providerLabel[providerId]}…
+      <Tooltip title={compact ? `Saving to ${providerLabel[providerId]}…` : ''}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <CircularProgress size={14} />
+          {!compact && (
+            <Box component="span" sx={{ fontSize: 12, color: 'text.secondary' }}>
+              Saving to {providerLabel[providerId]}…
+            </Box>
+          )}
         </Box>
-      </Box>
+      </Tooltip>
     );
   }
 
   if (saveStatus === 'saved') {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-        <CheckCircleOutlineIcon sx={{ fontSize: 16, color: 'success.main' }} />
-        <Box component="span" sx={{ fontSize: 12, color: 'success.main' }}>
-          Saved to {providerLabel[providerId]}
+      <Tooltip title={compact ? `Saved to ${providerLabel[providerId]}` : ''}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <CheckCircleOutlineIcon sx={{ fontSize: 16, color: 'success.main' }} />
+          {!compact && (
+            <Box component="span" sx={{ fontSize: 12, color: 'success.main' }}>
+              Saved to {providerLabel[providerId]}
+            </Box>
+          )}
         </Box>
-      </Box>
+      </Tooltip>
     );
   }
 
@@ -81,7 +91,7 @@ const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
     <Chip
       size="small"
       icon={<ErrorOutlineIcon />}
-      label={`Save to ${providerLabel[providerId]} failed – click to retry`}
+      label={compact ? 'Save failed' : `Save to ${providerLabel[providerId]} failed – click to retry`}
       color="error"
       variant="outlined"
       onClick={onRetry}

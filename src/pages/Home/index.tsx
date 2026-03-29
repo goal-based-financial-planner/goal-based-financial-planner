@@ -7,7 +7,7 @@ import { PlannerDataActionType } from '../../store/plannerDataActions';
 import { PlannerData } from '../../domain/PlannerData';
 import LandingPage from '../LandingPage';
 import Planner from '../Planner';
-import { Alert, Box, Button, Divider, Link, Snackbar } from '@mui/material';
+import { Alert, Box, Button, Divider, Link, Snackbar, useMediaQuery, useTheme } from '@mui/material';
 import {
   isDisclaimerAccepted,
   setDisclaimerAccepted,
@@ -18,6 +18,9 @@ import { useAutosave } from '../../hooks/useAutosave';
 import SaveStatusIndicator from '../../components/SaveStatusIndicator';
 
 const Home: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   const {
     provider,
     initialData,
@@ -65,30 +68,35 @@ const Home: React.FC = () => {
   }, [triggerManualSave]);
 
   const saveControls = (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
       <SaveStatusIndicator
         saveStatus={saveStatus}
         lastSavedAt={lastSavedAt}
         providerId={provider?.id ?? 'local-file'}
         onRetry={triggerManualSave}
+        compact={isMobile}
       />
-      <Button
-        size="small"
-        variant="text"
-        onClick={triggerManualSave}
-        disabled={saveStatus === 'saving'}
-        sx={{ minWidth: 0, fontWeight: 600 }}
-      >
-        Save
-      </Button>
-      <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+      {!isMobile && (
+        <>
+          <Button
+            size="small"
+            variant="text"
+            onClick={triggerManualSave}
+            disabled={saveStatus === 'saving'}
+            sx={{ minWidth: 0, fontWeight: 600 }}
+          >
+            Save
+          </Button>
+          <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
+        </>
+      )}
       <Button
         size="small"
         variant="text"
         onClick={() => void clearProvider()}
-        sx={{ minWidth: 0, color: 'text.secondary' }}
+        sx={{ minWidth: 0, color: 'text.secondary', fontSize: isMobile ? 11 : undefined }}
       >
-        Close Plan
+        {isMobile ? 'Close' : 'Close Plan'}
       </Button>
     </Box>
   );
