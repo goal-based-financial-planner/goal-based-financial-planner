@@ -41,7 +41,7 @@ exports[`CongratulationsPage > should match snapshot of congratulations content 
           <h2
             class="MuiTypography-root MuiTypography-h2 css-1jxdnlo-MuiTypography-root"
           >
-            5,000,000
+            $5,000,000
           </h2>
         </div>
         <div
@@ -65,7 +65,7 @@ exports[`CongratulationsPage > should match snapshot of congratulations content 
               </span>
                -
                
-              5,000,000
+              $5,000,000
             </p>
             <p
               class="MuiTypography-root MuiTypography-body1 css-e0r9tj-MuiTypography-root"
@@ -77,7 +77,7 @@ exports[`CongratulationsPage > should match snapshot of congratulations content 
               </span>
                -
                
-              2,000,000
+              $2,000,000
             </p>
             <p
               class="MuiTypography-root MuiTypography-body1 css-e0r9tj-MuiTypography-root"
@@ -89,7 +89,7 @@ exports[`CongratulationsPage > should match snapshot of congratulations content 
               </span>
                -
                
-              1,000,000
+              $1,000,000
             </p>
           </div>
         </div>

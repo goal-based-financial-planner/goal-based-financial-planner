@@ -4,6 +4,7 @@ import {
   clearUserLocale,
   formatNumber,
   formatCurrency,
+  formatCompactCurrency,
   formatIndianNumber,
   formatIndianCurrency,
   AVAILABLE_LOCALES,
@@ -13,6 +14,8 @@ import { renderHook } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 describe('Locale and Formatting Utilities', () => {
+  let originalIntl: typeof Intl;
+
   beforeEach(() => {
     localStorage.clear();
     // Reset navigator.language to default
@@ -20,6 +23,37 @@ describe('Locale and Formatting Utilities', () => {
       value: 'en-US',
       configurable: true,
     });
+    // Stub Intl.DateTimeFormat to return a neutral timezone so timezone-based
+    // detection doesn't interfere with navigator.language tests
+    originalIntl = global.Intl;
+    const MockIntl = {
+      ...Intl,
+      DateTimeFormat: Object.assign(
+        (locale?: string, options?: Intl.DateTimeFormatOptions) =>
+          new originalIntl.DateTimeFormat(locale, options),
+        {
+          ...Intl.DateTimeFormat,
+          prototype: Intl.DateTimeFormat.prototype,
+        }
+      ),
+    };
+    // Override resolvedOptions to return an unmapped timezone
+    MockIntl.DateTimeFormat = function(locale?: string, options?: Intl.DateTimeFormatOptions) {
+      const fmt = new originalIntl.DateTimeFormat(locale, options);
+      return {
+        ...fmt,
+        resolvedOptions: () => ({ ...fmt.resolvedOptions(), timeZone: 'UTC' }),
+        format: fmt.format.bind(fmt),
+        formatToParts: fmt.formatToParts.bind(fmt),
+        formatRange: fmt.formatRange?.bind(fmt),
+        formatRangeToParts: fmt.formatRangeToParts?.bind(fmt),
+      } as Intl.DateTimeFormat;
+    } as unknown as typeof Intl.DateTimeFormat;
+    global.Intl = MockIntl as typeof Intl;
+  });
+
+  afterEach(() => {
+    global.Intl = originalIntl;
   });
 
   describe('getUserLocale', () => {
@@ -28,7 +62,7 @@ describe('Locale and Formatting Utilities', () => {
       expect(getUserLocale()).toBe('en-IN');
     });
 
-    it('should return navigator.language when no stored preference', () => {
+    it('should return navigator.language directly for unambiguous locales (fr-FR)', () => {
       Object.defineProperty(navigator, 'language', {
         value: 'fr-FR',
         configurable: true,
@@ -37,13 +71,41 @@ describe('Locale and Formatting Utilities', () => {
       expect(getUserLocale()).toBe('fr-FR');
     });
 
-    it('should fallback to en-US when navigator.language unavailable', () => {
+    it('should return en-IN for unambiguous navigator.language en-IN', () => {
+      Object.defineProperty(navigator, 'language', {
+        value: 'en-IN',
+        configurable: true,
+      });
+
+      expect(getUserLocale()).toBe('en-IN');
+    });
+
+    it('should fallback to en-US when navigator.language unavailable and timezone unmapped', () => {
       Object.defineProperty(navigator, 'language', {
         value: undefined,
         configurable: true,
       });
 
+      // UTC is not in TIMEZONE_LOCALE_MAP → falls through to en-US
       expect(getUserLocale()).toBe('en-US');
+    });
+
+    it('should use timezone locale when navigator.language is generic (en-GB) and timezone maps to en-IN', () => {
+      Object.defineProperty(navigator, 'language', {
+        value: 'en-GB',
+        configurable: true,
+      });
+      // Override timezone to Asia/Kolkata
+      global.Intl = {
+        ...originalIntl,
+        DateTimeFormat: function() {
+          return {
+            resolvedOptions: () => ({ timeZone: 'Asia/Kolkata', locale: 'en-IN' }),
+          } as unknown as Intl.DateTimeFormat;
+        } as unknown as typeof Intl.DateTimeFormat,
+      } as typeof Intl;
+
+      expect(getUserLocale()).toBe('en-IN');
     });
 
     it('should prioritize stored preference over navigator.language', () => {
@@ -258,6 +320,59 @@ describe('Locale and Formatting Utilities', () => {
       const codes = AVAILABLE_LOCALES.map((l) => l.code);
       const uniqueCodes = new Set(codes);
       expect(codes.length).toBe(uniqueCodes.size);
+    });
+  });
+
+  describe('formatCompactCurrency', () => {
+    afterEach(() => {
+      clearUserLocale();
+    });
+
+    it('should format crore for INR locale', () => {
+      setUserLocale('en-IN');
+      expect(formatCompactCurrency(10_000_000)).toBe('₹1.0Cr');
+      expect(formatCompactCurrency(15_500_000)).toBe('₹1.6Cr');
+    });
+
+    it('should format lakh for INR locale', () => {
+      setUserLocale('en-IN');
+      expect(formatCompactCurrency(100_000)).toBe('₹1.0L');
+      expect(formatCompactCurrency(350_000)).toBe('₹3.5L');
+    });
+
+    it('should fall back to formatCurrency for INR below lakh threshold', () => {
+      setUserLocale('en-IN');
+      const result = formatCompactCurrency(50_000);
+      expect(result).toMatch(/₹|INR/);
+    });
+
+    it('should format millions for USD locale', () => {
+      setUserLocale('en-US');
+      expect(formatCompactCurrency(10_000_000)).toBe('$10.0M');
+      expect(formatCompactCurrency(1_500_000)).toBe('$1.5M');
+    });
+
+    it('should format thousands for USD locale', () => {
+      setUserLocale('en-US');
+      expect(formatCompactCurrency(5_000)).toBe('$5.0K');
+    });
+
+    it('should fall back to formatCurrency for USD below thousand threshold', () => {
+      setUserLocale('en-US');
+      const result = formatCompactCurrency(500);
+      expect(result).toMatch(/\$|USD/);
+    });
+
+    it('should use EUR symbol for de-DE locale', () => {
+      setUserLocale('de-DE');
+      const result = formatCompactCurrency(2_000_000);
+      expect(result).toMatch(/€.*M|M.*€/);
+    });
+
+    it('should fall back to USD for unknown locale', () => {
+      setUserLocale('en-US');
+      const result = formatCompactCurrency(1_000);
+      expect(result).toMatch(/\$|USD/);
     });
   });
 

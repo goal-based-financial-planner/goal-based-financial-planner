@@ -12,9 +12,10 @@ vi.mock('react-confetti', () => ({
 // Mock react-use/lib/useWindowSize hook
 vi.mock('react-use/lib/useWindowSize', () => ({ default: () => ({ width: 1920, height: 1080 }) }));
 
-// Mock formatNumber for deterministic snapshots
+// Mock format utilities for deterministic snapshots
 vi.mock('../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
+  formatCurrency: (num: number) => `$${num.toLocaleString('en-US')}`,
 }));
 
 describe('CongratulationsPage', () => {
@@ -51,7 +52,8 @@ describe('CongratulationsPage', () => {
     );
 
     expect(screen.getByText(/Your Total Savings/i)).toBeInTheDocument();
-    expect(screen.getByText('8,000,000')).toBeInTheDocument();
+    // formatCurrency mock returns "$8,000,000"
+    expect(screen.getByText('$8,000,000')).toBeInTheDocument();
   });
 
   it('should render all goal details', () => {
@@ -97,6 +99,7 @@ describe('CongratulationsPage', () => {
     );
 
     expect(screen.getByText('Vacation')).toBeInTheDocument();
-    expect(screen.getByText('1,000,000')).toBeInTheDocument();
+    // formatCurrency mock returns "$1,000,000"
+    expect(screen.getByText('$1,000,000')).toBeInTheDocument();
   });
 });

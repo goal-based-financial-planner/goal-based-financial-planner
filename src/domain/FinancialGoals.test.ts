@@ -28,7 +28,7 @@ describe('FinancialGoal', () => {
       expect(goal.getMonthTerm()).toBe(24);
     });
 
-    it('should return 1 year term for recurring goals', () => {
+    it('should return 1 year term for recurring goals with no duration set', () => {
       const goal = new FinancialGoal(
         'Annual Vacation',
         GoalType.RECURRING,
@@ -40,7 +40,7 @@ describe('FinancialGoal', () => {
       expect(goal.getTerm()).toBe(1);
     });
 
-    it('should return 12 month term for recurring goals', () => {
+    it('should return 12 month term for recurring goals with no duration set', () => {
       const goal = new FinancialGoal(
         'Annual Vacation',
         GoalType.RECURRING,
@@ -50,6 +50,36 @@ describe('FinancialGoal', () => {
       );
 
       expect(goal.getMonthTerm()).toBe(12);
+    });
+
+    it('should return recurringDurationYears as the term for recurring goals', () => {
+      const goal2 = new FinancialGoal('Expenses', GoalType.RECURRING, '', '', 120000, 2);
+      const goal3 = new FinancialGoal('Expenses', GoalType.RECURRING, '', '', 120000, 3);
+
+      expect(goal2.getTerm()).toBe(2);
+      expect(goal3.getTerm()).toBe(3);
+    });
+
+    it('should return recurringDurationYears * 12 as month term for recurring goals', () => {
+      const goal2 = new FinancialGoal('Expenses', GoalType.RECURRING, '', '', 120000, 2);
+      const goal3 = new FinancialGoal('Expenses', GoalType.RECURRING, '', '', 120000, 3);
+
+      expect(goal2.getMonthTerm()).toBe(24);
+      expect(goal3.getMonthTerm()).toBe(36);
+    });
+
+    it('should default to 1 year / 12 months when recurringDurationYears is undefined', () => {
+      const goal = new FinancialGoal('Legacy', GoalType.RECURRING, '', '', 60000, undefined);
+
+      expect(goal.getTerm()).toBe(1);
+      expect(goal.getMonthTerm()).toBe(12);
+    });
+
+    it('should not affect term calculation for one-time goals regardless of recurringDurationYears', () => {
+      const goal = new FinancialGoal('Car', GoalType.ONE_TIME, '2024-01-01', '2026-01-01', 500000, 2);
+
+      expect(goal.getTerm()).toBe(2); // dayjs diff, not duration
+      expect(goal.getMonthTerm()).toBe(24);
     });
 
     it('should classify goals as SHORT_TERM (≤36 months)', () => {

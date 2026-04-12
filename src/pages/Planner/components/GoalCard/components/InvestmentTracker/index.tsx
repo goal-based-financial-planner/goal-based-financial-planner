@@ -10,7 +10,7 @@ import {
   buildSIPComparison,
   buildGrowthProjection,
 } from '../../../../../../domain/investmentLog';
-import { formatNumber } from '../../../../../../types/util';
+import { formatCurrency, formatCompactCurrency } from '../../../../../../types/util';
 import SIPForm from '../LogEntryForm';
 import SIPList from '../InvestmentLogHistory';
 
@@ -89,12 +89,7 @@ const InvestmentTracker = ({
         xAxis={[{ data: xLabels, scaleType: 'point' as const }]}
         yAxis={[
           {
-            valueFormatter: (v: number) =>
-              v >= 10000000
-                ? `₹${(v / 10000000).toFixed(1)}Cr`
-                : v >= 100000
-                ? `₹${(v / 100000).toFixed(1)}L`
-                : `₹${formatNumber(v)}`,
+            valueFormatter: (v: number) => formatCompactCurrency(v),
           },
         ]}
         sx={{ '& .MuiChartsLegend-root': { fontSize: '0.7rem' } }}
@@ -163,10 +158,10 @@ const InvestmentTracker = ({
                     {/* Amount labels */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
-                        ₹{formatNumber(row.actualAmount)}/mo
+                        {formatCurrency(row.actualAmount)}/mo
                         {!isCustom && (
                           <Box component="span" sx={{ color: 'text.disabled' }}>
-                            {' '}/ ₹{formatNumber(row.suggestedAmount)}
+                            {' '}/ {formatCurrency(row.suggestedAmount)}
                           </Box>
                         )}
                       </Typography>
@@ -175,7 +170,7 @@ const InvestmentTracker = ({
                           variant="caption"
                           sx={{ fontSize: '0.65rem', color: isExceeding ? 'success.main' : 'error.main' }}
                         >
-                          {isExceeding ? '+' : ''}₹{formatNumber(row.difference)}/mo
+                          {isExceeding ? '+' : ''}{formatCurrency(row.difference)}/mo
                         </Typography>
                       )}
                     </Box>

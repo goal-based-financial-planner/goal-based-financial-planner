@@ -13,7 +13,7 @@ import {
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
-import { formatNumber } from '../../../../types/util';
+import { formatCurrency } from '../../../../types/util';
 import { Dispatch, memo } from 'react';
 
 type RecurringGoalsTableProps = {
@@ -42,12 +42,16 @@ const RecurringGoalsTable = memo(
                 Yearly Target
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                Duration
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>
                 Actions
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {recurringGoals.map((goal) => {
+              const duration = goal.recurringDurationYears ?? 1;
               return (
                 <TableRow
                   key={goal.id}
@@ -67,7 +71,12 @@ const RecurringGoalsTable = memo(
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="body1">
-                      ₹{formatNumber(goal.getTargetAmount())}
+                      {formatCurrency(goal.getTargetAmount() / duration)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body1">
+                      {duration} {duration === 1 ? 'year' : 'years'}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">

@@ -69,6 +69,7 @@ const FinancialGoalForm = ({
     setStartDate('');
     setTargetDate('');
     setTargetAmount('');
+    setRecurringDurationYears('1');
   };
 
   const [goalName, setGoalName] = useState<string>('');
@@ -76,6 +77,7 @@ const FinancialGoalForm = ({
   const [startDate, setStartDate] = useState<string>('');
   const [targetDate, setTargetDate] = useState<string>('');
   const [targetAmount, setTargetAmount] = useState<string>('');
+  const [recurringDurationYears, setRecurringDurationYears] = useState<string>('1');
   const [validationErrors, setValidationErrors] = useState<
     Record<string, boolean>
   >({});
@@ -134,6 +136,9 @@ const FinancialGoalForm = ({
       }
     }
 
+    const parsedDuration =
+      goalType === GoalType.RECURRING ? Number(recurringDurationYears) : undefined;
+
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       return;
@@ -146,6 +151,7 @@ const FinancialGoalForm = ({
         startDate,
         targetDate,
         Number(targetAmount),
+        parsedDuration,
       ),
     );
 
@@ -234,6 +240,20 @@ const FinancialGoalForm = ({
                       />
                     </RadioGroup>
                   </FormControl>
+                  {goalType === GoalType.RECURRING && (
+                    <FormControl component="fieldset" sx={{ mt: 0.5 }}>
+                      <Typography variant="body2">Duration</Typography>
+                      <RadioGroup
+                        value={recurringDurationYears}
+                        onChange={(e) => setRecurringDurationYears(e.target.value)}
+                        row
+                      >
+                        <FormControlLabel value="1" control={<Radio size="small" />} label="1 year" />
+                        <FormControlLabel value="2" control={<Radio size="small" />} label="2 years" />
+                        <FormControlLabel value="3" control={<Radio size="small" />} label="3 years" />
+                      </RadioGroup>
+                    </FormControl>
+                  )}
                   {goalType === GoalType.ONE_TIME && (
                     <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                       <DatePicker
