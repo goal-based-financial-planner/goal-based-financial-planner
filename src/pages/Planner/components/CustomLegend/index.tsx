@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
-import { formatNumber } from '../../../../types/util';
+import { formatCurrency } from '../../../../types/util';
 import { InvestmentAmountMap } from '../../../../types/charts';
 import { memo, useMemo } from 'react';
 
@@ -65,7 +65,7 @@ const CustomLegend = memo(
                   </TableCell>
                   <TableCell sx={{ padding: '4px 8px' }}>{key}</TableCell>
                   <TableCell sx={{ padding: '4px 8px', textAlign: 'right' }}>
-                    {formatNumber(Math.round(value))}
+                    {formatCurrency(Math.round(value))}
                   </TableCell>
                 </TableRow>
               );

@@ -218,6 +218,7 @@ export class LocalFileProvider implements StorageProvider {
           g.startDate,
           g.targetDate,
           g.targetAmount,
+          g.recurringDurationYears,
         );
       });
       const investmentLogs = Array.isArray(parsed.investmentLogs)

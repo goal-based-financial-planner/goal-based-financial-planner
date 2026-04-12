@@ -3,7 +3,7 @@ import { StyledBox } from '../../components/StyledBox';
 import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { useState, useEffect } from 'react';
-import { formatNumber } from '../../types/util';
+import { formatCurrency } from '../../types/util';
 import { GoalSummary } from '../../types/goals';
 
 const CongratulationsPage = ({
@@ -55,7 +55,7 @@ const CongratulationsPage = ({
               sx={{ fontWeight: 'bold', mt: 2 }}
               color="primary"
             >
-              {formatNumber(targetAmount)}
+              {formatCurrency(targetAmount)}
             </Typography>
           </StyledBox>
           <StyledBox
@@ -74,7 +74,7 @@ const CongratulationsPage = ({
               {goals.map((goal) => (
                 <Typography key={goal.name} color="primary">
                   <span style={{ fontWeight: 'bold' }}>{goal.name}</span> -{' '}
-                  {formatNumber(goal.amount)}
+                  {formatCurrency(goal.amount)}
                 </Typography>
               ))}
             </Box>

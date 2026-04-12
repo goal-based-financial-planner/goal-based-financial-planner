@@ -8,9 +8,10 @@ import * as actions from '../../../../store/plannerDataActions';
 // Mock actions
 vi.mock('../../../../store/plannerDataActions');
 
-// Mock formatNumber
+// Mock format utilities
 vi.mock('../../../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
+  formatCurrency: (num: number) => `$${num.toLocaleString('en-US')}`,
 }));
 
 describe('RecurringGoalsTable', () => {
@@ -54,6 +55,7 @@ describe('RecurringGoalsTable', () => {
 
     expect(screen.getByText('Goal Name')).toBeInTheDocument();
     expect(screen.getByText('Yearly Target')).toBeInTheDocument();
+    expect(screen.getByText('Duration')).toBeInTheDocument();
     expect(screen.getByText('Actions')).toBeInTheDocument();
     expect(screen.getByText('Monthly Savings')).toBeInTheDocument();
     expect(screen.getByText('Investment SIP')).toBeInTheDocument();
@@ -67,8 +69,23 @@ describe('RecurringGoalsTable', () => {
       />,
     );
 
-    expect(screen.getByText('₹5,000')).toBeInTheDocument();
-    expect(screen.getByText('₹10,000')).toBeInTheDocument();
+    // Yearly target = targetAmount / duration (default 1 year)
+    expect(screen.getByText('$5,000')).toBeInTheDocument();
+    expect(screen.getByText('$10,000')).toBeInTheDocument();
+  });
+
+  it('should display duration in years', () => {
+    const goalWith2Years = new FinancialGoal('Trip', GoalType.RECURRING, '', '', 24000, 2);
+    render(
+      <RecurringGoalsTable
+        recurringGoals={[goalWith2Years]}
+        dispatch={mockDispatch}
+      />,
+    );
+
+    expect(screen.getByText('2 years')).toBeInTheDocument();
+    // Yearly target = 24000 / 2 = 12000
+    expect(screen.getByText('$12,000')).toBeInTheDocument();
   });
 
   it('should call deleteFinancialGoal when delete button clicked', () => {

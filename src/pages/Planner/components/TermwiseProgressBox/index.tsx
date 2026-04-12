@@ -1,7 +1,7 @@
 import { Box, Typography, Chip, Grid2 as Grid, Tooltip } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { StyledBox } from '../../../../components/StyledBox';
-import { formatNumber } from '../../../../types/util';
+import { formatCurrency } from '../../../../types/util';
 import { TermTypeWiseProgressData, TermTypeWiseData } from '../../../../types/planner';
 import { memo } from 'react';
 
@@ -61,7 +61,7 @@ const TermSection = ({
       {/* Amount + goal count */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
         <Typography variant="body1" fontWeight={600}>
-          ₹{formatNumber(termTypeSum)}
+          {formatCurrency(termTypeSum)}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {goalNames.length} goal{goalNames.length !== 1 ? 's' : ''}

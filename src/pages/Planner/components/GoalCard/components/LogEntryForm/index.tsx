@@ -8,7 +8,8 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-import { Dispatch, useEffect } from 'react';
+import { Dispatch, useEffect, useMemo } from 'react';
+import { getUserLocale } from '../../../../../../types/util';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { PlannerDataAction } from '../../../../../../store/plannerDataReducer';
 import {
@@ -32,6 +33,11 @@ type Props = {
   existingEntry?: SIPEntry;
 };
 
+const localeCurrencyMap: Record<string, string> = {
+  'en-IN': 'INR', 'hi-IN': 'INR', 'en-US': 'USD',
+  'en-GB': 'GBP', 'de-DE': 'EUR', 'fr-FR': 'EUR', 'ja-JP': 'JPY',
+};
+
 const SIPForm = ({
   open,
   onClose,
@@ -40,6 +46,15 @@ const SIPForm = ({
   existingEntry,
 }: Props) => {
   const isEditMode = Boolean(existingEntry);
+
+  const currencySymbol = useMemo(() => {
+    const locale = getUserLocale();
+    const currency = localeCurrencyMap[locale] || 'USD';
+    return (0)
+      .toLocaleString(locale, { style: 'currency', currency, maximumFractionDigits: 0 })
+      .replace(/[\d,.\s]/g, '')
+      .trim();
+  }, []);
 
   const {
     register,
@@ -157,7 +172,7 @@ const SIPForm = ({
           )}
 
           <TextField
-            label="Monthly SIP Amount (₹)"
+            label={`Monthly SIP Amount (${currencySymbol})`}
             type="number"
             inputProps={{ min: 1, step: 1 }}
             error={Boolean(errors.monthlyAmount)}

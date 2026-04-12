@@ -29,7 +29,7 @@ exports[`CustomLegend > should match snapshot 1`] = `
           <td
             class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
           >
-            4,000,000
+            $4,000,000
           </td>
         </tr>
         <tr
@@ -50,7 +50,7 @@ exports[`CustomLegend > should match snapshot 1`] = `
           <td
             class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
           >
-            1,000,000
+            $1,000,000
           </td>
         </tr>
         <tr
@@ -71,7 +71,7 @@ exports[`CustomLegend > should match snapshot 1`] = `
           <td
             class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
           >
-            1,000,000
+            $1,000,000
           </td>
         </tr>
       </tbody>

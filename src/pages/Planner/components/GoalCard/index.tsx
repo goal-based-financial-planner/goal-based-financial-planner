@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { GoalType } from '../../../../types/enums';
 import { useMemo, useState, Dispatch, memo, useCallback } from 'react';
 import { InvestmentSuggestion } from '../../../../types/planner';
-import { formatNumber } from '../../../../types/util';
+import { formatCurrency } from '../../../../types/util';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 
 const INVESTMENT_COLORS = [
@@ -51,11 +51,11 @@ const GoalCard = memo(
       [investmentSuggestions],
     );
 
-  const formattedTargetAmount = formatNumber(
+  const formattedTargetAmount = formatCurrency(
     goal.getInflationAdjustedTargetAmount(),
   );
 
-  const formattedCurrentValue = formatNumber(goal.getTargetAmount());
+  const formattedCurrentValue = formatCurrency(goal.getTargetAmount());
 
   const progressPercentage = Math.round(
     (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
@@ -167,7 +167,7 @@ const GoalCard = memo(
             >
               expand_more
             </span>
-            Monthly SIP: ₹{formatNumber(totalMonthlyInvestment)}
+            Monthly SIP: {formatCurrency(totalMonthlyInvestment)}
           </Typography>
 
           {/* Mini color bar preview when collapsed */}
@@ -238,7 +238,7 @@ const GoalCard = memo(
                       component="span"
                       sx={{ fontWeight: 'bold', ml: 0.5 }}
                     >
-                      ₹{formatNumber(suggestion.amount)}
+                      {formatCurrency(suggestion.amount)}
                     </Typography>
                   </Box>
                 }

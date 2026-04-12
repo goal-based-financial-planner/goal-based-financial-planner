@@ -172,8 +172,8 @@ describe('TermWiseProgressBox', () => {
 
     render(<TermWiseProgressBox data={data} />);
 
-    // The formatNumber function should format this as "₹1,000,000"
-    expect(screen.getByText('₹1,000,000')).toBeInTheDocument();
+    // formatCurrency uses locale-aware formatting; in en-US test env this renders as "$1,000,000"
+    expect(screen.getByText('$1,000,000')).toBeInTheDocument();
   });
 
   it('should render with single term type data', () => {

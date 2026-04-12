@@ -15,6 +15,7 @@ export class FinancialGoal {
     startDate: string,
     targetDate: string,
     targetAmount: number,
+    recurringDurationYears?: number,
   ) {
     this.id = crypto.randomUUID();
     this.goalName = goalName;
@@ -22,6 +23,7 @@ export class FinancialGoal {
     this.startDate = startDate;
     this.targetDate = targetDate;
     this.targetAmount = targetAmount;
+    this.recurringDurationYears = recurringDurationYears;
   }
 
   id: string;
@@ -30,6 +32,8 @@ export class FinancialGoal {
   startDate: string;
   targetDate: string;
   targetAmount: number;
+  /** Duration in years for recurring goals. Valid range: 1–3. Undefined for one-time goals and legacy recurring goals (defaults to 1). */
+  recurringDurationYears?: number;
 
   getInvestmentStartDate(): string {
     // If the goal is recurring, we don't have a specific start date. Return today's date
@@ -53,14 +57,14 @@ export class FinancialGoal {
 
   getTerm(): number {
     if (this.goalType === GoalType.RECURRING) {
-      return 1;
+      return this.recurringDurationYears ?? 1;
     }
     return dayjs(this.targetDate).diff(dayjs(this.startDate), 'year');
   }
 
   getMonthTerm(): number {
     if (this.goalType === GoalType.RECURRING) {
-      return 12;
+      return (this.recurringDurationYears ?? 1) * 12;
     }
     return dayjs(this.targetDate).diff(dayjs(this.startDate), 'month');
   }

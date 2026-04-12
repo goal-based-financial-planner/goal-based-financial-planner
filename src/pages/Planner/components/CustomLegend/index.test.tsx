@@ -4,9 +4,10 @@ import CustomLegend from './index';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { useMediaQuery } from '@mui/material';
 
-// Mock formatNumber
+// Mock format utilities
 vi.mock('../../../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
+  formatCurrency: (num: number) => `$${num.toLocaleString('en-US')}`,
 }));
 
 // Mock useMediaQuery
@@ -55,8 +56,8 @@ describe('CustomLegend', () => {
 
   it('should aggregate amounts for same investment type', () => {
     render(<CustomLegend suggestions={mockSuggestions} />);
-    // Large Cap should be 3M + 1M = 4M
-    expect(screen.getByText('4,000,000')).toBeInTheDocument();
+    // Large Cap should be 3M + 1M = 4M; formatCurrency mock returns "$4,000,000"
+    expect(screen.getByText('$4,000,000')).toBeInTheDocument();
   });
 
   it('should handle empty suggestions', () => {

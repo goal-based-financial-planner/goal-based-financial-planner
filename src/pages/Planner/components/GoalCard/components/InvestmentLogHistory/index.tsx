@@ -1,6 +1,6 @@
 import { Box, Chip, IconButton, Typography } from '@mui/material';
 import { SIPEntry } from '../../../../../../types/investmentLog';
-import { formatNumber } from '../../../../../../types/util';
+import { formatCurrency } from '../../../../../../types/util';
 
 type Props = {
   sips: SIPEntry[];
@@ -41,7 +41,7 @@ const SIPList = ({ sips, onEdit, onDelete }: Props) => {
                 {type}
               </Typography>
               <Chip
-                label={`₹${formatNumber(groupTotal)}/mo`}
+                label={`${formatCurrency(groupTotal)}/mo`}
                 size="small"
                 sx={{ height: 18, fontSize: '0.65rem' }}
               />
@@ -65,7 +65,7 @@ const SIPList = ({ sips, onEdit, onDelete }: Props) => {
                   fontWeight="bold"
                   sx={{ mx: 1, whiteSpace: 'nowrap' }}
                 >
-                  ₹{formatNumber(sip.monthlyAmount)}/mo
+                  {formatCurrency(sip.monthlyAmount)}/mo
                 </Typography>
                 <IconButton
                   size="small"
