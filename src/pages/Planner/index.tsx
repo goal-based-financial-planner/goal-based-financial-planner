@@ -28,14 +28,18 @@ import { StyledBox } from '../../components/StyledBox';
 import PageTour from './components/Pagetour';
 import TargetBox from './components/TargetBox';
 import CongratulationsPage from '../CongratulationsPage';
+import PrintableReport from './components/PrintableReport';
 
 type PlannerProps = {
   plannerData: PlannerData;
   dispatch: Dispatch<PlannerDataAction>;
   headerRight?: React.ReactNode;
+  printRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-const Planner = ({ plannerData, dispatch, headerRight }: PlannerProps) => {
+const Planner = ({ plannerData, dispatch, headerRight, printRef: externalPrintRef }: PlannerProps) => {
+  const internalPrintRef = useRef<HTMLDivElement>(null);
+  const printRef = externalPrintRef ?? internalPrintRef;
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
   const [showDrawer, setShowDrawer] = useState(false);
 
@@ -323,6 +327,15 @@ const Planner = ({ plannerData, dispatch, headerRight }: PlannerProps) => {
           />
         </Box>
       </Drawer>
+
+      {/* Hidden print/export layout — always mounted, CSS-hidden from screen */}
+      <PrintableReport
+        plannerData={plannerData}
+        selectedDate={selectedDate}
+        investmentBreakdownBasedOnTermType={investmentBreakdownBasedOnTermType}
+        termTypeWiseProgressData={termTypeWiseProgressData}
+        printRef={printRef}
+      />
     </>
   );
 };

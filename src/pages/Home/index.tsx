@@ -1,4 +1,6 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
+import ExportButton from '../Planner/components/ExportButton';
+import usePdfExport from '../Planner/hooks/usePdfExport';
 import {
   getInitialData,
   plannerDataReducer,
@@ -20,6 +22,9 @@ import SaveStatusIndicator from '../../components/SaveStatusIndicator';
 const Home: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const printRef = useRef<HTMLDivElement>(null);
+  const { isExporting, error: exportError, downloadPdf, triggerPrint } = usePdfExport();
 
   const {
     provider,
@@ -90,6 +95,14 @@ const Home: React.FC = () => {
           <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
         </>
       )}
+      <ExportButton
+        onDownloadPdf={() => downloadPdf(printRef)}
+        onPrint={triggerPrint}
+        isExporting={isExporting}
+        error={exportError}
+        compact={isMobile}
+      />
+      <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
       <Button
         size="small"
         variant="text"
@@ -108,6 +121,7 @@ const Home: React.FC = () => {
           plannerData={plannerData}
           dispatch={dispatch}
           headerRight={saveControls}
+          printRef={printRef}
         />
       ) : (
         <LandingPage
