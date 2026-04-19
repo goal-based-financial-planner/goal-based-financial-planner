@@ -33,6 +33,9 @@ const InvestmentTracker = ({
   const investmentTypes = investmentSuggestions.map((s) => s.investmentName);
   const comparison = buildSIPComparison(sips, investmentSuggestions);
 
+  const totalRequired = Math.round(comparison.reduce((sum, r) => sum + r.suggestedAmount, 0));
+  const totalInvesting = Math.round(comparison.reduce((sum, r) => sum + r.actualAmount, 0));
+
   const growthData = useMemo(
     () => buildGrowthProjection(sips, investmentSuggestions, projectionYears),
     [sips, investmentSuggestions, projectionYears],
@@ -55,6 +58,56 @@ const InvestmentTracker = ({
 
   return (
     <Box sx={{ mt: 1 }}>
+      {/* Monthly summary */}
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid size={{ xs: 6 }}>
+          <Box
+            sx={{
+              p: 1.5,
+              borderRadius: 1.5,
+              border: '1px solid',
+              borderColor: 'divider',
+              backgroundColor: 'background.paper',
+            }}
+          >
+            <Typography variant="overline" color="text.secondary" sx={{ fontSize: '0.6rem', lineHeight: 1.4, display: 'block' }}>
+              Monthly Required
+            </Typography>
+            <Typography variant="subtitle1" fontWeight="bold" color="primary">
+              {formatCurrency(totalRequired)}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              /month across all goals
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid size={{ xs: 6 }}>
+          <Box
+            sx={{
+              p: 1.5,
+              borderRadius: 1.5,
+              border: '1px solid',
+              borderColor: totalInvesting >= totalRequired ? 'success.main' : 'divider',
+              backgroundColor: 'background.paper',
+            }}
+          >
+            <Typography variant="overline" color="text.secondary" sx={{ fontSize: '0.6rem', lineHeight: 1.4, display: 'block' }}>
+              Monthly Investing
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              fontWeight="bold"
+              color={totalInvesting >= totalRequired ? 'success.main' : totalInvesting > 0 ? 'warning.main' : 'text.secondary'}
+            >
+              {formatCurrency(totalInvesting)}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {totalInvesting === 0 ? 'No SIPs logged yet' : totalInvesting >= totalRequired ? 'On track' : `${formatCurrency(totalRequired - totalInvesting)} short`}
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+
       {/* Growth projection chart */}
       <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 0.5 }}>
         Portfolio Growth Projection ({projectionYears} year{projectionYears !== 1 ? 's' : ''})

@@ -83,4 +83,31 @@ describe('InvestmentTracker', () => {
     );
     expect(screen.getByText('Portfolio Growth Projection (1 year)')).toBeInTheDocument();
   });
+
+  it('shows monthly required and "No SIPs logged yet" when no SIPs', () => {
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
+    );
+    expect(screen.getByText('Monthly Required')).toBeInTheDocument();
+    expect(screen.getByText('Monthly Investing')).toBeInTheDocument();
+    expect(screen.getByText('No SIPs logged yet')).toBeInTheDocument();
+  });
+
+  it('shows "short" status when investing less than required', () => {
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
+    );
+    expect(screen.getByText(/short/i)).toBeInTheDocument();
+  });
+
+  it('shows "On track" when investing at least as much as required', () => {
+    const fullSips: SIPEntry[] = [
+      { id: 's1', name: 'Liquid', type: 'Liquid Funds', monthlyAmount: 25000 },
+      { id: 's2', name: 'Index', type: 'Index Funds', monthlyAmount: 50000 },
+    ];
+    render(
+      <InvestmentTracker investmentSuggestions={suggestions} sips={fullSips} dispatch={mockDispatch} />,
+    );
+    expect(screen.getAllByText('On track').length).toBeGreaterThanOrEqual(1);
+  });
 });
