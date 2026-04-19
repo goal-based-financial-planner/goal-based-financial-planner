@@ -9,6 +9,57 @@ body {
   height: 100vh; /* Add this line to make the body take the full height of the page */
 }
 
+/* ── Print / PDF export ── */
+.printable-report {
+  display: none;
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 1cm;
+    size: A4 portrait;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide entire app — visibility allows descendants to override, unlike display:none */
+  body {
+    visibility: hidden;
+  }
+
+  /* Show only the report and all its children */
+  .printable-report,
+  .printable-report * {
+    visibility: visible;
+  }
+
+  .printable-report {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+    visibility: visible;
+  }
+
+  /* Page break before each major section */
+  .print-page-break {
+    page-break-before: always;
+  }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
