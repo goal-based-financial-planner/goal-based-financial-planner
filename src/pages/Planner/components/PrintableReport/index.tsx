@@ -274,7 +274,7 @@ const PrintableReport = ({
         <strong>not</strong> guarantee any specific financial outcomes or returns.
         Users should consult a <strong>qualified financial advisor</strong> before making any
         investment decisions. The creators of this tool accept no liability for financial losses
-        or incorrect decisions arising from its use. This tool is provided "as-is" without
+        or incorrect decisions arising from its use. This tool is provided &quot;as-is&quot; without
         warranties of any kind.
       </div>
     </div>
