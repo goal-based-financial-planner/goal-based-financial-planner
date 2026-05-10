@@ -6,11 +6,13 @@ import {
   Button,
   Tab,
   Tabs,
+  Tooltip,
 } from '@mui/material';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { TermType } from '../../../../types/enums';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import AllocationTour from '../AllocationTour';
 import InvestmentSuggestionsDoughnutChart from '../InvestmentSuggestionsDoughnutChart';
 import InvestmentAllocations from '../InvestmentAllocations';
 import InvestmentPieChart from '../InvestmentPieChart';
@@ -41,6 +43,18 @@ const InvestmentSuggestionsBox = ({
 }) => {
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const [termTypeModal, setTermTypeModal] = useState<TermType | null>(null);
+  const [runAllocationTour, setRunAllocationTour] = useState(false);
+  const hasShownAllocationTourRef = useRef(false);
+
+  useEffect(() => {
+    if (termTypeModal !== null && !hasShownAllocationTourRef.current) {
+      hasShownAllocationTourRef.current = true;
+      setRunAllocationTour(true);
+    }
+    if (termTypeModal === null) {
+      setRunAllocationTour(false);
+    }
+  }, [termTypeModal]);
 
   const handleClose = () => setTermTypeModal(null);
   const handleSubmit = () => setTermTypeModal(null);
@@ -73,7 +87,7 @@ const InvestmentSuggestionsBox = ({
 
   return (
     <>
-      <StyledBox mb={2}>
+      <StyledBox mb={2} className="investment-plan-box">
         <Tabs
           value={activeTab}
           onChange={(_, v) => setActiveTab(v as 0 | 1)}
@@ -99,13 +113,15 @@ const InvestmentSuggestionsBox = ({
                     <Typography variant="h6" fontWeight="bold">
                       Investments for {term.termType}
                     </Typography>
-                    <Button
-                      onClick={() => setTermTypeModal(term.termType)}
-                      sx={{ color: 'green', px: 0 }}
-                      className="customize-button"
-                    >
-                      <span className="material-symbols-rounded">tune</span>
-                    </Button>
+                    <Tooltip title="Customize allocation" arrow>
+                      <Button
+                        onClick={() => setTermTypeModal(term.termType)}
+                        sx={{ color: 'green', px: 0 }}
+                        className="customize-button"
+                      >
+                        <span className="material-symbols-rounded">tune</span>
+                      </Button>
+                    </Tooltip>
                   </Box>
                   <Grid container justifyContent="center" alignItems="center">
                     <>
@@ -179,6 +195,11 @@ const InvestmentSuggestionsBox = ({
           )}
         </Box>
       </StyledBox>
+
+      <AllocationTour
+        run={runAllocationTour}
+        onDone={() => setRunAllocationTour(false)}
+      />
 
       <Modal
         open={termTypeModal !== null}

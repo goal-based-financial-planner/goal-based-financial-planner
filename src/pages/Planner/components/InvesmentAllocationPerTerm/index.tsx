@@ -197,6 +197,7 @@ const InvestmentAllocationPerTerm = ({
             }}
           >
             <Button
+              className="allocation-add-btn"
               variant="outlined"
               color="primary"
               sx={{ mt: 2, color: 'green', border: '1px solid green' }}

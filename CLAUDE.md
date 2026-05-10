@@ -1,6 +1,6 @@
 # goal-based-financial-planner Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-04-19
+Auto-generated from all feature plans. Last updated: 2026-04-25
 
 ## Active Technologies
 - TypeScript (React 18, CRA / react-scripts 5) + MUI v6 (`@mui/material` — Tabs, Tab already available), React 18 hooks (004-goals-tabbed-view)
@@ -17,6 +17,8 @@ Auto-generated from all feature plans. Last updated: 2026-04-19
 - No new storage — export is read-only, client-side only (010-export-plan-pdf)
 - TypeScript 4.x + React 19.2.4, MUI v6 (`@mui/material`), Vite 8.0.0, Vites (011-total-monthly-investment)
 - N/A — derived display value only (011-total-monthly-investment)
+- TypeScript 4.x + React 19.2.4 + MUI v6 (`@mui/material` — Dialog, Stepper/MobileStepper, Button, Typography), react-hook-form (existing), Vite 8.0.0, Vites (012-onboarding-wizard)
+- `localStorage` via `src/util/legacyStorage.ts` (key: `'onboardingComplete'`) (012-onboarding-wizard)
 
 - Markdown / N/A (documentation only) + N/A (static documentation files) (003-oss-documentation)
 
@@ -37,9 +39,9 @@ tests/
 Markdown / N/A (documentation only): Follow standard conventions
 
 ## Recent Changes
+- 012-onboarding-wizard: Added TypeScript 4.x + React 19.2.4 + MUI v6 (`@mui/material` — Dialog, Stepper/MobileStepper, Button, Typography), react-hook-form (existing), Vite 8.0.0, Vites
 - 011-total-monthly-investment: Added TypeScript 4.x + React 19.2.4, MUI v6 (`@mui/material`), Vite 8.0.0, Vites
 - 010-export-plan-pdf: Added TypeScript 4.x + React 19.2.4 + MUI v6, react-hook-form, dayjs, Vite 8.0.0 + Vitest (existing); **new**: `jspdf` + `html2canvas`
-- 009-locale-currency-goal-duration: Added TypeScript 4.x + React 19.2.4, Vite 8.0.0, MUI v6, react-hook-form, dayjs
 
 
 <!-- MANUAL ADDITIONS START -->
