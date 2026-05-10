@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 
+export type WizardPath = 'new' | 'open' | null;
+
 export type UseOnboardingWizardReturn = {
   currentStep: number;
   totalSteps: number;
