@@ -34,6 +34,7 @@ import AddGoalPopup from '../Home/components/AddGoalPopup';
 import StorageProviderPicker from '../../components/StorageProviderPicker';
 import { DriveFileInfo, StorageProviderId } from '../../util/storage';
 import { StorageProviderContextValue } from '../../context/StorageProviderContext';
+import OnboardingWizard from './components/OnboardingWizard';
 
 const getImageStyle = (position: string, size: number, rotation: number) => ({
   position: 'absolute',
@@ -57,6 +58,7 @@ interface LandingPageProps {
   driveFiles: DriveFileInfo[];
   selectDriveFile: (fileId: string) => Promise<import('../../domain/PlannerData').PlannerData | null>;
   deleteDriveFile: (fileId: string) => Promise<void>;
+  onNewPlanCreated?: () => void;
 }
 
 const LandingPage = ({
@@ -66,7 +68,9 @@ const LandingPage = ({
   driveFiles,
   selectDriveFile,
   deleteDriveFile,
+  onNewPlanCreated,
 }: LandingPageProps) => {
+  const [showWizard, setShowWizard] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [pickerMode, setPickerMode] = useState<'new' | 'open' | null>(null);
   const [loading, setLoading] = useState(false);
@@ -239,7 +243,7 @@ const LandingPage = ({
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, mt: 1 }}>
             <Button
               variant="contained"
-              onClick={() => setPickerMode('new')}
+              onClick={() => setShowWizard(true)}
               sx={{ border: '1px solid green', backgroundColor: 'green' }}
             >
               NEW PLAN
@@ -306,6 +310,18 @@ const LandingPage = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
         <Alert severity="error" onClose={() => setError(null)}>{error}</Alert>
       </Snackbar>
+
+      {showWizard && (
+        <OnboardingWizard
+          initProvider={initProvider}
+          dispatch={dispatch}
+          onComplete={() => setShowWizard(false)}
+          onNewPlanCreated={() => {
+            setShowWizard(false);
+            onNewPlanCreated?.();
+          }}
+        />
+      )}
     </Box>
   );
 };

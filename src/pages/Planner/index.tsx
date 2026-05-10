@@ -35,9 +35,11 @@ type PlannerProps = {
   dispatch: Dispatch<PlannerDataAction>;
   headerRight?: React.ReactNode;
   printRef?: React.RefObject<HTMLDivElement | null>;
+  runTour?: boolean;
+  onTourDone?: () => void;
 };
 
-const Planner = ({ plannerData, dispatch, headerRight, printRef: externalPrintRef }: PlannerProps) => {
+const Planner = ({ plannerData, dispatch, headerRight, printRef: externalPrintRef, runTour = false, onTourDone }: PlannerProps) => {
   const internalPrintRef = useRef<HTMLDivElement>(null);
   const printRef = externalPrintRef ?? internalPrintRef;
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
@@ -170,7 +172,7 @@ const Planner = ({ plannerData, dispatch, headerRight, printRef: externalPrintRe
     completedGoals.length === plannerData.financialGoals.length;
   return (
     <>
-      <PageTour />
+      <PageTour run={runTour} onDone={onTourDone} />
 
       <Grid container padding={2} spacing={2} height="100%">
         <Grid

@@ -90,7 +90,7 @@ const InvestmentAllocations = ({
           },
         }}
       >
-        <Box>
+        <Box className="allocation-modal-header">
           <Typography sx={{ fontWeight: 'bold', textAlign: 'center' }}>
             Investment Allocations for {termType} Goals
           </Typography>
@@ -113,6 +113,7 @@ const InvestmentAllocations = ({
           }}
         >
           <Box
+            className="allocation-table-section"
             sx={{
               flex: 1,
               overflowY: 'auto',
@@ -130,6 +131,7 @@ const InvestmentAllocations = ({
             }}
           >
             <Button
+              className="allocation-submit-btn"
               variant="contained"
               sx={{
                 backgroundColor: 'green',

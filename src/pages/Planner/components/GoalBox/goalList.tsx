@@ -40,7 +40,7 @@ const GoalList = ({
             <GoalCard
               goal={goal}
               dispatch={dispatch}
-              currentValue={investmentBreakdown?.currentValue!}
+              currentValue={investmentBreakdown?.currentValue ?? 0}
               investmentSuggestions={investmentBreakdown?.investmentSuggestions}
             />
             <Divider className="divider" />

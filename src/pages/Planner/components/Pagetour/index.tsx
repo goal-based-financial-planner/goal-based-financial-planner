@@ -1,110 +1,100 @@
-import { useState, useEffect } from 'react';
-import Joyride, { CallBackProps, STATUS } from '@adi-prasetyo/react-joyride';
-import {
-  setTourTaken,
-  isTourTaken as isTourAlreadyTaken,
-} from '../../../../util/legacyStorage';
+import { driver } from 'driver.js';
+import 'driver.js/dist/driver.css';
+import { useEffect, useRef } from 'react';
 
-const steps = [
-  {
-    target: '.target-box',
-    disableBeacon: true,
-    content:
-      'This is your total financial target. The amount is automatically adjusted for inflation to ensure accuracy.',
-  },
-  {
-    target: '.add-goals-button',
-    disableBeacon: true,
+const isMobile = () => window.innerWidth < 600;
 
+const allSteps = [
+  {
+    element: '.target-box',
+    desktopOnly: false,
     content:
-      'Click here to add new financial goals to your target and start planning.',
+      'Your total financial target — the inflation-adjusted sum of all your goals. It updates automatically as you add or edit goals.',
   },
   {
-    target: '.financial-goals-box',
-    disableBeacon: true,
+    element: '.add-goals-button',
+    desktopOnly: false,
     content:
-      'Here, you can see all the financial goals you’ve already added, along with their progress.',
+      'Add a goal here. Give it a name, target amount, and deadline — the app automatically classifies it as short (≤3 yr), medium (3–7 yr), or long term (7+ yr).',
   },
   {
-    target: '.financial-progress-box',
-    disableBeacon: true,
-
+    element: '.financial-goals-box',
+    desktopOnly: true,
     content:
-      'This section provides a detailed breakdown of your financial goals by term.',
+      'All your goals at a glance. Each card shows the goal name, target date, inflation-adjusted amount, and how much you have invested so far.',
   },
   {
-    target: '.investment-plan-box',
-    disableBeacon: true,
-
+    element: '.financial-progress-box',
+    desktopOnly: false,
     content:
-      'These are tailored investment suggestions to help you achieve your financial goals efficiently.',
+      "Goals grouped by time horizon. Each bar shows the percentage of that term's total target you've already covered with current investments.",
   },
   {
-    target: '.customize-button',
-    disableBeacon: true,
+    element: '.investment-plan-box',
+    desktopOnly: false,
     content:
-      'Click this button to personalize the investment suggestions according to your preferences.',
+      'Monthly investment suggestions by instrument (FD, debt funds, equity, etc.). These numbers tell you exactly how much to invest each month to hit every goal on time.',
   },
   {
-    target: '.calendar-button',
-    disableBeacon: true,
+    element: '.customize-button',
+    desktopOnly: false,
     content:
-      'This calendar is set to the current month by default. You can change the date to view your progress at any point in time.',
+      'Adjust the asset allocation to match your risk appetite. Change the percentage split between equity, debt, and other instruments — suggestions recalculate instantly.',
+  },
+  {
+    element: '.calendar-button',
+    desktopOnly: false,
+    content:
+      'Move the date forward to preview your portfolio at any future point, or backward to review past progress. Great for stress-testing your plan.',
   },
 ];
 
-const PageTour = () => {
-  const [isTourTaken, setIsTourTaken] = useState(isTourAlreadyTaken());
-  const [runTour, setRunTour] = useState<boolean>(!isTourTaken);
+type PageTourProps = {
+  run: boolean;
+  onDone?: () => void;
+};
+
+const PageTour = ({ run, onDone }: PageTourProps) => {
+  const onDoneRef = useRef(onDone);
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
 
   useEffect(() => {
-    if (!isTourTaken) {
-      setRunTour(true);
-    }
-  }, [isTourTaken]);
+    if (!run) return;
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
+    let destroyed = false;
+    const steps = allSteps.filter((s) => !s.desktopOnly || !isMobile());
 
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      setTourTaken();
-      setIsTourTaken(true);
-      setRunTour(false);
-    }
-  };
-  return (
-    <Joyride
-      steps={steps}
-      callback={handleJoyrideCallback}
-      run={runTour}
-      continuous
-      showSkipButton
-      showProgress
-      styles={{
-        options: {
-          arrowColor: '#f5f5f5',
-          backgroundColor: '#ffffff',
-          overlayColor: 'rgba(0, 0, 0, 0.5)',
-          primaryColor: '#4CAF50',
-          textColor: '#333',
-          zIndex: 1000,
-        },
-        buttonClose: {
-          color: '#ff1744',
-        },
-        buttonBack: {
-          color: '#9E9E9E',
-        },
-        buttonNext: {
-          backgroundColor: '#1976D2',
-          color: '#ffffff',
-        },
-        buttonSkip: {
-          color: '#F44336',
-        },
-      }}
-    />
-  );
+    const dObj = driver({
+      showProgress: true,
+      steps: steps.map((s) => ({
+        element: s.element,
+        popover: { description: s.content },
+      })),
+      onDestroyStarted: () => {
+        if (!destroyed) {
+          destroyed = true;
+          dObj.destroy();
+          onDoneRef.current?.();
+        }
+      },
+    });
+
+    const id = setTimeout(() => {
+      if (!destroyed) dObj.drive();
+    }, 300);
+
+    return () => {
+      clearTimeout(id);
+      if (!destroyed) {
+        destroyed = true;
+        dObj.destroy();
+      }
+    };
+  }, [run]);
+
+  return null;
 };
 
 export default PageTour;

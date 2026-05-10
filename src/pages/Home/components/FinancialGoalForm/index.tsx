@@ -51,11 +51,13 @@ const FinancialGoalForm = ({
   dispatch,
   close,
   title,
+  embedded,
 }: {
   sx?: SxProps<Theme>;
   dispatch: Dispatch<PlannerDataAction>;
   close: () => void;
   title?: string;
+  embedded?: boolean;
 }) => {
   const handleAddGoal = (financialGoal: FinancialGoal) => {
     addFinancialGoal(dispatch, financialGoal);
@@ -161,17 +163,7 @@ const FinancialGoalForm = ({
   const startDatePickerRef = useRef<HTMLDivElement | null>(null);
   const endDatePickerRef = useRef<HTMLDivElement | null>(null);
 
-  return (
-    <StyledBackdrop sx={sx} onClick={close}>
-      <Box
-        sx={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+  const cardContent = (
         <Card
           sx={{
             borderRadius: 4,
@@ -262,6 +254,11 @@ const FinancialGoalForm = ({
                         onChange={handleStartYearChange}
                         ref={startDatePickerRef}
                         slotProps={{
+                          actionBar: { actions: ['accept'] },
+                          dialog: {
+                            disableEscapeKeyDown: true,
+                            onClose: () => {},
+                          },
                           textField: {
                             variant: 'standard',
                             label: 'Start Date',
@@ -290,6 +287,11 @@ const FinancialGoalForm = ({
                         onChange={handleTargetYearChange}
                         ref={endDatePickerRef}
                         slotProps={{
+                          actionBar: { actions: ['accept'] },
+                          dialog: {
+                            disableEscapeKeyDown: true,
+                            onClose: () => {},
+                          },
                           textField: {
                             variant: 'standard',
                             label: 'Target Date',
@@ -357,6 +359,24 @@ const FinancialGoalForm = ({
             </Box>
           </CardContent>
         </Card>
+  );
+
+  if (embedded) {
+    return cardContent;
+  }
+
+  return (
+    <StyledBackdrop sx={sx} onClick={close}>
+      <Box
+        sx={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {cardContent}
       </Box>
     </StyledBackdrop>
   );

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   getUserLocale,
   setUserLocale,
@@ -379,7 +380,7 @@ describe('Locale and Formatting Utilities', () => {
   describe('useNumberFormatter', () => {
     const theme = createTheme();
 
-    const wrapper = ({ children }: any) => (
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     );
 

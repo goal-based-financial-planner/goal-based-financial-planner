@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import ExportButton from '../Planner/components/ExportButton';
 import usePdfExport from '../Planner/hooks/usePdfExport';
 import {
@@ -54,6 +54,16 @@ const Home: React.FC = () => {
     plannerData,
     provider,
   );
+
+  const [runTour, setRunTour] = useState(false);
+
+  useEffect(() => {
+    if (!provider) setRunTour(false);
+  }, [provider]);
+
+  const handleNewPlanCreated = useCallback(() => {
+    setRunTour(true);
+  }, []);
 
   const [showDisclaimer, setShowDisclaimer] = React.useState(
     !isDisclaimerAccepted(),
@@ -122,6 +132,8 @@ const Home: React.FC = () => {
           dispatch={dispatch}
           headerRight={saveControls}
           printRef={printRef}
+          runTour={runTour}
+          onTourDone={() => setRunTour(false)}
         />
       ) : (
         <LandingPage
@@ -131,6 +143,7 @@ const Home: React.FC = () => {
           driveFiles={driveFiles}
           selectDriveFile={selectDriveFile}
           deleteDriveFile={deleteDriveFile}
+          onNewPlanCreated={handleNewPlanCreated}
         />
       )}
 

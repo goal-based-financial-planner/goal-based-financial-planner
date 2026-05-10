@@ -29,7 +29,7 @@ const TermWiseProgressBarChart = memo(({ data }: TermWiseProgressBoxProps) => {
             scaleType: 'band',
             data: chartData.map((item) => item.termType),
             categoryGapRatio: 0.5,
-          } as AxisConfig<'band', any, ChartsXAxisProps>,
+          } as AxisConfig<'band', string, ChartsXAxisProps>,
         ]}
         yAxis={[
           {

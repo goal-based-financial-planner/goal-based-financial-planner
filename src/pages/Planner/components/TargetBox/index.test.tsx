@@ -6,13 +6,13 @@ import { TermType } from '../../../../types/enums';
 
 // Mock child components
 vi.mock('../../../../components/LiveNumberCounter', () => ({
-  default: function MockLiveCounter({ value }: any) {
+  default: function MockLiveCounter({ value }: { value: number }) {
     return <div data-testid="live-counter">{value}</div>;
   },
 }));
 
 vi.mock('../../../Home/components/AddGoalPopup', () => ({
-  default: function MockAddGoalPopup({ isOpen, onClose }: any) {
+  default: function MockAddGoalPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     return isOpen ? (
       <div data-testid="add-goal-popup">
         <button onClick={onClose}>Close</button>

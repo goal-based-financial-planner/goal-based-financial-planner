@@ -24,7 +24,7 @@ export class PlannerData {
       [TermType.SHORT_TERM]: [],
     },
     investmentLogs: SIPEntry[] = [],
-    investmentOptions?: InvestmentOptionType[],
+    _investmentOptions?: InvestmentOptionType[],
   ) {
     this.financialGoals = financialGoals;
     this.investmentAllocations = investmentAllocations;

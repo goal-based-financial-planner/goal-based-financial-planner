@@ -160,4 +160,108 @@ describe('Home', () => {
     const { container } = render(<Home />);
     expect(container).toMatchSnapshot();
   });
+
+  it('should call triggerManualSave on Ctrl+S', async () => {
+    (storage.isDisclaimerAccepted as ReturnType<typeof vi.fn>).mockReturnValue(
+      true,
+    );
+    const mockTriggerManualSave = vi.fn();
+    const { useAutosave } = await import('../../hooks/useAutosave');
+    vi.mocked(useAutosave).mockReturnValue({
+      saveStatus: 'idle',
+      lastSavedAt: null,
+      lastError: null,
+      triggerManualSave: mockTriggerManualSave,
+    });
+
+    render(<Home />);
+    fireEvent.keyDown(window, { ctrlKey: true, key: 's' });
+    expect(mockTriggerManualSave).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call triggerManualSave on Cmd+S (Mac)', async () => {
+    (storage.isDisclaimerAccepted as ReturnType<typeof vi.fn>).mockReturnValue(
+      true,
+    );
+    const mockTriggerManualSave = vi.fn();
+    const { useAutosave } = await import('../../hooks/useAutosave');
+    vi.mocked(useAutosave).mockReturnValue({
+      saveStatus: 'idle',
+      lastSavedAt: null,
+      lastError: null,
+      triggerManualSave: mockTriggerManualSave,
+    });
+
+    render(<Home />);
+    fireEvent.keyDown(window, { metaKey: true, key: 's' });
+    expect(mockTriggerManualSave).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatches INITIALIZE with initialData when provider supplies it', async () => {
+    (storage.isDisclaimerAccepted as ReturnType<typeof vi.fn>).mockReturnValue(true);
+    const { useStorageProvider } = await import('../../context/StorageProviderContext');
+    const plannerDataWithGoal = {
+      financialGoals: [{}],
+      investmentAllocations: {},
+    } as unknown as import('../../domain/PlannerData').PlannerData;
+    vi.mocked(useStorageProvider).mockReturnValue({
+      provider: { id: 'local-file' } as unknown as import('../../util/storage').StorageProvider,
+      initialData: plannerDataWithGoal,
+      clearProvider: vi.fn(),
+      driveFiles: [],
+      selectDriveFile: vi.fn(),
+      deleteDriveFile: vi.fn(),
+      initProvider: vi.fn(),
+      saveStatus: 'idle' as const,
+      lastSavedAt: null,
+      lastError: null,
+      setSaveStatus: vi.fn(),
+      setLastSavedAt: vi.fn(),
+      setLastError: vi.fn(),
+    });
+    render(<Home />);
+    // When initialData is truthy, the planner view is shown (goals were loaded)
+    expect(screen.getByTestId('planner-page')).toBeInTheDocument();
+  });
+
+  it('resets plannerData when provider is cleared (provider becomes null)', async () => {
+    (storage.isDisclaimerAccepted as ReturnType<typeof vi.fn>).mockReturnValue(true);
+    const { useStorageProvider } = await import('../../context/StorageProviderContext');
+    vi.mocked(useStorageProvider).mockReturnValue({
+      provider: null,
+      initialData: null,
+      clearProvider: vi.fn(),
+      driveFiles: [],
+      selectDriveFile: vi.fn(),
+      deleteDriveFile: vi.fn(),
+      initProvider: vi.fn(),
+      saveStatus: 'idle' as const,
+      lastSavedAt: null,
+      lastError: null,
+      setSaveStatus: vi.fn(),
+      setLastSavedAt: vi.fn(),
+      setLastError: vi.fn(),
+    });
+    render(<Home />);
+    // When provider is null, the landing page is shown (empty PlannerData dispatched)
+    expect(screen.getByTestId('landing-page')).toBeInTheDocument();
+  });
+
+  it('should show error snackbar with message and Retry button when saveStatus is error', async () => {
+    (storage.isDisclaimerAccepted as ReturnType<typeof vi.fn>).mockReturnValue(
+      true,
+    );
+    const mockTriggerManualSave = vi.fn();
+    const { useAutosave } = await import('../../hooks/useAutosave');
+    vi.mocked(useAutosave).mockReturnValue({
+      saveStatus: 'error',
+      lastSavedAt: null,
+      lastError: new Error('Save failed'),
+      triggerManualSave: mockTriggerManualSave,
+    });
+
+    render(<Home />);
+    expect(screen.getByText('Save failed')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
+  });
 });

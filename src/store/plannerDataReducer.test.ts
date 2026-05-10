@@ -476,10 +476,10 @@ describe('plannerDataReducer', () => {
 
   describe('Default case', () => {
     it('should return current state for unknown action type', () => {
-      const action: PlannerDataAction = {
-        type: 'UNKNOWN_ACTION' as any,
-        payload: '' as any, // Using empty string as a valid payload type
-      };
+      const action = {
+        type: 'UNKNOWN_ACTION',
+        payload: '',
+      } as unknown as PlannerDataAction;
 
       const newState = plannerDataReducer(initialState, action);
 

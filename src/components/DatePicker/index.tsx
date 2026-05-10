@@ -46,7 +46,7 @@ export type DatePickerProps = {
  * />
  * ```
  */
-export const DatePicker = forwardRef<any, DatePickerProps>(
+export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
   (
     {
       value,

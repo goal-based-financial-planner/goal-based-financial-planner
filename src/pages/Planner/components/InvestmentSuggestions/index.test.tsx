@@ -20,7 +20,10 @@ vi.mock('../InvestmentSuggestionsDoughnutChart', () => ({
 vi.mock('../InvestmentAllocations', async () => {
   const React = await import('react');
   return {
-    default: React.forwardRef(function MockInvestmentAllocations({ onSubmit, termType }: any, ref: any) {
+    default: React.forwardRef(function MockInvestmentAllocations(
+      { onSubmit, termType }: { onSubmit?: () => void; termType?: string },
+      ref: React.Ref<HTMLDivElement>,
+    ) {
       return (
         <div ref={ref} tabIndex={-1} data-testid="investment-allocations">
           Investment Allocations for {termType}
