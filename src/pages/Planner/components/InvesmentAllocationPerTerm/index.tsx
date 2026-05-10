@@ -32,7 +32,7 @@ const InvestmentAllocationPerTerm = ({
 
   const [editableRow, setEditableRow] = useState<number | null>(null);
 
-  const saveRow = () => {
+  const saveRow = (_index: number) => {
     setEditableRow(null);
   };
 
