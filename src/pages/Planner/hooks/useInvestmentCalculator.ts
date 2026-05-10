@@ -27,7 +27,7 @@ export type GoalWiseReturn = {
   returnsPerInvestment: ReturnsPerInvestment[];
 };
 
-const useInvestmentCalculator = (plannerData: PlannerData) => {
+const useInvestmentCalculator = (_plannerData: PlannerData) => {
   const calculateInvestmentNeededForGoals = (
     plannerData: PlannerData,
     selectedDate: string,

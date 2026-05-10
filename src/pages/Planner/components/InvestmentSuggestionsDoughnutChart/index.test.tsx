@@ -6,7 +6,7 @@ import { useMediaQuery } from '@mui/material';
 
 // Mock MUI PieChart
 vi.mock('@mui/x-charts', () => ({
-  PieChart: ({ series, colors }: any) => (
+  PieChart: ({ series, colors }: { series: { data: { id: string | number; value: number }[] }[]; colors?: string[] }) => (
     <div data-testid="doughnut-chart">
       <div data-testid="chart-colors">{JSON.stringify(colors)}</div>
       <div data-testid="chart-data">{JSON.stringify(series[0].data)}</div>
@@ -25,7 +25,7 @@ vi.mock('@mui/material', async (importActual) => {
 
 // Mock LiveCounter
 vi.mock('../../../../components/LiveNumberCounter', () => ({
-  default: function MockLiveCounter({ value }: any) {
+  default: function MockLiveCounter({ value }: { value: number }) {
     return <div data-testid="live-counter">{value}</div>;
   },
 }));

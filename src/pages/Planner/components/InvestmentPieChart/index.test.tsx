@@ -5,7 +5,7 @@ import { InvestmentChoiceType } from '../../../../domain/InvestmentOptions';
 
 // Mock MUI PieChart
 vi.mock('@mui/x-charts', () => ({
-  PieChart: ({ series, colors }: any) => (
+  PieChart: ({ series, colors }: { series: { data: { id: string | number; value: number }[] }[]; colors?: string[] }) => (
     <div data-testid="pie-chart">
       <div data-testid="chart-colors">{JSON.stringify(colors)}</div>
       <div data-testid="chart-data">{JSON.stringify(series[0].data)}</div>

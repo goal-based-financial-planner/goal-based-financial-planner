@@ -63,12 +63,11 @@ vi.mock('../CongratulationsPage', () => ({
 }));
 
 vi.mock('../../components/DatePicker', () => ({
-  default: React.forwardRef(function MockDatePicker(props: any, _ref: any) {
+  default: React.forwardRef(function MockDatePicker(props: { onChange?: (val: ReturnType<typeof dayjs>) => void }) {
     return (
       <input
         data-testid="date-picker"
         onChange={(e) => {
-          const dayjs = require('dayjs');
           props.onChange?.(dayjs(e.target.value));
         }}
       />

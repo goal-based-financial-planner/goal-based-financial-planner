@@ -1,20 +1,22 @@
 import React, { forwardRef } from 'react';
+import dayjs from 'dayjs';
 import { render, screen, fireEvent } from '@testing-library/react';
 import FinancialGoalForm from './index';
 import * as plannerDataActions from '../../../../store/plannerDataActions';
 
-// Mock DatePicker: renders an <input> whose aria-label comes from slotProps.textField.label
-// and calls props.onChange with a dayjs object on change
+type DatePickerMockProps = {
+  slotProps?: { textField?: { label?: string } };
+  onChange?: (val: dayjs.Dayjs) => void;
+};
+
 vi.mock('../../../../components/DatePicker', () => ({
-  default: forwardRef((props: any, _ref: any) => {
+  default: forwardRef(function MockDatePicker(props: DatePickerMockProps) {
     const label = props.slotProps?.textField?.label ?? '';
     return (
       <input
         aria-label={label}
         data-testid={`datepicker-${label}`}
         onChange={(e) => {
-          // Dynamically import dayjs to avoid top-level import issues in the mock
-          const dayjs = require('dayjs');
           props.onChange?.(dayjs(e.target.value));
         }}
       />

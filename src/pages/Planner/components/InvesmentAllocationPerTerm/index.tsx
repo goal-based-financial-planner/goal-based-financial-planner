@@ -22,7 +22,7 @@ const InvestmentAllocationPerTerm = ({
   control,
   name,
 }: {
-  control: Control<InvestmentAllocationsType, any>;
+  control: Control<InvestmentAllocationsType>;
   name: TermType;
 }) => {
   const { fields, append, remove } = useFieldArray({
@@ -32,7 +32,7 @@ const InvestmentAllocationPerTerm = ({
 
   const [editableRow, setEditableRow] = useState<number | null>(null);
 
-  const saveRow = (index: number) => {
+  const saveRow = () => {
     setEditableRow(null);
   };
 

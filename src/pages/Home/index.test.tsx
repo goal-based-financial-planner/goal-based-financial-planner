@@ -205,14 +205,20 @@ describe('Home', () => {
       investmentAllocations: {},
     } as unknown as import('../../domain/PlannerData').PlannerData;
     vi.mocked(useStorageProvider).mockReturnValue({
-      provider: { id: 'local-file' } as any,
+      provider: { id: 'local-file' } as unknown as import('../../util/storage').StorageProvider,
       initialData: plannerDataWithGoal,
       clearProvider: vi.fn(),
       driveFiles: [],
       selectDriveFile: vi.fn(),
       deleteDriveFile: vi.fn(),
       initProvider: vi.fn(),
-    } as any);
+      saveStatus: 'idle' as const,
+      lastSavedAt: null,
+      lastError: null,
+      setSaveStatus: vi.fn(),
+      setLastSavedAt: vi.fn(),
+      setLastError: vi.fn(),
+    });
     render(<Home />);
     // When initialData is truthy, the planner view is shown (goals were loaded)
     expect(screen.getByTestId('planner-page')).toBeInTheDocument();
@@ -229,7 +235,13 @@ describe('Home', () => {
       selectDriveFile: vi.fn(),
       deleteDriveFile: vi.fn(),
       initProvider: vi.fn(),
-    } as any);
+      saveStatus: 'idle' as const,
+      lastSavedAt: null,
+      lastError: null,
+      setSaveStatus: vi.fn(),
+      setLastSavedAt: vi.fn(),
+      setLastError: vi.fn(),
+    });
     render(<Home />);
     // When provider is null, the landing page is shown (empty PlannerData dispatched)
     expect(screen.getByTestId('landing-page')).toBeInTheDocument();
@@ -244,7 +256,7 @@ describe('Home', () => {
     vi.mocked(useAutosave).mockReturnValue({
       saveStatus: 'error',
       lastSavedAt: null,
-      lastError: { message: 'Save failed' } as any,
+      lastError: new Error('Save failed'),
       triggerManualSave: mockTriggerManualSave,
     });
 

@@ -6,7 +6,7 @@ import { TermType } from '../../../../types/enums';
 
 // Mock MUI BarChart
 vi.mock('@mui/x-charts/BarChart', () => ({
-  BarChart: ({ xAxis, yAxis, series, height, barLabel }: any) => (
+  BarChart: ({ xAxis, series, height }: { xAxis: { data: string[] }[]; series: { data: number[] }[]; height: number }) => (
     <div data-testid="bar-chart">
       <div data-testid="chart-height">{height}</div>
       <div data-testid="x-axis-data">
