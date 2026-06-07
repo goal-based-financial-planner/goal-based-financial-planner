@@ -4,7 +4,7 @@ import {
   InvestmentOptionType,
 } from './InvestmentOptions';
 
-export const INFLATION_PERCENTAGE = 5;
+export const DEFAULT_INFLATION_RATE = 5;
 
 export const DEFAULT_INVESTMENT_OPTIONS: InvestmentOptionType[] = [
   {

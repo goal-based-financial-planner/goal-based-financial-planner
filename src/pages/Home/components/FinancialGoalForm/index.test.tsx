@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import { render, screen, fireEvent } from '@testing-library/react';
 import FinancialGoalForm from './index';
 import * as plannerDataActions from '../../../../store/plannerDataActions';
+import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import { GoalType } from '../../../../types/enums';
 
 type DatePickerMockProps = {
   slotProps?: { textField?: { label?: string } };
@@ -24,9 +26,10 @@ vi.mock('../../../../components/DatePicker', () => ({
   }),
 }));
 
-// Mock addFinancialGoal so we can spy on dispatch calls
+// Mock addFinancialGoal and updateFinancialGoal so we can spy on dispatch calls
 vi.mock('../../../../store/plannerDataActions', () => ({
   addFinancialGoal: vi.fn(),
+  updateFinancialGoal: vi.fn(),
 }));
 
 const mockDispatch = vi.fn();
@@ -179,5 +182,62 @@ describe('FinancialGoalForm', () => {
     expect(
       screen.queryByText('Enter your first financial goal to get started.'),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('Edit mode (initialGoal provided)', () => {
+  function makeEditGoal(inflationRate?: number): FinancialGoal {
+    const goal = new FinancialGoal(
+      'Education',
+      GoalType.ONE_TIME,
+      '2024-01-01',
+      '2030-01-01',
+      500000,
+      undefined,
+      inflationRate,
+    );
+    goal.id = 'goal-edit-id';
+    return goal;
+  }
+
+  it('pre-fills goal name field', () => {
+    const goal = makeEditGoal();
+    renderForm({ initialGoal: goal });
+    expect(screen.getByLabelText(/Goal Name/i)).toHaveValue('Education');
+  });
+
+  it('pre-fills target amount field', () => {
+    const goal = makeEditGoal();
+    renderForm({ initialGoal: goal });
+    expect(screen.getByLabelText(/Target Amount/i)).toHaveValue('500000');
+  });
+
+  it('pre-fills inflation rate field with goal inflation rate', () => {
+    const goal = makeEditGoal(8);
+    renderForm({ initialGoal: goal });
+    expect(screen.getByLabelText(/Inflation/i)).toHaveValue(8);
+  });
+
+  it('goal type radio buttons are disabled', () => {
+    const goal = makeEditGoal();
+    renderForm({ initialGoal: goal });
+    expect(screen.getByLabelText('One Time')).toBeDisabled();
+    expect(screen.getByLabelText('Recurring')).toBeDisabled();
+  });
+
+  it('renders save icon instead of check', () => {
+    const goal = makeEditGoal();
+    renderForm({ initialGoal: goal });
+    expect(screen.getByText('save')).toBeInTheDocument();
+    expect(screen.queryByText('check')).not.toBeInTheDocument();
+  });
+
+  it('valid submit calls updateFinancialGoal (not addFinancialGoal) and then close', () => {
+    const goal = makeEditGoal(8);
+    renderForm({ initialGoal: goal });
+    fireEvent.click(screen.getByText('save'));
+    expect(plannerDataActions.updateFinancialGoal).toHaveBeenCalledTimes(1);
+    expect(plannerDataActions.addFinancialGoal).not.toHaveBeenCalled();
+    expect(mockClose).toHaveBeenCalledTimes(1);
   });
 });

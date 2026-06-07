@@ -1,7 +1,6 @@
 import { Box, Typography, Grid2 as Grid } from '@mui/material';
 import { StyledBox } from '../../components/StyledBox';
 import Confetti from 'react-confetti';
-import useWindowSize from 'react-use/lib/useWindowSize';
 import { useState, useEffect } from 'react';
 import { formatCurrency } from '../../types/util';
 import { GoalSummary } from '../../types/goals';
@@ -13,7 +12,13 @@ const CongratulationsPage = ({
   targetAmount: number;
   goals: GoalSummary[];
 }) => {
-  const { width, height } = useWindowSize();
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  useEffect(() => {
+    const handler = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  const { width, height } = windowSize;
   const [showConfetti, setShowConfetti] = useState(true);
 
   useEffect(() => {

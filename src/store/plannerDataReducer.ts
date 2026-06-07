@@ -25,7 +25,8 @@ export type PlannerDataActionPayload =
   | InvestmentChoiceType // UPDATE_*_TERM_INVESTMENT
   | InvestmentOptionType // ADD_INVESTMENT_OPTION
   | string // DELETE_FINANCIAL_GOAL (goalId)
-  | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number } // UPDATE_FINANCIAL_GOAL (alternative form)
+  | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number; recurringDurationYears?: number; inflationRate?: number } // UPDATE_FINANCIAL_GOAL (alternative form)
+  | { id: string; inflationRate: number } // UPDATE_GOAL_INFLATION_RATE
   | AddSIPEntryPayload
   | EditSIPEntryPayload
   | DeleteSIPEntryPayload
@@ -133,11 +134,7 @@ export function plannerDataReducer(
       const entries = state.investmentLogs.map(
         (e: SIPEntry) => e.id === entryId ? { ...e, name, type, monthlyAmount, expectedReturnPct } : e,
       );
-      return new PlannerData(
-        state.financialGoals,
-        state.investmentAllocations,
-        entries,
-      );
+      return new PlannerData(state.financialGoals, state.investmentAllocations, entries);
     }
 
     case PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY: {
@@ -145,27 +142,45 @@ export function plannerDataReducer(
       const entries = state.investmentLogs.filter(
         (e: SIPEntry) => e.id !== entryId,
       );
-      return new PlannerData(
-        state.financialGoals,
-        state.investmentAllocations,
-        entries,
-      );
+      return new PlannerData(state.financialGoals, state.investmentAllocations, entries);
     }
 
     case PlannerDataActionType.UPDATE_FINANCIAL_GOAL: {
       const financialGoals = [...state.financialGoals];
-      const updatedPayload = action.payload as { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number };
-      const goalToBeUpdated = financialGoals.find(
-        (g) => g.id === updatedPayload.id,
-      );
+      const updatedPayload = action.payload as {
+        id: string;
+        goalName: string;
+        startYear: string;
+        targetYear: string;
+        targetAmount: number;
+        recurringDurationYears?: number;
+        inflationRate?: number;
+      };
+      const goalToBeUpdated = financialGoals.find((g) => g.id === updatedPayload.id);
 
       if (goalToBeUpdated) {
         goalToBeUpdated.goalName = updatedPayload.goalName;
         goalToBeUpdated.startDate = updatedPayload.startYear;
         goalToBeUpdated.targetDate = updatedPayload.targetYear;
         goalToBeUpdated.targetAmount = updatedPayload.targetAmount;
+        if (updatedPayload.recurringDurationYears !== undefined) {
+          goalToBeUpdated.recurringDurationYears = updatedPayload.recurringDurationYears;
+        }
+        if (updatedPayload.inflationRate !== undefined) {
+          goalToBeUpdated.inflationRate = updatedPayload.inflationRate;
+        }
       }
 
+      return new PlannerData(financialGoals, state.investmentAllocations, state.investmentLogs);
+    }
+
+    case PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE: {
+      const { id, inflationRate } = action.payload as { id: string; inflationRate: number };
+      const financialGoals = [...state.financialGoals];
+      const goal = financialGoals.find((g) => g.id === id);
+      if (goal) {
+        goal.inflationRate = inflationRate;
+      }
       return new PlannerData(financialGoals, state.investmentAllocations, state.investmentLogs);
     }
 
