@@ -9,9 +9,6 @@ vi.mock('react-confetti', () => ({
   },
 }));
 
-// Mock react-use/lib/useWindowSize hook
-vi.mock('react-use/lib/useWindowSize', () => ({ default: () => ({ width: 1920, height: 1080 }) }));
-
 // Mock format utilities for deterministic snapshots
 vi.mock('../../types/util', () => ({
   formatNumber: (num: number) => num.toLocaleString('en-US'),
@@ -26,13 +23,13 @@ describe('CongratulationsPage', () => {
   ];
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-    jest.clearAllMocks();
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+    vi.clearAllMocks();
   });
 
   it('should render congratulations message', () => {
