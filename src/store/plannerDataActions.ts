@@ -25,6 +25,7 @@ export enum PlannerDataActionType {
   ADD_INVESTMENT_LOG_ENTRY = 'ADD_INVESTMENT_LOG_ENTRY',
   EDIT_INVESTMENT_LOG_ENTRY = 'EDIT_INVESTMENT_LOG_ENTRY',
   DELETE_INVESTMENT_LOG_ENTRY = 'DELETE_INVESTMENT_LOG_ENTRY',
+  UPDATE_GOAL_INFLATION_RATE = 'UPDATE_GOAL_INFLATION_RATE',
   INITIALIZE = 'INITIALIZE',
 }
 
@@ -50,7 +51,7 @@ export function deleteFinancialGoal(
 
 export function updateFinancialGoal(
   dispatch: Dispatch<PlannerDataAction>,
-  financialGoal: FinancialGoal | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number },
+  financialGoal: FinancialGoal | { id: string; goalName: string; startYear: string; targetYear: string; targetAmount: number; recurringDurationYears?: number; inflationRate?: number },
 ) {
   dispatch({
     payload: financialGoal,
@@ -134,4 +135,12 @@ export function deleteInvestmentLogEntry(
 ) {
   const payload: DeleteSIPEntryPayload = { entryId };
   dispatch({ payload, type: PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY });
+}
+
+export function updateGoalInflationRate(
+  dispatch: Dispatch<PlannerDataAction>,
+  goalId: string,
+  inflationRate: number,
+) {
+  dispatch({ payload: { id: goalId, inflationRate }, type: PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE });
 }

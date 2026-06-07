@@ -12,6 +12,7 @@ import {
   addInvestmentLogEntry,
   editInvestmentLogEntry,
   deleteInvestmentLogEntry,
+  updateGoalInflationRate,
 } from './plannerDataActions';
 import { SIPEntry } from '../types/investmentLog';
 import { PlannerDataAction } from './plannerDataReducer';
@@ -214,6 +215,21 @@ describe('Planner Data Action Creators', () => {
       expect(dispatchMock).toHaveBeenCalledWith({
         type: PlannerDataActionType.DELETE_INVESTMENT_LOG_ENTRY,
         payload: { entryId: 'sip-1' },
+      });
+    });
+  });
+
+  describe('updateGoalInflationRate', () => {
+    it('should dispatch UPDATE_GOAL_INFLATION_RATE with id and inflationRate payload', () => {
+      const goalId = 'goal-123';
+      const inflationRate = 8;
+
+      updateGoalInflationRate(dispatchMock, goalId, inflationRate);
+
+      expect(dispatchMock).toHaveBeenCalledTimes(1);
+      expect(dispatchMock).toHaveBeenCalledWith({
+        type: PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE,
+        payload: { id: goalId, inflationRate },
       });
     });
   });

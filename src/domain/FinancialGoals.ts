@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { GoalType, TermType } from '../types/enums';
-import { INFLATION_PERCENTAGE } from './constants';
+import { DEFAULT_INFLATION_RATE } from './constants';
 
 // Extend dayjs with comparison plugins
 dayjs.extend(isSameOrAfter);
@@ -16,6 +16,7 @@ export class FinancialGoal {
     targetDate: string,
     targetAmount: number,
     recurringDurationYears?: number,
+    inflationRate?: number,
   ) {
     this.id = crypto.randomUUID();
     this.goalName = goalName;
@@ -24,6 +25,7 @@ export class FinancialGoal {
     this.targetDate = targetDate;
     this.targetAmount = targetAmount;
     this.recurringDurationYears = recurringDurationYears;
+    this.inflationRate = inflationRate;
   }
 
   id: string;
@@ -34,6 +36,8 @@ export class FinancialGoal {
   targetAmount: number;
   /** Duration in years for recurring goals. Valid range: 1–3. Undefined for one-time goals and legacy recurring goals (defaults to 1). */
   recurringDurationYears?: number;
+  /** Per-goal inflation rate in percent. Defaults to DEFAULT_INFLATION_RATE when undefined. */
+  inflationRate?: number;
 
   getInvestmentStartDate(): string {
     // If the goal is recurring, we don't have a specific start date. Return today's date
@@ -82,13 +86,11 @@ export class FinancialGoal {
   }
 
   getInflationAdjustedTargetAmount(): number {
-    if (this.goalType === GoalType.RECURRING) {
-      return this.targetAmount;
-    }
-
-    const term = this.getTerm();
-    const inflatedAmount =
-      this.targetAmount * Math.pow(1 + INFLATION_PERCENTAGE / 100, term);
+    const rate = this.inflationRate ?? DEFAULT_INFLATION_RATE;
+    const term = this.goalType === GoalType.RECURRING
+      ? (this.recurringDurationYears ?? 1)
+      : this.getTerm();
+    const inflatedAmount = this.targetAmount * Math.pow(1 + rate / 100, term);
     return Math.round((inflatedAmount + Number.EPSILON) * 100) / 100;
   }
 

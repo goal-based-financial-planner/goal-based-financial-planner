@@ -260,7 +260,7 @@ const Planner = ({ plannerData, dispatch, headerRight, printRef: externalPrintRe
           <>
             <Grid container size={12} spacing={2} sx={{ alignItems: 'stretch', mb: 4 }}>
               <Grid
-                size={{ xs: 12, sm: 6, md: 3 }}
+                size={{ xs: 12, sm: 4, md: 4 }}
                 sx={{ display: 'flex' }}
               >
                 <TargetBox
@@ -270,7 +270,7 @@ const Planner = ({ plannerData, dispatch, headerRight, printRef: externalPrintRe
                   termTypeWiseProgressData={termTypeWiseProgressData}
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 9 }} sx={{ display: 'flex', flexGrow: 1 }}>
+              <Grid size={{ xs: 12, sm: 8, md: 8 }} sx={{ display: 'flex', flexGrow: 1 }}>
                 <TermWiseProgressBox data={termTypeWiseProgressData} />
               </Grid>
             </Grid>

@@ -151,7 +151,7 @@ describe('PlannerData', () => {
   describe('Construction', () => {
     it('should initialize with empty goals and allocations', () => {
       const planner = new PlannerData();
-      
+
       expect(planner.financialGoals).toEqual([]);
       expect(planner.investmentAllocations).toEqual({
         [TermType.SHORT_TERM]: [],
@@ -171,9 +171,10 @@ describe('PlannerData', () => {
       };
 
       const planner = new PlannerData(goals, allocations);
-      
+
       expect(planner.financialGoals).toHaveLength(1);
       expect(planner.investmentAllocations[TermType.SHORT_TERM]).toHaveLength(1);
     });
   });
+
 });

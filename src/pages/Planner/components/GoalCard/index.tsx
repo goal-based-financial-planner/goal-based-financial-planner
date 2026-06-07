@@ -4,6 +4,7 @@ import {
   Collapse,
   Chip,
   IconButton,
+  Dialog,
 } from '@mui/material';
 import SemiCircleProgressBar from 'react-progressbar-semicircle';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
@@ -14,6 +15,8 @@ import { useMemo, useState, Dispatch, memo, useCallback } from 'react';
 import { InvestmentSuggestion } from '../../../../types/planner';
 import { formatCurrency } from '../../../../types/util';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
+import { DEFAULT_INFLATION_RATE } from '../../../../domain/constants';
+import FinancialGoalForm from '../../../../pages/Home/components/FinancialGoalForm';
 
 const INVESTMENT_COLORS = [
   '#FF9800', // Orange
@@ -36,6 +39,7 @@ const GoalCard = memo(
     investmentSuggestions?: InvestmentSuggestion[];
   }) => {
     const [expanded, setExpanded] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleDelete = useCallback(
       () => deleteFinancialGoal(dispatch, goal.id),
@@ -51,235 +55,271 @@ const GoalCard = memo(
       [investmentSuggestions],
     );
 
-  const formattedTargetAmount = formatCurrency(
-    goal.getInflationAdjustedTargetAmount(),
-  );
+    const formattedTargetAmount = formatCurrency(goal.getInflationAdjustedTargetAmount());
+    const formattedNominalAmount = formatCurrency(goal.getTargetAmount());
 
-  const formattedCurrentValue = formatCurrency(goal.getTargetAmount());
+    const progressPercentage = Math.round(
+      (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
+    );
 
-  const progressPercentage = Math.round(
-    (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
-  );
+    const goalDuration = `${dayjs(goal.startDate).format('MM/YYYY')} - ${dayjs(
+      goal.targetDate,
+    ).format('MM/YYYY')}`;
 
-  const goalDuration = `${dayjs(goal.startDate).format('MM/YYYY')} - ${dayjs(
-    goal.targetDate,
-  ).format('MM/YYYY')}`;
+    const fontSize = useMemo(() => {
+      const valueLength = currentValue.toFixed().length;
+      if (valueLength <= 8) return '1.25rem';
+      return '1rem';
+    }, [currentValue]);
 
-  const fontSize = useMemo(() => {
-    const valueLength = currentValue.toFixed().length;
-    if (valueLength <= 8) return '1.25rem';
-    return '1rem';
-  }, [currentValue]);
+    const hasInvestmentData = investmentSuggestions.length > 0;
+    const displayedInflationRate = goal.inflationRate ?? DEFAULT_INFLATION_RATE;
 
-  const hasInvestmentData = investmentSuggestions.length > 0;
-
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        px: 1,
-        py: 1,
-        borderRadius: 2,
-      }}
-    >
-      {/* Main card row */}
+    return (
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          pr: 4, // Space for delete button
+          position: 'relative',
+          px: 1,
+          py: 1,
+          borderRadius: 2,
         }}
       >
-        {/* Left section */}
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography variant="subtitle2">{goal.goalName}</Typography>
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: 'bold', mt: 1, fontSize }}
-          >
-            {formattedTargetAmount}
-          </Typography>
-          {goal.goalType !== GoalType.RECURRING && (
-            <Typography variant="caption">
-              Original Target: {formattedCurrentValue}
-            </Typography>
-          )}
-        </Box>
-
-        {/* Right section: Duration and progress */}
-        {goal.goalType !== GoalType.RECURRING && (
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flexShrink: 0,
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ color: 'grey', textAlign: 'center' }}
-            >
-              {goalDuration}
-            </Typography>
-            <Box sx={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
-              <SemiCircleProgressBar
-                percentage={progressPercentage}
-                showPercentValue
-                strokeWidth={5}
-                diameter={90}
-              />
-            </Box>
-          </Box>
-        )}
-      </Box>
-
-      {/* Investment Breakdown Toggle */}
-      {hasInvestmentData && (
+        {/* Main card row */}
         <Box
           sx={{
             display: 'flex',
-            alignItems: 'center',
-            mt: 1,
-            cursor: 'pointer',
-            userSelect: 'none',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            pr: 4, // Space for the button column
           }}
-          onClick={() => setExpanded(!expanded)}
         >
-          <Typography
-            variant="caption"
-            sx={{
-              color: 'primary.main',
-              fontWeight: 500,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-            }}
-          >
-            <span
-              className="material-symbols-rounded"
-              style={{
-                fontSize: '16px',
-                transition: 'transform 0.2s',
-                transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-              }}
+          {/* Left section */}
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography variant="subtitle2">{goal.goalName}</Typography>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 'bold', mt: 1, fontSize }}
             >
-              expand_more
-            </span>
-            Monthly SIP: {formatCurrency(totalMonthlyInvestment)}
-          </Typography>
+              {formattedTargetAmount}
+            </Typography>
+            <Typography variant="caption" display="block">
+              Original Target: {formattedNominalAmount}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Inflation: {displayedInflationRate}%
+            </Typography>
+          </Box>
 
-          {/* Mini color bar preview when collapsed */}
-          {!expanded && (
+          {/* Right section: Duration and progress */}
+          {goal.goalType !== GoalType.RECURRING && (
             <Box
               sx={{
                 display: 'flex',
-                ml: 2,
-                height: 6,
-                borderRadius: 1,
-                overflow: 'hidden',
-                flex: 1,
-                maxWidth: 120,
+                flexDirection: 'column',
+                alignItems: 'center',
+                flexShrink: 0,
               }}
             >
+              <Typography
+                variant="body2"
+                sx={{ color: 'grey', textAlign: 'center' }}
+              >
+                {goalDuration}
+              </Typography>
+              <Box sx={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
+                <SemiCircleProgressBar
+                  percentage={progressPercentage}
+                  showPercentValue
+                  strokeWidth={5}
+                  diameter={90}
+                />
+              </Box>
+            </Box>
+          )}
+        </Box>
+
+        {/* Investment Breakdown Toggle */}
+        {hasInvestmentData && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              mt: 1,
+              cursor: 'pointer',
+              userSelect: 'none',
+            }}
+            onClick={() => setExpanded(!expanded)}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'primary.main',
+                fontWeight: 500,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+              }}
+            >
+              <span
+                className="material-symbols-rounded"
+                style={{
+                  fontSize: '16px',
+                  transition: 'transform 0.2s',
+                  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                }}
+              >
+                expand_more
+              </span>
+              Monthly SIP: {formatCurrency(totalMonthlyInvestment)}
+            </Typography>
+
+            {/* Mini color bar preview when collapsed */}
+            {!expanded && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  ml: 2,
+                  height: 6,
+                  borderRadius: 1,
+                  overflow: 'hidden',
+                  flex: 1,
+                  maxWidth: 120,
+                }}
+              >
+                {investmentSuggestions.map((suggestion, index) => (
+                  <Box
+                    key={suggestion.investmentName}
+                    sx={{
+                      flex: suggestion.amount / totalMonthlyInvestment,
+                      backgroundColor:
+                        INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
+                    }}
+                  />
+                ))}
+              </Box>
+            )}
+          </Box>
+        )}
+
+        {/* Expandable Investment Breakdown */}
+        <Collapse in={expanded}>
+          <Box
+            sx={{
+              mt: 1.5,
+              pt: 1.5,
+              borderTop: '1px dashed',
+              borderColor: 'divider',
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
+            >
+              Investment Breakdown (Monthly)
+            </Typography>
+
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {investmentSuggestions.map((suggestion, index) => (
-                <Box
+                <Chip
                   key={suggestion.investmentName}
+                  size="small"
+                  label={
+                    <Box
+                      sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                    >
+                      <Box
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          backgroundColor:
+                            INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
+                        }}
+                      />
+                      <span>{suggestion.investmentName}</span>
+                      <Typography
+                        component="span"
+                        sx={{ fontWeight: 'bold', ml: 0.5 }}
+                      >
+                        {formatCurrency(suggestion.amount)}
+                      </Typography>
+                    </Box>
+                  }
                   sx={{
-                    flex: suggestion.amount / totalMonthlyInvestment,
-                    backgroundColor:
-                      INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    '& .MuiChip-label': {
+                      px: 1,
+                    },
                   }}
                 />
               ))}
             </Box>
-          )}
-        </Box>
-      )}
+          </Box>
+        </Collapse>
 
-      {/* Expandable Investment Breakdown */}
-      <Collapse in={expanded}>
-        <Box
+        {/* Edit Button — stacked above Delete */}
+        <IconButton
+          size="small"
+          onClick={() => setIsEditing(true)}
           sx={{
-            mt: 1.5,
-            pt: 1.5,
-            borderTop: '1px dashed',
-            borderColor: 'divider',
+            position: 'absolute',
+            top: 4,
+            right: 4,
+            color: 'primary.main',
+            opacity: 0.6,
+            '&:hover': {
+              opacity: 1,
+              backgroundColor: 'primary.light',
+              color: 'primary.contrastText',
+            },
           }}
         >
-          <Typography
-            variant="caption"
-            sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
-          >
-            Investment Breakdown (Monthly)
-          </Typography>
+          <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>
+            edit
+          </span>
+        </IconButton>
 
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {investmentSuggestions.map((suggestion, index) => (
-              <Chip
-                key={suggestion.investmentName}
-                size="small"
-                label={
-                  <Box
-                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                  >
-                    <Box
-                      sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        backgroundColor:
-                          INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
-                      }}
-                    />
-                    <span>{suggestion.investmentName}</span>
-                    <Typography
-                      component="span"
-                      sx={{ fontWeight: 'bold', ml: 0.5 }}
-                    >
-                      {formatCurrency(suggestion.amount)}
-                    </Typography>
-                  </Box>
-                }
-                sx={{
-                  backgroundColor: 'background.paper',
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  '& .MuiChip-label': {
-                    px: 1,
-                  },
-                }}
-              />
-            ))}
-          </Box>
-        </Box>
-      </Collapse>
+        {/* Delete Button — below Edit */}
+        <IconButton
+          size="small"
+          onClick={handleDelete}
+          sx={{
+            position: 'absolute',
+            top: 36,
+            right: 4,
+            color: 'error.main',
+            opacity: 0.6,
+            '&:hover': {
+              opacity: 1,
+              backgroundColor: 'error.light',
+              color: 'error.contrastText',
+            },
+          }}
+        >
+          <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>
+            delete
+          </span>
+        </IconButton>
 
-      {/* Delete Button - Always visible */}
-      <IconButton
-        size="small"
-        onClick={handleDelete}
-        sx={{
-          position: 'absolute',
-          top: 8,
-          right: 8,
-          color: 'error.main',
-          opacity: 0.6,
-          '&:hover': {
-            opacity: 1,
-            backgroundColor: 'error.light',
-            color: 'error.contrastText',
-          },
-        }}
-      >
-        <span className="material-symbols-rounded" style={{ fontSize: '20px' }}>
-          delete
-        </span>
-      </IconButton>
-    </Box>
-  );
-});
+        {/* Edit Dialog */}
+        <Dialog
+          open={isEditing}
+          onClose={() => setIsEditing(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <FinancialGoalForm
+            dispatch={dispatch}
+            close={() => setIsEditing(false)}
+            embedded
+            initialGoal={goal}
+          />
+        </Dialog>
+      </Box>
+    );
+  });
 
 GoalCard.displayName = 'GoalCard';
 

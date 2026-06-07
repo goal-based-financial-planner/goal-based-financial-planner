@@ -210,16 +210,49 @@ describe('FinancialGoal', () => {
       expect(inflatedAmount).toBeCloseTo(1628894.63, 0);
     });
 
-    it('should NOT apply inflation to recurring goals', () => {
+    it('should apply inflation to recurring goals using recurringDurationYears', () => {
       const goal = new FinancialGoal(
         'Annual Vacation',
         GoalType.RECURRING,
         '2024-01-01',
         '2024-12-31',
-        100000
+        100000,
+        1,
+        5,
       );
 
-      expect(goal.getInflationAdjustedTargetAmount()).toBe(100000);
+      // 5% over 1 year: 100000 * 1.05 = 105000
+      expect(goal.getInflationAdjustedTargetAmount()).toBe(105000);
+    });
+
+    it('should apply inflation to recurring goal with 3-year duration', () => {
+      const goal = new FinancialGoal(
+        'Vacation Fund',
+        GoalType.RECURRING,
+        '2024-01-01',
+        '2024-12-31',
+        100000,
+        3,
+        5,
+      );
+
+      // 5% over 3 years: 100000 * (1.05)^3 ≈ 115762.5
+      expect(goal.getInflationAdjustedTargetAmount()).toBeCloseTo(115762.5, 0);
+    });
+
+    it('should default to 1-year term for legacy recurring goal with no duration', () => {
+      const goal = new FinancialGoal(
+        'Legacy Recurring',
+        GoalType.RECURRING,
+        '2024-01-01',
+        '2024-12-31',
+        100000,
+        undefined,
+        5,
+      );
+
+      // No recurringDurationYears → defaults to 1: 100000 * 1.05 = 105000
+      expect(goal.getInflationAdjustedTargetAmount()).toBe(105000);
     });
 
     it('should round inflated amounts correctly', () => {
@@ -261,9 +294,46 @@ describe('FinancialGoal', () => {
       );
 
       const inflatedAmount = goal.getInflationAdjustedTargetAmount();
-      
+
       // Expected: 1000000 * (1.05)^25 ≈ 3386355.08
       expect(inflatedAmount).toBeCloseTo(3386355.08, 0);
+    });
+
+    it('should use a custom inflation rate for one-time goals', () => {
+      const goal = new FinancialGoal(
+        'House',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2029-01-01',
+        1000000,
+        undefined,
+        8,
+      );
+
+      // 8% over 5 years: 1000000 * (1.08)^5 ≈ 1469328
+      expect(goal.getInflationAdjustedTargetAmount()).toBeCloseTo(1469328, 0);
+    });
+
+    it('should return nominal amount when inflation rate is 0', () => {
+      const goal = new FinancialGoal(
+        'Car',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2030-01-01',
+        500000,
+        undefined,
+        0,
+      );
+
+      expect(goal.getInflationAdjustedTargetAmount()).toBe(500000);
+    });
+
+    it('should treat 0% inflation as returning the nominal amount for both goal types', () => {
+      const oneTime = new FinancialGoal('House', GoalType.ONE_TIME, '2024-01-01', '2034-01-01', 1000000, undefined, 0);
+      const recurring = new FinancialGoal('Vacation', GoalType.RECURRING, '2024-01-01', '2024-12-31', 200000, 3, 0);
+
+      expect(oneTime.getInflationAdjustedTargetAmount()).toBe(1000000);
+      expect(recurring.getInflationAdjustedTargetAmount()).toBe(200000);
     });
   });
 

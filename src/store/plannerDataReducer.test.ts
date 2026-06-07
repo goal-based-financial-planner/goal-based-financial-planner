@@ -315,6 +315,73 @@ describe('plannerDataReducer', () => {
 
       expect(newState.investmentAllocations[TermType.LONG_TERM]).toHaveLength(1);
     });
+
+    it('should update recurringDurationYears when provided', () => {
+      const goal = new FinancialGoal(
+        'Goal',
+        GoalType.RECURRING,
+        '2024-01-01',
+        '2024-01-01',
+        500000,
+        1,
+      );
+      goal.id = 'test-id';
+
+      const state = new PlannerData([goal], {
+        [TermType.SHORT_TERM]: [],
+        [TermType.MEDIUM_TERM]: [],
+        [TermType.LONG_TERM]: [],
+      });
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.UPDATE_FINANCIAL_GOAL,
+        payload: {
+          id: 'test-id',
+          goalName: 'Goal',
+          startYear: '2024-01-01',
+          targetYear: '2024-01-01',
+          targetAmount: 500000,
+          recurringDurationYears: 3,
+        },
+      };
+
+      const newState = plannerDataReducer(state, action);
+
+      expect(newState.financialGoals[0].recurringDurationYears).toBe(3);
+    });
+
+    it('should update inflationRate when provided', () => {
+      const goal = new FinancialGoal(
+        'Goal',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2030-01-01',
+        500000,
+      );
+      goal.id = 'test-id';
+
+      const state = new PlannerData([goal], {
+        [TermType.SHORT_TERM]: [],
+        [TermType.MEDIUM_TERM]: [],
+        [TermType.LONG_TERM]: [],
+      });
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.UPDATE_FINANCIAL_GOAL,
+        payload: {
+          id: 'test-id',
+          goalName: 'Goal',
+          startYear: '2024-01-01',
+          targetYear: '2030-01-01',
+          targetAmount: 500000,
+          inflationRate: 7,
+        },
+      };
+
+      const newState = plannerDataReducer(state, action);
+
+      expect(newState.financialGoals[0].inflationRate).toBe(7);
+    });
   });
 
   describe('UPDATE_INVESTMENT_ALLOCATIONS', () => {
@@ -471,6 +538,97 @@ describe('plannerDataReducer', () => {
 
       expect(newState.investmentLogs).toHaveLength(1);
       expect(newState.investmentLogs[0].id).toBe('sip-2');
+    });
+  });
+
+  describe('UPDATE_GOAL_INFLATION_RATE', () => {
+    it('should update inflationRate on the matching goal', () => {
+      const goal = new FinancialGoal(
+        'Education',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2030-01-01',
+        500000,
+      );
+      goal.id = 'test-id-inflate';
+
+      const state = new PlannerData([goal], {
+        [TermType.SHORT_TERM]: [],
+        [TermType.MEDIUM_TERM]: [],
+        [TermType.LONG_TERM]: [],
+      });
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE,
+        payload: { id: 'test-id-inflate', inflationRate: 8 },
+      };
+
+      const newState = plannerDataReducer(state, action);
+
+      expect(newState.financialGoals[0].inflationRate).toBe(8);
+    });
+
+    it('should preserve inflationRate on other goals when one is updated', () => {
+      const goal1 = new FinancialGoal(
+        'Goal 1',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2030-01-01',
+        300000,
+      );
+      goal1.id = 'id-1';
+      goal1.inflationRate = 7;
+
+      const goal2 = new FinancialGoal(
+        'Goal 2',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2030-01-01',
+        200000,
+      );
+      goal2.id = 'id-2';
+
+      const state = new PlannerData([goal1, goal2], {
+        [TermType.SHORT_TERM]: [],
+        [TermType.MEDIUM_TERM]: [],
+        [TermType.LONG_TERM]: [],
+      });
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE,
+        payload: { id: 'id-1', inflationRate: 9 },
+      };
+
+      const newState = plannerDataReducer(state, action);
+
+      expect(newState.financialGoals[0].inflationRate).toBe(9);
+      expect(newState.financialGoals[1].inflationRate).toBeUndefined();
+    });
+
+    it('should no-op gracefully when goal id not found', () => {
+      const goal = new FinancialGoal(
+        'Goal',
+        GoalType.ONE_TIME,
+        '2024-01-01',
+        '2030-01-01',
+        500000,
+      );
+      goal.id = 'existing-id';
+
+      const state = new PlannerData([goal], {
+        [TermType.SHORT_TERM]: [],
+        [TermType.MEDIUM_TERM]: [],
+        [TermType.LONG_TERM]: [],
+      });
+
+      const action: PlannerDataAction = {
+        type: PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE,
+        payload: { id: 'non-existent-id', inflationRate: 8 },
+      };
+
+      const newState = plannerDataReducer(state, action);
+
+      expect(newState.financialGoals[0].inflationRate).toBeUndefined();
     });
   });
 
