@@ -6,9 +6,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  InputAdornment,
   TextField,
 } from '@mui/material';
-import { Dispatch, useEffect, useMemo } from 'react';
+import { Dispatch, useEffect, useMemo, useRef } from 'react';
 import { getUserLocale } from '../../../../../../types/util';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { PlannerDataAction } from '../../../../../../store/plannerDataReducer';
@@ -17,12 +19,16 @@ import {
   editInvestmentLogEntry,
 } from '../../../../../../store/plannerDataActions';
 import { SIPEntry } from '../../../../../../types/investmentLog';
+import { CalendarIcon } from '@mui/x-date-pickers';
+import DatePicker from '../../../../../../components/DatePicker';
+import dayjs from 'dayjs';
 
 type FormValues = {
   name: string;
   type: string;
   monthlyAmount: string;
   expectedReturnPct: string;
+  startDate: string;
 };
 
 type Props = {
@@ -56,11 +62,14 @@ const SIPForm = ({
       .trim();
   }, []);
 
+  const sipStartDateRef = useRef<HTMLDivElement | null>(null);
+
   const {
     register,
     handleSubmit,
     reset,
     control,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -68,6 +77,7 @@ const SIPForm = ({
       type: existingEntry?.type ?? investmentTypes[0] ?? '',
       monthlyAmount: existingEntry ? String(existingEntry.monthlyAmount) : '',
       expectedReturnPct: existingEntry?.expectedReturnPct != null ? String(existingEntry.expectedReturnPct) : '',
+      startDate: existingEntry?.startDate ?? '',
     },
   });
 
@@ -78,6 +88,7 @@ const SIPForm = ({
         type: existingEntry?.type ?? investmentTypes[0] ?? '',
         monthlyAmount: existingEntry ? String(existingEntry.monthlyAmount) : '',
         expectedReturnPct: existingEntry?.expectedReturnPct != null ? String(existingEntry.expectedReturnPct) : '',
+        startDate: existingEntry?.startDate ?? '',
       });
     }
   }, [open, existingEntry, investmentTypes, reset]);
@@ -95,9 +106,12 @@ const SIPForm = ({
     const expectedReturnPct = isCustomType && values.expectedReturnPct
       ? parseFloat(values.expectedReturnPct)
       : undefined;
+    const startDate = values.startDate && dayjs(values.startDate).isValid()
+      ? dayjs(values.startDate).format('YYYY-MM-DD')
+      : undefined;
 
     if (isEditMode && existingEntry) {
-      editInvestmentLogEntry(dispatch, existingEntry.id, values.name, values.type, monthlyAmount, expectedReturnPct);
+      editInvestmentLogEntry(dispatch, existingEntry.id, values.name, values.type, monthlyAmount, expectedReturnPct, startDate);
     } else {
       const entry: SIPEntry = {
         id: crypto.randomUUID(),
@@ -105,6 +119,7 @@ const SIPForm = ({
         type: values.type,
         monthlyAmount,
         ...(expectedReturnPct != null && { expectedReturnPct }),
+        ...(startDate && { startDate }),
       };
       addInvestmentLogEntry(dispatch, entry);
     }
@@ -182,6 +197,31 @@ const SIPForm = ({
               validate: (v) =>
                 parseFloat(v) > 0 || 'Amount must be greater than zero',
             })}
+          />
+
+          <DatePicker
+            label={'"month" and "year"'}
+            views={['month', 'year']}
+            defaultValue={existingEntry?.startDate ? dayjs(existingEntry.startDate) : undefined}
+            onChange={(val) => setValue('startDate', val ? val.toString() : '')}
+            ref={sipStartDateRef}
+            slotProps={{
+              actionBar: { actions: ['clear', 'accept'] },
+              dialog: { disableEscapeKeyDown: true, onClose: () => {} },
+              textField: {
+                label: 'SIP Start Date (optional)',
+                helperText: 'When did you start this SIP?',
+                InputProps: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => sipStartDateRef.current?.click()}>
+                        <CalendarIcon fontSize="small" />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              },
+            }}
           />
         </Box>
       </DialogContent>

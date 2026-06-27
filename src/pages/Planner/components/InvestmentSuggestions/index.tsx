@@ -21,6 +21,7 @@ import { StyledBox } from '../../../../components/StyledBox';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 import { SIPEntry } from '../../../../types/investmentLog';
 import { InvestmentSuggestion } from '../../../../types/planner';
+import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import InvestmentTracker from '../GoalCard/components/InvestmentTracker';
 
 export type InvestmentBreakdownBasedOnTermType = {
@@ -33,13 +34,13 @@ const InvestmentSuggestionsBox = ({
   dispatch,
   investmentBreakdownBasedOnTermType,
   investmentLogs = [],
-  projectionYears = 10,
+  goals = [],
 }: {
   dispatch: React.Dispatch<PlannerDataAction>;
   investmentAllocations: InvestmentAllocationsType;
   investmentBreakdownBasedOnTermType: InvestmentBreakdownBasedOnTermType[];
   investmentLogs: SIPEntry[];
-  projectionYears?: number;
+  goals?: FinancialGoal[];
 }) => {
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
   const [termTypeModal, setTermTypeModal] = useState<TermType | null>(null);
@@ -189,11 +190,12 @@ const InvestmentSuggestionsBox = ({
             <InvestmentTracker
               investmentSuggestions={aggregatedSuggestions}
               sips={investmentLogs}
+              goals={goals}
               dispatch={dispatch}
-              projectionYears={projectionYears}
             />
           )}
         </Box>
+
       </StyledBox>
 
       <AllocationTour

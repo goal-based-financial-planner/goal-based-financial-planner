@@ -4,6 +4,7 @@ export type SIPEntry = {
   type: string;          // e.g., "Liquid Funds" — matches a suggestion instrument name
   monthlyAmount: number;
   expectedReturnPct?: number; // only set for custom (off-plan) types
+  startDate?: string;    // YYYY-MM-DD — when this SIP was actually started
 };
 
 export type SIPComparison = {
@@ -15,5 +16,5 @@ export type SIPComparison = {
 };
 
 export type AddSIPEntryPayload    = { entry: SIPEntry };
-export type EditSIPEntryPayload   = { entryId: string; name: string; type: string; monthlyAmount: number; expectedReturnPct?: number };
+export type EditSIPEntryPayload   = { entryId: string; name: string; type: string; monthlyAmount: number; expectedReturnPct?: number; startDate?: string };
 export type DeleteSIPEntryPayload = { entryId: string };

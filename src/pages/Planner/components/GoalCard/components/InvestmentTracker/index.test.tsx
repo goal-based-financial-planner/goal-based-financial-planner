@@ -4,8 +4,8 @@ import InvestmentTracker from './index';
 import { SIPEntry } from '../../../../../../types/investmentLog';
 import { InvestmentSuggestion } from '../../../../../../types/planner';
 
-vi.mock('@mui/x-charts/LineChart', () => ({
-  LineChart: () => <div data-testid="line-chart">Line Chart</div>,
+vi.mock('../../../GoalGrowthChart', () => ({
+  default: () => <div data-testid="goal-growth-chart">Growth Chart</div>,
 }));
 
 const mockDispatch = jest.fn();
@@ -25,24 +25,23 @@ const sip: SIPEntry = {
 describe('InvestmentTracker', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('renders the growth projection chart', () => {
+  it('renders the growth chart', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} goals={[]} dispatch={mockDispatch} />,
     );
-    expect(screen.getByTestId('line-chart')).toBeInTheDocument();
-    expect(screen.getByText('Portfolio Growth Projection (10 years)')).toBeInTheDocument();
+    expect(screen.getByTestId('goal-growth-chart')).toBeInTheDocument();
   });
 
   it('renders the Add SIP button', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByRole('button', { name: /add sip/i })).toBeInTheDocument();
   });
 
   it('renders comparison cards for each suggestion type', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getAllByText('Liquid Funds').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Index Funds').length).toBeGreaterThanOrEqual(1);
@@ -50,7 +49,7 @@ describe('InvestmentTracker', () => {
 
   it('renders SIP list section when SIPs exist', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByText('Axis Bank Liquid Fund')).toBeInTheDocument();
   });
@@ -58,35 +57,14 @@ describe('InvestmentTracker', () => {
   it('shows "Not in plan" chip for custom SIP types', () => {
     const customSip: SIPEntry = { id: 'c1', name: 'PPF', type: 'PPF', monthlyAmount: 12500 };
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[customSip]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[customSip]} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByText('Not in plan')).toBeInTheDocument();
   });
 
-  it('shows helper text when no SIPs added yet', () => {
-    render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
-    );
-    expect(screen.getByText(/add sips to see/i)).toBeInTheDocument();
-  });
-
-  it('uses projectionYears in the chart title when provided', () => {
-    render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} projectionYears={20} />,
-    );
-    expect(screen.getByText('Portfolio Growth Projection (20 years)')).toBeInTheDocument();
-  });
-
-  it('uses singular "year" when projectionYears is 1', () => {
-    render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} projectionYears={1} />,
-    );
-    expect(screen.getByText('Portfolio Growth Projection (1 year)')).toBeInTheDocument();
-  });
-
   it('shows monthly required and "No SIPs logged yet" when no SIPs', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByText('Monthly Required')).toBeInTheDocument();
     expect(screen.getByText('Monthly Investing')).toBeInTheDocument();
@@ -95,7 +73,7 @@ describe('InvestmentTracker', () => {
 
   it('shows "short" status when investing less than required', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByText(/short/i)).toBeInTheDocument();
   });
@@ -106,7 +84,7 @@ describe('InvestmentTracker', () => {
       { id: 's2', name: 'Index', type: 'Index Funds', monthlyAmount: 50000 },
     ];
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={fullSips} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={fullSips} goals={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getAllByText('On track').length).toBeGreaterThanOrEqual(1);
   });

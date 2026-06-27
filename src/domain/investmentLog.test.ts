@@ -1,6 +1,8 @@
-import { totalMonthlySIP, buildSIPComparison, buildGrowthProjection } from './investmentLog';
+import { totalMonthlySIP, buildSIPComparison, buildGrowthProjection, buildPortfolioWithdrawalSeries } from './investmentLog';
 import { SIPEntry } from '../types/investmentLog';
 import { InvestmentSuggestion } from '../types/planner';
+import { FinancialGoal } from './FinancialGoals';
+import { GoalType } from '../types/enums';
 
 const makeSIP = (overrides: Partial<SIPEntry> = {}): SIPEntry => ({
   id: 'sip-1',
@@ -9,6 +11,20 @@ const makeSIP = (overrides: Partial<SIPEntry> = {}): SIPEntry => ({
   monthlyAmount: 10000,
   ...overrides,
 });
+
+const makeDatedSIP = (overrides: Partial<SIPEntry> = {}): SIPEntry => ({
+  id: 'sip-d1',
+  name: 'Index Fund SIP',
+  type: 'Index Funds',
+  monthlyAmount: 10000,
+  startDate: `${new Date().getFullYear() - 2}-01-01`,
+  ...overrides,
+});
+
+function makeOneTimeGoal(name: string, yearsFromNow: number): FinancialGoal {
+  const targetYear = new Date().getFullYear() + yearsFromNow;
+  return new FinancialGoal(name, GoalType.ONE_TIME, `${targetYear - 10}-01-01`, `${targetYear}-01-01`, 1000000);
+}
 
 const makeSuggestion = (name: string, amount: number): InvestmentSuggestion => ({
   investmentName: name,
@@ -127,5 +143,102 @@ describe('buildGrowthProjection', () => {
     const result = buildGrowthProjection([customSip], [], 5);
     // Should still compute a value (using 10% default), not 0
     expect(result[5].actualValue).toBeGreaterThan(0);
+  });
+});
+
+describe('buildPortfolioWithdrawalSeries', () => {
+  it('returns empty series when there are no SIPs', () => {
+    const goal = makeOneTimeGoal('House', 5);
+    const result = buildPortfolioWithdrawalSeries([], [goal], []);
+    expect(result.points).toHaveLength(0);
+    expect(result.suggestedPoints).toHaveLength(0);
+    expect(result.goalMarkers).toHaveLength(0);
+  });
+
+  it('returns empty series when there are no one-time goals', () => {
+    const sip = makeDatedSIP();
+    const result = buildPortfolioWithdrawalSeries([sip], [], []);
+    expect(result.points).toHaveLength(0);
+    expect(result.suggestedPoints).toHaveLength(0);
+    expect(result.goalMarkers).toHaveLength(0);
+  });
+
+  it('generates points spanning from SIP start to one year after last goal', () => {
+    const sip = makeDatedSIP();
+    const goal = makeOneTimeGoal('House', 5);
+    const { points } = buildPortfolioWithdrawalSeries([sip], [goal], []);
+    // ~2 years past + 5 future + 1 extra = ~96 months
+    expect(points.length).toBeGreaterThanOrEqual(60);
+  });
+
+  it('portfolio value increases over time before goal withdrawals', () => {
+    const sip = makeDatedSIP({ monthlyAmount: 10000 });
+    const goal = makeOneTimeGoal('House', 5);
+    const { points } = buildPortfolioWithdrawalSeries([sip], [goal], []);
+    // Mid-chart value should exceed the initial value
+    const midIdx = Math.floor(points.length / 2);
+    expect(points[midIdx].value).toBeGreaterThan(points[0].value);
+  });
+
+  it('produces goalMarkers with correct names and positive amounts', () => {
+    const sip = makeDatedSIP({ monthlyAmount: 50000 });
+    const goal1 = makeOneTimeGoal('Car', 3);
+    const goal2 = makeOneTimeGoal('House', 6);
+    const { goalMarkers } = buildPortfolioWithdrawalSeries([sip], [goal1, goal2], []);
+    const names = goalMarkers.map((m) => m.goalName);
+    expect(names).toContain('Car');
+    expect(names).toContain('House');
+    goalMarkers.forEach((m) => expect(m.amount).toBeGreaterThan(0));
+  });
+
+  it('returns empty suggestedPoints when allSuggestions is empty', () => {
+    const sip = makeDatedSIP();
+    const goal = makeOneTimeGoal('House', 5);
+    const { suggestedPoints } = buildPortfolioWithdrawalSeries([sip], [goal], []);
+    expect(suggestedPoints).toHaveLength(0);
+  });
+
+  it('suggestedPoints matches actual when investing exactly the suggested amount', () => {
+    const sip = makeDatedSIP({ monthlyAmount: 10000, type: 'Index Funds' });
+    const goal = makeOneTimeGoal('House', 5);
+    const suggestion: InvestmentSuggestion = { investmentName: 'Index Funds', amount: 10000, expectedReturnPercentage: 12 };
+    const { points, suggestedPoints } = buildPortfolioWithdrawalSeries([sip], [goal], [suggestion]);
+    expect(suggestedPoints).toHaveLength(points.length);
+    suggestedPoints.forEach((sp, i) => {
+      expect(sp.value).toBe(points[i].value);
+    });
+  });
+
+  it('suggestedPoints exceeds actual when under-investing', () => {
+    const sip = makeDatedSIP({ monthlyAmount: 5000, type: 'Index Funds' });
+    const goal = makeOneTimeGoal('House', 5);
+    const suggestion: InvestmentSuggestion = { investmentName: 'Index Funds', amount: 10000, expectedReturnPercentage: 12 };
+    const { points, suggestedPoints } = buildPortfolioWithdrawalSeries([sip], [goal], [suggestion]);
+    const lastIdx = points.length - 1;
+    expect(suggestedPoints[lastIdx].value).toBeGreaterThan(points[lastIdx].value);
+  });
+
+  it('two SIPs of same type are scaled proportionally — no double-counting', () => {
+    // Each SIP 5k/mo, total actual 10k = suggested 10k → suggestedPoints should equal actual
+    const sip1 = makeDatedSIP({ id: 's1', type: 'Index Funds', monthlyAmount: 5000 });
+    const sip2 = makeDatedSIP({ id: 's2', type: 'Index Funds', monthlyAmount: 5000 });
+    const goal = makeOneTimeGoal('House', 5);
+    const suggestion: InvestmentSuggestion = { investmentName: 'Index Funds', amount: 10000, expectedReturnPercentage: 12 };
+    const { points, suggestedPoints } = buildPortfolioWithdrawalSeries([sip1, sip2], [goal], [suggestion]);
+    suggestedPoints.forEach((sp, i) => {
+      expect(sp.value).toBe(points[i].value);
+    });
+  });
+
+  it('uses today as chart start when no SIP has a valid startDate', () => {
+    const sip = makeDatedSIP({ startDate: undefined });
+    const goal = makeOneTimeGoal('House', 5);
+    const { points } = buildPortfolioWithdrawalSeries([sip], [goal], []);
+    expect(points.length).toBeGreaterThan(0);
+    // First point date should be the current month
+    const firstDate = new Date(points[0].date);
+    const today = new Date();
+    expect(firstDate.getFullYear()).toBe(today.getFullYear());
+    expect(firstDate.getMonth()).toBe(today.getMonth());
   });
 });
