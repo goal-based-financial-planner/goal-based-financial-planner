@@ -108,7 +108,7 @@ const GoalGrowthChart = ({ sips, goals, allSuggestions }: Props) => {
             key={i}
             x={marker.date}
             label={`${marker.goalName} (${formatCompactCurrency(marker.amount)})`}
-            labelAlign="start"
+            labelAlign={i % 2 === 0 ? 'start' : 'end'}
             lineStyle={{
               stroke: theme.palette.info.main,
               strokeWidth: 1.5,
