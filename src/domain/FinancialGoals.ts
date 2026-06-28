@@ -40,7 +40,6 @@ export class FinancialGoal {
   inflationRate?: number;
 
   getInvestmentStartDate(): string {
-    // If the goal is recurring, we don't have a specific start date. Return today's date
     if (this.goalType === GoalType.RECURRING) {
       return dayjs().format('YYYY-MM-DD');
     }

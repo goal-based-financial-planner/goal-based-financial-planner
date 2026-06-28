@@ -1,6 +1,6 @@
 # goal-based-financial-planner Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-05-13
+Auto-generated from all feature plans. Last updated: 2026-06-07
 
 ## Active Technologies
 - TypeScript (React 18, CRA / react-scripts 5) + MUI v6 (`@mui/material` — Tabs, Tab already available), React 18 hooks (004-goals-tabbed-view)
@@ -21,6 +21,8 @@ Auto-generated from all feature plans. Last updated: 2026-05-13
 - `localStorage` via `src/util/legacyStorage.ts` (key: `'onboardingComplete'`) (012-onboarding-wizard)
 - TypeScript 4.x + React 19.2.4, MUI v6 (`@mui/material`), react-hook-form (existing), Vite 8.0.0, Vites (013-configurable-inflation-rate)
 - Browser `localStorage` (local) + Google Drive REST API (cloud) — via `src/util/storage/storageProvider.ts` (013-configurable-inflation-rate)
+- TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `dayjs` ^1.11.13 (014-portfolio-growth-chart)
+- None — all projection data is derived at render time from existing `localStorage` / Google Drive data (014-portfolio-growth-chart)
 
 - Markdown / N/A (documentation only) + N/A (static documentation files) (003-oss-documentation)
 
@@ -41,9 +43,9 @@ tests/
 Markdown / N/A (documentation only): Follow standard conventions
 
 ## Recent Changes
+- 014-portfolio-growth-chart: Added TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `dayjs` ^1.11.13
 - 013-configurable-inflation-rate: Added TypeScript 4.x + React 19.2.4, MUI v6 (`@mui/material`), react-hook-form (existing), Vite 8.0.0, Vites
 - 012-onboarding-wizard: Added TypeScript 4.x + React 19.2.4 + MUI v6 (`@mui/material` — Dialog, Stepper/MobileStepper, Button, Typography), react-hook-form (existing), Vite 8.0.0, Vites
-- 011-total-monthly-investment: Added TypeScript 4.x + React 19.2.4, MUI v6 (`@mui/material`), Vite 8.0.0, Vites
 
 
 <!-- MANUAL ADDITIONS START -->

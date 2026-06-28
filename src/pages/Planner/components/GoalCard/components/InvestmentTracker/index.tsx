@@ -1,31 +1,29 @@
 import { Box, Button, Chip, Grid2 as Grid, Typography } from '@mui/material';
-import { LineChart } from '@mui/x-charts/LineChart';
-import { Dispatch, useMemo } from 'react';
+import { Dispatch } from 'react';
 import { useState } from 'react';
 import { PlannerDataAction } from '../../../../../../store/plannerDataReducer';
 import { deleteInvestmentLogEntry } from '../../../../../../store/plannerDataActions';
 import { InvestmentSuggestion } from '../../../../../../types/planner';
 import { SIPEntry } from '../../../../../../types/investmentLog';
-import {
-  buildSIPComparison,
-  buildGrowthProjection,
-} from '../../../../../../domain/investmentLog';
-import { formatCurrency, formatCompactCurrency } from '../../../../../../types/util';
+import { FinancialGoal } from '../../../../../../domain/FinancialGoals';
+import { buildSIPComparison } from '../../../../../../domain/investmentLog';
+import { formatCurrency } from '../../../../../../types/util';
 import SIPForm from '../LogEntryForm';
 import SIPList from '../InvestmentLogHistory';
+import GoalGrowthChart from '../../../GoalGrowthChart';
 
 type Props = {
   investmentSuggestions: InvestmentSuggestion[];
   sips: SIPEntry[];
+  goals: FinancialGoal[];
   dispatch: Dispatch<PlannerDataAction>;
-  projectionYears?: number;
 };
 
 const InvestmentTracker = ({
   investmentSuggestions,
   sips = [],
+  goals = [],
   dispatch,
-  projectionYears = 10,
 }: Props) => {
   const [formOpen, setFormOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<SIPEntry | undefined>(undefined);
@@ -35,17 +33,6 @@ const InvestmentTracker = ({
 
   const totalRequired = Math.round(comparison.reduce((sum, r) => sum + r.suggestedAmount, 0));
   const totalInvesting = Math.round(comparison.reduce((sum, r) => sum + r.actualAmount, 0));
-
-  const growthData = useMemo(
-    () => buildGrowthProjection(sips, investmentSuggestions, projectionYears),
-    [sips, investmentSuggestions, projectionYears],
-  );
-
-  const xLabels = growthData.map((d) => (d.year === 0 ? 'Now' : `Yr ${d.year}`));
-  const expectedSeries = growthData.map((d) => d.expectedValue);
-  const actualSeries = growthData.map((d) => d.actualValue);
-
-  const hasAnySips = sips.length > 0;
 
   const handleEdit = (entry: SIPEntry) => {
     setEditingEntry(entry);
@@ -108,46 +95,8 @@ const InvestmentTracker = ({
         </Grid>
       </Grid>
 
-      {/* Growth projection chart */}
-      <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 0.5 }}>
-        Portfolio Growth Projection ({projectionYears} year{projectionYears !== 1 ? 's' : ''})
-      </Typography>
-      <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-        {hasAnySips
-          ? 'Based on your current SIPs vs the recommended plan'
-          : 'Add SIPs to see how your actual portfolio compares to the plan'}
-      </Typography>
-      <LineChart
-        height={220}
-        series={[
-          {
-            data: expectedSeries,
-            label: 'Recommended plan',
-            color: '#2196F3',
-            curve: 'natural',
-            showMark: false,
-          },
-          ...(hasAnySips
-            ? [
-                {
-                  data: actualSeries,
-                  label: 'Your SIPs',
-                  color: '#4CAF50',
-                  curve: 'natural' as const,
-                  showMark: false,
-                },
-              ]
-            : []),
-        ]}
-        xAxis={[{ data: xLabels, scaleType: 'point' as const }]}
-        yAxis={[
-          {
-            valueFormatter: (v: number) => formatCompactCurrency(v),
-          },
-        ]}
-        sx={{ '& .MuiChartsLegend-root': { fontSize: '0.7rem' } }}
-        slotProps={{ legend: { itemMarkWidth: 10, itemMarkHeight: 10 } }}
-      />
+      {/* Portfolio growth chart with withdrawal simulation */}
+      <GoalGrowthChart sips={sips} goals={goals} allSuggestions={investmentSuggestions} />
 
       {/* Comparison + SIP list side by side */}
       <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -190,7 +139,6 @@ const InvestmentTracker = ({
                       backgroundColor: 'background.paper',
                     }}
                   >
-                    {/* Type name + status chip */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
                       <Typography variant="caption" fontWeight={600} noWrap sx={{ maxWidth: '60%' }}>
                         {row.type}
@@ -208,7 +156,6 @@ const InvestmentTracker = ({
                       )}
                     </Box>
 
-                    {/* Amount labels */}
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.65rem' }}>
                         {formatCurrency(row.actualAmount)}/mo
@@ -228,7 +175,6 @@ const InvestmentTracker = ({
                       )}
                     </Box>
 
-                    {/* Single progress bar */}
                     <Box sx={{ height: 5, borderRadius: 2, backgroundColor: 'action.hover', overflow: 'hidden' }}>
                       <Box
                         sx={{
@@ -267,7 +213,6 @@ const InvestmentTracker = ({
         </Grid>
       </Grid>
 
-      {/* Add/Edit form */}
       <SIPForm
         open={formOpen}
         onClose={() => setFormOpen(false)}

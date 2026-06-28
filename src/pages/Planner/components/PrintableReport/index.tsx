@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 import { PlannerData } from '../../../../domain/PlannerData';
 import { InvestmentBreakdownBasedOnTermType } from '../InvestmentSuggestions';
 import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
-
+import { buildPortfolioWithdrawalSeries } from '../../../../domain/investmentLog';
+import { InvestmentSuggestion } from '../../../../types/planner';
 type PrintableReportProps = {
   plannerData: PlannerData;
   selectedDate: string;
@@ -67,6 +68,30 @@ const PrintableReport = ({
   printRef,
 }: PrintableReportProps) => {
   const hasGoals = plannerData.financialGoals.length > 0;
+
+  const allSuggestions: InvestmentSuggestion[] = investmentBreakdownBasedOnTermType.flatMap(
+    (term) =>
+      term.investmentBreakdown.flatMap((b) =>
+        b.investmentSuggestions.map((s) => ({
+          investmentName: s.investmentName,
+          amount: s.amount,
+          expectedReturnPercentage: s.expectedReturnPercentage,
+        })),
+      ),
+  );
+
+  const { points: projPoints, goalMarkers } = buildPortfolioWithdrawalSeries(
+    plannerData.investmentLogs,
+    plannerData.financialGoals,
+    allSuggestions,
+  );
+
+  const yearlyProjection: { year: number; date: Date; value: number }[] = [];
+  for (let m = 12; m <= projPoints.length; m += 12) {
+    const pt = projPoints[m - 1];
+    if (pt) yearlyProjection.push({ year: m / 12, date: pt.date, value: pt.value });
+  }
+  const hasProjection = yearlyProjection.length > 0;
 
   return (
     <div ref={printRef} className="printable-report">
@@ -247,6 +272,50 @@ const PrintableReport = ({
                       <td style={tdStyle}>{item.termTypeWiseData.progressPercent}%</td>
                     </tr>
                   ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          {/* ── Section 5: Growth Projection Summary ── */}
+          <div style={sectionStyle}>
+            <h2 style={headingStyle}>Growth Projection Summary</h2>
+            {!hasProjection ? (
+              <p style={emptyStyle}>
+                Log SIPs and add one-time goals to see your portfolio growth projection.
+              </p>
+            ) : (
+              <table style={tableStyle}>
+                <thead>
+                  <tr>
+                    <th style={thStyle}>Year</th>
+                    <th style={thStyle}>Date</th>
+                    <th style={thStyle}>Portfolio Value</th>
+                    <th style={thStyle}>Goals Due</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {yearlyProjection.map((row, i) => {
+                    const goalsThisYear = goalMarkers.filter(
+                      (m) => dayjs(m.date).year() === dayjs(row.date).year(),
+                    );
+                    return (
+                      <tr key={i} style={{ backgroundColor: i % 2 === 0 ? '#fff' : '#fafafa' }}>
+                        <td style={tdStyle}>Year {row.year}</td>
+                        <td style={tdStyle}>{dayjs(row.date).format('MMM YYYY')}</td>
+                        <td style={{ ...tdStyle, color: row.value < 0 ? '#d32f2f' : 'inherit' }}>
+                          {formatAmount(row.value)}
+                        </td>
+                        <td style={tdStyle}>
+                          {goalsThisYear.length > 0
+                            ? goalsThisYear
+                                .map((m) => `${m.goalName} (${formatAmount(m.amount)})`)
+                                .join(', ')
+                            : '—'}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}

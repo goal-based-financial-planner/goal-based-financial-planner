@@ -296,6 +296,7 @@ export class GoogleDriveProvider implements StorageProvider {
           g.targetDate,
           g.targetAmount,
           g.recurringDurationYears,
+          g.inflationRate,
         );
       });
       const investmentLogs = Array.isArray(parsed.investmentLogs)

@@ -104,10 +104,10 @@ const LandingPage = ({
   const _doInitProvider = async (type: StorageProviderId, mode: 'new' | 'open', name?: string) => {
     setLoading(true);
     try {
-      await initProvider(type, mode, name);
-      if (mode === 'new') {
-        setIsFormOpen(true);
-      } else if (mode === 'open' && type !== 'google-drive') {
+      const data = await initProvider(type, mode, name);
+      if (!data) return; // user cancelled or provider not ready
+      const hasGoals = data.financialGoals.length > 0;
+      if (mode === 'new' || !hasGoals) {
         setIsFormOpen(true);
       }
     } catch (err) {
