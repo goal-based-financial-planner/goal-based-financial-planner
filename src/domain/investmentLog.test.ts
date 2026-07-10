@@ -1,8 +1,9 @@
-import { totalMonthlySIP, buildSIPComparison, buildGrowthProjection, buildPortfolioWithdrawalSeries } from './investmentLog';
+import { totalMonthlySIP, buildSIPComparison, buildGrowthProjection, buildPortfolioWithdrawalSeries, GoalSuggestion } from './investmentLog';
 import { SIPEntry } from '../types/investmentLog';
 import { InvestmentSuggestion } from '../types/planner';
 import { FinancialGoal } from './FinancialGoals';
 import { GoalType } from '../types/enums';
+import dayjs from 'dayjs';
 
 const makeSIP = (overrides: Partial<SIPEntry> = {}): SIPEntry => ({
   id: 'sip-1',
@@ -240,5 +241,106 @@ describe('buildPortfolioWithdrawalSeries', () => {
     const today = new Date();
     expect(firstDate.getFullYear()).toBe(today.getFullYear());
     expect(firstDate.getMonth()).toBe(today.getMonth());
+  });
+});
+
+describe('buildPortfolioWithdrawalSeries — stop-per-goal mode', () => {
+  // SIP with NO startDate, matching the user scenario
+  const noDateSIP = (overrides: Partial<SIPEntry> = {}): SIPEntry => ({
+    id: 's1',
+    name: 'Index Fund',
+    type: 'Index Funds',
+    monthlyAmount: 10000,
+    ...overrides,
+  });
+
+  function findMonthIdx(points: { date: Date }[], targetDate: string): number {
+    const target = dayjs(targetDate).startOf('month');
+    return points.findIndex((p) => dayjs(p.date).isSame(target, 'month'));
+  }
+
+  it('after goal date, actual portfolio grows only by compounding (no new contributions)', () => {
+    // Small goal so portfolio stays positive for clear comparison
+    const targetYear = new Date().getFullYear() + 5;
+    const goal = new FinancialGoal('House', GoalType.ONE_TIME,
+      `${targetYear - 10}-01-01`, `${targetYear}-01-01`, 50_000);
+
+    const goalWiseSugs: GoalSuggestion[] = [{
+      goalStartDate: `${targetYear - 10}-01-01`,
+      goalTargetDate: `${targetYear}-01-01`,
+      suggestions: [{ investmentName: 'Index Funds', amount: 10000, expectedReturnPercentage: 12 }],
+    }];
+
+    const { points: stopPoints } = buildPortfolioWithdrawalSeries(
+      [noDateSIP()], [goal], [], goalWiseSugs,
+    );
+    const { points: continuePoints } = buildPortfolioWithdrawalSeries(
+      [noDateSIP()], [goal], [],
+    );
+
+    const goalIdx = findMonthIdx(stopPoints, `${targetYear}-01-01`);
+    expect(goalIdx).toBeGreaterThan(0);
+
+    // 12 months after the goal, continue mode should be substantially higher
+    // because it keeps adding ₹10k/mo; stop mode only compounds the residual
+    const afterIdx = goalIdx + 12;
+    expect(afterIdx).toBeLessThan(stopPoints.length);
+    expect(continuePoints[afterIdx].value).toBeGreaterThan(stopPoints[afterIdx].value + 50_000);
+  });
+
+  it('with two goals, first goal portion stops while second continues — growth slows proportionally', () => {
+    const year3 = new Date().getFullYear() + 3;
+    const year6 = new Date().getFullYear() + 6;
+    const goal1 = new FinancialGoal('Short', GoalType.ONE_TIME, `${year3-10}-01-01`, `${year3}-01-01`, 30_000);
+    const goal2 = new FinancialGoal('Long',  GoalType.ONE_TIME, `${year6-10}-01-01`, `${year6}-01-01`, 30_000);
+
+    // 40% for goal1, 60% for goal2
+    const goalWiseSugs: GoalSuggestion[] = [
+      { goalStartDate: `${year3-10}-01-01`, goalTargetDate: `${year3}-01-01`, suggestions: [{ investmentName: 'Index Funds', amount: 4000, expectedReturnPercentage: 12 }] },
+      { goalStartDate: `${year6-10}-01-01`, goalTargetDate: `${year6}-01-01`, suggestions: [{ investmentName: 'Index Funds', amount: 6000, expectedReturnPercentage: 12 }] },
+    ];
+
+    const { points: stopPoints } = buildPortfolioWithdrawalSeries(
+      [noDateSIP()], [goal1, goal2], [], goalWiseSugs,
+    );
+    const { points: continuePoints } = buildPortfolioWithdrawalSeries(
+      [noDateSIP()], [goal1, goal2], [],
+    );
+
+    const goal1Idx = findMonthIdx(stopPoints, `${year3}-01-01`);
+    expect(goal1Idx).toBeGreaterThan(0);
+
+    // Between goal1 and goal2 dates: stop mode only contributes 60% (₹6k/mo)
+    // Continue mode contributes 100% (₹10k/mo)
+    // So after 12 months, continue mode should be higher
+    const midIdx = goal1Idx + 12;
+    expect(midIdx).toBeLessThan(stopPoints.length);
+    expect(continuePoints[midIdx].value).toBeGreaterThan(stopPoints[midIdx].value + 20_000);
+  });
+
+  it('when SIP type has no matching suggestion, it keeps running in stop mode too', () => {
+    const targetYear = new Date().getFullYear() + 5;
+    const goal = makeOneTimeGoal('House', 5);
+
+    // SIP type "PPF" has no suggestion — should keep contributing forever
+    const ppfSip = noDateSIP({ type: 'PPF' });
+    const goalWiseSugs: GoalSuggestion[] = [{
+      goalStartDate: `${targetYear - 10}-01-01`,
+      goalTargetDate: `${targetYear}-01-01`,
+      suggestions: [{ investmentName: 'Index Funds', amount: 10000, expectedReturnPercentage: 12 }],
+    }];
+
+    const { points: stopPoints } = buildPortfolioWithdrawalSeries(
+      [ppfSip], [goal], [], goalWiseSugs,
+    );
+    const { points: continuePoints } = buildPortfolioWithdrawalSeries(
+      [ppfSip], [goal], [],
+    );
+
+    // No goal mapping for PPF → both modes behave identically
+    expect(stopPoints.length).toBe(continuePoints.length);
+    stopPoints.forEach((sp, i) => {
+      expect(sp.value).toBe(continuePoints[i].value);
+    });
   });
 });

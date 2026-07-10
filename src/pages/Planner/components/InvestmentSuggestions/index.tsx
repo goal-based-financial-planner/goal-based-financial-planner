@@ -22,6 +22,7 @@ import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions'
 import { SIPEntry } from '../../../../types/investmentLog';
 import { InvestmentSuggestion } from '../../../../types/planner';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
+import { GoalSuggestion } from '../../../../domain/investmentLog';
 import InvestmentTracker from '../GoalCard/components/InvestmentTracker';
 
 export type InvestmentBreakdownBasedOnTermType = {
@@ -59,6 +60,16 @@ const InvestmentSuggestionsBox = ({
 
   const handleClose = () => setTermTypeModal(null);
   const handleSubmit = () => setTermTypeModal(null);
+
+  const goalWiseSuggestions: GoalSuggestion[] = useMemo(() => {
+    return investmentBreakdownBasedOnTermType
+      .flatMap((term) => term.investmentBreakdown)
+      .flatMap((b) => {
+        const goal = goals.find((g) => g.getGoalName() === b.goalName);
+        if (!goal || b.investmentSuggestions.length === 0) return [];
+        return [{ goalStartDate: goal.getInvestmentStartDate(), goalTargetDate: goal.getTargetDate(), suggestions: b.investmentSuggestions }];
+      });
+  }, [investmentBreakdownBasedOnTermType, goals]);
 
   const aggregatedSuggestions: InvestmentSuggestion[] = useMemo(() => {
     const totals: Record<string, number> = {};
@@ -192,6 +203,7 @@ const InvestmentSuggestionsBox = ({
               sips={investmentLogs}
               goals={goals}
               dispatch={dispatch}
+              goalWiseSuggestions={goalWiseSuggestions}
             />
           )}
         </Box>

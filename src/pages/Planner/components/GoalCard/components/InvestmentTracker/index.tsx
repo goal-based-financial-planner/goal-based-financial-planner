@@ -6,7 +6,7 @@ import { deleteInvestmentLogEntry } from '../../../../../../store/plannerDataAct
 import { InvestmentSuggestion } from '../../../../../../types/planner';
 import { SIPEntry } from '../../../../../../types/investmentLog';
 import { FinancialGoal } from '../../../../../../domain/FinancialGoals';
-import { buildSIPComparison } from '../../../../../../domain/investmentLog';
+import { buildSIPComparison, GoalSuggestion } from '../../../../../../domain/investmentLog';
 import { formatCurrency } from '../../../../../../types/util';
 import SIPForm from '../LogEntryForm';
 import SIPList from '../InvestmentLogHistory';
@@ -17,6 +17,7 @@ type Props = {
   sips: SIPEntry[];
   goals: FinancialGoal[];
   dispatch: Dispatch<PlannerDataAction>;
+  goalWiseSuggestions?: GoalSuggestion[];
 };
 
 const InvestmentTracker = ({
@@ -24,6 +25,7 @@ const InvestmentTracker = ({
   sips = [],
   goals = [],
   dispatch,
+  goalWiseSuggestions,
 }: Props) => {
   const [formOpen, setFormOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<SIPEntry | undefined>(undefined);
@@ -96,7 +98,7 @@ const InvestmentTracker = ({
       </Grid>
 
       {/* Portfolio growth chart with withdrawal simulation */}
-      <GoalGrowthChart sips={sips} goals={goals} allSuggestions={investmentSuggestions} />
+      <GoalGrowthChart sips={sips} goals={goals} allSuggestions={investmentSuggestions} goalWiseSuggestions={goalWiseSuggestions} />
 
       {/* Comparison + SIP list side by side */}
       <Grid container spacing={2} sx={{ mt: 1 }}>

@@ -1,26 +1,31 @@
-import { useMemo } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Box, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts';
 import dayjs from 'dayjs';
 import { SIPEntry } from '../../../../types/investmentLog';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { InvestmentSuggestion } from '../../../../types/planner';
-import { buildPortfolioWithdrawalSeries } from '../../../../domain/investmentLog';
+import { buildPortfolioWithdrawalSeries, GoalSuggestion } from '../../../../domain/investmentLog';
 import { formatCompactCurrency } from '../../../../types/util';
 
 type Props = {
   sips: SIPEntry[];
   goals: FinancialGoal[];
   allSuggestions: InvestmentSuggestion[];
+  goalWiseSuggestions?: GoalSuggestion[];
 };
 
-const GoalGrowthChart = ({ sips, goals, allSuggestions }: Props) => {
+const GoalGrowthChart = ({ sips, goals, allSuggestions, goalWiseSuggestions }: Props) => {
   const theme = useTheme();
+  const [stopPerGoal, setStopPerGoal] = useState(false);
 
   const { points, suggestedPoints, goalMarkers } = useMemo(
-    () => buildPortfolioWithdrawalSeries(sips, goals, allSuggestions),
-    [sips, goals, allSuggestions],
+    () => buildPortfolioWithdrawalSeries(
+      sips, goals, allSuggestions,
+      stopPerGoal ? goalWiseSuggestions : undefined,
+    ),
+    [sips, goals, allSuggestions, goalWiseSuggestions, stopPerGoal],
   );
 
   if (points.length === 0) {
@@ -43,6 +48,23 @@ const GoalGrowthChart = ({ sips, goals, allSuggestions }: Props) => {
 
   return (
     <Box aria-label="Portfolio growth projection chart">
+      {goalWiseSuggestions && goalWiseSuggestions.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+          <ToggleButtonGroup
+            value={stopPerGoal ? 'stop' : 'continue'}
+            exclusive
+            onChange={(_, v) => { if (v !== null) setStopPerGoal(v === 'stop'); }}
+            size="small"
+          >
+            <ToggleButton value="continue" sx={{ fontSize: 11, py: 0.4, px: 1.5, textTransform: 'none' }}>
+              Keep investing
+            </ToggleButton>
+            <ToggleButton value="stop" sx={{ fontSize: 11, py: 0.4, px: 1.5, textTransform: 'none' }}>
+              Stop per goal
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      )}
       <LineChart
         xAxis={[
           {
@@ -83,7 +105,7 @@ const GoalGrowthChart = ({ sips, goals, allSuggestions }: Props) => {
             markGap: 6,
           },
         }}
-        margin={{ top: 20, left: 70, right: 30, bottom: 60 }}
+        margin={{ top: 60, left: 70, right: 30, bottom: 60 }}
       >
         {showTodayLine && (
           <ChartsReferenceLine
@@ -108,14 +130,14 @@ const GoalGrowthChart = ({ sips, goals, allSuggestions }: Props) => {
             key={i}
             x={marker.date}
             label={`${marker.goalName} (${formatCompactCurrency(marker.amount)})`}
-            labelAlign={i % 2 === 0 ? 'start' : 'end'}
+            labelAlign="start"
             lineStyle={{
               stroke: theme.palette.info.main,
               strokeWidth: 1.5,
               strokeDasharray: '4 4',
             }}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            labelStyle={{ fontSize: 10, fill: theme.palette.info.main, textAnchor: 'end' } as any}
+            labelStyle={{ fontSize: 9, fill: theme.palette.info.main, textAnchor: 'end', transform: 'rotate(-45deg)', transformBox: 'fill-box', transformOrigin: 'right bottom' } as any}
           />
         ))}
       </LineChart>
