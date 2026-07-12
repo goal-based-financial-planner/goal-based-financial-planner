@@ -3,79 +3,158 @@
 exports[`CustomLegend > should match snapshot 1`] = `
 <div>
   <div
-    class="MuiTableContainer-root MuiBox-root css-jd4hnh-MuiTableContainer-root"
+    class="MuiBox-root css-k5rr6j"
   >
-    <table
-      class="MuiTable-root css-1xwxv7r-MuiTable-root"
+    <div
+      class="MuiBox-root css-okmndc"
     >
-      <tbody
-        class="MuiTableBody-root css-gmh7jj-MuiTableBody-root"
+      <div
+        class="css-5h5k6k-MuiResponsiveChart-container"
       >
-        <tr
-          class="MuiTableRow-root css-6phqnb-MuiTableRow-root"
+        <svg
+          class="css-1evyvmv-MuiChartsSurface-root"
+          height="110"
+          viewBox="0 0 110 110"
+          width="110"
         >
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
-          >
-            <div
-              class="MuiBox-root css-ya7p3"
-            />
-          </td>
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
-          >
-            Large Cap Equity
-          </td>
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
-          >
-            $4,000,000
-          </td>
-        </tr>
-        <tr
-          class="MuiTableRow-root css-6phqnb-MuiTableRow-root"
+          <title />
+          <desc />
+          <defs />
+          <g>
+            <g
+              transform="translate(55, 55)"
+            >
+              <g>
+                <path
+                  class="MuiPieArc-root MuiPieArc-series-auto-generated-id-0 MuiPieArc-data-index-0 css-1mzvvpl-MuiPieArc-root"
+                  cursor="unset"
+                  d="M34.11,18.908L24.489,13.575Z"
+                  fill="rgba(255, 165, 0, 0.8)"
+                  filter="none"
+                  opacity="1"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  visibility="hidden"
+                />
+                <path
+                  class="MuiPieArc-root MuiPieArc-series-auto-generated-id-0 MuiPieArc-data-index-1 css-1mzvvpl-MuiPieArc-root"
+                  cursor="unset"
+                  d="M-38.987,1.021L-27.99,0.733Z"
+                  fill="rgba(54, 162, 235, 0.8)"
+                  filter="none"
+                  opacity="1"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  visibility="hidden"
+                />
+                <path
+                  class="MuiPieArc-root MuiPieArc-series-auto-generated-id-0 MuiPieArc-data-index-2 css-1mzvvpl-MuiPieArc-root"
+                  cursor="unset"
+                  d="M-19.794,-33.604L-14.211,-24.126Z"
+                  fill="rgba(75, 192, 192, 0.8)"
+                  filter="none"
+                  opacity="1"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  visibility="hidden"
+                />
+              </g>
+            </g>
+            <g
+              transform="translate(55, 55)"
+            >
+              <g>
+                <text
+                  class="MuiPieArcLabel-root MuiPieArcLabel-series-auto-generated-id-0 css-ixpz1i-MuiPieArcLabel-root"
+                  style="opacity: 0; transform: none;"
+                />
+                <text
+                  class="MuiPieArcLabel-root MuiPieArcLabel-series-auto-generated-id-0 css-ixpz1i-MuiPieArcLabel-root"
+                  style="opacity: 0; transform: none;"
+                />
+                <text
+                  class="MuiPieArcLabel-root MuiPieArcLabel-series-auto-generated-id-0 css-ixpz1i-MuiPieArcLabel-root"
+                  style="opacity: 0; transform: none;"
+                />
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root css-6c794j"
+    >
+      <div
+        class="MuiBox-root css-172hjuw"
+      >
+        <div
+          class="MuiBox-root css-um6r64"
+        />
+        <span
+          class="MuiBox-root css-gorx6i"
         >
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
-          >
-            <div
-              class="MuiBox-root css-ck996r"
-            />
-          </td>
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
-          >
-            Gold
-          </td>
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
-          >
-            $1,000,000
-          </td>
-        </tr>
-        <tr
-          class="MuiTableRow-root css-6phqnb-MuiTableRow-root"
+          Large Cap Equity
+        </span>
+        <span
+          class="MuiBox-root css-gof1rv"
         >
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
-          >
-            <div
-              class="MuiBox-root css-d6x00p"
-            />
-          </td>
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-1lb47ru-MuiTableCell-root"
-          >
-            PPF
-          </td>
-          <td
-            class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeSmall css-jlqdff-MuiTableCell-root"
-          >
-            $1,000,000
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          67
+          %
+        </span>
+        <span
+          class="MuiBox-root css-bh4ibf"
+        >
+          $4,000,000
+        </span>
+      </div>
+      <div
+        class="MuiBox-root css-172hjuw"
+      >
+        <div
+          class="MuiBox-root css-dqa00k"
+        />
+        <span
+          class="MuiBox-root css-gorx6i"
+        >
+          Gold
+        </span>
+        <span
+          class="MuiBox-root css-gof1rv"
+        >
+          17
+          %
+        </span>
+        <span
+          class="MuiBox-root css-bh4ibf"
+        >
+          $1,000,000
+        </span>
+      </div>
+      <div
+        class="MuiBox-root css-172hjuw"
+      >
+        <div
+          class="MuiBox-root css-171r4kw"
+        />
+        <span
+          class="MuiBox-root css-gorx6i"
+        >
+          PPF
+        </span>
+        <span
+          class="MuiBox-root css-gof1rv"
+        >
+          17
+          %
+        </span>
+        <span
+          class="MuiBox-root css-bh4ibf"
+        >
+          $1,000,000
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 `;

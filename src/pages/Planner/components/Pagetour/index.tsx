@@ -6,28 +6,16 @@ const isMobile = () => window.innerWidth < 600;
 
 const allSteps = [
   {
-    element: '.target-box',
+    element: '.stat-total-target',
     desktopOnly: false,
     content:
-      'Your total financial target — the inflation-adjusted sum of all your goals. It updates automatically as you add or edit goals.',
+      'Your total financial target — the inflation-adjusted sum of all your goals. The monthly required and investing tiles show how your SIPs compare to the plan.',
   },
   {
-    element: '.add-goals-button',
+    element: '.goals-drawer-button',
     desktopOnly: false,
     content:
-      'Add a goal here. Give it a name, target amount, and deadline — the app automatically classifies it as short (≤3 yr), medium (3–7 yr), or long term (7+ yr).',
-  },
-  {
-    element: '.financial-goals-box',
-    desktopOnly: true,
-    content:
-      'All your goals at a glance. Each card shows the goal name, target date, inflation-adjusted amount, and how much you have invested so far.',
-  },
-  {
-    element: '.financial-progress-box',
-    desktopOnly: false,
-    content:
-      "Goals grouped by time horizon. Each bar shows the percentage of that term's total target you've already covered with current investments.",
+      'Open your goals here. Each card shows the goal name, target date, inflation-adjusted amount, and monthly SIP breakdown. Add new goals from inside this panel.',
   },
   {
     element: '.investment-plan-box',

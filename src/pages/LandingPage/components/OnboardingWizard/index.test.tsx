@@ -54,9 +54,9 @@ describe('OnboardingWizard shell', () => {
     expect(screen.getByText('Step 1 of 4')).toBeInTheDocument();
   });
 
-  it('Skip button is visible on step 1', () => {
+  it('Skip button is not rendered', () => {
     render(<OnboardingWizard {...defaultProps} />, { wrapper });
-    expect(screen.getByRole('button', { name: /skip/i })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /skip/i })).not.toBeInTheDocument();
   });
 
   it('Back button is not accessible on step 1', () => {
@@ -104,13 +104,6 @@ describe('OnboardingWizard shell', () => {
     fireEvent.click(screen.getByText('goal-done'));
     expect(defaultProps.onNewPlanCreated).toHaveBeenCalledTimes(1);
     expect(defaultProps.onComplete).not.toHaveBeenCalled();
-  });
-
-  it('Skip button calls onComplete (not onNewPlanCreated)', () => {
-    render(<OnboardingWizard {...defaultProps} />, { wrapper });
-    fireEvent.click(screen.getByRole('button', { name: /skip/i }));
-    expect(defaultProps.onComplete).toHaveBeenCalledTimes(1);
-    expect(defaultProps.onNewPlanCreated).not.toHaveBeenCalled();
   });
 
   it('progress bar reflects current step', () => {

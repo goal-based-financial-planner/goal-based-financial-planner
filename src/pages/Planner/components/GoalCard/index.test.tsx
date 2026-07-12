@@ -5,12 +5,6 @@ import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { GoalType } from '../../../../types/enums';
 import * as plannerDataActions from '../../../../store/plannerDataActions';
 
-vi.mock('react-progressbar-semicircle', () => ({
-  default: ({ percentage }: { percentage: number }) => (
-    <div data-testid="progress-bar">{percentage}%</div>
-  ),
-}));
-
 vi.mock('../../../../store/plannerDataActions', () => ({
   deleteFinancialGoal: vi.fn(),
   updateGoalInflationRate: vi.fn(),
@@ -113,7 +107,7 @@ describe('GoalCard', () => {
     expect(screen.getByTestId('financial-goal-form')).toBeInTheDocument();
   });
 
-  it('for recurring goals: progress bar section is NOT shown', () => {
+  it('for recurring goals: date range is NOT shown', () => {
     const goal = new FinancialGoal(
       'Monthly Savings',
       GoalType.RECURRING,
@@ -125,14 +119,14 @@ describe('GoalCard', () => {
     render(
       <GoalCard goal={goal} dispatch={mockDispatch} currentValue={0} />,
     );
-    expect(screen.queryByTestId('progress-bar')).not.toBeInTheDocument();
+    expect(screen.queryByText(/\d{2}\/\d{4} - \d{2}\/\d{4}/)).not.toBeInTheDocument();
   });
 
-  it('for one-time goals: progress bar section IS shown', () => {
+  it('for one-time goals: date range IS shown', () => {
     const goal = makeOneTimeGoal();
     render(
       <GoalCard goal={goal} dispatch={mockDispatch} currentValue={50000} />,
     );
-    expect(screen.getByTestId('progress-bar')).toBeInTheDocument();
+    expect(screen.getByText(/01\/2024 - 01\/2030/)).toBeInTheDocument();
   });
 });

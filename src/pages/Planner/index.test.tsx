@@ -22,19 +22,17 @@ vi.mock('./components/Pagetour', () => ({
   },
 }));
 
-vi.mock('./components/TargetBox', () => ({
-  default: function MockTargetBox({ setShowDrawer }: { setShowDrawer: (v: boolean) => void }) {
+vi.mock('./components/PlannerStatStrip', () => ({
+  default: function MockPlannerStatStrip({ onGoalsClick, onAddGoal, financialGoals }: { onGoalsClick?: () => void; onAddGoal?: () => void; financialGoals?: { getTermType: () => string }[] }) {
+    const count = financialGoals?.length ?? 0;
     return (
-      <div data-testid="target-box">
-        <button data-testid="open-drawer" onClick={() => setShowDrawer(true)} />
+      <div data-testid="planner-stat-strip">
+        {onGoalsClick && count > 0 && (
+          <button onClick={onGoalsClick}>{count} Goal{count !== 1 ? 's' : ''}</button>
+        )}
+        {onAddGoal && <button onClick={onAddGoal}>+ Add Goal</button>}
       </div>
     );
-  },
-}));
-
-vi.mock('./components/TermwiseProgressBox', () => ({
-  default: function MockTermWiseProgressBox() {
-    return <div data-testid="termwise-progress" />;
   },
 }));
 
@@ -50,6 +48,12 @@ vi.mock('./components/GoalBox', () => ({
   },
 }));
 
+vi.mock('./components/GoalGrowthChart', () => ({
+  default: function MockGoalGrowthChart() {
+    return <div data-testid="goal-growth-chart" />;
+  },
+}));
+
 vi.mock('./components/PrintableReport', () => ({
   default: function MockPrintableReport() {
     return <div data-testid="printable-report" />;
@@ -59,6 +63,12 @@ vi.mock('./components/PrintableReport', () => ({
 vi.mock('../CongratulationsPage', () => ({
   default: function MockCongratulationsPage() {
     return <div data-testid="congratulations" />;
+  },
+}));
+
+vi.mock('../Home/components/AddGoalPopup', () => ({
+  default: function MockAddGoalPopup() {
+    return null;
   },
 }));
 
@@ -118,16 +128,15 @@ describe('Planner', () => {
     vi.clearAllMocks();
   });
 
-  it('renders CongratulationsPage when there are no goals (both counts are 0)', () => {
+  it('does not show CongratulationsPage when there are no goals', () => {
     renderPlanner({ plannerData: new PlannerData() });
-    expect(screen.getByTestId('congratulations')).toBeInTheDocument();
+    expect(screen.queryByTestId('congratulations')).not.toBeInTheDocument();
   });
 
-  it('renders TargetBox, TermWiseProgressBox, and InvestmentSuggestions when a future goal exists', () => {
+  it('renders stat strip and investment suggestions when a future goal exists', () => {
     const plannerData = new PlannerData([makeGoal()]);
     renderPlanner({ plannerData });
-    expect(screen.getByTestId('target-box')).toBeInTheDocument();
-    expect(screen.getByTestId('termwise-progress')).toBeInTheDocument();
+    expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
     expect(screen.getByTestId('investment-suggestions')).toBeInTheDocument();
   });
 
@@ -161,10 +170,9 @@ describe('Planner', () => {
     expect(screen.getByTestId('printable-report')).toBeInTheDocument();
   });
 
-  it('renders PrintableReport even in CongratulationsPage state', () => {
+  it('renders PrintableReport even with no goals', () => {
     renderPlanner({ plannerData: new PlannerData() });
     expect(screen.getByTestId('printable-report')).toBeInTheDocument();
-    expect(screen.getByTestId('congratulations')).toBeInTheDocument();
   });
 
   it('renders CongratulationsPage when all goals have past target dates', () => {
@@ -182,18 +190,27 @@ describe('Planner', () => {
   it('handleChange: changing the date picker updates state without error', () => {
     const plannerData = new PlannerData([makeGoal()]);
     renderPlanner({ plannerData });
-    // Fires handleChange (covers line 49: setSelectedDate)
     fireEvent.change(screen.getByTestId('date-picker'), {
       target: { value: '2026-06-01' },
     });
-    expect(screen.getByTestId('target-box')).toBeInTheDocument();
+    expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
   });
 
-  it('setShowDrawerCallback: clicking open-drawer shows the Goals drawer', () => {
+  it('renders Investment Plan and Portfolio tab labels when a future goal exists', () => {
     const plannerData = new PlannerData([makeGoal()]);
     renderPlanner({ plannerData });
-    // Fires setShowDrawerCallback (covers line 166: setShowDrawer)
-    fireEvent.click(screen.getByTestId('open-drawer'));
-    expect(screen.getByText('Goals')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Investment Plan' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Portfolio' })).toBeInTheDocument();
+  });
+
+  it('renders Add Goal button in stat strip', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    expect(screen.getByRole('button', { name: /add goal/i })).toBeInTheDocument();
+  });
+
+  it('renders term goal chips in stat strip when goals exist', () => {
+    const plannerData = new PlannerData([makeGoal()]);
+    renderPlanner({ plannerData });
+    expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
   });
 });

@@ -70,24 +70,6 @@ describe('useOnboardingWizard', () => {
     });
   });
 
-  describe('skip', () => {
-    it('calls onComplete', () => {
-      const { result } = renderHook(() => useOnboardingWizard());
-      const onComplete = vi.fn();
-      act(() => result.current.skip(onComplete));
-      expect(onComplete).toHaveBeenCalledTimes(1);
-    });
-
-    it('skip works from any step', () => {
-      const { result } = renderHook(() => useOnboardingWizard());
-      act(() => result.current.goNext());
-      act(() => result.current.goNext());
-      const onComplete = vi.fn();
-      act(() => result.current.skip(onComplete));
-      expect(onComplete).toHaveBeenCalledTimes(1);
-    });
-  });
-
   describe('handleGoalCreated', () => {
     it('calls onComplete', () => {
       const { result } = renderHook(() => useOnboardingWizard());

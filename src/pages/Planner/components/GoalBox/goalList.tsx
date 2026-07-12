@@ -1,5 +1,5 @@
 import GoalCard from '../GoalCard';
-import { Box, Divider } from '@mui/material';
+import { Grid2 as Grid } from '@mui/material';
 import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculator';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
@@ -17,37 +17,24 @@ const GoalList = ({
   dispatch,
 }: GoalListProps) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        '& .divider': {
-          display: 'block',
-        },
-        '& .divider:last-child': {
-          display: 'none',
-        },
-      }}
-    >
+    <Grid container spacing={2}>
       {goals.map((goal: FinancialGoal) => {
         const investmentBreakdown = investmentBreakdownForAllGoals.find(
           (ib) => ib.goalName === goal.getGoalName(),
         );
 
         return (
-          <div key={goal.id}>
+          <Grid key={goal.id} size={{ xs: 12, sm: 6 }}>
             <GoalCard
               goal={goal}
               dispatch={dispatch}
               currentValue={investmentBreakdown?.currentValue ?? 0}
               investmentSuggestions={investmentBreakdown?.investmentSuggestions}
             />
-            <Divider className="divider" />
-          </div>
+          </Grid>
         );
       })}
-    </Box>
+    </Grid>
   );
 };
 

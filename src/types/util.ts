@@ -171,6 +171,7 @@ export const formatIndianCurrency = (num: number): string => {
  * @param num - The number to format
  */
 export const formatCompactCurrency = (num: number): string => {
+  if (num < 0) return `-${formatCompactCurrency(-num)}`;
   const locale = getUserLocale();
   const localeCurrencyMap: { [key: string]: string } = {
     'en-IN': 'INR',

@@ -33,7 +33,7 @@ const GoalGrowthChart = ({ sips, goals, allSuggestions, goalWiseSuggestions }: P
       <Box sx={{ py: 4, textAlign: 'center' }} aria-label="Portfolio growth projection chart">
         <Typography variant="body2" color="text.secondary">
           {sips.length === 0
-            ? 'Log your SIPs above to see portfolio growth.'
+            ? 'Log your SIPs in the Investment Plan tab to see portfolio growth.'
             : 'Add one-time financial goals to see growth with withdrawals.'}
         </Typography>
       </Box>

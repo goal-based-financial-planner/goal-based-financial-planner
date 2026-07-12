@@ -46,12 +46,9 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     isLastStep,
     goNext,
     goBack,
-    skip,
     handleStorageSelected,
     handleGoalCreated,
   } = useOnboardingWizard();
-
-  const handleSkip = () => skip(onComplete);
 
   const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
 
@@ -93,7 +90,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       fullScreen={fullScreen}
       fullWidth
       maxWidth="sm"
-      onClose={handleSkip}
+      onClose={onComplete}
       aria-label="Onboarding wizard"
       disableEscapeKeyDown={false}
     >
@@ -111,9 +108,6 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
         <Typography variant="body2" color="text.secondary">
           Step {currentStep} of {totalSteps}
         </Typography>
-        <Button size="small" color="inherit" onClick={handleSkip} sx={{ color: 'text.secondary' }}>
-          Skip
-        </Button>
       </Box>
 
       {/* Progress bar */}

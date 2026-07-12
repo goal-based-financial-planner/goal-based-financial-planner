@@ -4,16 +4,9 @@ import InvestmentSuggestionsBox from './index';
 import { TermType } from '../../../../types/enums';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 
-// Mock child components
 vi.mock('../GoalCard/components/InvestmentTracker', () => ({
   default: function MockInvestmentTracker() {
     return <div data-testid="investment-tracker">Investment Tracker</div>;
-  },
-}));
-
-vi.mock('../InvestmentSuggestionsDoughnutChart', () => ({
-  default: function MockDoughnutChart() {
-    return <div data-testid="doughnut-chart">Doughnut Chart</div>;
   },
 }));
 
@@ -34,15 +27,14 @@ vi.mock('../InvestmentAllocations', async () => {
   };
 });
 
-vi.mock('../InvestmentPieChart', () => ({
-  default: function MockPieChart() {
-    return <div data-testid="pie-chart">Pie Chart</div>;
-  },
-}));
-
 vi.mock('../CustomLegend', () => ({
-  default: function MockCustomLegend() {
-    return <div data-testid="custom-legend">Custom Legend</div>;
+  default: function MockCustomLegend({ label, onCustomize }: { label?: string; onCustomize?: () => void }) {
+    return (
+      <div data-testid="custom-legend">
+        {label && <span>{label}</span>}
+        {onCustomize && <button onClick={onCustomize}>tune</button>}
+      </div>
+    );
   },
 }));
 
@@ -98,7 +90,7 @@ describe('InvestmentSuggestionsBox', () => {
     jest.clearAllMocks();
   });
 
-  it('should render Suggestions and Investment Tracker tabs', () => {
+  it('renders both Allocation Plan and Investment Tracker sections simultaneously', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
@@ -107,37 +99,36 @@ describe('InvestmentSuggestionsBox', () => {
         investmentLogs={[]}
       />
     );
-    expect(screen.getByRole('tab', { name: /allocation plan/i })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: /investment tracker/i })).toBeInTheDocument();
-  });
-
-  it('should show suggestions tab content by default', () => {
-    render(
-      <InvestmentSuggestionsBox
-        dispatch={mockDispatch}
-        investmentAllocations={mockInvestmentAllocations}
-        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
-        investmentLogs={[]}
-      />
-    );
-    expect(screen.getByText(/Investments for Short Term/i)).toBeInTheDocument();
-    expect(screen.getByText(/Investments for Long Term/i)).toBeInTheDocument();
-  });
-
-  it('should show Investment Tracker tab when clicked', () => {
-    render(
-      <InvestmentSuggestionsBox
-        dispatch={mockDispatch}
-        investmentAllocations={mockInvestmentAllocations}
-        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
-        investmentLogs={[]}
-      />
-    );
-    fireEvent.click(screen.getByRole('tab', { name: /investment tracker/i }));
+    expect(screen.getByText(/allocation plan/i)).toBeInTheDocument();
     expect(screen.getByTestId('investment-tracker')).toBeInTheDocument();
   });
 
-  it('should open modal when customize button is clicked', () => {
+  it('shows term type headings in the allocation column', () => {
+    render(
+      <InvestmentSuggestionsBox
+        dispatch={mockDispatch}
+        investmentAllocations={mockInvestmentAllocations}
+        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
+      />
+    );
+    expect(screen.getByText(TermType.SHORT_TERM)).toBeInTheDocument();
+    expect(screen.getByText(TermType.LONG_TERM)).toBeInTheDocument();
+  });
+
+  it('renders the Investment Tracker without any tab click', () => {
+    render(
+      <InvestmentSuggestionsBox
+        dispatch={mockDispatch}
+        investmentAllocations={mockInvestmentAllocations}
+        investmentBreakdownBasedOnTermType={mockInvestmentBreakdown}
+        investmentLogs={[]}
+      />
+    );
+    expect(screen.getByTestId('investment-tracker')).toBeInTheDocument();
+  });
+
+  it('opens modal when customize button is clicked', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
@@ -151,7 +142,7 @@ describe('InvestmentSuggestionsBox', () => {
     expect(screen.getByTestId('investment-allocations')).toBeInTheDocument();
   });
 
-  it('should close modal when handleSubmit is called', () => {
+  it('closes modal when handleSubmit is called', () => {
     render(
       <InvestmentSuggestionsBox
         dispatch={mockDispatch}
@@ -166,7 +157,7 @@ describe('InvestmentSuggestionsBox', () => {
     fireEvent.click(screen.getByText('Submit'));
   });
 
-  it('should filter out term types with no investment suggestions', () => {
+  it('filters out term types with no investment suggestions', () => {
     const emptyBreakdown = [
       {
         termType: TermType.SHORT_TERM,
@@ -197,11 +188,11 @@ describe('InvestmentSuggestionsBox', () => {
         investmentLogs={[]}
       />
     );
-    expect(screen.queryByText(/Investments for Short Term/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Investments for Long Term/i)).toBeInTheDocument();
+    expect(screen.queryByText(TermType.SHORT_TERM)).not.toBeInTheDocument();
+    expect(screen.getByText(TermType.LONG_TERM)).toBeInTheDocument();
   });
 
-  it('should show empty state when all breakdowns have no suggestions', () => {
+  it('shows empty state when all breakdowns have no suggestions', () => {
     const emptyBreakdown = [
       {
         termType: TermType.SHORT_TERM,
