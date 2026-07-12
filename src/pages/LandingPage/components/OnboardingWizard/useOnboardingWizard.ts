@@ -9,7 +9,6 @@ export type UseOnboardingWizardReturn = {
   isLastStep: boolean;
   goNext: () => void;
   goBack: () => void;
-  skip: (onComplete: () => void) => void;
   handleStorageSelected: () => void;
   handleGoalCreated: (onComplete: () => void) => void;
 };
@@ -28,10 +27,6 @@ export function useOnboardingWizard(): UseOnboardingWizardReturn {
     setCurrentStep((s) => Math.max(s - 1, 1));
   }, []);
 
-  const skip = useCallback((onComplete: () => void) => {
-    onComplete();
-  }, []);
-
   const handleStorageSelected = useCallback(() => {
     setCurrentStep(4);
   }, []);
@@ -47,7 +42,6 @@ export function useOnboardingWizard(): UseOnboardingWizardReturn {
     isLastStep: currentStep === TOTAL_STEPS,
     goNext,
     goBack,
-    skip,
     handleStorageSelected,
     handleGoalCreated,
   };

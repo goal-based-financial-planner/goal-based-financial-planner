@@ -6,7 +6,6 @@ import {
   IconButton,
   Dialog,
 } from '@mui/material';
-import SemiCircleProgressBar from 'react-progressbar-semicircle';
 import { deleteFinancialGoal } from '../../../../store/plannerDataActions';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import dayjs from 'dayjs';
@@ -58,10 +57,6 @@ const GoalCard = memo(
     const formattedTargetAmount = formatCurrency(goal.getInflationAdjustedTargetAmount());
     const formattedNominalAmount = formatCurrency(goal.getTargetAmount());
 
-    const progressPercentage = Math.round(
-      (currentValue / goal.getInflationAdjustedTargetAmount()) * 100,
-    );
-
     const goalDuration = `${dayjs(goal.startDate).format('MM/YYYY')} - ${dayjs(
       goal.targetDate,
     ).format('MM/YYYY')}`;
@@ -79,9 +74,15 @@ const GoalCard = memo(
       <Box
         sx={{
           position: 'relative',
-          px: 1,
-          py: 1,
+          px: 2,
+          py: 1.5,
           borderRadius: 2,
+          border: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: 'background.paper',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+          transition: 'box-shadow 0.15s ease',
+          '&:hover': { boxShadow: '0 3px 8px rgba(0,0,0,0.1)' },
         }}
       >
         {/* Main card row */}
@@ -90,7 +91,7 @@ const GoalCard = memo(
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
-            pr: 4, // Space for the button column
+            pr: 4,
           }}
         >
           {/* Left section */}
@@ -108,34 +109,12 @@ const GoalCard = memo(
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               Inflation: {displayedInflationRate}%
             </Typography>
-          </Box>
-
-          {/* Right section: Duration and progress */}
-          {goal.goalType !== GoalType.RECURRING && (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <Typography
-                variant="body2"
-                sx={{ color: 'grey', textAlign: 'center' }}
-              >
+            {goal.goalType !== GoalType.RECURRING && (
+              <Typography variant="caption" display="block" sx={{ color: 'text.secondary', mt: 0.5 }}>
                 {goalDuration}
               </Typography>
-              <Box sx={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
-                <SemiCircleProgressBar
-                  percentage={progressPercentage}
-                  showPercentValue
-                  strokeWidth={5}
-                  diameter={90}
-                />
-              </Box>
-            </Box>
-          )}
+            )}
+          </Box>
         </Box>
 
         {/* Investment Breakdown Toggle */}
@@ -144,7 +123,10 @@ const GoalCard = memo(
             sx={{
               display: 'flex',
               alignItems: 'center',
-              mt: 1,
+              mt: 1.5,
+              pt: 1,
+              borderTop: '1px dashed',
+              borderColor: 'divider',
               cursor: 'pointer',
               userSelect: 'none',
             }}
@@ -179,11 +161,12 @@ const GoalCard = memo(
                 sx={{
                   display: 'flex',
                   ml: 2,
-                  height: 6,
+                  height: 5,
                   borderRadius: 1,
                   overflow: 'hidden',
                   flex: 1,
-                  maxWidth: 120,
+                  maxWidth: 100,
+                  opacity: 0.75,
                 }}
               >
                 {investmentSuggestions.map((suggestion, index) => (
@@ -191,8 +174,7 @@ const GoalCard = memo(
                     key={suggestion.investmentName}
                     sx={{
                       flex: suggestion.amount / totalMonthlyInvestment,
-                      backgroundColor:
-                        INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
+                      backgroundColor: INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
                     }}
                   />
                 ))}
@@ -203,59 +185,42 @@ const GoalCard = memo(
 
         {/* Expandable Investment Breakdown */}
         <Collapse in={expanded}>
-          <Box
-            sx={{
-              mt: 1.5,
-              pt: 1.5,
-              borderTop: '1px dashed',
-              borderColor: 'divider',
-            }}
-          >
-            <Typography
-              variant="caption"
-              sx={{ color: 'text.secondary', mb: 1, display: 'block' }}
-            >
-              Investment Breakdown (Monthly)
-            </Typography>
-
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {investmentSuggestions.map((suggestion, index) => (
+          <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
+            {investmentSuggestions.map((suggestion, index) => {
+              const color = INVESTMENT_COLORS[index % INVESTMENT_COLORS.length];
+              const pct = totalMonthlyInvestment > 0
+                ? Math.round((suggestion.amount / totalMonthlyInvestment) * 100)
+                : 0;
+              return (
                 <Chip
                   key={suggestion.investmentName}
-                  size="small"
                   label={
-                    <Box
-                      sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                    >
-                      <Box
-                        sx={{
-                          width: 8,
-                          height: 8,
-                          borderRadius: '50%',
-                          backgroundColor:
-                            INVESTMENT_COLORS[index % INVESTMENT_COLORS.length],
-                        }}
-                      />
-                      <span>{suggestion.investmentName}</span>
-                      <Typography
-                        component="span"
-                        sx={{ fontWeight: 'bold', ml: 0.5 }}
-                      >
-                        {formatCurrency(suggestion.amount)}
+                    <Box sx={{ py: 0.25 }}>
+                      <Typography variant="caption" display="block" sx={{ fontWeight: 500, lineHeight: 1.4 }}>
+                        {suggestion.investmentName}
                       </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5 }}>
+                        <Typography variant="caption" sx={{ fontWeight: 'bold', color, lineHeight: 1.4 }}>
+                          {formatCurrency(Math.round(suggestion.amount))}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.65rem' }}>
+                          {pct}%
+                        </Typography>
+                      </Box>
                     </Box>
                   }
                   sx={{
-                    backgroundColor: 'background.paper',
+                    height: 'auto',
+                    borderRadius: 1.5,
+                    backgroundColor: 'background.default',
                     border: '1px solid',
                     borderColor: 'divider',
-                    '& .MuiChip-label': {
-                      px: 1,
-                    },
+                    borderLeft: `3px solid ${color}`,
+                    '& .MuiChip-label': { px: 1.25 },
                   }}
                 />
-              ))}
-            </Box>
+              );
+            })}
           </Box>
         </Collapse>
 
@@ -265,8 +230,8 @@ const GoalCard = memo(
           onClick={() => setIsEditing(true)}
           sx={{
             position: 'absolute',
-            top: 4,
-            right: 4,
+            top: 8,
+            right: 8,
             color: 'primary.main',
             opacity: 0.6,
             '&:hover': {
@@ -287,8 +252,8 @@ const GoalCard = memo(
           onClick={handleDelete}
           sx={{
             position: 'absolute',
-            top: 36,
-            right: 4,
+            top: 40,
+            right: 8,
             color: 'error.main',
             opacity: 0.6,
             '&:hover': {

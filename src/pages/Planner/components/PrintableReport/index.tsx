@@ -2,14 +2,12 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { PlannerData } from '../../../../domain/PlannerData';
 import { InvestmentBreakdownBasedOnTermType } from '../InvestmentSuggestions';
-import { TermTypeWiseProgressData } from '../TermwiseProgressBox';
 import { buildPortfolioWithdrawalSeries } from '../../../../domain/investmentLog';
 import { InvestmentSuggestion } from '../../../../types/planner';
 type PrintableReportProps = {
   plannerData: PlannerData;
   selectedDate: string;
   investmentBreakdownBasedOnTermType: InvestmentBreakdownBasedOnTermType[];
-  termTypeWiseProgressData: TermTypeWiseProgressData[];
   printRef: React.RefObject<HTMLDivElement | null>;
 };
 
@@ -64,7 +62,6 @@ const PrintableReport = ({
   plannerData,
   selectedDate,
   investmentBreakdownBasedOnTermType,
-  termTypeWiseProgressData,
   printRef,
 }: PrintableReportProps) => {
   const hasGoals = plannerData.financialGoals.length > 0;
@@ -244,40 +241,7 @@ const PrintableReport = ({
             )}
           </div>
 
-          {/* ── Section 4: Term-wise Progress Summary ── */}
-          <div style={sectionStyle}>
-            <h2 style={headingStyle}>Term-wise Progress Summary</h2>
-            {termTypeWiseProgressData.length === 0 ? (
-              <p style={emptyStyle}>No progress data available.</p>
-            ) : (
-              <table style={tableStyle}>
-                <thead>
-                  <tr>
-                    <th style={thStyle}>Term</th>
-                    <th style={thStyle}>Goals</th>
-                    <th style={thStyle}>Target Amount</th>
-                    <th style={thStyle}>Progress</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {termTypeWiseProgressData.map((item, i) => (
-                    <tr key={i} style={{ backgroundColor: i % 2 === 0 ? '#fff' : '#fafafa' }}>
-                      <td style={tdStyle}>{item.termType}</td>
-                      <td style={tdStyle}>
-                        {item.termTypeWiseData.goalNames.join(', ')}
-                      </td>
-                      <td style={tdStyle}>
-                        {formatAmount(item.termTypeWiseData.termTypeSum)}
-                      </td>
-                      <td style={tdStyle}>{item.termTypeWiseData.progressPercent}%</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-
-          {/* ── Section 5: Growth Projection Summary ── */}
+          {/* ── Section 4: Growth Projection Summary ── */}
           <div style={sectionStyle}>
             <h2 style={headingStyle}>Growth Projection Summary</h2>
             {!hasProjection ? (

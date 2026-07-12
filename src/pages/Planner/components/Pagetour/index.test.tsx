@@ -89,15 +89,15 @@ describe('PageTour', () => {
     expect(onDone).toHaveBeenCalledTimes(1);
   });
 
-  it('shows all 7 steps on desktop', () => {
+  it('shows all 5 steps on desktop', () => {
     render(<PageTour run={true} />);
     act(() => {
       vi.runAllTimers();
     });
-    expect(lastInstance!.stepCount).toBe(7);
+    expect(lastInstance!.stepCount).toBe(5);
   });
 
-  it('shows 6 steps on mobile (desktop-only goal box step excluded)', () => {
+  it('shows 5 steps on mobile (no desktop-only steps)', () => {
     Object.defineProperty(window, 'innerWidth', {
       value: 400,
       writable: true,
@@ -107,6 +107,6 @@ describe('PageTour', () => {
     act(() => {
       vi.runAllTimers();
     });
-    expect(lastInstance!.stepCount).toBe(6);
+    expect(lastInstance!.stepCount).toBe(5);
   });
 });

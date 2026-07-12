@@ -4,10 +4,6 @@ import InvestmentTracker from './index';
 import { SIPEntry } from '../../../../../../types/investmentLog';
 import { InvestmentSuggestion } from '../../../../../../types/planner';
 
-vi.mock('../../../GoalGrowthChart', () => ({
-  default: () => <div data-testid="goal-growth-chart">Growth Chart</div>,
-}));
-
 const mockDispatch = jest.fn();
 
 const suggestions: InvestmentSuggestion[] = [
@@ -25,23 +21,16 @@ const sip: SIPEntry = {
 describe('InvestmentTracker', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('renders the growth chart', () => {
-    render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} goals={[]} dispatch={mockDispatch} />,
-    );
-    expect(screen.getByTestId('goal-growth-chart')).toBeInTheDocument();
-  });
-
   it('renders the Add SIP button', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} goals={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} dispatch={mockDispatch} />,
     );
     expect(screen.getByRole('button', { name: /add sip/i })).toBeInTheDocument();
   });
 
   it('renders comparison cards for each suggestion type', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} goals={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
     );
     expect(screen.getAllByText('Liquid Funds').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Index Funds').length).toBeGreaterThanOrEqual(1);
@@ -49,7 +38,7 @@ describe('InvestmentTracker', () => {
 
   it('renders SIP list section when SIPs exist', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} goals={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
     );
     expect(screen.getByText('Axis Bank Liquid Fund')).toBeInTheDocument();
   });
@@ -57,25 +46,17 @@ describe('InvestmentTracker', () => {
   it('shows "Not in plan" chip for custom SIP types', () => {
     const customSip: SIPEntry = { id: 'c1', name: 'PPF', type: 'PPF', monthlyAmount: 12500 };
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[customSip]} goals={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[customSip]} dispatch={mockDispatch} />,
     );
     expect(screen.getByText('Not in plan')).toBeInTheDocument();
   });
 
-  it('shows monthly required and "No SIPs logged yet" when no SIPs', () => {
+  it('shows "X% met" when investing less than required', () => {
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[]} goals={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} dispatch={mockDispatch} />,
     );
-    expect(screen.getByText('Monthly Required')).toBeInTheDocument();
-    expect(screen.getByText('Monthly Investing')).toBeInTheDocument();
-    expect(screen.getByText('No SIPs logged yet')).toBeInTheDocument();
-  });
-
-  it('shows "short" status when investing less than required', () => {
-    render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={[sip]} goals={[]} dispatch={mockDispatch} />,
-    );
-    expect(screen.getByText(/short/i)).toBeInTheDocument();
+    // sip covers 40000/25000 of Liquid Funds (exceeding) and 0/50000 of Index Funds (0% met)
+    expect(screen.getByText(/\d+% met/i)).toBeInTheDocument();
   });
 
   it('shows "On track" when investing at least as much as required', () => {
@@ -84,7 +65,7 @@ describe('InvestmentTracker', () => {
       { id: 's2', name: 'Index', type: 'Index Funds', monthlyAmount: 50000 },
     ];
     render(
-      <InvestmentTracker investmentSuggestions={suggestions} sips={fullSips} goals={[]} dispatch={mockDispatch} />,
+      <InvestmentTracker investmentSuggestions={suggestions} sips={fullSips} dispatch={mockDispatch} />,
     );
     expect(screen.getAllByText('On track').length).toBeGreaterThanOrEqual(1);
   });

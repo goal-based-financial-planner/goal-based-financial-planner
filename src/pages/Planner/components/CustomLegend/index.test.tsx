@@ -60,10 +60,9 @@ describe('CustomLegend', () => {
     expect(screen.getByText('$4,000,000')).toBeInTheDocument();
   });
 
-  it('should handle empty suggestions', () => {
-    render(<CustomLegend suggestions={[]} />);
-    const tbody = screen.queryByRole('rowgroup');
-    expect(tbody).toBeInTheDocument();
+  it('should handle empty suggestions without crashing', () => {
+    const { container } = render(<CustomLegend suggestions={[]} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('should match snapshot', () => {

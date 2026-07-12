@@ -87,16 +87,11 @@ const GoalBox = ({
         ) : (
           <>
             {pendingGoals.length > 0 && (
-              <>
-                <Typography variant="h6" fontWeight="bold">
-                  Financial Goals
-                </Typography>
-                <GoalList
-                  investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
-                  goals={pendingGoals}
-                  dispatch={dispatch}
-                />
-              </>
+              <GoalList
+                investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
+                goals={pendingGoals}
+                dispatch={dispatch}
+              />
             )}
             {completedGoals.length > 0 && (
               <>

@@ -100,7 +100,7 @@ describe('GoalBox', () => {
   });
 
   describe('One Time tab content', () => {
-    it('should show pending goals under "Financial Goals" heading', () => {
+    it('should show pending goals', () => {
       render(
         <GoalBox
           {...defaultProps}
@@ -108,7 +108,6 @@ describe('GoalBox', () => {
         />,
       );
 
-      expect(screen.getByText('Financial Goals')).toBeInTheDocument();
       expect(screen.getByTestId('goal-House Fund')).toBeInTheDocument();
     });
 
@@ -160,7 +159,7 @@ describe('GoalBox', () => {
 
       fireEvent.click(screen.getByRole('tab', { name: /Recurring/i }));
 
-      expect(screen.queryByText('Financial Goals')).not.toBeVisible();
+      expect(screen.queryByTestId('goal-House Fund')).not.toBeVisible();
     });
 
     it('should show empty state when no recurring goals exist', () => {

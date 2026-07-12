@@ -16,31 +16,16 @@ function addCanvasToMultiPagePdf(
   const pdfWidth = doc.internal.pageSize.getWidth();
   const pdfHeight = doc.internal.pageSize.getHeight();
 
-  const canvasWidth = canvas.width;
-  const canvasHeight = canvas.height;
-
-  // Scale canvas width to fit the PDF page width
   const imgWidth = pdfWidth;
-  const imgHeight = (canvasHeight / canvasWidth) * imgWidth;
+  const imgHeight = (canvas.height / canvas.width) * imgWidth;
 
+  // Encode once — reused across all pages
+  const imgData = canvas.toDataURL('image/jpeg', 0.88);
   const pageCount = Math.ceil(imgHeight / pdfHeight);
 
   for (let page = 0; page < pageCount; page++) {
-    if (page > 0) {
-      doc.addPage();
-    }
-
-    // Y offset in the scaled image coordinates
-    const yOffset = -(page * pdfHeight);
-
-    doc.addImage(
-      canvas.toDataURL('image/png'),
-      'PNG',
-      0,
-      yOffset,
-      imgWidth,
-      imgHeight,
-    );
+    if (page > 0) doc.addPage();
+    doc.addImage(imgData, 'JPEG', 0, -(page * pdfHeight), imgWidth, imgHeight);
   }
 }
 
@@ -66,7 +51,7 @@ const usePdfExport = (): UsePdfExportReturn => {
       el.style.display = 'block';
 
       const canvas = await html2canvas(el, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
