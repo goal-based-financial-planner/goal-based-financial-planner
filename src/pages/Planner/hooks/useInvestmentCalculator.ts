@@ -1,8 +1,7 @@
 import { PlannerData } from '../../../domain/PlannerData';
-import { FinancialGoal, isGoalActive } from '../../../domain/FinancialGoals';
-import { InvestmentAllocationsType } from '../../../domain/InvestmentOptions';
+import { isGoalActive } from '../../../domain/FinancialGoals';
 import {
-  calculateTotalMonthlySIP,
+  calculateInvestmentSuggestionsForGoal,
   calculateCurrentPortfolioValue,
 } from '../../../domain/investmentCalculations';
 import { InvestmentSuggestion } from '../../../types/planner';
@@ -33,7 +32,7 @@ const useInvestmentCalculator = (_plannerData: PlannerData) => {
     selectedDate: string,
   ): GoalWiseInvestmentSuggestions[] => {
     return plannerData.financialGoals.map((goal) => {
-      const investmentSuggestions = calculateInvestmentPerGoal(
+      const investmentSuggestions = calculateInvestmentSuggestionsForGoal(
         goal,
         plannerData.investmentAllocations,
       );
@@ -52,38 +51,6 @@ const useInvestmentCalculator = (_plannerData: PlannerData) => {
         currentValue,
       };
     });
-  };
-
-  /**
-   * Calculates the monthly SIP needed for each investment type to reach the goal.
-   * Uses the Annuity Due formula (payments at beginning of period).
-   *
-   * @param goal - The financial goal
-   * @param investmentAllocations - Investment allocations by term type
-   */
-  const calculateInvestmentPerGoal = (
-    goal: FinancialGoal,
-    investmentAllocations: InvestmentAllocationsType,
-  ): InvestmentSuggestion[] => {
-    // Get the investment allocations for the term type of the goal
-    const investmentAllocationsForType =
-      investmentAllocations[goal.getTermType()];
-
-    if (!investmentAllocationsForType || investmentAllocationsForType.length === 0) {
-      return [];
-    }
-
-    const totalMonthlyInvestmentNeeded = calculateTotalMonthlySIP(
-      investmentAllocationsForType,
-      goal.getInflationAdjustedTargetAmount(),
-      goal.getMonthTerm(),
-    );
-
-    return investmentAllocationsForType.map((allocation) => ({
-      investmentName: allocation.investmentName,
-      amount: (totalMonthlyInvestmentNeeded * allocation.investmentPercentage) / 100,
-      expectedReturnPercentage: allocation.expectedReturnPercentage,
-    }));
   };
 
   return {

@@ -6,8 +6,9 @@
  * These functions are pure (no side effects) and React-independent.
  */
 
-import { InvestmentChoiceType } from './InvestmentOptions';
+import { InvestmentAllocationsType, InvestmentChoiceType } from './InvestmentOptions';
 import { FinancialGoal } from './FinancialGoals';
+import { InvestmentSuggestion } from '../types/planner';
 
 /**
  * Calculates the SIP factor for a given allocation.
@@ -119,6 +120,37 @@ export const verifySIPCalculation = (
       )
     );
   }, 0);
+};
+
+/**
+ * Calculates the monthly SIP suggestion per investment instrument needed for a goal to reach
+ * its (inflation-adjusted) target amount by its target date, split across the goal's term-type
+ * investment allocation mix.
+ *
+ * @param goal - The financial goal
+ * @param investmentAllocations - Investment allocations by term type
+ */
+export const calculateInvestmentSuggestionsForGoal = (
+  goal: FinancialGoal,
+  investmentAllocations: InvestmentAllocationsType,
+): InvestmentSuggestion[] => {
+  const investmentAllocationsForType = investmentAllocations[goal.getTermType()];
+
+  if (!investmentAllocationsForType || investmentAllocationsForType.length === 0) {
+    return [];
+  }
+
+  const totalMonthlyInvestmentNeeded = calculateTotalMonthlySIP(
+    investmentAllocationsForType,
+    goal.getInflationAdjustedTargetAmount(),
+    goal.getMonthTerm(),
+  );
+
+  return investmentAllocationsForType.map((allocation) => ({
+    investmentName: allocation.investmentName,
+    amount: (totalMonthlyInvestmentNeeded * allocation.investmentPercentage) / 100,
+    expectedReturnPercentage: allocation.expectedReturnPercentage,
+  }));
 };
 
 /**

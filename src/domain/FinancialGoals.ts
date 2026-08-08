@@ -84,8 +84,11 @@ export class FinancialGoal {
     return TermType.LONG_TERM;
   }
 
-  getInflationAdjustedTargetAmount(): number {
-    const rate = this.inflationRate ?? DEFAULT_INFLATION_RATE;
+  /**
+   * @param rateOverride - Use this rate instead of the goal's own inflationRate (e.g. for scenario what-ifs).
+   */
+  getInflationAdjustedTargetAmount(rateOverride?: number): number {
+    const rate = rateOverride ?? this.inflationRate ?? DEFAULT_INFLATION_RATE;
     const term = this.goalType === GoalType.RECURRING
       ? (this.recurringDurationYears ?? 1)
       : this.getTerm();
