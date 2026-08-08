@@ -20,7 +20,6 @@ const CreateGoalStep: React.FC<CreateGoalStepProps> = ({ dispatch, onComplete })
     <FinancialGoalForm
       dispatch={dispatch}
       close={onComplete}
-      title="Add your first goal"
       embedded
     />
   </Box>
