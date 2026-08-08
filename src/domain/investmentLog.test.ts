@@ -318,6 +318,43 @@ describe('buildPortfolioWithdrawalSeries — stop-per-goal mode', () => {
     expect(continuePoints[midIdx].value).toBeGreaterThan(stopPoints[midIdx].value + 20_000);
   });
 
+  it('"if on plan" uses the actual SIP start date, not the goal\'s planned start date', () => {
+    // Goal was planned to start being funded 1 year from now, but the SIP wasn't actually
+    // logged until 3 years from now — the "if on plan" line should follow the latter.
+    const targetYear = new Date().getFullYear() + 6;
+    const goalStart = dayjs().add(1, 'year').format('YYYY-MM-DD');
+    const goal = new FinancialGoal('Long', GoalType.ONE_TIME, goalStart, `${targetYear}-01-01`, 30_000);
+
+    const equitySip = noDateSIP({ type: 'Equity', monthlyAmount: 6000, startDate: dayjs().add(3, 'year').format('YYYY-MM-DD') });
+    const anchorSip = noDateSIP({ id: 's0', type: 'Debt', monthlyAmount: 1000, startDate: dayjs().format('YYYY-MM-DD') });
+
+    const allSuggestions: InvestmentSuggestion[] = [makeSuggestion('Equity', 6000), makeSuggestion('Debt', 1000)];
+    const goalWiseSugs: GoalSuggestion[] = [{
+      goalStartDate: goalStart,
+      goalTargetDate: `${targetYear}-01-01`,
+      suggestions: [{ investmentName: 'Equity', amount: 6000, expectedReturnPercentage: 12 }],
+    }];
+
+    const { suggestedPoints } = buildPortfolioWithdrawalSeries([anchorSip, equitySip], [goal], allSuggestions, goalWiseSugs);
+
+    // At the goal's planned start (1yr in), the Equity SIP hasn't actually started yet (starts at 3yr) —
+    // so the suggested Equity contribution shouldn't have begun compounding either.
+    const plannedStartIdx = findMonthIdx(suggestedPoints, dayjs().add(1, 'year').format('YYYY-MM-DD'));
+    const actualStartIdx = findMonthIdx(suggestedPoints, dayjs().add(3, 'year').format('YYYY-MM-DD'));
+    expect(plannedStartIdx).toBeGreaterThan(0);
+    expect(actualStartIdx).toBeGreaterThan(plannedStartIdx);
+
+    // Before the Equity SIP's actual start, only the ₹1000/mo Debt anchor is contributing —
+    // 6 months of growth should be modest.
+    const growthBeforeActualStart = suggestedPoints[plannedStartIdx + 6].value - suggestedPoints[plannedStartIdx].value;
+
+    // Once the Equity SIP's actual start date passes, its ₹6000/mo suggested contribution kicks
+    // in too — the same 6-month window should now grow far more.
+    const growthAfterActualStart = suggestedPoints[actualStartIdx + 6].value - suggestedPoints[actualStartIdx].value;
+
+    expect(growthAfterActualStart).toBeGreaterThan(growthBeforeActualStart * 3);
+  });
+
   it('when SIP type has no matching suggestion, it keeps running in stop mode too', () => {
     const targetYear = new Date().getFullYear() + 5;
     const goal = makeOneTimeGoal('House', 5);
