@@ -1,6 +1,6 @@
 # goal-based-financial-planner Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-07-11
+Auto-generated from all feature plans. Last updated: 2026-07-19
 
 ## Active Technologies
 - TypeScript (React 18, CRA / react-scripts 5) + MUI v6 (`@mui/material` — Tabs, Tab already available), React 18 hooks (004-goals-tabbed-view)
@@ -25,6 +25,8 @@ Auto-generated from all feature plans. Last updated: 2026-07-11
 - None — all projection data is derived at render time from existing `localStorage` / Google Drive data (014-portfolio-growth-chart)
 - TypeScript 4.x + React 19.2.4 + MUI v6 (`@mui/material`, `@mui/x-charts`), `dayjs`, Vite 8.0.0 (016-layout-redesign)
 - Browser `localStorage` / Google Drive — no changes (016-layout-redesign)
+- TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `react-hook-form` (already present), `dayjs` ^1.11.13 (017-scenario-comparison)
+- Browser `localStorage`/File System Access API (local) + Google Drive REST API (cloud) via `src/util/storage/*Provider.ts` — new `scenarios` field on the existing `PlannerData` payload, no new storage mechanism (017-scenario-comparison)
 
 - Markdown / N/A (documentation only) + N/A (static documentation files) (003-oss-documentation)
 
@@ -45,9 +47,9 @@ tests/
 Markdown / N/A (documentation only): Follow standard conventions
 
 ## Recent Changes
+- 017-scenario-comparison: Added TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `react-hook-form` (already present), `dayjs` ^1.11.13
 - 016-layout-redesign: Added TypeScript 4.x + React 19.2.4 + MUI v6 (`@mui/material`, `@mui/x-charts`), `dayjs`, Vite 8.0.0
 - 014-portfolio-growth-chart: Added TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `dayjs` ^1.11.13
-- 013-configurable-inflation-rate: Added TypeScript 4.x + React 19.2.4, MUI v6 (`@mui/material`), react-hook-form (existing), Vite 8.0.0, Vites
 
 
 <!-- MANUAL ADDITIONS START -->

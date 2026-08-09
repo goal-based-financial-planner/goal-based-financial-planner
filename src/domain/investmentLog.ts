@@ -158,19 +158,29 @@ export function buildPortfolioWithdrawalSeries(
 
     if (useStopMode) {
       // Goal-mapped types: one SimSIP per (goal × investment type).
-      // startOffset comes from the goal's own startDate so that "If on plan" reflects the
-      // planned investment horizon. Actual SimSIPs may start earlier — that gap is the
-      // visible reward for starting early.
-      const result: SimSIP[] = (goalWiseSuggestions ?? []).flatMap(({ goalStartDate, goalTargetDate, suggestions }) => {
-        const goalStartOffset = Math.max(0, dayjs(goalStartDate).startOf('month').diff(chartStart, 'month'));
+      // startOffset comes from the type's own actual SIP start date — same basis "Actual" uses —
+      // so the only difference between the two lines is the invested AMOUNT, not an artificially
+      // different start date. (Using the goal's own planned start date here previously made "If
+      // on plan" assume investing began earlier/later than you actually started, which could
+      // make it diverge from "Actual" well before the goal was ever reached.)
+      const result: SimSIP[] = (goalWiseSuggestions ?? []).flatMap(({ goalTargetDate, suggestions }) => {
         const goalMonth = Math.max(0, dayjs(goalTargetDate).startOf('month').diff(chartStart, 'month'));
-        return suggestions.map((s) => ({
-          monthlyAmount: s.amount,
-          r: (s.expectedReturnPercentage ?? DEFAULT_RETURN_PCT) / 100 / 12,
-          startOffset: goalStartOffset,
-          stopMonth: goalMonth,
-          value: 0,
-        }));
+        return suggestions.map((s) => {
+          const typeStarts = sips
+            .filter((sip) => sip.type === s.investmentName && sip.startDate && dayjs(sip.startDate).isValid())
+            .map((sip) => dayjs(sip.startDate!));
+          const sipStart = (
+            typeStarts.length > 0 ? typeStarts.reduce((min, d) => (d.isBefore(min) ? d : min)) : chartStart
+          ).startOf('month');
+          const startOffset = Math.max(0, sipStart.diff(chartStart, 'month'));
+          return {
+            monthlyAmount: s.amount,
+            r: (s.expectedReturnPercentage ?? DEFAULT_RETURN_PCT) / 100 / 12,
+            startOffset,
+            stopMonth: goalMonth,
+            value: 0,
+          };
+        });
       });
 
       // SIP types with no goal mapping keep running at scaled amounts (same as keep-investing).

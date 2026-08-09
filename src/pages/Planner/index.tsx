@@ -28,6 +28,7 @@ import CongratulationsPage from '../CongratulationsPage';
 import PrintableReport from './components/PrintableReport';
 import PlannerStatStrip from './components/PlannerStatStrip';
 import GoalGrowthChart from './components/GoalGrowthChart';
+import WhatIf from './components/WhatIf';
 import AddGoalPopup from '../Home/components/AddGoalPopup';
 import { GoalSuggestion } from '../../domain/investmentLog';
 
@@ -51,7 +52,7 @@ const Planner = ({
   const internalPrintRef = useRef<HTMLDivElement>(null);
   const printRef = externalPrintRef ?? internalPrintRef;
   const [selectedDate, setSelectedDate] = useState<string>(dayjs().toString());
-  const [activeTab, setActiveTab] = useState<0 | 1>(0);
+  const [activeTab, setActiveTab] = useState<0 | 1 | 2>(0);
   const [showGoalsDrawer, setShowGoalsDrawer] = useState(false);
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
 
@@ -228,11 +229,12 @@ const Planner = ({
 
             <Tabs
               value={activeTab}
-              onChange={(_, v) => setActiveTab(v as 0 | 1)}
+              onChange={(_, v) => setActiveTab(v as 0 | 1 | 2)}
               sx={{ mb: 2, borderBottom: 1, borderColor: 'divider' }}
             >
               <Tab label="Investment Plan" />
               <Tab label="Portfolio" />
+              <Tab label="What If" />
             </Tabs>
 
             <Box role="tabpanel" hidden={activeTab !== 0}>
@@ -255,6 +257,14 @@ const Planner = ({
                     allSuggestions={aggregatedSuggestions}
                     goalWiseSuggestions={goalWiseSuggestions}
                   />
+                </StyledBox>
+              )}
+            </Box>
+
+            <Box role="tabpanel" hidden={activeTab !== 2}>
+              {activeTab === 2 && (
+                <StyledBox>
+                  <WhatIf plannerData={plannerData} />
                 </StyledBox>
               )}
             </Box>

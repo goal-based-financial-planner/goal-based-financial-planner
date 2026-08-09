@@ -30,9 +30,9 @@ describe('CreateGoalStep', () => {
     expect(screen.getByText(/You can add more goals later/i)).toBeInTheDocument();
   });
 
-  it('renders FinancialGoalForm with correct title', () => {
+  it('renders FinancialGoalForm without a redundant title, since the step already has a heading', () => {
     render(<CreateGoalStep {...defaultProps} />, { wrapper });
     expect(screen.getByTestId('financial-goal-form')).toBeInTheDocument();
-    expect(screen.getByTestId('financial-goal-form')).toHaveTextContent('Add your first goal');
+    expect(screen.getByTestId('financial-goal-form')).toBeEmptyDOMElement();
   });
 });
