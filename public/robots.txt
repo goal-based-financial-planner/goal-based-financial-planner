@@ -3,9 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://goal-based-financial-planner.vercel.app/sitemap.xml
+Sitemap: https://goal-based-financial-planner.github.io/goal-based-financial-planner/sitemap.xml
 
 # Disallow common non-content paths
-Disallow: /static/
-Disallow: /*.json$
-
+Disallow: /goal-based-financial-planner/assets/
