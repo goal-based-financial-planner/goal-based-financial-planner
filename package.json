@@ -4,7 +4,6 @@
   "private": false,
   "homepage": "https://goal-based-financial-planner.github.io/goal-based-financial-planner",
   "dependencies": {
-    "@adi-prasetyo/react-joyride": "^2.9.3-adp.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^6.1.7",
