@@ -43,29 +43,29 @@
     <meta name="author" content="Goal Based Financial Planner" />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://goal-based-financial-planner.vercel.app/" />
+    <link rel="canonical" href="https://goal-based-financial-planner.github.io/goal-based-financial-planner/" />
 
     <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://goal-based-financial-planner.vercel.app/" />
+    <meta property="og:url" content="https://goal-based-financial-planner.github.io/goal-based-financial-planner/" />
     <meta property="og:title" content="Goal Based Financial Planner - Plan Your Financial Future" />
     <meta
       property="og:description"
       content="A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them."
     />
-    <meta property="og:image" content="https://goal-based-financial-planner.vercel.app/favicon.png" />
+    <meta property="og:image" content="https://goal-based-financial-planner.github.io/goal-based-financial-planner/og-image.png" />
     <meta property="og:site_name" content="Goal Based Financial Planner" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://goal-based-financial-planner.vercel.app/" />
+    <meta name="twitter:url" content="https://goal-based-financial-planner.github.io/goal-based-financial-planner/" />
     <meta name="twitter:title" content="Goal Based Financial Planner - Plan Your Financial Future" />
     <meta
       name="twitter:description"
       content="A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them."
     />
-    <meta name="twitter:image" content="https://goal-based-financial-planner.vercel.app/favicon.png" />
+    <meta name="twitter:image" content="https://goal-based-financial-planner.github.io/goal-based-financial-planner/og-image.png" />
 
     <!-- Additional SEO Meta Tags -->
     <meta name="robots" content="index, follow" />
@@ -88,7 +88,7 @@
         "@type": "WebApplication",
         "name": "Goal Based Financial Planner",
         "description": "A simple goal-based financial planner that helps you set goals, choose investment options, and calculate the investments needed to achieve them.",
-        "url": "https://goal-based-financial-planner.vercel.app/",
+        "url": "https://goal-based-financial-planner.github.io/goal-based-financial-planner/",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web Browser",
         "offers": {
@@ -104,7 +104,7 @@
           "SIP planning",
           "Mutual fund allocation"
         ],
-        "screenshot": "https://goal-based-financial-planner.vercel.app/favicon.png",
+        "screenshot": "https://goal-based-financial-planner.github.io/goal-based-financial-planner/og-image.png",
         "author": {
           "@type": "Organization",
           "name": "Goal Based Financial Planner"
@@ -121,7 +121,27 @@
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <!-- Static content below is indexable by crawlers that don't execute
+         JavaScript and doubles as a loading state; React replaces it on mount. -->
+    <div id="root">
+      <main style="max-width: 720px; margin: 64px auto; padding: 0 24px; font-family: system-ui, -apple-system, sans-serif; color: #1f2933">
+        <h1 style="font-size: 1.75rem">Goal Based Financial Planner</h1>
+        <p>
+          A free, privacy-friendly financial planning tool. Set financial goals such as retirement,
+          education, or buying a home; choose how to allocate investments across mutual funds, stocks,
+          fixed deposits, and other options; and see the monthly SIP amount needed to reach each goal
+          on time — adjusted for inflation.
+        </p>
+        <ul>
+          <li>Goal-based planning with target amounts and timelines</li>
+          <li>Automatic investment allocation and required-SIP calculations</li>
+          <li>Portfolio growth projections and visual progress tracking</li>
+          <li>Scenario comparison and per-goal risk indicators</li>
+          <li>Your data stays with you — saved to a local file or your own Google Drive</li>
+        </ul>
+        <p>Loading the app&hellip;</p>
+      </main>
+    </div>
     <script type="module" src="/src/index.tsx"></script>
     <script src="https://accounts.google.com/gsi/client" async></script>
   </body>
