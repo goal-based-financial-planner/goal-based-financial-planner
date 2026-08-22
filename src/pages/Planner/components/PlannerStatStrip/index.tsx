@@ -2,6 +2,7 @@ import { Box, Chip, Typography } from '@mui/material';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { TermType } from '../../../../types/enums';
 import { formatCurrency } from '../../../../types/util';
+import { GoalRiskSummary } from '../../../../domain/goalRiskStatus';
 
 export type PlannerStatStripProps = {
   targetAmount: number;
@@ -10,6 +11,7 @@ export type PlannerStatStripProps = {
   financialGoals?: FinancialGoal[];
   onGoalsClick?: () => void;
   onAddGoal?: () => void;
+  goalRiskSummary: GoalRiskSummary;
 };
 
 const TERM_CONFIG: { type: TermType; label: string; color: string }[] = [
@@ -59,14 +61,20 @@ const StatTile = ({
   </Box>
 );
 
-const PlannerStatStrip = ({ targetAmount, totalRequired, totalInvesting, financialGoals, onGoalsClick, onAddGoal }: PlannerStatStripProps) => {
-  const isOnTrack = totalInvesting >= totalRequired;
-  const investingColor = isOnTrack ? 'success.main' : totalInvesting > 0 ? 'warning.main' : 'text.secondary';
+const PlannerStatStrip = ({ targetAmount, totalRequired, totalInvesting, financialGoals, onGoalsClick, onAddGoal, goalRiskSummary }: PlannerStatStripProps) => {
+  // Sourced from the same per-goal risk computation as the goal risk dashboard's chips (018),
+  // rather than a standalone totalInvesting >= totalRequired comparison — so this caption and the
+  // per-goal chips can never disagree about the same plan (FR-009).
+  const hasOneTimeGoals = goalRiskSummary.total > 0;
+  const isAtRisk = hasOneTimeGoals && goalRiskSummary.atRisk > 0;
+  const investingColor = !hasOneTimeGoals ? 'text.secondary' : isAtRisk ? 'warning.main' : 'success.main';
   const investingCaption = totalInvesting === 0
     ? 'No SIPs logged yet'
-    : isOnTrack
-    ? 'On track'
-    : `${formatCurrency(totalRequired - totalInvesting)} short`;
+    : !hasOneTimeGoals
+    ? undefined
+    : isAtRisk
+    ? `${goalRiskSummary.atRisk} of ${goalRiskSummary.total} goal${goalRiskSummary.total === 1 ? '' : 's'} at risk`
+    : 'On track';
 
   const termChips = TERM_CONFIG
     .map(({ type, label, color }) => ({

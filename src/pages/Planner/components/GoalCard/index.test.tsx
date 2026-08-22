@@ -129,4 +129,68 @@ describe('GoalCard', () => {
     );
     expect(screen.getByText(/01\/2024 - 01\/2030/)).toBeInTheDocument();
   });
+
+  describe('riskStatus chip', () => {
+    it('defaults to "Not evaluated" when no riskStatus prop is passed', () => {
+      const goal = makeOneTimeGoal();
+      render(
+        <GoalCard goal={goal} dispatch={mockDispatch} currentValue={50000} />,
+      );
+      expect(screen.getByText('Not evaluated')).toBeInTheDocument();
+    });
+
+    it('renders "On track" for riskStatus="on-track"', () => {
+      const goal = makeOneTimeGoal();
+      render(
+        <GoalCard
+          goal={goal}
+          dispatch={mockDispatch}
+          currentValue={50000}
+          riskStatus="on-track"
+        />,
+      );
+      expect(screen.getByText('On track')).toBeInTheDocument();
+    });
+
+    it('renders "At risk" for riskStatus="at-risk"', () => {
+      const goal = makeOneTimeGoal();
+      render(
+        <GoalCard
+          goal={goal}
+          dispatch={mockDispatch}
+          currentValue={50000}
+          riskStatus="at-risk"
+        />,
+      );
+      expect(screen.getByText('At risk')).toBeInTheDocument();
+    });
+
+    it('renders "Not evaluated" for riskStatus="not-evaluated"', () => {
+      const goal = makeOneTimeGoal();
+      render(
+        <GoalCard
+          goal={goal}
+          dispatch={mockDispatch}
+          currentValue={50000}
+          riskStatus="not-evaluated"
+        />,
+      );
+      expect(screen.getByText('Not evaluated')).toBeInTheDocument();
+    });
+
+    it('the risk chip is not clickable (static display only)', () => {
+      const goal = makeOneTimeGoal();
+      render(
+        <GoalCard
+          goal={goal}
+          dispatch={mockDispatch}
+          currentValue={50000}
+          riskStatus="at-risk"
+        />,
+      );
+      const chipLabel = screen.getByText('At risk');
+      // MUI Chip only renders a clickable root (role="button") when onClick is passed.
+      expect(chipLabel.closest('.MuiChip-root')).not.toHaveAttribute('role', 'button');
+    });
+  });
 });

@@ -16,6 +16,7 @@ import { formatCurrency } from '../../../../types/util';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { DEFAULT_INFLATION_RATE } from '../../../../domain/constants';
 import FinancialGoalForm from '../../../../pages/Home/components/FinancialGoalForm';
+import { GoalRiskDisplayStatus } from '../../../../domain/goalRiskStatus';
 
 const INVESTMENT_COLORS = [
   '#FF9800', // Orange
@@ -25,17 +26,31 @@ const INVESTMENT_COLORS = [
   '#F44336', // Red
 ];
 
+// Static (no click/navigation) — per FR-007, this is a display-only signal.
+const RISK_STATUS_CONFIG: Record<
+  GoalRiskDisplayStatus,
+  { label: string; icon: string; color: 'success' | 'warning' | 'default' }
+> = {
+  'on-track': { label: 'On track', icon: 'check_circle', color: 'success' },
+  'at-risk': { label: 'At risk', icon: 'warning', color: 'warning' },
+  'not-evaluated': { label: 'Not evaluated', icon: 'help', color: 'default' },
+};
+
 const GoalCard = memo(
   ({
     goal,
     dispatch,
     currentValue,
     investmentSuggestions = [],
+    // Defaults to 'not-evaluated' (never a false on-track/at-risk claim) when a caller doesn't
+    // yet have a computed status to pass — e.g. existing tests predating the goal risk dashboard.
+    riskStatus = 'not-evaluated',
   }: {
     goal: FinancialGoal;
     dispatch: Dispatch<PlannerDataAction>;
     currentValue: number;
     investmentSuggestions?: InvestmentSuggestion[];
+    riskStatus?: GoalRiskDisplayStatus;
   }) => {
     const [expanded, setExpanded] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -96,7 +111,26 @@ const GoalCard = memo(
         >
           {/* Left section */}
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography variant="subtitle2">{goal.goalName}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+              <Typography variant="subtitle2">{goal.goalName}</Typography>
+              <Chip
+                size="small"
+                color={RISK_STATUS_CONFIG[riskStatus].color}
+                variant={riskStatus === 'not-evaluated' ? 'outlined' : 'filled'}
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <span className="material-symbols-rounded" style={{ fontSize: '14px' }}>
+                      {RISK_STATUS_CONFIG[riskStatus].icon}
+                    </span>
+                    {RISK_STATUS_CONFIG[riskStatus].label}
+                  </Box>
+                }
+                sx={{
+                  height: 22,
+                  '& .MuiChip-label': { px: 1, display: 'flex', alignItems: 'center' },
+                }}
+              />
+            </Box>
             <Typography
               variant="h6"
               sx={{ fontWeight: 'bold', mt: 1, fontSize }}

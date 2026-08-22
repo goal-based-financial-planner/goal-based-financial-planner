@@ -3,14 +3,25 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import GoalBox from './index';
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { GoalType } from '../../../../types/enums';
+import { GoalRiskDisplayStatus } from '../../../../domain/goalRiskStatus';
 
 // Mock child components to keep tests focused on GoalBox tab behavior
 vi.mock('./goalList', () => ({
-  default: function MockGoalList({ goals }: { goals: FinancialGoal[] }) {
+  default: function MockGoalList({
+    goals,
+    goalRiskStatuses,
+  }: {
+    goals: FinancialGoal[];
+    goalRiskStatuses: Record<string, GoalRiskDisplayStatus>;
+  }) {
     return (
       <div data-testid="goal-list">
         {goals.map((g) => (
-          <div key={g.id} data-testid={`goal-${g.goalName}`}>
+          <div
+            key={g.id}
+            data-testid={`goal-${g.goalName}`}
+            data-risk-status={goalRiskStatuses[g.id]}
+          >
             {g.goalName}
           </div>
         ))}
@@ -55,6 +66,7 @@ describe('GoalBox', () => {
     selectedDate,
     dispatch: mockDispatch,
     useStyledBox: false,
+    goalRiskStatuses: {},
   };
 
   afterEach(() => {
@@ -201,6 +213,26 @@ describe('GoalBox', () => {
       expect(screen.getByRole('tab', { name: /One Time/i })).toHaveAttribute(
         'aria-selected',
         'false',
+      );
+    });
+  });
+
+  describe('goalRiskStatuses forwarding', () => {
+    it('forwards the goalRiskStatuses map it is given down to GoalList unchanged', () => {
+      render(
+        <GoalBox
+          {...defaultProps}
+          financialGoals={[pendingGoal, recurringGoal]}
+          goalRiskStatuses={{ [pendingGoal.id]: 'at-risk', [recurringGoal.id]: 'not-evaluated' }}
+        />,
+      );
+
+      expect(screen.getByTestId('goal-House Fund')).toHaveAttribute('data-risk-status', 'at-risk');
+
+      fireEvent.click(screen.getByRole('tab', { name: /Recurring/i }));
+      expect(screen.getByTestId('goal-Monthly Savings')).toHaveAttribute(
+        'data-risk-status',
+        'not-evaluated',
       );
     });
   });
