@@ -31,6 +31,8 @@ import GoalGrowthChart from './components/GoalGrowthChart';
 import WhatIf from './components/WhatIf';
 import AddGoalPopup from '../Home/components/AddGoalPopup';
 import { GoalSuggestion } from '../../domain/investmentLog';
+import { buildPortfolioWhatIfResult, EMPTY_ADJUSTMENTS } from '../../domain/whatIf';
+import { deriveGoalRiskStatuses, summarizeGoalRisk } from '../../domain/goalRiskStatus';
 
 type PlannerProps = {
   plannerData: PlannerData;
@@ -135,6 +137,29 @@ const Planner = ({
     [plannerData.investmentLogs],
   );
 
+  // Goal risk dashboard (018): the plan's own current assumptions, no What-If overrides — the
+  // exact same baseline the What If tab computes, reused here to drive an always-visible signal.
+  const goalRiskBaseline = useMemo(
+    () =>
+      buildPortfolioWhatIfResult(
+        plannerData.financialGoals,
+        plannerData.investmentLogs,
+        plannerData.investmentAllocations,
+        EMPTY_ADJUSTMENTS,
+      ),
+    [plannerData.financialGoals, plannerData.investmentLogs, plannerData.investmentAllocations],
+  );
+
+  const goalRiskStatuses = useMemo(
+    () => deriveGoalRiskStatuses(plannerData.financialGoals, goalRiskBaseline),
+    [plannerData.financialGoals, goalRiskBaseline],
+  );
+
+  const goalRiskSummary = useMemo(
+    () => summarizeGoalRisk(goalRiskStatuses),
+    [goalRiskStatuses],
+  );
+
   const completedGoals = useMemo(
     () => plannerData.financialGoals.filter((goal) => dayjs(selectedDate).isAfter(goal.getTargetDate())),
     [plannerData.financialGoals, selectedDate],
@@ -225,6 +250,7 @@ const Planner = ({
               financialGoals={plannerData.financialGoals}
               onGoalsClick={() => setShowGoalsDrawer(true)}
               onAddGoal={() => setIsAddGoalOpen(true)}
+              goalRiskSummary={goalRiskSummary}
             />
 
             <Tabs
@@ -293,6 +319,7 @@ const Planner = ({
             selectedDate={selectedDate}
             dispatch={dispatch}
             useStyledBox={false}
+            goalRiskStatuses={goalRiskStatuses}
           />
         </Box>
       </Drawer>

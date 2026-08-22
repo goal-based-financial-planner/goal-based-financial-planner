@@ -23,10 +23,24 @@ vi.mock('./components/Pagetour', () => ({
 }));
 
 vi.mock('./components/PlannerStatStrip', () => ({
-  default: function MockPlannerStatStrip({ onGoalsClick, onAddGoal, financialGoals }: { onGoalsClick?: () => void; onAddGoal?: () => void; financialGoals?: { getTermType: () => string }[] }) {
+  default: function MockPlannerStatStrip({
+    onGoalsClick,
+    onAddGoal,
+    financialGoals,
+    goalRiskSummary,
+  }: {
+    onGoalsClick?: () => void;
+    onAddGoal?: () => void;
+    financialGoals?: { getTermType: () => string }[];
+    goalRiskSummary?: { atRisk: number; total: number };
+  }) {
     const count = financialGoals?.length ?? 0;
     return (
-      <div data-testid="planner-stat-strip">
+      <div
+        data-testid="planner-stat-strip"
+        data-risk-at-risk={goalRiskSummary?.atRisk}
+        data-risk-total={goalRiskSummary?.total}
+      >
         {onGoalsClick && count > 0 && (
           <button onClick={onGoalsClick}>{count} Goal{count !== 1 ? 's' : ''}</button>
         )}
@@ -212,5 +226,44 @@ describe('Planner', () => {
     const plannerData = new PlannerData([makeGoal()]);
     renderPlanner({ plannerData });
     expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
+  });
+
+  it('passes a goalRiskSummary consistent with an unfunded one-time goal (at risk)', () => {
+    // makeGoal() is a one-time goal with no logged SIPs (default empty investmentLogs) — its
+    // shared corpus can't cover its target amount, so it must be counted at-risk.
+    const plannerData = new PlannerData([makeGoal()]);
+    renderPlanner({ plannerData });
+    const statStrip = screen.getByTestId('planner-stat-strip');
+    expect(statStrip).toHaveAttribute('data-risk-at-risk', '1');
+    expect(statStrip).toHaveAttribute('data-risk-total', '1');
+  });
+
+  it('passes a goalRiskSummary of zero/zero when there are no goals', () => {
+    renderPlanner({ plannerData: new PlannerData() });
+    const statStrip = screen.getByTestId('planner-stat-strip');
+    expect(statStrip).toHaveAttribute('data-risk-at-risk', '0');
+    expect(statStrip).toHaveAttribute('data-risk-total', '0');
+  });
+
+  it('recomputes goalRiskSummary live when investmentLogs change, without remounting', () => {
+    const goal = makeGoal();
+    const { rerender } = renderPlanner({ plannerData: new PlannerData([goal]) });
+
+    expect(screen.getByTestId('planner-stat-strip')).toHaveAttribute('data-risk-at-risk', '1');
+
+    // Log enough SIP funding to close the shortfall — same goal, same component instance.
+    const funded = new PlannerData([goal], undefined, [
+      {
+        id: 'sip-1',
+        name: 'Test Fund',
+        type: 'Equity',
+        monthlyAmount: 30_000,
+        expectedReturnPct: 10,
+        startDate: dayjs().format('YYYY-MM-DD'),
+      },
+    ]);
+    rerender(<Planner plannerData={funded} dispatch={mockDispatch} />);
+
+    expect(screen.getByTestId('planner-stat-strip')).toHaveAttribute('data-risk-at-risk', '0');
   });
 });

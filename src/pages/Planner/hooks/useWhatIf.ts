@@ -5,6 +5,7 @@ import {
   Adjustments,
   buildPortfolioWhatIfResult,
   calculateRequiredTopUp,
+  EMPTY_ADJUSTMENTS,
   PortfolioWhatIfResult,
   WhatIfTopUpResult,
 } from '../../../domain/whatIf';
@@ -13,8 +14,6 @@ export type InvestmentBaseline = {
   investmentName: string;
   expectedReturnPercentage: number;
 };
-
-const EMPTY_ADJUSTMENTS: Adjustments = { goalInflationRates: {}, investmentReturnRates: {} };
 
 export type UseWhatIfResult = {
   oneTimeGoals: PlannerData['financialGoals'];

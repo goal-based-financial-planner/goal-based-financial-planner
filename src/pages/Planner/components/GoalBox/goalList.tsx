@@ -4,17 +4,20 @@ import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculat
 import { FinancialGoal } from '../../../../domain/FinancialGoals';
 import { PlannerDataAction } from '../../../../store/plannerDataReducer';
 import { Dispatch } from 'react';
+import { GoalRiskDisplayStatus } from '../../../../domain/goalRiskStatus';
 
 type GoalListProps = {
   investmentBreakdownForAllGoals: GoalWiseInvestmentSuggestions[];
   goals: FinancialGoal[];
   dispatch: Dispatch<PlannerDataAction>;
+  goalRiskStatuses: Record<string, GoalRiskDisplayStatus>;
 };
 
 const GoalList = ({
   investmentBreakdownForAllGoals,
   goals,
   dispatch,
+  goalRiskStatuses,
 }: GoalListProps) => {
   return (
     <Grid container spacing={2}>
@@ -30,6 +33,7 @@ const GoalList = ({
               dispatch={dispatch}
               currentValue={investmentBreakdown?.currentValue ?? 0}
               investmentSuggestions={investmentBreakdown?.investmentSuggestions}
+              riskStatus={goalRiskStatuses[goal.id]}
             />
           </Grid>
         );

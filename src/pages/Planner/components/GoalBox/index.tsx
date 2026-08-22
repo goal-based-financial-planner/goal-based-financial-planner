@@ -7,6 +7,7 @@ import { GoalWiseInvestmentSuggestions } from '../../hooks/useInvestmentCalculat
 import { StyledBox } from '../../../../components/StyledBox';
 import GoalList from './goalList';
 import { GoalType } from '../../../../types/enums';
+import { GoalRiskDisplayStatus } from '../../../../domain/goalRiskStatus';
 
 type GoalBoxProps = {
   financialGoals: FinancialGoal[];
@@ -14,6 +15,7 @@ type GoalBoxProps = {
   selectedDate: string;
   dispatch: Dispatch<PlannerDataAction>;
   useStyledBox: boolean;
+  goalRiskStatuses: Record<string, GoalRiskDisplayStatus>;
 };
 
 const GoalBox = ({
@@ -22,6 +24,7 @@ const GoalBox = ({
   investmentBreakdownForAllGoals,
   dispatch,
   useStyledBox,
+  goalRiskStatuses,
 }: GoalBoxProps) => {
   const [activeTab, setActiveTab] = useState<0 | 1>(0);
 
@@ -91,6 +94,7 @@ const GoalBox = ({
                 investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
                 goals={pendingGoals}
                 dispatch={dispatch}
+                goalRiskStatuses={goalRiskStatuses}
               />
             )}
             {completedGoals.length > 0 && (
@@ -102,6 +106,7 @@ const GoalBox = ({
                   investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
                   goals={completedGoals}
                   dispatch={dispatch}
+                  goalRiskStatuses={goalRiskStatuses}
                 />
               </>
             )}
@@ -119,6 +124,7 @@ const GoalBox = ({
             investmentBreakdownForAllGoals={investmentBreakdownForAllGoals}
             goals={recurringGoals}
             dispatch={dispatch}
+            goalRiskStatuses={goalRiskStatuses}
           />
         )}
       </Box>

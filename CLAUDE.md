@@ -1,6 +1,6 @@
 # goal-based-financial-planner Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-07-19
+Auto-generated from all feature plans. Last updated: 2026-08-22
 
 ## Active Technologies
 - TypeScript (React 18, CRA / react-scripts 5) + MUI v6 (`@mui/material` — Tabs, Tab already available), React 18 hooks (004-goals-tabbed-view)
@@ -27,6 +27,8 @@ Auto-generated from all feature plans. Last updated: 2026-07-19
 - Browser `localStorage` / Google Drive — no changes (016-layout-redesign)
 - TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `react-hook-form` (already present), `dayjs` ^1.11.13 (017-scenario-comparison)
 - Browser `localStorage`/File System Access API (local) + Google Drive REST API (cloud) via `src/util/storage/*Provider.ts` — new `scenarios` field on the existing `PlannerData` payload, no new storage mechanism (017-scenario-comparison)
+- TypeScript 4.x + React 19.2.4 + `@mui/material` v6 (`Chip`, already used by `GoalCard`/`PlannerStatStrip`), existing `src/domain/whatIf.ts` (`buildPortfolioWhatIfResult`, unmodified — reused, not extended), `dayjs` ^1.11.13 (indirectly, via `whatIf.ts`) (018-goal-risk-dashboard)
+- N/A — fully derived at render time from the existing `PlannerData` (`financialGoals`, `investmentAllocations`, `investmentLogs`) already loaded via `localStorage`/Google Drive; nothing new persisted, no `PlannerData` shape change (018-goal-risk-dashboard)
 
 - Markdown / N/A (documentation only) + N/A (static documentation files) (003-oss-documentation)
 
@@ -47,9 +49,9 @@ tests/
 Markdown / N/A (documentation only): Follow standard conventions
 
 ## Recent Changes
+- 018-goal-risk-dashboard: Added TypeScript 4.x + React 19.2.4 + `@mui/material` v6 (`Chip`, already used by `GoalCard`/`PlannerStatStrip`), existing `src/domain/whatIf.ts` (`buildPortfolioWhatIfResult`, unmodified — reused, not extended), `dayjs` ^1.11.13 (indirectly, via `whatIf.ts`)
 - 017-scenario-comparison: Added TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `react-hook-form` (already present), `dayjs` ^1.11.13
 - 016-layout-redesign: Added TypeScript 4.x + React 19.2.4 + MUI v6 (`@mui/material`, `@mui/x-charts`), `dayjs`, Vite 8.0.0
-- 014-portfolio-growth-chart: Added TypeScript 4.x + React 19.2.4 + `@mui/material` v6, `@mui/x-charts` ^7.23.6 (already installed), `dayjs` ^1.11.13
 
 
 <!-- MANUAL ADDITIONS START -->

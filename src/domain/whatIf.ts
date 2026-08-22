@@ -34,6 +34,11 @@ export type Adjustments = {
   investmentReturnRates: Record<string, number>;
 };
 
+/** The "no overrides" adjustments — i.e. the plan's own current assumptions. Shared so every
+ *  caller that wants the unmodified baseline (the What If tab, the goal risk dashboard) uses the
+ *  exact same empty object rather than each redeclaring it locally. */
+export const EMPTY_ADJUSTMENTS: Adjustments = { goalInflationRates: {}, investmentReturnRates: {} };
+
 export type PortfolioWhatIfResult = {
   totalTargetAmount: number;
   totalInvestedValue: number;
