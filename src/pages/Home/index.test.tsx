@@ -200,10 +200,11 @@ describe('Home', () => {
   it('dispatches INITIALIZE with initialData when provider supplies it', async () => {
     (storage.isDisclaimerAccepted as ReturnType<typeof vi.fn>).mockReturnValue(true);
     const { useStorageProvider } = await import('../../context/StorageProviderContext');
-    const plannerDataWithGoal = {
-      financialGoals: [{}],
-      investmentAllocations: {},
-    } as unknown as import('../../domain/PlannerData').PlannerData;
+    const { FinancialGoal } = await import('../../domain/FinancialGoals');
+    const { GoalType } = await import('../../types/enums');
+    const plannerDataWithGoal = new PlannerData([
+      new FinancialGoal('Education', GoalType.ONE_TIME, '2026-01-01', '2036-01-01', 1_000_000),
+    ]);
     vi.mocked(useStorageProvider).mockReturnValue({
       provider: { id: 'local-file' } as unknown as import('../../util/storage').StorageProvider,
       initialData: plannerDataWithGoal,

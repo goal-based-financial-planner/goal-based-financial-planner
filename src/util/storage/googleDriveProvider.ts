@@ -1,5 +1,5 @@
 import { PlannerData } from '../../domain/PlannerData';
-import { FinancialGoal } from '../../domain/FinancialGoals';
+import { FinancialGoal, restoreGoalStatus } from '../../domain/FinancialGoals';
 import {
   StorageLoadError,
   StorageProvider,
@@ -289,14 +289,17 @@ export class GoogleDriveProvider implements StorageProvider {
       }
       const financialGoals = parsed.financialGoals.map((g: FinancialGoal) => {
         validateParsedGoal(g, 'google-drive');
-        return new FinancialGoal(
-          g.goalName,
-          g.goalType,
-          g.startDate,
-          g.targetDate,
-          g.targetAmount,
-          g.recurringDurationYears,
-          g.inflationRate,
+        return restoreGoalStatus(
+          new FinancialGoal(
+            g.goalName,
+            g.goalType,
+            g.startDate,
+            g.targetDate,
+            g.targetAmount,
+            g.recurringDurationYears,
+            g.inflationRate,
+          ),
+          g,
         );
       });
       const investmentLogs = Array.isArray(parsed.investmentLogs)

@@ -26,6 +26,7 @@ export enum PlannerDataActionType {
   EDIT_INVESTMENT_LOG_ENTRY = 'EDIT_INVESTMENT_LOG_ENTRY',
   DELETE_INVESTMENT_LOG_ENTRY = 'DELETE_INVESTMENT_LOG_ENTRY',
   UPDATE_GOAL_INFLATION_RATE = 'UPDATE_GOAL_INFLATION_RATE',
+  UPDATE_GOAL_STATUS = 'UPDATE_GOAL_STATUS',
   INITIALIZE = 'INITIALIZE',
 }
 
@@ -144,4 +145,32 @@ export function updateGoalInflationRate(
   inflationRate: number,
 ) {
   dispatch({ payload: { id: goalId, inflationRate }, type: PlannerDataActionType.UPDATE_GOAL_INFLATION_RATE });
+}
+
+export type GoalStatusUpdate = {
+  id: string;
+  /** null clears it. */
+  completion?: FinancialGoal['completion'] | null;
+  reopened?: boolean;
+  archived?: boolean;
+};
+
+export function markGoalCompleted(dispatch: Dispatch<PlannerDataAction>, id: string, at: string, value: number) {
+  dispatch({ payload: { id, completion: { at, value } }, type: PlannerDataActionType.UPDATE_GOAL_STATUS });
+}
+
+export function acknowledgeGoalCompletion(dispatch: Dispatch<PlannerDataAction>, goal: FinancialGoal) {
+  if (!goal.completion) return;
+  dispatch({
+    payload: { id: goal.id, completion: { ...goal.completion, acknowledged: true } },
+    type: PlannerDataActionType.UPDATE_GOAL_STATUS,
+  });
+}
+
+export function reopenGoal(dispatch: Dispatch<PlannerDataAction>, id: string) {
+  dispatch({ payload: { id, completion: null, reopened: true, archived: false }, type: PlannerDataActionType.UPDATE_GOAL_STATUS });
+}
+
+export function setGoalArchived(dispatch: Dispatch<PlannerDataAction>, id: string, archived: boolean) {
+  dispatch({ payload: { id, archived }, type: PlannerDataActionType.UPDATE_GOAL_STATUS });
 }

@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { PlannerData } from '../../domain/PlannerData';
 import { FinancialGoal } from '../../domain/FinancialGoals';
 import { GoalType } from '../../types/enums';
+import { DEFAULT_INVESTMENT_ALLOCATIONS } from '../../domain/constants';
 import Planner from './index';
 
 // ---------------------------------------------------------------------------
@@ -22,29 +23,17 @@ vi.mock('./components/Pagetour', () => ({
   },
 }));
 
-vi.mock('./components/PlannerStatStrip', () => ({
-  default: function MockPlannerStatStrip({
-    onGoalsClick,
-    onAddGoal,
-    financialGoals,
-    goalRiskSummary,
-  }: {
-    onGoalsClick?: () => void;
-    onAddGoal?: () => void;
-    financialGoals?: { getTermType: () => string }[];
-    goalRiskSummary?: { atRisk: number; total: number };
-  }) {
-    const count = financialGoals?.length ?? 0;
+vi.mock('./components/Overview/OverviewStatCards', () => ({
+  default: function MockOverviewStatCards({ termsPresent }: { termsPresent: string[] }) {
+    return <div data-testid="overview-stat-cards" data-terms={termsPresent.join(',')} />;
+  },
+}));
+
+vi.mock('./components/Overview/AllocationPlanCard', () => ({
+  default: function MockAllocationPlanCard({ goalCount, onViewGoals }: { goalCount: number; onViewGoals: () => void }) {
     return (
-      <div
-        data-testid="planner-stat-strip"
-        data-risk-at-risk={goalRiskSummary?.atRisk}
-        data-risk-total={goalRiskSummary?.total}
-      >
-        {onGoalsClick && count > 0 && (
-          <button onClick={onGoalsClick}>{count} Goal{count !== 1 ? 's' : ''}</button>
-        )}
-        {onAddGoal && <button onClick={onAddGoal}>+ Add Goal</button>}
+      <div data-testid="allocation-plan-card">
+        <button onClick={onViewGoals}>View All {goalCount} Goals</button>
       </div>
     );
   },
@@ -56,9 +45,50 @@ vi.mock('./components/InvestmentSuggestions', () => ({
   },
 }));
 
-vi.mock('./components/GoalBox', () => ({
-  default: function MockGoalBox() {
-    return <div data-testid="goal-box" />;
+vi.mock('./components/MyGoals', () => ({
+  default: function MockMyGoals({
+    goals,
+    funding,
+    onViewDetails,
+  }: {
+    goals: { id: string }[];
+    funding: Record<string, { fundedPercent: number }>;
+    onViewDetails: (id: string) => void;
+  }) {
+    return (
+      <div data-testid="my-goals" data-goal-count={Object.keys(funding).length}>
+        <button onClick={() => onViewDetails(goals[0].id)}>View Details</button>
+      </div>
+    );
+  },
+}));
+
+vi.mock('./components/TermPortfolio', () => ({
+  default: function MockTermPortfolio({
+    term,
+    goals,
+    onBack,
+  }: {
+    term: string;
+    goals: unknown[];
+    onBack: () => void;
+  }) {
+    return (
+      <div data-testid="term-portfolio" data-term={term} data-goals={goals.length}>
+        <button onClick={onBack}>Back to Overview</button>
+      </div>
+    );
+  },
+}));
+
+vi.mock('./components/GoalDetail', () => ({
+  default: function MockGoalDetail({ goal, onBack }: { goal: { goalName: string }; onBack: () => void }) {
+    return (
+      <div data-testid="goal-detail">
+        {goal.goalName}
+        <button onClick={onBack}>Back to My Goals</button>
+      </div>
+    );
   },
 }));
 
@@ -147,11 +177,14 @@ describe('Planner', () => {
     expect(screen.queryByTestId('congratulations')).not.toBeInTheDocument();
   });
 
-  it('renders stat strip and investment suggestions when a future goal exists', () => {
+  it('lands on the Overview with stat cards and the allocation plan when a future goal exists', () => {
     const plannerData = new PlannerData([makeGoal()]);
     renderPlanner({ plannerData });
-    expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
-    expect(screen.getByTestId('investment-suggestions')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Overview' })).toBeInTheDocument();
+    expect(screen.getByTestId('overview-stat-cards')).toBeInTheDocument();
+    expect(screen.getByTestId('allocation-plan-card')).toBeInTheDocument();
+    expect(screen.getByText('Goal Progress')).toBeInTheDocument();
+    expect(screen.getByText('Active SIPs')).toBeInTheDocument();
   });
 
   it('passes runTour=true to PageTour', () => {
@@ -207,63 +240,141 @@ describe('Planner', () => {
     fireEvent.change(screen.getByTestId('date-picker'), {
       target: { value: '2026-06-01' },
     });
-    expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
+    expect(screen.getByText('June 2026')).toBeInTheDocument();
   });
 
-  it('renders Investment Plan and Portfolio tab labels when a future goal exists', () => {
-    const plannerData = new PlannerData([makeGoal()]);
-    renderPlanner({ plannerData });
-    expect(screen.getByRole('tab', { name: 'Investment Plan' })).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Portfolio' })).toBeInTheDocument();
-  });
-
-  it('renders Add Goal button in stat strip', () => {
+  it('navigates between sidebar sections', () => {
     renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
-    expect(screen.getByRole('button', { name: /add goal/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Investments' }));
+    expect(screen.getByTestId('investment-suggestions')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Portfolio' }));
+    expect(screen.getByTestId('goal-growth-chart')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'My Goals' }));
+    expect(screen.getByTestId('my-goals')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Overview' }));
+    expect(screen.getByTestId('overview-stat-cards')).toBeInTheDocument();
   });
 
-  it('renders term goal chips in stat strip when goals exist', () => {
-    const plannerData = new PlannerData([makeGoal()]);
-    renderPlanner({ plannerData });
-    expect(screen.getByTestId('planner-stat-strip')).toBeInTheDocument();
+  it('opens My Goals from the allocation plan "View All" button', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    fireEvent.click(screen.getByRole('button', { name: /view all 1 goals/i }));
+    expect(screen.getByTestId('my-goals')).toBeInTheDocument();
   });
 
-  it('passes a goalRiskSummary consistent with an unfunded one-time goal (at risk)', () => {
+  it('shows My Goals with its own New Goal button and per-goal funding', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    fireEvent.click(screen.getByRole('button', { name: 'My Goals' }));
+    expect(screen.getByRole('heading', { name: 'My Goals' })).toBeInTheDocument();
+    expect(screen.getByTestId('my-goals')).toHaveAttribute('data-goal-count', '1');
+    expect(screen.getAllByRole('button', { name: /new goal/i })).toHaveLength(2);
+  });
+
+  it('opens a goal detail page from My Goals and returns to the list', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    fireEvent.click(screen.getByRole('button', { name: 'My Goals' }));
+    fireEvent.click(screen.getByRole('button', { name: 'View Details' }));
+    expect(screen.getByTestId('goal-detail')).toHaveTextContent('Education');
+    fireEvent.click(screen.getByRole('button', { name: 'Back to My Goals' }));
+    expect(screen.getByTestId('my-goals')).toBeInTheDocument();
+  });
+
+  it('opens a term portfolio from the term switcher and returns to the Overview', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    fireEvent.click(screen.getByRole('tab', { name: 'Mid-term' }));
+    expect(screen.getByTestId('term-portfolio')).toHaveAttribute('data-term', 'Medium Term');
+    expect(screen.getByTestId('term-portfolio')).toHaveAttribute('data-goals', '1');
+    expect(screen.getByRole('button', { name: 'Overview' })).toHaveAttribute('aria-current', 'page');
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Summary' }));
+    expect(screen.getByTestId('overview-stat-cards')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Long-term' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Overview' }));
+    expect(screen.getByTestId('overview-stat-cards')).toBeInTheDocument();
+  });
+
+  it('marks a goal complete once its own SIPs reach the target', () => {
+    const dispatch = vi.fn();
+    const goal = new FinancialGoal(
+      'Education',
+      GoalType.ONE_TIME,
+      dayjs().subtract(1, 'month').toString(),
+      dayjs().add(5, 'year').toString(),
+      1_000_000,
+    );
+    const plan = new PlannerData(
+      [goal],
+      DEFAULT_INVESTMENT_ALLOCATIONS,
+      DEFAULT_INVESTMENT_ALLOCATIONS[goal.getTermType()].map((a, i) => ({
+        id: `sip-${i}`,
+        name: a.investmentName,
+        type: a.investmentName,
+        monthlyAmount: 10_000_000,
+        startDate: dayjs(goal.startDate).format('YYYY-MM-DD'),
+      })),
+    );
+    render(<Planner plannerData={plan} dispatch={dispatch} />);
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: 'UPDATE_GOAL_STATUS',
+        payload: expect.objectContaining({ id: goal.id, completion: expect.any(Object) }),
+      }),
+    );
+  });
+
+  it('shows the completion banner for a goal finished early', () => {
+    const goal = makeGoal();
+    goal.completion = { at: dayjs().subtract(1, 'month').format('YYYY-MM-DD'), value: 1_200_000 };
+    renderPlanner({ plannerData: new PlannerData([goal, makeGoal()], DEFAULT_INVESTMENT_ALLOCATIONS) });
+    expect(screen.getByRole('status')).toHaveTextContent(/Education completed/);
+  });
+
+  it('renders the New Goal button in the sidebar', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    expect(screen.getByRole('button', { name: /new goal/i })).toBeInTheDocument();
+  });
+
+  it('passes the terms present to the stat cards', () => {
+    renderPlanner({ plannerData: new PlannerData([makeGoal()]) });
+    expect(screen.getByTestId('overview-stat-cards')).toHaveAttribute('data-terms', 'Medium Term');
+  });
+
+  it('shows the health score with an unfunded one-time goal counted at risk', () => {
     // makeGoal() is a one-time goal with no logged SIPs (default empty investmentLogs) — its
     // shared corpus can't cover its target amount, so it must be counted at-risk.
     const plannerData = new PlannerData([makeGoal()]);
     renderPlanner({ plannerData });
-    const statStrip = screen.getByTestId('planner-stat-strip');
-    expect(statStrip).toHaveAttribute('data-risk-at-risk', '1');
-    expect(statStrip).toHaveAttribute('data-risk-total', '1');
+    expect(screen.getByText('Health Score')).toBeInTheDocument();
+    expect(screen.getByText('1 of 1 goal at risk')).toBeInTheDocument();
   });
 
-  it('passes a goalRiskSummary of zero/zero when there are no goals', () => {
+  it('hides the health score when there are no one-time goals', () => {
     renderPlanner({ plannerData: new PlannerData() });
-    const statStrip = screen.getByTestId('planner-stat-strip');
-    expect(statStrip).toHaveAttribute('data-risk-at-risk', '0');
-    expect(statStrip).toHaveAttribute('data-risk-total', '0');
+    expect(screen.queryByText('Health Score')).not.toBeInTheDocument();
   });
 
-  it('recomputes goalRiskSummary live when investmentLogs change, without remounting', () => {
+  it('recomputes goal risk live when investmentLogs change, without remounting', () => {
     const goal = makeGoal();
-    const { rerender } = renderPlanner({ plannerData: new PlannerData([goal]) });
+    const { rerender } = renderPlanner({
+      plannerData: new PlannerData([goal], DEFAULT_INVESTMENT_ALLOCATIONS),
+    });
 
-    expect(screen.getByTestId('planner-stat-strip')).toHaveAttribute('data-risk-at-risk', '1');
+    expect(screen.getByText('1 of 1 goal at risk')).toBeInTheDocument();
 
-    // Log enough SIP funding to close the shortfall — same goal, same component instance.
-    const funded = new PlannerData([goal], undefined, [
-      {
-        id: 'sip-1',
-        name: 'Test Fund',
-        type: 'Equity',
+    // Log SIPs in every instrument the goal's plan uses, generously — same goal, same instance.
+    const funded = new PlannerData(
+      [goal],
+      DEFAULT_INVESTMENT_ALLOCATIONS,
+      DEFAULT_INVESTMENT_ALLOCATIONS[goal.getTermType()].map((a, i) => ({
+        id: `sip-${i}`,
+        name: a.investmentName,
+        type: a.investmentName,
         monthlyAmount: 30_000,
-        expectedReturnPct: 10,
         startDate: dayjs().format('YYYY-MM-DD'),
-      },
-    ]);
+      })),
+    );
     rerender(<Planner plannerData={funded} dispatch={mockDispatch} />);
 
-    expect(screen.getByTestId('planner-stat-strip')).toHaveAttribute('data-risk-at-risk', '0');
+    expect(screen.getByText('0 of 1 goal at risk')).toBeInTheDocument();
   });
 });

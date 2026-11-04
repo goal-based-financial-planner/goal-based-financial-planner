@@ -173,3 +173,35 @@ describe('InvestmentAllocations', () => {
     );
   });
 });
+
+describe('InvestmentAllocations total and cancel', () => {
+  it('shows the live total and what is left to allocate', () => {
+    render(
+      <InvestmentAllocations
+        investmentAllocations={splitAllocations}
+        dispatch={mockDispatch}
+        onSubmit={mockOnSubmit}
+        termType={TermType.SHORT_TERM}
+      />,
+    );
+    expect(screen.getByLabelText('Total allocation')).toHaveTextContent('90%');
+    expect(screen.getByText(/10% left to allocate/)).toBeInTheDocument();
+  });
+
+  it('cancels from the close button and the Cancel button without saving', () => {
+    const onCancel = vi.fn();
+    render(
+      <InvestmentAllocations
+        investmentAllocations={validAllocations}
+        dispatch={mockDispatch}
+        onSubmit={mockOnSubmit}
+        onCancel={onCancel}
+        termType={TermType.SHORT_TERM}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(onCancel).toHaveBeenCalledTimes(2);
+    expect(updateInvestmentAllocation).not.toHaveBeenCalled();
+  });
+});

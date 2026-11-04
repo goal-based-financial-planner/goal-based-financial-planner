@@ -7,7 +7,7 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import PrintIcon from '@mui/icons-material/Print';
 
@@ -50,26 +50,28 @@ const ExportButton = ({
   return (
     <Box>
       <Button
-        size="small"
-        variant="text"
+        variant="outlined"
         onClick={handleOpen}
         disabled={isExporting}
-        endIcon={
-          !compact && (
-            isExporting ? (
-              <CircularProgress size={14} color="inherit" />
-            ) : (
-              <KeyboardArrowDownIcon fontSize="small" />
-            )
+        aria-haspopup="menu"
+        startIcon={
+          isExporting ? (
+            <CircularProgress size={14} color="inherit" />
+          ) : (
+            <IosShareIcon sx={{ fontSize: '16px !important' }} />
           )
         }
-        sx={{ minWidth: 0, fontWeight: 600, fontSize: compact ? 11 : undefined }}
+        sx={{
+          height: 38,
+          px: compact ? 1.25 : 2,
+          fontSize: 13,
+          color: 'text.primary',
+          backgroundColor: 'background.paper',
+          borderColor: 'divider',
+          '&:hover': { borderColor: 'text.disabled', backgroundColor: 'background.paper' },
+        }}
       >
-        {isExporting ? (
-          compact ? <CircularProgress size={14} color="inherit" /> : 'Exporting…'
-        ) : (
-          compact ? 'Export' : 'Export'
-        )}
+        {isExporting && !compact ? 'Exporting…' : 'Export'}
       </Button>
 
       <Menu

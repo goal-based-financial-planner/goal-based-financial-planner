@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 type UsePdfExportReturn = {
   isExporting: boolean;
   error: string | null;
-  downloadPdf: (ref: RefObject<HTMLDivElement | null>) => Promise<void>;
+  downloadPdf: (ref: RefObject<HTMLDivElement | null>, fileName?: string) => Promise<void>;
   triggerPrint: () => void;
 };
 
@@ -33,7 +33,7 @@ const usePdfExport = (): UsePdfExportReturn => {
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const downloadPdf = async (ref: RefObject<HTMLDivElement | null>): Promise<void> => {
+  const downloadPdf = async (ref: RefObject<HTMLDivElement | null>, fileName?: string): Promise<void> => {
     if (!ref.current) return;
 
     setIsExporting(true);
@@ -67,7 +67,7 @@ const usePdfExport = (): UsePdfExportReturn => {
 
       addCanvasToMultiPagePdf(canvas, doc);
 
-      doc.save(`financial-plan-${dayjs().format('YYYY-MM-DD')}.pdf`);
+      doc.save(fileName ?? `financial-plan-${dayjs().format('YYYY-MM-DD')}.pdf`);
     } catch {
       setError(
         'PDF generation failed. Please try again or use Print → Save as PDF from your browser.',

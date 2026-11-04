@@ -1,22 +1,57 @@
+import React, { useState } from 'react';
 import { useFieldArray, Controller, Control } from 'react-hook-form';
 import {
   Autocomplete,
   Box,
-  Button,
-  Grid2 as Grid,
+  IconButton,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
+import AddIcon from '@mui/icons-material/Add';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import SavingsIcon from '@mui/icons-material/Savings';
 import { InvestmentAllocationsType } from '../../../../domain/InvestmentOptions';
 import { TermType } from '../../../../types/enums';
 import investmentNames from '../../../../domain/investmentAllocations';
-import { useState } from 'react';
+import { assetClassOf } from '../../../../domain/assetClass';
+
+const instrumentIcon = (name: string): { Icon: React.ElementType; color: string } => {
+  if (/liquid/i.test(name)) return { Icon: WaterDropIcon, color: '#4C6EF5' };
+  switch (assetClassOf(name || '')) {
+    case 'Debt / RD':
+      return { Icon: AccountBalanceIcon, color: '#E8772E' };
+    case 'Equity':
+      return { Icon: ShowChartIcon, color: '#2E7D32' };
+    case 'Gold':
+      return { Icon: MonetizationOnIcon, color: '#D4A017' };
+    case 'Real Estate':
+      return { Icon: ApartmentIcon, color: '#6B7280' };
+    default:
+      return { Icon: SavingsIcon, color: '#8B5CF6' };
+  }
+};
+
+const headerCellSx = {
+  fontSize: 11,
+  fontWeight: 600,
+  color: 'text.secondary',
+  textTransform: 'uppercase',
+  letterSpacing: 0.5,
+  whiteSpace: 'nowrap',
+} as const;
 
 const InvestmentAllocationPerTerm = ({
   control,
@@ -32,190 +67,208 @@ const InvestmentAllocationPerTerm = ({
 
   const [editableRow, setEditableRow] = useState<number | null>(null);
 
-  const saveRow = (_index: number) => {
-    setEditableRow(null);
-  };
-
   return (
-    <Grid container spacing={2}>
-      <Grid size={12}>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <Typography fontWeight="bold">Investment Name</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography fontWeight="bold">Expected Return (%)</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography fontWeight="bold">Investment (%)</Typography>
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {fields.map((field, index) => {
-                const isEditing = editableRow === index; // Track editable row
-                return (
-                  <TableRow
-                    key={field.id}
-                    sx={{
-                      'td,th': { border: 0 },
-                    }}
-                  >
-                    <TableCell>
-                      <Controller
-                        name={`${name}.${index}.investmentName`}
-                        control={control}
-                        render={({ field }) =>
-                          isEditing ? (
-                            <Autocomplete
-                              options={investmentNames}
-                              freeSolo
-                              value={field.value || ''}
-                              onChange={(event, newValue) =>
-                                field.onChange(newValue)
-                              }
-                              onInputChange={(event, newInputValue) => {
-                                if (event?.type === 'change') {
-                                  field.onChange(newInputValue);
-                                }
+    <Box>
+      <Box sx={{ overflowX: 'auto' }}>
+        <Table sx={{ '& td, & th': { borderColor: 'divider', px: 1 } }}>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={headerCellSx}>Investment Name</TableCell>
+              <TableCell align="center" sx={headerCellSx}>
+                Expected Return (%)
+              </TableCell>
+              <TableCell align="center" sx={headerCellSx}>
+                Investment (%)
+              </TableCell>
+              <TableCell align="right" sx={headerCellSx}>
+                Actions
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {fields.map((field, index) => {
+              const isEditing = editableRow === index;
+              return (
+                <TableRow key={field.id}>
+                  <TableCell sx={{ width: '50%' }}>
+                    <Controller
+                      name={`${name}.${index}.investmentName`}
+                      control={control}
+                      render={({ field }) => {
+                        const { Icon, color } = instrumentIcon(field.value);
+                        return (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: isEditing ? 260 : 180 }}>
+                            <Box
+                              sx={{
+                                width: 30,
+                                height: 30,
+                                flexShrink: 0,
+                                borderRadius: 1.5,
+                                border: '1px solid',
+                                borderColor: 'divider',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color,
                               }}
-                              slotProps={{
-                                popper: {
-                                  disablePortal: true,
-                                  sx: {
-                                    transformOrigin: 'top',
-                                    zIndex: 2000,
+                            >
+                              <Icon sx={{ fontSize: 16 }} />
+                            </Box>
+                            {isEditing ? (
+                              <Autocomplete
+                                options={investmentNames}
+                                freeSolo
+                                fullWidth
+                                sx={{ minWidth: 220 }}
+                                value={field.value || ''}
+                                onChange={(event, newValue) => field.onChange(newValue)}
+                                onInputChange={(event, newInputValue) => {
+                                  if (event?.type === 'change') {
+                                    field.onChange(newInputValue);
+                                  }
+                                }}
+                                slotProps={{
+                                  popper: {
+                                    disablePortal: true,
+                                    placement: 'bottom-start',
+                                    // Wider than the input so long names fit on one line
+                                    sx: { transformOrigin: 'top', zIndex: 2000, minWidth: 320 },
                                   },
-                                },
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  variant="standard"
-                                  fullWidth
-                                />
-                              )}
-                            />
-                          ) : (
-                            <Typography>{field.value || '—'}</Typography>
-                          )
-                        }
-                      />
-                    </TableCell>
-                    <TableCell align="center" width={'160px'}>
-                      <Controller
-                        name={`${name}.${index}.expectedReturnPercentage`}
-                        control={control}
-                        render={({ field }) =>
-                          isEditing ? (
-                            <TextField
-                              {...field}
-                              type="number"
-                              sx={{ width: '100%' }}
-                              variant="standard"
-                              inputProps={{
-                                min: 1,
-                                inputMode: 'numeric',
-                              }}
-                            />
-                          ) : (
-                            <Typography>{field.value}</Typography>
-                          )
-                        }
-                      />
-                    </TableCell>
-                    <TableCell align="center" width={'130px'}>
-                      <Controller
-                        name={`${name}.${index}.investmentPercentage`}
-                        control={control}
-                        rules={{
-                          validate: (value) => value <= 100,
-                        }}
-                        render={({ field, fieldState: { error } }) =>
-                          isEditing ? (
-                            <TextField
-                              {...field}
-                              type="number"
-                              error={!!error}
-                              inputProps={{
-                                min: 1,
-                                max: 100,
-                                inputMode: 'numeric',
-                              }}
-                              sx={{ width: '100%' }}
-                              variant="standard"
-                            />
-                          ) : (
-                            <Typography>{field.value}</Typography>
-                          )
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          textAlign: 'right',
-                          '& > span': { mx: 1, cursor: 'pointer' },
-                        }}
-                      >
-                        {isEditing ? (
-                          <span
-                            className="material-symbols-rounded"
-                            onClick={() => saveRow(index)}
-                          >
-                            save
-                          </span>
+                                  listbox: {
+                                    sx: { '& .MuiAutocomplete-option': { whiteSpace: 'nowrap', fontSize: 14 } },
+                                  },
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    size="small"
+                                    placeholder="Investment name"
+                                    inputProps={{ ...params.inputProps, 'aria-label': 'Investment name' }}
+                                  />
+                                )}
+                              />
+                            ) : (
+                              <Typography sx={{ fontWeight: 600, fontSize: 14 }}>{field.value || '—'}</Typography>
+                            )}
+                          </Box>
+                        );
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="center" width="130px">
+                    <Controller
+                      name={`${name}.${index}.expectedReturnPercentage`}
+                      control={control}
+                      render={({ field }) =>
+                        isEditing ? (
+                          <TextField
+                            {...field}
+                            type="number"
+                            size="small"
+                            sx={{ width: 80 }}
+                            inputProps={{ min: 1, inputMode: 'numeric', 'aria-label': 'Expected return (%)' }}
+                          />
                         ) : (
-                          <span
-                            className="material-symbols-rounded"
-                            onClick={() => setEditableRow(index)}
-                          >
-                            edit
-                          </span>
-                        )}
-                        <span
-                          className="material-symbols-rounded"
-                          onClick={() => remove(index)}
-                          style={{ color: 'red' }}
-                        >
-                          delete
-                        </span>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          <Box
-            sx={{
-              textAlign: 'center',
-            }}
-          >
-            <Button
-              className="allocation-add-btn"
-              variant="outlined"
-              color="primary"
-              sx={{ mt: 2, color: 'green', border: '1px solid green' }}
-              onClick={() => {
-                append({
-                  investmentName: '',
-                  expectedReturnPercentage: 0,
-                  investmentPercentage: 0,
-                });
-                setEditableRow(fields.length);
-              }}
-            >
-              Add Investment
-            </Button>
-          </Box>
-        </TableContainer>
-      </Grid>
-    </Grid>
+                          <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>{field.value}</Typography>
+                        )
+                      }
+                    />
+                  </TableCell>
+                  <TableCell align="center" width="120px">
+                    <Controller
+                      name={`${name}.${index}.investmentPercentage`}
+                      control={control}
+                      rules={{
+                        validate: (value) => value <= 100,
+                      }}
+                      render={({ field, fieldState: { error } }) =>
+                        isEditing ? (
+                          <TextField
+                            {...field}
+                            type="number"
+                            size="small"
+                            error={!!error}
+                            sx={{ width: 80 }}
+                            inputProps={{ min: 1, max: 100, inputMode: 'numeric', 'aria-label': 'Investment (%)' }}
+                          />
+                        ) : (
+                          <Typography sx={{ fontSize: 14, fontWeight: 700 }}>{field.value}</Typography>
+                        )
+                      }
+                    />
+                  </TableCell>
+                  <TableCell align="right" width="96px" sx={{ whiteSpace: 'nowrap' }}>
+                    {isEditing ? (
+                      <Tooltip title="Done">
+                        <IconButton size="small" aria-label="Save row" onClick={() => setEditableRow(null)} sx={{ color: 'primary.main' }}>
+                          <CheckIcon sx={{ fontSize: 18 }} />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Edit">
+                        <IconButton size="small" aria-label="Edit row" onClick={() => setEditableRow(index)} sx={{ color: 'text.secondary' }}>
+                          <EditIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    <Tooltip title="Remove">
+                      <IconButton
+                        size="small"
+                        aria-label="Delete row"
+                        onClick={() => {
+                          remove(index);
+                          setEditableRow(null);
+                        }}
+                        sx={{ color: 'error.main' }}
+                      >
+                        <DeleteIcon sx={{ fontSize: 16 }} />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Box>
+
+      <Box
+        component="button"
+        type="button"
+        className="allocation-add-btn"
+        onClick={() => {
+          append({
+            investmentName: '',
+            expectedReturnPercentage: 0,
+            investmentPercentage: 0,
+          });
+          setEditableRow(fields.length);
+        }}
+        sx={{
+          all: 'unset',
+          boxSizing: 'border-box',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 0.75,
+          width: '100%',
+          mt: 2.5,
+          py: 1.25,
+          borderRadius: 2.5,
+          border: '1px dashed',
+          borderColor: '#D4D4D2',
+          fontSize: 13,
+          fontWeight: 600,
+          color: 'primary.main',
+          '&:hover': { borderColor: 'primary.main', backgroundColor: '#F6FAF4' },
+          '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main' },
+        }}
+      >
+        <AddIcon sx={{ fontSize: 16 }} />
+        Add Investment
+      </Box>
+    </Box>
   );
 };
 
