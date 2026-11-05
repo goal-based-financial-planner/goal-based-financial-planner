@@ -2,7 +2,7 @@ import theme from './theme';
 
 describe('theme', () => {
   it('should have a primary color defined', () => {
-    expect(theme.palette.primary.main).toBe('#008000');
+    expect(theme.palette.primary.main).toBe('#2E7D32');
   });
 
   it('should have MuiModal zIndex override', () => {

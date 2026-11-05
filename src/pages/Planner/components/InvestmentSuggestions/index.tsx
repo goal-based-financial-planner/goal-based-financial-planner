@@ -157,6 +157,7 @@ const InvestmentSuggestionsBox = ({
           dispatch={dispatch}
           investmentAllocations={investmentAllocations}
           onSubmit={handleSubmit}
+          onCancel={handleClose}
           termType={termTypeModal!}
         />
       </Modal>

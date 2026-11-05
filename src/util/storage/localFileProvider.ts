@@ -1,5 +1,5 @@
 import { PlannerData } from '../../domain/PlannerData';
-import { FinancialGoal } from '../../domain/FinancialGoals';
+import { FinancialGoal, restoreGoalStatus } from '../../domain/FinancialGoals';
 import { GoalType } from '../../types/enums';
 import { ALPHANUMERIC_PATTERN, NUMBER_PATTERN } from '../../types/constants';
 import {
@@ -212,14 +212,17 @@ export class LocalFileProvider implements StorageProvider {
       }
       const financialGoals = parsed.financialGoals.map((g: FinancialGoal) => {
         validateParsedGoal(g, 'local-file');
-        return new FinancialGoal(
-          g.goalName,
-          g.goalType,
-          g.startDate,
-          g.targetDate,
-          g.targetAmount,
-          g.recurringDurationYears,
-          g.inflationRate,
+        return restoreGoalStatus(
+          new FinancialGoal(
+            g.goalName,
+            g.goalType,
+            g.startDate,
+            g.targetDate,
+            g.targetAmount,
+            g.recurringDurationYears,
+            g.inflationRate,
+          ),
+          g,
         );
       });
       const investmentLogs = Array.isArray(parsed.investmentLogs)

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   plannerDataReducer,
   getInitialData,
@@ -647,3 +648,90 @@ describe('plannerDataReducer', () => {
 
 });
 
+
+describe('missing term allocations', () => {
+  const goalSpanning = (months: number, name = 'Goal') =>
+    new FinancialGoal(name, GoalType.ONE_TIME, '2026-01-01', dayjs('2026-01-01').add(months, 'month').format('YYYY-MM-DD'), 100000);
+
+  it('fills the default allocation when editing a goal moves it into a new term', () => {
+    let state = plannerDataReducer(new PlannerData(), {
+      type: PlannerDataActionType.ADD_FINANCIAL_GOAL,
+      payload: goalSpanning(24),
+    });
+    expect(state.investmentAllocations[TermType.MEDIUM_TERM]).toHaveLength(0);
+
+    const goal = state.financialGoals[0];
+    state = plannerDataReducer(state, {
+      type: PlannerDataActionType.UPDATE_FINANCIAL_GOAL,
+      payload: {
+        id: goal.id,
+        goalName: goal.goalName,
+        startYear: goal.startDate,
+        targetYear: dayjs(goal.startDate).add(48, 'month').format('YYYY-MM-DD'),
+        targetAmount: goal.targetAmount,
+      },
+    });
+    expect(state.financialGoals[0].getTermType()).toBe(TermType.MEDIUM_TERM);
+    expect(state.investmentAllocations[TermType.MEDIUM_TERM].length).toBeGreaterThan(0);
+  });
+
+  it('repairs a loaded plan whose goal term has no allocation', () => {
+    const loaded = new PlannerData([goalSpanning(120)]);
+    const state = plannerDataReducer(new PlannerData(), {
+      type: PlannerDataActionType.INITIALIZE,
+      payload: loaded,
+    });
+    expect(state.investmentAllocations[TermType.LONG_TERM].length).toBeGreaterThan(0);
+    expect(state.investmentAllocations[TermType.SHORT_TERM]).toHaveLength(0);
+  });
+
+  it('keeps a loaded plan untouched when every goal term has an allocation', () => {
+    const loaded = plannerDataReducer(new PlannerData(), {
+      type: PlannerDataActionType.ADD_FINANCIAL_GOAL,
+      payload: goalSpanning(120),
+    });
+    expect(
+      plannerDataReducer(new PlannerData(), { type: PlannerDataActionType.INITIALIZE, payload: loaded }),
+    ).toBe(loaded);
+  });
+
+  it('does not mutate the previous state when deleting a goal', () => {
+    const before = plannerDataReducer(new PlannerData(), {
+      type: PlannerDataActionType.ADD_FINANCIAL_GOAL,
+      payload: goalSpanning(120),
+    });
+    const longBefore = before.investmentAllocations[TermType.LONG_TERM];
+    plannerDataReducer(before, {
+      type: PlannerDataActionType.DELETE_FINANCIAL_GOAL,
+      payload: before.financialGoals[0].id,
+    });
+    expect(before.investmentAllocations[TermType.LONG_TERM]).toBe(longBefore);
+  });
+});
+
+describe('goal status', () => {
+  const withGoal = () => {
+    const goal = new FinancialGoal('Fund', GoalType.ONE_TIME, '2026-01-01', '2027-01-01', 1000);
+    return { goal, state: new PlannerData([goal]) };
+  };
+  const update = (state: PlannerData, payload: object) =>
+    plannerDataReducer(state, { type: PlannerDataActionType.UPDATE_GOAL_STATUS, payload } as PlannerDataAction);
+
+  it('records completion on a copy of the goal, keeping its methods', () => {
+    const { goal, state } = withGoal();
+    const next = update(state, { id: goal.id, completion: { at: '2026-08-01', value: 1000 } });
+    expect(next.financialGoals[0]).not.toBe(goal);
+    expect(next.financialGoals[0].completion).toEqual({ at: '2026-08-01', value: 1000 });
+    expect(next.financialGoals[0].getGoalName()).toBe('Fund');
+    expect(goal.completion).toBeUndefined();
+  });
+
+  it('reopens (clearing completion) and archives', () => {
+    const { goal, state } = withGoal();
+    const done = update(state, { id: goal.id, completion: { at: '2026-08-01', value: 1000 }, archived: true });
+    const reopened = update(done, { id: goal.id, completion: null, reopened: true, archived: false });
+    expect(reopened.financialGoals[0]).toMatchObject({ reopened: true });
+    expect(reopened.financialGoals[0].completion).toBeUndefined();
+    expect(reopened.financialGoals[0].archived).toBeUndefined();
+  });
+});

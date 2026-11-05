@@ -8,6 +8,16 @@ import { DEFAULT_INFLATION_RATE } from './constants';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
+/** Recorded when a goal's own SIPs reach its target before the target date. */
+export type GoalCompletion = {
+  /** YYYY-MM-DD the target was reached. */
+  at: string;
+  /** What the goal's share of the SIPs had grown to on that date. */
+  value: number;
+  /** The user has seen (dismissed) the completion banner. */
+  acknowledged?: boolean;
+};
+
 export class FinancialGoal {
   constructor(
     goalName: string,
@@ -38,6 +48,12 @@ export class FinancialGoal {
   recurringDurationYears?: number;
   /** Per-goal inflation rate in percent. Defaults to DEFAULT_INFLATION_RATE when undefined. */
   inflationRate?: number;
+  /** Set when the target was reached early. Absent for goals still in progress. */
+  completion?: GoalCompletion;
+  /** The user reopened a completed goal; it won't be marked complete again automatically. */
+  reopened?: boolean;
+  /** Hidden from goal lists. Only completed goals can be archived. */
+  archived?: boolean;
 
   getInvestmentStartDate(): string {
     if (this.goalType === GoalType.RECURRING) {
@@ -118,6 +134,19 @@ export class FinancialGoal {
 export const isGoalActive = (goal: FinancialGoal, selectedDate: string): boolean => {
   return (
     dayjs(selectedDate).isSameOrAfter(dayjs(goal.getInvestmentStartDate()), 'day') &&
-    dayjs(selectedDate).isSameOrBefore(dayjs(goal.getTargetDate()), 'day')
+    dayjs(selectedDate).isSameOrBefore(dayjs(goal.getTargetDate()), 'day') &&
+    // A goal that reached its target early needs no more investing after that day.
+    !(goal.completion && dayjs(selectedDate).isAfter(dayjs(goal.completion.at), 'day'))
   );
+};
+
+/** Copies the saved completion / reopened / archived state onto a goal rebuilt from a plan file. */
+export const restoreGoalStatus = (goal: FinancialGoal, saved: Partial<FinancialGoal>): FinancialGoal => {
+  const c = saved.completion;
+  if (c && typeof c.at === 'string' && dayjs(c.at).isValid() && typeof c.value === 'number') {
+    goal.completion = { at: c.at, value: c.value, ...(c.acknowledged ? { acknowledged: true } : {}) };
+  }
+  if (saved.reopened === true) goal.reopened = true;
+  if (saved.archived === true) goal.archived = true;
+  return goal;
 };

@@ -9,7 +9,20 @@ import { PlannerDataActionType } from '../../store/plannerDataActions';
 import { PlannerData } from '../../domain/PlannerData';
 import LandingPage from '../LandingPage';
 import Planner from '../Planner';
-import { Alert, Box, Button, Divider, Link, Snackbar, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Link,
+  Snackbar,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   isDisclaimerAccepted,
   setDisclaimerAccepted,
@@ -82,29 +95,28 @@ const Home: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [triggerManualSave]);
 
+  const iconButtonSx = {
+    width: 38,
+    height: 38,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 2,
+    backgroundColor: 'background.paper',
+    color: 'text.primary',
+  };
+
+  const saveStatusIndicator = (
+    <SaveStatusIndicator
+      saveStatus={saveStatus}
+      lastSavedAt={lastSavedAt}
+      providerId={provider?.id ?? 'local-file'}
+      onRetry={triggerManualSave}
+      compact={isMobile}
+    />
+  );
+
   const saveControls = (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
-      <SaveStatusIndicator
-        saveStatus={saveStatus}
-        lastSavedAt={lastSavedAt}
-        providerId={provider?.id ?? 'local-file'}
-        onRetry={triggerManualSave}
-        compact={isMobile}
-      />
-      {!isMobile && (
-        <>
-          <Button
-            size="small"
-            variant="text"
-            onClick={triggerManualSave}
-            disabled={saveStatus === 'saving'}
-            sx={{ minWidth: 0, fontWeight: 600 }}
-          >
-            Save
-          </Button>
-          <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
-        </>
-      )}
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
       <ExportButton
         onDownloadPdf={() => downloadPdf(printRef)}
         onPrint={triggerPrint}
@@ -112,15 +124,24 @@ const Home: React.FC = () => {
         error={exportError}
         compact={isMobile}
       />
-      <Divider orientation="vertical" flexItem sx={{ mx: 0.5 }} />
-      <Button
-        size="small"
-        variant="text"
-        onClick={() => void clearProvider()}
-        sx={{ minWidth: 0, color: 'text.secondary', fontSize: isMobile ? 11 : undefined }}
-      >
-        {isMobile ? 'Close' : 'Close Plan'}
-      </Button>
+      <Divider orientation="vertical" flexItem sx={{ my: 0.5 }} />
+      <Tooltip title="Save (⌘S)">
+        <span>
+          <IconButton
+            aria-label="Save plan"
+            onClick={triggerManualSave}
+            disabled={saveStatus === 'saving'}
+            sx={iconButtonSx}
+          >
+            <SaveOutlinedIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+        </span>
+      </Tooltip>
+      <Tooltip title="Close plan">
+        <IconButton aria-label="Close plan" onClick={() => void clearProvider()} sx={iconButtonSx}>
+          <CloseIcon sx={{ fontSize: 18 }} />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 
@@ -131,6 +152,7 @@ const Home: React.FC = () => {
           plannerData={plannerData}
           dispatch={dispatch}
           headerRight={saveControls}
+          topBarRight={saveStatusIndicator}
           printRef={printRef}
           runTour={runTour}
           onTourDone={() => setRunTour(false)}

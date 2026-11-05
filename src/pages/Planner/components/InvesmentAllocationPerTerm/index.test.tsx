@@ -58,31 +58,31 @@ describe('InvestmentAllocationPerTerm', () => {
     render(<Wrapper />);
     fireEvent.click(screen.getByRole('button', { name: /add investment/i }));
     // Edit icons (material symbols) indicate the row is in edit mode
-    expect(screen.getByText('save')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save row' })).toBeInTheDocument();
   });
 
   it('shows edit icon for existing rows in read mode', () => {
     render(<Wrapper defaultValues={withOneRow} />);
-    expect(screen.getByText('edit')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Edit row' })).toBeInTheDocument();
   });
 
   it('switches row to edit mode when edit icon is clicked', () => {
     render(<Wrapper defaultValues={withOneRow} />);
-    fireEvent.click(screen.getByText('edit'));
-    expect(screen.getByText('save')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Edit row' }));
+    expect(screen.getByRole('button', { name: 'Save row' })).toBeInTheDocument();
   });
 
   it('saves row back to read mode when save icon is clicked', () => {
     render(<Wrapper defaultValues={withOneRow} />);
-    fireEvent.click(screen.getByText('edit'));
-    fireEvent.click(screen.getByText('save'));
-    expect(screen.getByText('edit')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Edit row' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Save row' }));
+    expect(screen.getByRole('button', { name: 'Edit row' })).toBeInTheDocument();
   });
 
   it('removes a row when delete icon is clicked', () => {
     render(<Wrapper defaultValues={withOneRow} />);
     expect(screen.getByText('Liquid Funds')).toBeInTheDocument();
-    fireEvent.click(screen.getByText('delete'));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete row' }));
     expect(screen.queryByText('Liquid Funds')).not.toBeInTheDocument();
   });
 
